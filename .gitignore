@@ -1,0 +1,31 @@
+# تجاهل المجلدات المؤقتة الخاصة بفلاتر
+build/
+.dart_tool/
+.pub/
+.flutter-plugins
+.flutter-plugins-dependencies
+flutter_export_environment.sh
+
+# تجاهل ملفات بيئة العمل مثل VS Code و Android Studio
+.vscode/
+.idea/
+*.iml
+
+# تجاهل ملفات النظام غير المهمة
+.DS_Store
+Thumbs.db
+
+# تجاهل ملفات Android Studio
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# تجاهل ملفات Cache الخاصة بـ Flutter و Dart
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.pub-cache/
+
+# تجاهل ملفات Debugging ورموز التعتيم
+app.*.symbols
+app.*.map.json
+migrate_working_dir/
