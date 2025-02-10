@@ -143,7 +143,10 @@ class ApiService {
 
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
+import 'package:talker_dio_logger/talker_dio_logger.dart';
+import 'package:teacher_app/responses/login_response.dart';
 import '../AuthStorage.dart';
 import '../models/student.dart';
 import '../models/group.dart';
@@ -153,6 +156,19 @@ class ApiService {
   late Box authBox;
 
   ApiService(this._dio) {
+
+
+    _dio.interceptors.add
+      (
+      TalkerDioLogger(
+        settings: const TalkerDioLoggerSettings(
+          printRequestHeaders: !kReleaseMode,
+          printResponseHeaders: !kReleaseMode,
+          printResponseMessage: !kReleaseMode,
+        ),
+      ),
+    );
+
     _dio.options = BaseOptions(
       baseUrl: "https://assistant-app-2136afb92d95.herokuapp.com",
       connectTimeout: Duration(seconds: 30),
@@ -244,20 +260,30 @@ class ApiService {
         },
       );
 
+      print("statusCode:${response.statusCode}");
       print("📢 استجابة API عند تسجيل الدخول: ${response.data}");
 
-      if (response.statusCode == 200 && response.data.containsKey('token')) {
-        final token = response.data['token'];
-        if (token != null && token is String && token.isNotEmpty) {
-          await updateAuthToken(token);
-          print("✅ تم استخراج وحفظ التوكن بنجاح: $token");
-          return token;
-        } else {
-          throw Exception("❌ التوكن غير صالح!");
-        }
-      } else {
-        throw Exception("❌ فشل تسجيل الدخول: ${response.data}");
+      if(response.statusCode == 200){
+        LoginResponse responseResult = LoginResponse.fromJson(response.data);
+        print("responseResult.username :${responseResult.username}");
+        print("responseResult.accessToken :${responseResult.accessToken}");
+
+        return responseResult.accessToken;
+
       }
+
+      // if (response.statusCode == 200 && response.data.containsKey('token')) {
+      //   final token = response.data['token'];
+      //   if (token != null && token is String && token.isNotEmpty) {
+      //     await updateAuthToken(token);
+      //     print("✅ تم استخراج وحفظ التوكن بنجاح: $token");
+      //     return token;
+      //   } else {
+      //     throw Exception("❌ التوكن غير صالح!");
+      //   }
+      // } else {
+      //   throw Exception("❌ فشل تسجيل الدخول: ${response.data}");
+      // }
     } catch (e) {
       throw Exception("❌ فشل تسجيل الدخول: $e");
     }

@@ -22,6 +22,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.11.0"
+  ansicolor:
+    dependency: transitive
+    description:
+      name: ansicolor
+      sha256: "50e982d500bc863e1d703448afdbf9e5a72eb48840a4f766fa361ffd6877055f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.3"
   args:
     dependency: transitive
     description:
@@ -645,6 +653,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.0"
+  talker:
+    dependency: transitive
+    description:
+      name: talker
+      sha256: a67ee21b020c060efefd18dd0d8c52c9d670eb6089c227f22136c6ff09454b0a
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.6.11"
+  talker_dio_logger:
+    dependency: "direct main"
+    description:
+      name: talker_dio_logger
+      sha256: "4056724cdae03249093a19bdac788285432ff30075e1d8aea65b0ef893d12281"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.6.11"
+  talker_logger:
+    dependency: transitive
+    description:
+      name: talker_logger
+      sha256: "73e0b40f60ff334216c054b11b75d94d18600abd50e9ff46b7e859c3705b86a6"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.6.11"
   term_glyph:
     dependency: transitive
     description:
@@ -742,5 +774,5 @@ packages:
     source: hosted
     version: "3.1.3"
 sdks:
-  dart: ">=3.6.1 <4.0.0"
+  dart: ">=3.6.0 <4.0.0"
   flutter: ">=3.24.0"
