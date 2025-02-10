@@ -1,41 +1,3 @@
-/*import 'package:equatable/equatable.dart';
-
-class Student extends Equatable {
-  final String id;
-  final String name;
-  final String phone;
-  final String grade;
-  final String password;
-  final bool attended;
-  final bool homeworkDone;
-
-  const Student({
-    required this.id,
-    required this.name,
-    required this.phone,
-    required this.grade,
-    required this.password,
-    this.attended = false,
-    this.homeworkDone = false,
-  });
-
-  @override
-  List<Object?> get props => [id, name, phone, grade, password, attended, homeworkDone];
-
-  Student copyWith({bool? attended, bool? homeworkDone}) {
-    return Student(
-      id: id,
-      name: name,
-      phone: phone,
-      grade: grade,
-      password: password,
-      attended: attended ?? this.attended,
-      homeworkDone: homeworkDone ?? this.homeworkDone,
-    );
-  }
-}
-*/
-
 import 'package:hive/hive.dart';
 
 part 'student.g.dart'; // ✅ سيتم إنشاؤه تلقائيًا باستخدام `build_runner`
@@ -73,8 +35,8 @@ class Student {
     this.homeworkDone = false,
   });
 
-  // ✅ تحويل `Student` إلى Map لحفظه في `Hive`
-  Map<String, dynamic> toMap() {
+  /// ✅ **إضافة `toJson` لتحويل الكائن إلى JSON**
+  Map<String, dynamic> toJson() {
     return {
       'id': id,
       'name': name,
@@ -86,35 +48,36 @@ class Student {
     };
   }
 
-  // ✅ تحويل Map إلى `Student`
-  factory Student.fromMap(Map<String, dynamic> map) {
+  /// ✅ **إضافة `fromJson` لتحويل JSON إلى كائن `Student`**
+  factory Student.fromJson(Map<String, dynamic> json) {
     return Student(
-      id: map['id'],
-      name: map['name'],
-      phone: map['phone'],
-      grade: map['grade'],
-      password: map['password'],
-      attended: map['attended'],
-      homeworkDone: map['homeworkDone'],
+      id: json['id'],
+      name: json['name'],
+      phone: json['phone'],
+      grade: json['grade'],
+      password: json['password'],
+      attended: json['attended'] ?? false,
+      homeworkDone: json['homeworkDone'] ?? false,
     );
   }
-  Student copyWith({bool? attended, bool? homeworkDone,
-    required String name,
-    required String phone,
-    required String grade,
-    required String password})
 
-  {
+  /// ✅ **إضافة `copyWith` لتحديث البيانات بسهولة**
+  Student copyWith({
+    String? name,
+    String? phone,
+    String? grade,
+    String? password,
+    bool? attended,
+    bool? homeworkDone,
+  }) {
     return Student(
-      id: id,
-      name: name,
-      phone: phone,
-      grade: grade,
-      password: password,
+      id: this.id,
+      name: name ?? this.name,
+      phone: phone ?? this.phone,
+      grade: grade ?? this.grade,
+      password: password ?? this.password,
       attended: attended ?? this.attended,
       homeworkDone: homeworkDone ?? this.homeworkDone,
     );
   }
-
-
 }

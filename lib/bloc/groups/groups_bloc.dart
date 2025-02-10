@@ -1,217 +1,81 @@
-
-/*import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive/hive.dart';
-import '../../models/group.dart';
-import '../../models/student.dart';
-import 'groups_event.dart';
-import 'groups_state.dart';
-
-class GroupsBloc extends Bloc<GroupsEvent, GroupsState> {
-  List<Group> groups = [];
-  final Box _groupsBox = Hive.box('groupsBox'); // ✅ صندوق تخزين المجموعات
-
-  GroupsBloc() : super(GroupsInitial()) {
-    on<LoadGroupsEvent>((event, emit) {
-      emit(GroupsLoading());
-      _loadGroupsFromHive();
-      emit(GroupsLoaded(groups));
-    });
-
-    on<AddGroupEvent>((event, emit) {
-      groups.add(event.group);
-      _saveGroupsToHive();
-      emit(GroupsLoaded(groups));
-    });
-
-    on<AddStudentToGroupEvent>((event, emit) {
-      final updatedGroups = groups.map((g) {
-        if (g.id == event.group.id) {
-          return g.copyWith(
-            students: List.from(g.students)
-              ..add(event.newStudent),
-          );
-        }
-        return g;
-      }).toList();
-
-      groups = updatedGroups;
-      _saveGroupsToHive(); // ✅ حفظ التعديلات في `Hive`
-      emit(
-          GroupsLoaded(List.from(groups))); // ✅ تحديث الواجهة فورًا بعد الإضافة
-    });
-
-    on<DeleteStudentFromGroupEvent>((event, emit) {
-      for (var g in groups) {
-        if (g.id == event.group.id) {
-          g.students.removeWhere((s) => s.id == event.student.id);
-        }
-      }
-      _saveGroupsToHive();
-      emit(GroupsLoaded(List.from(groups))); // ✅ تحديث الـ UI فورًا
-    });
-
-    on<DeleteAllGroupsEvent>((event, emit) {
-      groups.clear();
-      _saveGroupsToHive();
-      emit(GroupsLoaded(groups));
-    });
-
-    // ✅ تحديث بيانات الطالب داخل المجموعة
-    on<UpdateStudentInGroupEvent>((event, emit) {
-      final updatedGroups = groups.map((g) {
-        if (g.id == event.group.id) {
-          return g.copyWith(
-            students: g.students.map((s) {
-              return (s.id == event.updatedStudent.id)
-                  ? event.updatedStudent.copyWith()
-                  : s;
-            }).toList(),
-          );
-        }
-        return g;
-      }).toList();
-
-      groups = updatedGroups;
-      _saveGroupsToHive(); // ✅ حفظ التعديلات في `Hive`
-      emit(GroupsLoaded(List.from(groups))); // ✅ تحديث الواجهة فورًا
-    });
-
-
-    void _loadGroupsFromHive() {
-      final storedGroups = _groupsBox.get('groups', defaultValue: []);
-      if (storedGroups.isNotEmpty) {
-        groups = List<Group>.from(
-          storedGroups.map((g) => Group.fromMap(Map<String, dynamic>.from(g))),
-        );
-        emit(GroupsLoaded(groups));
-      }
-    }
-
-    void _saveGroupsToHive() {
-      final groupMaps = groups.map((g) => g.toMap()).toList();
-      _groupsBox.put('groups', groupMaps);
-    }
-  }
-}
-*/
-
-
-
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive/hive.dart';
+import '../../services/api_service.dart';
 import '../../models/group.dart';
-import '../../models/student.dart';
 import 'groups_event.dart';
 import 'groups_state.dart';
 
 class GroupsBloc extends Bloc<GroupsEvent, GroupsState> {
-  List<Group> groups = [];
-  final Box _groupsBox = Hive.box('groupsBox'); // ✅ صندوق تخزين المجموعات
+  final ApiService apiService;
+  List<Group> groups = []; // ✅ قائمة محلية للمجموعات
 
-  GroupsBloc() : super(GroupsInitial()) {
-    on<LoadGroupsEvent>((event, emit) {
-      emit(GroupsLoading());
-      _loadGroupsFromHive();
-      emit(GroupsLoaded(groups));
-    });
-
-    on<AddGroupEvent>((event, emit) {
-      groups.add(event.group);
-      _saveGroupsToHive();
-      emit(GroupsLoaded(groups));
-    });
-
-    on<AddStudentToGroupEvent>((event, emit) {
-      final updatedGroups = groups.map((g) {
-        if (g.id == event.group.id) {
-          return g.copyWith(
-            students: List.from(g.students)..add(event.newStudent),
-          );
-        }
-        return g;
-      }).toList();
-
-      groups = updatedGroups;
-      _saveGroupsToHive(); // ✅ حفظ التعديلات في `Hive`
-      emit(GroupsLoaded(List.from(groups))); // ✅ تحديث الواجهة فورًا بعد الإضافة
-    });
-
-    on<DeleteStudentFromGroupEvent>((event, emit) {
-      for (var g in groups) {
-        if (g.id == event.group.id) {
-          g.students.removeWhere((s) => s.id == event.student.id);
-        }
-      }
-      _saveGroupsToHive();
-      emit(GroupsLoaded(List.from(groups))); // ✅ تحديث الـ UI فورًا
-    });
-
-    on<DeleteAllGroupsEvent>((event, emit) {
-      groups.clear();
-      _saveGroupsToHive();
-      emit(GroupsLoaded(groups));
-    });
-
-
-    on<UpdateGroupEvent>((event, emit) {
-      final updatedGroups = groups.map((g) {
-        return g.id == event.updatedGroup.id ? event.updatedGroup : g;
-      }).toList();
-
-      groups = updatedGroups;
-      _saveGroupsToHive();
-      emit(GroupsLoaded(List.from(groups))); // ✅ تحديث الواجهة فورًا بعد التعديل
-    });
-
-    on<DeleteGroupEvent>((event, emit) {
-      groups.removeWhere((g) => g.id == event.group.id);
-      _saveGroupsToHive();
-      emit(GroupsLoaded(List.from(groups))); // ✅ تحديث الواجهة فورًا بعد الحذف
-    });
-
-
-
-    // ✅ تحديث بيانات الطالب داخل المجموعة
-    on<UpdateStudentInGroupEvent>((event, emit) {
-      final updatedGroups = groups.map((g) {
-        if (g.id == event.group.id) {
-          return g.copyWith(
-            students: g.students.map((s) {
-              return (s.id == event.updatedStudent.id)
-                  ? s.copyWith(
-                name: event.updatedStudent.name,
-                phone: event.updatedStudent.phone,
-                grade: event.updatedStudent.grade,
-                password: event.updatedStudent.password,
-                attended: event.updatedStudent.attended,
-                homeworkDone: event.updatedStudent.homeworkDone,
-              )
-                  : s;
-            }).toList(),
-          );
-        }
-        return g;
-      }).toList();
-
-      groups = updatedGroups;
-      _saveGroupsToHive(); // ✅ حفظ التعديلات في `Hive`
-      emit(GroupsLoaded(List.from(groups))); // ✅ تحديث الواجهة فورًا
-    });
+  GroupsBloc({required this.apiService}) : super(GroupsInitial()) {
+    on<LoadGroupsEvent>(_onLoadGroups);
+    on<AddGroupEvent>(_onAddGroup);
+    on<UpdateGroupEvent>(_onUpdateGroup);
+    on<DeleteGroupEvent>(_onDeleteGroup);
+    on<DeleteAllGroupsEvent>(_onDeleteAllGroups);
   }
 
-  void _loadGroupsFromHive() {
-    final storedGroups = _groupsBox.get('groups', defaultValue: []);
-    if (storedGroups.isNotEmpty) {
-      groups = List<Group>.from(
-        storedGroups.map((g) => Group.fromMap(Map<String, dynamic>.from(g))),
-      );
-      emit(GroupsLoaded(groups));
+  /// ✅ **تحميل جميع المجموعات من API**
+  Future<void> _onLoadGroups(LoadGroupsEvent event, Emitter<GroupsState> emit) async {
+    emit(GroupsLoading()); // 🔄 إظهار تحميل البيانات
+    try {
+      final response = await apiService.fetchGroups(); // ✅ جلب البيانات من API
+      groups = (response as List).map((g) => Group.fromJson(g as Map<String, dynamic>)).toList();
+      emit(GroupsLoaded(List.from(groups))); // ✅ تحديث الواجهة بالبيانات الجديدة
+    } catch (e) {
+      emit(GroupsError("❌ فشل تحميل المجموعات: $e")); // ❌ في حال فشل الاتصال
     }
   }
 
-  void _saveGroupsToHive() {
-    final groupMaps = groups.map((g) => g.toMap()).toList();
-    _groupsBox.put('groups', groupMaps);
+  /// ✅ **إضافة مجموعة جديدة**
+  Future<void> _onAddGroup(AddGroupEvent event, Emitter<GroupsState> emit) async {
+    try {
+      await apiService.createGroup(event.group); // ✅ إرسال البيانات إلى API
+      await _fetchUpdatedGroups(emit); // ✅ تحديث القائمة بعد الإضافة
+    } catch (e) {
+      emit(GroupsError("❌ فشل إضافة المجموعة: $e"));
+    }
+  }
+
+  /// ✅ **تحديث بيانات المجموعة**
+  Future<void> _onUpdateGroup(UpdateGroupEvent event, Emitter<GroupsState> emit) async {
+    try {
+      await apiService.updateGroup(event.group); // ✅ إرسال البيانات إلى API
+      await _fetchUpdatedGroups(emit); // ✅ تحديث القائمة بعد التعديل
+    } catch (e) {
+      emit(GroupsError("❌ فشل تحديث المجموعة: $e"));
+    }
+  }
+
+  /// ✅ **حذف مجموعة معينة**
+  Future<void> _onDeleteGroup(DeleteGroupEvent event, Emitter<GroupsState> emit) async {
+    try {
+      await apiService.deleteGroup(event.group.id); // ✅ حذف المجموعة عبر API
+      await _fetchUpdatedGroups(emit); // ✅ تحديث القائمة بعد الحذف
+    } catch (e) {
+      emit(GroupsError("❌ فشل حذف المجموعة: $e"));
+    }
+  }
+
+  /// ✅ **حذف جميع المجموعات**
+  Future<void> _onDeleteAllGroups(DeleteAllGroupsEvent event, Emitter<GroupsState> emit) async {
+    try {
+      await apiService.deleteAllGroups(); // ✅ إرسال طلب حذف كل البيانات
+      await _fetchUpdatedGroups(emit); // ✅ تحميل البيانات بعد الحذف
+    } catch (e) {
+      emit(GroupsError("❌ فشل حذف جميع المجموعات: $e"));
+    }
+  }
+
+  /// ✅ **جلب البيانات المحدثة من API**
+  Future<void> _fetchUpdatedGroups(Emitter<GroupsState> emit) async {
+    try {
+      final response = await apiService.fetchGroups();
+      groups = (response as List).map((g) => Group.fromJson(g as Map<String, dynamic>)).toList();
+      emit(GroupsLoaded(List.from(groups))); // ✅ تحديث القائمة بالبيانات الجديدة
+    } catch (e) {
+      emit(GroupsError("❌ فشل تحديث البيانات بعد الإضافة: $e"));
+    }
   }
 }
-

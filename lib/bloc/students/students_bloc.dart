@@ -1,49 +1,65 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive/hive.dart';
-import '../../models/student.dart';
-import '../groups/groups_event.dart';
+import '../../services/api_service.dart';
 import 'students_event.dart';
 import 'students_state.dart';
 
 class StudentsBloc extends Bloc<StudentsEvent, StudentsState> {
-  List<Student> students = [];
-  final Box _studentsBox = Hive.box('studentsBox'); // ✅ صندوق التخزين في Hive
+  final ApiService apiService;
 
-  StudentsBloc() : super(StudentsInitial()) {
-    _loadStudentsFromHive(); // ✅ تحميل الطلاب عند بدء التطبيق
-
-    on<LoadStudentsEvent>((event, emit) {
-      emit(StudentsLoading());
-      emit(StudentsLoaded(students));
-    });
-
-    on<AddStudentEvent>((event, emit) {
-      students.add(event.student);
-      _saveStudentsToHive(); // ✅ حفظ الطلاب في Hive بعد الإضافة
-      emit(StudentsLoaded(students));
-    });
-
-    on<DeleteAllStudentsEvent>((event, emit) {
-      students.clear(); // ✅ حذف جميع الطلاب من القائمة
-      _saveStudentsToHive(); // ✅ تحديث البيانات في `Hive`
-      emit(StudentsLoaded(students)); // ✅ تحديث الواجهة فورًا
-    });
-
-
+  StudentsBloc({required this.apiService}) : super(StudentsInitial()) {
+    on<LoadStudentsEvent>(_onLoadStudents);
+    on<AddStudentEvent>(_onAddStudent);
+    on<UpdateStudentEvent>(_onUpdateStudent);
+    on<DeleteStudentEvent>(_onDeleteStudent);
+    on<DeleteAllStudentsEvent>(_onDeleteAllStudents);
   }
 
-  // ✅ استرجاع بيانات الطلاب عند بدء التطبيق
-  void _loadStudentsFromHive() {
-    final storedStudents = _studentsBox.get('students', defaultValue: []);
-    if (storedStudents.isNotEmpty) {
-      students = List<Student>.from(storedStudents.map((s) => Student.fromMap(Map<String, dynamic>.from(s))));
+  Future<void> _onLoadStudents(LoadStudentsEvent event, Emitter<StudentsState> emit) async {
+    emit(StudentsLoading());
+    try {
+      final students = await apiService.fetchStudents();
       emit(StudentsLoaded(students));
+    } catch (e) {
+      emit(StudentsError("❌ فشل تحميل الطلاب: $e"));
     }
   }
 
-  // ✅ حفظ بيانات الطلاب في Hive
-  void _saveStudentsToHive() {
-    final studentMaps = students.map((s) => s.toMap()).toList();
-    _studentsBox.put('students', studentMaps);
+  Future<void> _onAddStudent(AddStudentEvent event, Emitter<StudentsState> emit) async {
+    try {
+      await apiService.createStudent(event.student);
+      final students = await apiService.fetchStudents();
+      emit(StudentsLoaded(students));
+    } catch (e) {
+      emit(StudentsError("❌ فشل إضافة الطالب: $e"));
+    }
+  }
+
+  Future<void> _onUpdateStudent(UpdateStudentEvent event, Emitter<StudentsState> emit) async {
+    try {
+      await apiService.updateStudent(event.student);
+      final students = await apiService.fetchStudents();
+      emit(StudentsLoaded(students));
+    } catch (e) {
+      emit(StudentsError("❌ فشل تحديث بيانات الطالب: $e"));
+    }
+  }
+
+  Future<void> _onDeleteStudent(DeleteStudentEvent event, Emitter<StudentsState> emit) async {
+    try {
+      await apiService.deleteStudent(event.student.id); // ✅ تأكد من استخدام `id`
+      final students = await apiService.fetchStudents();
+      emit(StudentsLoaded(students));
+    } catch (e) {
+      emit(StudentsError("❌ فشل حذف الطالب: $e"));
+    }
+  }
+
+  Future<void> _onDeleteAllStudents(DeleteAllStudentsEvent event, Emitter<StudentsState> emit) async {
+    try {
+      await apiService.deleteAllStudents();
+      emit(StudentsLoaded([]));
+    } catch (e) {
+      emit(StudentsError("❌ فشل حذف جميع الطلاب: $e"));
+    }
   }
 }

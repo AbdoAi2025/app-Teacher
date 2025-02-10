@@ -1,17 +1,32 @@
-abstract class AuthState {}
+import 'package:equatable/equatable.dart';
 
-class AuthInitial extends AuthState {}
-
-class AuthLoading extends AuthState {}
-
-class Authenticated extends AuthState {
-  final String username;
-  final String email;
-
-  Authenticated(this.username, this.email);
+abstract class AuthState extends Equatable {
+  @override
+  List<Object> get props => [];
 }
 
-class AuthError extends AuthState {
-  final String message;
-  AuthError(this.message);
+// ✅ الحالة الأولية عند بدء التطبيق
+class AuthInitial extends AuthState {}
+
+// ✅ الحالة عند تحميل البيانات أثناء تسجيل الدخول
+class AuthLoading extends AuthState {}
+
+// ✅ الحالة عند نجاح تسجيل الدخول
+class AuthSuccess extends AuthState {
+  final String token;
+
+  AuthSuccess(this.token); // ✅ استخدم معامل موضعي بدلاً من معامل مسمى
+
+  @override
+  List<Object> get props => [token];
+}
+
+// ✅ الحالة عند فشل تسجيل الدخول
+class AuthFailure extends AuthState {
+  final String error;
+
+  AuthFailure(this.error); // ✅ استخدم معامل موضعي بدلاً من معامل مسمى
+
+  @override
+  List<Object> get props => [error];
 }

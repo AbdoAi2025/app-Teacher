@@ -69,7 +69,13 @@ class _EditStudentScreenState extends State<EditStudentScreen> {
   Widget _buildTextField(TextEditingController controller, String label) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
-      child: TextField(controller: controller, decoration: InputDecoration(labelText: label)),
+      child: TextField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(),
+        ),
+      ),
     );
   }
 }

@@ -36,6 +36,9 @@ class UpdateGroupEvent extends GroupsEvent {
   final Group updatedGroup;
 
   UpdateGroupEvent(this.updatedGroup);
+
+  get group => null;
+
 }
 
 class DeleteGroupEvent extends GroupsEvent {

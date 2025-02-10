@@ -1,7 +1,7 @@
 import 'package:hive/hive.dart';
 import 'student.dart';
 
-part 'group.g.dart'; // ✅ تأكد من أن هذا السطر مضاف
+part 'group.g.dart'; // ✅ تأكد من أن هذا السطر موجود لإنشاء ملف Hive Adapter
 
 @HiveType(typeId: 0) // ✅ تعريف HiveType
 class Group {
@@ -18,7 +18,7 @@ class Group {
   final String classroom;
 
   @HiveField(4)
-  late final List<Student> students;
+  final List<Student> students;
 
   Group({
     required this.id,
@@ -28,6 +28,7 @@ class Group {
     required this.students,
   });
 
+  /// ✅ **إضافة `copyWith` لتحديث البيانات بسهولة**
   Group copyWith({
     String? id,
     String? name,
@@ -44,24 +45,26 @@ class Group {
     );
   }
 
-  Map<String, dynamic> toMap() {
+  /// ✅ **إضافة `toJson` لتحويل `Group` إلى JSON**
+  Map<String, dynamic> toJson() {
     return {
       'id': id,
       'name': name,
       'startTime': startTime.toIso8601String(),
       'classroom': classroom,
-      'students': students.map((s) => s.toMap()).toList(),
+      'students': students.map((s) => s.toJson()).toList(),
     };
   }
 
-  factory Group.fromMap(Map<String, dynamic> map) {
+  /// ✅ **إضافة `fromJson` لتحويل JSON إلى `Group`**
+  factory Group.fromJson(Map<String, dynamic> json) {
     return Group(
-      id: map['id'],
-      name: map['name'],
-      startTime: DateTime.parse(map['startTime']),
-      classroom: map['classroom'],
-      students: (map['students'] as List<dynamic>)
-          .map((s) => Student.fromMap(Map<String, dynamic>.from(s)))
+      id: json['id'],
+      name: json['name'],
+      startTime: DateTime.parse(json['startTime']),
+      classroom: json['classroom'],
+      students: (json['students'] as List<dynamic>)
+          .map((s) => Student.fromJson(Map<String, dynamic>.from(s)))
           .toList(),
     );
   }
