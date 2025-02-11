@@ -198,57 +198,7 @@ class ApiService {
   }
 
 
-  Future<String> addTeacher(String name, String username, String password) async {
-    try {
-      Response response = await _dio.post(
-        '/api/v1/teachers/add',
-        data: {
-          "name": name,
-          "username": username,
-          "password": password,
-        },
-      );
 
-      print("📢 استجابة API: ${response.data}");
-
-      if (response.statusCode == 200 && response.data.containsKey('accessToken')) {
-        String token = response.data['accessToken'];
-        updateAuthToken(token); // ✅ حفظ التوكن بعد إنشاء الحساب
-        return token;
-      } else {
-        throw Exception("❌ استجابة غير متوقعة من السيرفر: ${response.data}");
-      }
-    } on DioException catch (e) {
-      print("❌ خطأ في الطلب: ${e.response?.data}");
-      throw Exception("❌ فشل إضافة المعلم: ${e.response?.data ?? e.toString()}");
-    }
-  }
-
-
-
-// ✅ تسجيل مستخدم جديد وجلب التوكن
-  Future<String> signUp(String username, String email, String password, int roleId) async {
-    try {
-      Response response = await _dio.post('/api/v1/users/signup', data: {
-        "username": username,
-        "email": email,
-        "password": password,
-        roleId: roleId, // تأكد أن الـ roleId صحيح
-      });
-
-      print("📢 استجابة API عند التسجيل: ${response.data}");
-
-      if (response.statusCode == 200 && response.data.containsKey('accessToken')) {
-        String token = response.data['accessToken'];
-        updateAuthToken(token); // حفظ التوكن
-        return token;
-      } else {
-        throw Exception("❌ فشل تسجيل الحساب: استجابة غير متوقعة من السيرفر");
-      }
-    } catch (e) {
-      throw Exception("❌ فشل تسجيل الحساب: $e");
-    }
-  }
   // ✅ تسجيل الدخول وجلب التوكن
   Future<String?> login(String username, String password) async {
     try {
@@ -298,7 +248,7 @@ class ApiService {
   // ✅ جلب جميع الطلاب
   Future<List<Student>> fetchStudents() async {
     try {
-      Response response = await _dio.get('/students');
+      Response response = await _dio.get('/api/v1/students/myStudents');
       return (response.data as List).map((s) => Student.fromJson(s)).toList();
     } catch (e) {
       throw Exception("فشل في جلب بيانات الطلاب");
@@ -308,7 +258,7 @@ class ApiService {
   // ✅ إضافة طالب جديد
   Future<void> createStudent(Student student) async {
     try {
-      await _dio.post('/students', data: student.toJson());
+      await _dio.post('/api/v1/students/add', data: student.toJson());
     } catch (e) {
       throw Exception("فشل في إضافة الطالب");
     }
@@ -317,7 +267,7 @@ class ApiService {
   // ✅ تحديث بيانات طالب
   Future<void> updateStudent(Student student) async {
     try {
-      await _dio.put('/students/${student.id}', data: student.toJson());
+      await _dio.put('/api/v1/students/update/${student.id}', data: student.toJson());
     } catch (e) {
       throw Exception("فشل في تحديث بيانات الطالب");
     }
@@ -344,18 +294,20 @@ class ApiService {
   // ✅ جلب جميع المجموعات
   Future<List<Group>> fetchGroups() async {
     try {
-      Response response = await _dio.get('/groups');
-      return (response.data as List).map((g) =>
-          Group.fromJson(g as Map<String, dynamic>)).toList();
+      Response response = await _dio.get('/api/v1/groups/myGroups');
+      print("📢 البيانات المسترجعة من API: ${response.data}");  // ✅ طباعة بيانات API
+      return (response.data as List).map((g) => Group.fromJson(g)).toList();
     } catch (e) {
-      throw Exception("❌ فشل في جلب بيانات المجموعات: $e");
+      print("❌ خطأ أثناء جلب المجموعات: $e");
+      throw Exception("❌ فشل في جلب بيانات المجموعات");
     }
   }
+
 
   // ✅ إضافة مجموعة جديدة
   Future<void> createGroup(Group group) async {
     try {
-      await _dio.post('/groups', data: group.toJson());
+      await _dio.post('/api/v1/groups/add', data: group.toJson());
     } catch (e) {
       throw Exception("فشل في إضافة المجموعة");
     }
@@ -364,7 +316,7 @@ class ApiService {
   // ✅ تحديث بيانات مجموعة
   Future<void> updateGroup(Group group) async {
     try {
-      await _dio.put('/groups/${group.id}', data: group.toJson());
+      await _dio.put('/api/v1/groups/update/${group.id}', data: group.toJson());
     } catch (e) {
       throw Exception("فشل في تحديث بيانات المجموعة");
     }

@@ -1,4 +1,4 @@
-import 'package:hive/hive.dart';
+/*import 'package:hive/hive.dart';
 import 'student.dart';
 
 part 'group.g.dart'; // ✅ تأكد من أن هذا السطر موجود لإنشاء ملف Hive Adapter
@@ -67,5 +67,66 @@ class Group {
           .map((s) => Student.fromJson(Map<String, dynamic>.from(s)))
           .toList(),
     );
+  }
+}
+*/
+
+
+
+import 'package:hive/hive.dart';
+import 'package:teacher_app/models/student.dart';
+
+
+@HiveType(typeId: 1) // تعريف HiveType
+class Group {
+  @HiveField(0)
+  final String id;
+
+  @HiveField(1)
+  final String name;
+
+  @HiveField(2)
+  final List<Student> studentsIds;
+
+  @HiveField(3)
+  final int day;
+
+  @HiveField(4)
+  final String timeFrom;
+
+  @HiveField(5)
+  final String timeTo;
+
+  Group({
+    required this.id,
+    required this.name,
+    required this.studentsIds,
+    required this.day,
+    required this.timeFrom,
+    required this.timeTo,
+  });
+
+  /// ✅ **تحويل `JSON` إلى `Group`**
+  factory Group.fromJson(Map<String, dynamic> json) {
+    return Group(
+      id: json['id'] ?? '',
+      name: json['name'] ?? '',
+      studentsIds: List<Student>.from(json['studentsIds'] ?? []),
+      day: json['day'] ?? 0,
+      timeFrom: json['timeFrom'] ?? '',
+      timeTo: json['timeTo'] ?? '',
+    );
+  }
+
+  /// ✅ **تحويل `Group` إلى `JSON`**
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'studentsIds': studentsIds,
+      'day': day,
+      'timeFrom': timeFrom,
+      'timeTo': timeTo,
+    };
   }
 }

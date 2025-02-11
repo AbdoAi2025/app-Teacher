@@ -1,4 +1,4 @@
-// GENERATED CODE - DO NOT MODIFY BY HAND
+/*// GENERATED CODE - DO NOT MODIFY BY HAND
 
 part of 'group.dart';
 
@@ -51,3 +51,4 @@ class GroupAdapter extends TypeAdapter<Group> {
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
+*/

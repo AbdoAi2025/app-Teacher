@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../bloc/groups/groups_bloc.dart';
-import '../bloc/groups/groups_event.dart';
-import '../models/group.dart';
+import '../bloc/students/students_bloc.dart';
+import '../bloc/students/students_event.dart';
 import '../models/student.dart';
 
 class EditStudentScreen extends StatefulWidget {
-  final Group group;
   final Student student;
 
-  EditStudentScreen({required this.group, required this.student});
+  EditStudentScreen({required this.student});
 
   @override
   _EditStudentScreenState createState() => _EditStudentScreenState();
@@ -18,17 +16,40 @@ class EditStudentScreen extends StatefulWidget {
 class _EditStudentScreenState extends State<EditStudentScreen> {
   late TextEditingController _nameController;
   late TextEditingController _phoneController;
-  late TextEditingController _gradeController;
-  late TextEditingController _passwordController;
+  late TextEditingController _parentPhoneController;
+  int? _selectedGradeId;
+  late TextEditingController _passwordController ;
 
   @override
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.student.name);
     _phoneController = TextEditingController(text: widget.student.phone);
-    _gradeController = TextEditingController(text: widget.student.grade);
-    _passwordController = TextEditingController(text: widget.student.password);
+    _parentPhoneController = TextEditingController(text: widget.student.parentPhone);
+    _selectedGradeId = widget.student.gradeId as int?;// ✅ استخدم الـ ID بدلاً من كائن `Grade`
+    _passwordController=TextEditingController(text: widget.student.password);
   }
+
+  void _saveChanges() {
+    if (_nameController.text.isNotEmpty && _phoneController.text.isNotEmpty && _selectedGradeId != null) {
+      Student updatedStudent = Student(
+        id: widget.student.id, // ✅ استخدام ID الطالب الحالي
+        name: _nameController.text,
+        phone: _phoneController.text,
+        parentPhone: _parentPhoneController.text,
+        password: _passwordController.text,
+        gradeId: _selectedGradeId!,
+        accessToken: widget.student.accessToken, // ✅ الاحتفاظ بالتوكن كما هو
+      );
+
+      BlocProvider.of<StudentsBloc>(context).add(UpdateStudentEvent(
+          studentId: updatedStudent.id, // ✅ تمرير `studentId` الصحيح
+        updatedStudent: updatedStudent));
+
+      Navigator.pop(context);
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -40,24 +61,11 @@ class _EditStudentScreenState extends State<EditStudentScreen> {
           children: [
             _buildTextField(_nameController, "اسم الطالب"),
             _buildTextField(_phoneController, "رقم الهاتف"),
-            _buildTextField(_gradeController, "الصف الدراسي"),
-            _buildTextField(_passwordController, "كلمة المرور"),
+            _buildTextField(_parentPhoneController, "رقم ولي الأمر"),
+            _buildDropdownField("اختر الصف الدراسي"),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                BlocProvider.of<GroupsBloc>(context).add(
-                  UpdateStudentInGroupEvent(
-                    widget.group,
-                    widget.student.copyWith(
-                      name: _nameController.text,
-                      phone: _phoneController.text,
-                      grade: _gradeController.text,
-                      password: _passwordController.text,
-                    ),
-                  ),
-                );
-                Navigator.pop(context);
-              },
+              onPressed: _saveChanges,
               child: Text("حفظ التعديلات"),
             ),
           ],
@@ -75,6 +83,29 @@ class _EditStudentScreenState extends State<EditStudentScreen> {
           labelText: label,
           border: OutlineInputBorder(),
         ),
+      ),
+    );
+  }
+
+  Widget _buildDropdownField(String label) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: DropdownButtonFormField<int>(
+        value: _selectedGradeId,
+        onChanged: (value) {
+          setState(() {
+            _selectedGradeId = value;
+          });
+        },
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(),
+        ),
+        items: [
+          DropdownMenuItem(value: 1073741824, child: Text("الصف الأول")),
+          DropdownMenuItem(value: 1073741825, child: Text("الصف الثاني")),
+          DropdownMenuItem(value: 1073741826, child: Text("الصف الثالث")),
+        ],
       ),
     );
   }

@@ -18,20 +18,27 @@ class GroupsBloc extends Bloc<GroupsEvent, GroupsState> {
 
   /// ✅ **تحميل جميع المجموعات من API**
   Future<void> _onLoadGroups(LoadGroupsEvent event, Emitter<GroupsState> emit) async {
-    emit(GroupsLoading()); // 🔄 إظهار تحميل البيانات
+    emit(GroupsLoading());
     try {
-      final response = await apiService.fetchGroups(); // ✅ جلب البيانات من API
-      groups = (response as List).map((g) => Group.fromJson(g as Map<String, dynamic>)).toList();
-      emit(GroupsLoaded(List.from(groups))); // ✅ تحديث الواجهة بالبيانات الجديدة
+      final groups = await apiService.fetchGroups();
+      print("✅ تم تحميل المجموعات بنجاح: $groups"); // ✅ طباعة البيانات بعد التحميل
+      emit(GroupsLoaded(groups));
     } catch (e) {
-      emit(GroupsError("❌ فشل تحميل المجموعات: $e")); // ❌ في حال فشل الاتصال
+      print("❌ خطأ أثناء تحميل المجموعات: $e");
+      emit(GroupsError("❌ فشل تحميل المجموعات: $e")); // ✅ إرسال رسالة خطأ واضحة
     }
   }
+
 
   /// ✅ **إضافة مجموعة جديدة**
   Future<void> _onAddGroup(AddGroupEvent event, Emitter<GroupsState> emit) async {
     try {
       await apiService.createGroup(event.group); // ✅ إرسال البيانات إلى API
+
+      final groups = await apiService.fetchGroups(); // ✅ تحديث القائمة بعد الإضافة
+
+      emit(GroupsLoaded(groups)); // ✅ تحديث الحالة بـ المجموعات الجديدة
+
       await _fetchUpdatedGroups(emit); // ✅ تحديث القائمة بعد الإضافة
     } catch (e) {
       emit(GroupsError("❌ فشل إضافة المجموعة: $e"));
@@ -41,17 +48,18 @@ class GroupsBloc extends Bloc<GroupsEvent, GroupsState> {
   /// ✅ **تحديث بيانات المجموعة**
   Future<void> _onUpdateGroup(UpdateGroupEvent event, Emitter<GroupsState> emit) async {
     try {
-      await apiService.updateGroup(event.group); // ✅ إرسال البيانات إلى API
+      await apiService.updateGroup(event.updatedGroup); // ✅ استخدام `updatedGroup` بدلاً من `group`
       await _fetchUpdatedGroups(emit); // ✅ تحديث القائمة بعد التعديل
     } catch (e) {
       emit(GroupsError("❌ فشل تحديث المجموعة: $e"));
     }
   }
 
+
   /// ✅ **حذف مجموعة معينة**
   Future<void> _onDeleteGroup(DeleteGroupEvent event, Emitter<GroupsState> emit) async {
     try {
-      await apiService.deleteGroup(event.group.id); // ✅ حذف المجموعة عبر API
+      await apiService.deleteGroup(event.groupId); // ✅ حذف المجموعة عبر API
       await _fetchUpdatedGroups(emit); // ✅ تحديث القائمة بعد الحذف
     } catch (e) {
       emit(GroupsError("❌ فشل حذف المجموعة: $e"));

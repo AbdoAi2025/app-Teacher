@@ -12,7 +12,7 @@ class GroupTile extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       child: ListTile(
         title: Text(group.name ?? "مجموعة بدون اسم"),
-        subtitle: Text("الصف: ${group.classroom}"),
+      //  subtitle: Text("الصف: ${group.classroom}"),
         trailing: Icon(Icons.arrow_forward),
         onTap: () {
           // هنا يمكنك توجيه المستخدم إلى تفاصيل المجموعة

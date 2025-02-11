@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/groups/groups_bloc.dart';
 import '../bloc/groups/groups_event.dart';
 import '../models/group.dart';
-import '../models/student.dart';
 
 class CreateGroupScreen extends StatefulWidget {
   @override
@@ -12,64 +11,45 @@ class CreateGroupScreen extends StatefulWidget {
 
 class _CreateGroupScreenState extends State<CreateGroupScreen> {
   final TextEditingController _nameController = TextEditingController();
-  DateTime? _selectedDateTime;
-  String? _selectedClassroom;
+  int? _selectedDay;
+  TimeOfDay? _selectedTimeFrom;
+  TimeOfDay? _selectedTimeTo;
 
-  void _pickDateTime() async {
-    DateTime? pickedDate = await showDatePicker(
+  void _pickTime(bool isStart) async {
+    TimeOfDay? pickedTime = await showTimePicker(
       context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime(2100),
+      initialTime: TimeOfDay.now(),
     );
 
-    if (pickedDate != null) {
-      TimeOfDay? pickedTime = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.now(),
-      );
-
-      if (pickedTime != null) {
-        setState(() {
-          _selectedDateTime = DateTime(
-            pickedDate.year,
-            pickedDate.month,
-            pickedDate.day,
-            pickedTime.hour,
-            pickedTime.minute,
-          );
-        });
-      }
+    if (pickedTime != null) {
+      setState(() {
+        if (isStart) {
+          _selectedTimeFrom = pickedTime;
+        } else {
+          _selectedTimeTo = pickedTime;
+        }
+      });
     }
   }
 
-  void _selectClassroom() {
+  void _selectDay() {
     showModalBottomSheet(
       context: context,
       builder: (context) {
         return Container(
-          height: 200,
+          height: 300,
           child: Column(
-            children: [
-              ListTile(
-                title: Text("الصف الأول"),
+            children: List.generate(7, (index) {
+              return ListTile(
+                title: Text("اليوم ${index + 1}"),
                 onTap: () {
                   setState(() {
-                    _selectedClassroom = "الصف الأول";
+                    _selectedDay = index + 1; // API يتعامل مع الأيام بأرقام 1-7
                   });
                   Navigator.pop(context);
                 },
-              ),
-              ListTile(
-                title: Text("الصف الثاني"),
-                onTap: () {
-                  setState(() {
-                    _selectedClassroom = "الصف الثاني";
-                  });
-                  Navigator.pop(context);
-                },
-              ),
-            ],
+              );
+            }),
           ),
         );
       },
@@ -77,20 +57,20 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   }
 
   void _saveGroup() {
-    if (_selectedDateTime != null && _selectedClassroom != null) {
+    if (_selectedDay != null && _selectedTimeFrom != null && _selectedTimeTo != null) {
       final newGroup = Group(
-        id: DateTime.now().toString(),
-        name: _nameController.text.isEmpty ? null : _nameController.text,
-        startTime: _selectedDateTime!,
-        classroom: _selectedClassroom!,
-        students: [], // ✅ تأكد من أن القائمة فارغة عند إنشاء المجموعة
+        id: "", // سيُنشأ في الـ API
+        name: _nameController.text.isEmpty ? "بدون اسم" : _nameController.text,
+        studentsIds: [], // ✅ API يحتاج قائمة `studentsIds`
+        day: _selectedDay!,
+        timeFrom: "${_selectedTimeFrom!.hour}:${_selectedTimeFrom!.minute}",
+        timeTo: "${_selectedTimeTo!.hour}:${_selectedTimeTo!.minute}",
       );
 
       BlocProvider.of<GroupsBloc>(context).add(AddGroupEvent(newGroup));
       Navigator.pop(context);
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -106,13 +86,18 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
             ),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: _pickDateTime,
-              child: Text(_selectedDateTime == null ? "اختر وقت الدرس" : "${_selectedDateTime!.toLocal()}"),
+              onPressed: _selectDay,
+              child: Text(_selectedDay == null ? "اختر يوم الدرس" : "اليوم $_selectedDay"),
             ),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: _selectClassroom,
-              child: Text(_selectedClassroom ?? "اختر الصف الدراسي"),
+              onPressed: () => _pickTime(true),
+              child: Text(_selectedTimeFrom == null ? "اختر وقت البدء" : "${_selectedTimeFrom!.format(context)}"),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () => _pickTime(false),
+              child: Text(_selectedTimeTo == null ? "اختر وقت الانتهاء" : "${_selectedTimeTo!.format(context)}"),
             ),
             SizedBox(height: 20),
             ElevatedButton(
@@ -125,3 +110,6 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
     );
   }
 }
+
+
+//✅ تحديث Student لإضافة attended و homeworkDone

@@ -91,7 +91,7 @@ void main() async {
   // ✅ تهيئة Hive وتخزين التوكن
   await Hive.initFlutter();
   await AuthStorage.init(); // ✅ تهيئة Hive
-  Hive.registerAdapter(GroupAdapter());
+ // Hive.registerAdapter(GroupAdapter());
   Hive.registerAdapter(StudentAdapter());
   await Hive.openBox('authBox'); // ✅ فتح صندوق المستخدم
   await Hive.openBox('groupsBox'); // ✅ فتح صندوق المجموعات

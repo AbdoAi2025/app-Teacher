@@ -1,4 +1,3 @@
-import 'package:teacher_app/models/group.dart';
 import '../../models/student.dart';
 
 abstract class StudentsEvent {}
@@ -11,20 +10,21 @@ class AddStudentEvent extends StudentsEvent {
 }
 
 class UpdateStudentEvent extends StudentsEvent {
-  final Student student;
-  UpdateStudentEvent(this.student);
+  final String studentId; // ✅ تحديد الطالب المحدث بوضوح
+  final Student updatedStudent;
+  UpdateStudentEvent({required this.studentId, required this.updatedStudent});
 }
 
 class DeleteStudentEvent extends StudentsEvent {
-  final Student student;
-  DeleteStudentEvent(this.student);
+  final String studentId; // ✅ حذف الطالب عبر `studentId`
+  DeleteStudentEvent(this.studentId);
 }
 
 class DeleteAllStudentsEvent extends StudentsEvent {}
 
 class DeleteStudentsEventFromStudentsList extends StudentsEvent {
-  final Group group;
-  final Student student;
+  final String groupId;
+  final String studentId;
 
-  DeleteStudentsEventFromStudentsList(this.group, this.student);
+  DeleteStudentsEventFromStudentsList({required this.groupId, required this.studentId});
 }

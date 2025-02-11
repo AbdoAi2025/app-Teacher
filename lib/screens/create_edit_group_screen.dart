@@ -15,88 +15,45 @@ class CreateEditGroupScreen extends StatefulWidget {
 
 class _CreateEditGroupScreenState extends State<CreateEditGroupScreen> {
   final TextEditingController _nameController = TextEditingController();
-  DateTime? _selectedDateTime;
+  final TextEditingController _timeFromController = TextEditingController();
+  final TextEditingController _timeToController = TextEditingController();
+
   String? _selectedClassroom;
+  int? _selectedDay;
 
   @override
   void initState() {
     super.initState();
     if (widget.group != null) {
       _nameController.text = widget.group!.name ?? "";
-      _selectedDateTime = widget.group!.startTime;
-      _selectedClassroom = widget.group!.classroom;
+      _selectedDay = widget.group!.day;
+      _timeFromController.text = widget.group!.timeFrom;
+      _timeToController.text = widget.group!.timeTo;
     }
   }
 
-  void _pickDateTime() async {
-    DateTime? pickedDate = await showDatePicker(
+  void _selectTime(TextEditingController controller) async {
+    TimeOfDay? pickedTime = await showTimePicker(
       context: context,
-      initialDate: _selectedDateTime ?? DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime(2100),
+      initialTime: TimeOfDay.now(),
     );
 
-    if (pickedDate != null) {
-      TimeOfDay? pickedTime = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.now(),
-      );
-
-      if (pickedTime != null) {
-        setState(() {
-          _selectedDateTime = DateTime(
-            pickedDate.year,
-            pickedDate.month,
-            pickedDate.day,
-            pickedTime.hour,
-            pickedTime.minute,
-          );
-        });
-      }
+    if (pickedTime != null) {
+      setState(() {
+        controller.text = "${pickedTime.hour}:${pickedTime.minute}";
+      });
     }
-  }
-
-  void _selectClassroom() {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return Container(
-          height: 200,
-          child: Column(
-            children: [
-              ListTile(
-                title: Text("الصف الأول"),
-                onTap: () {
-                  setState(() {
-                    _selectedClassroom = "الصف الأول";
-                  });
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                title: Text("الصف الثاني"),
-                onTap: () {
-                  setState(() {
-                    _selectedClassroom = "الصف الثاني";
-                  });
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
   }
 
   void _saveGroup() {
-    if (_selectedDateTime != null && _selectedClassroom != null) {
+    if (_selectedDay != null && _selectedClassroom != null && _timeFromController.text.isNotEmpty && _timeToController.text.isNotEmpty) {
       final newGroup = Group(
         id: widget.group?.id ?? DateTime.now().toString(),
-        name: _nameController.text.isEmpty ? null : _nameController.text,
-        startTime: _selectedDateTime!,
-        classroom: _selectedClassroom!,
-        students: widget.group?.students ?? [],
+        name: _nameController.text.isEmpty ?"بدون اسم": _nameController.text,
+        day: _selectedDay!,
+        timeFrom: _timeFromController.text,
+        timeTo: _timeToController.text,
+        studentsIds: [],
       );
 
       if (widget.group == null) {
@@ -111,7 +68,7 @@ class _CreateEditGroupScreenState extends State<CreateEditGroupScreen> {
 
   void _deleteGroup() {
     if (widget.group != null) {
-      BlocProvider.of<GroupsBloc>(context).add(DeleteGroupEvent(widget.group!));
+      BlocProvider.of<GroupsBloc>(context).add(DeleteGroupEvent(widget.group! as String));
       Navigator.pop(context);
     }
   }
@@ -129,20 +86,56 @@ class _CreateEditGroupScreenState extends State<CreateEditGroupScreen> {
               decoration: InputDecoration(labelText: "اسم المجموعة (اختياري)"),
             ),
             SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _pickDateTime,
-              child: Text(_selectedDateTime == null ? "اختر وقت الدرس" : "${_selectedDateTime!.toLocal()}"),
+
+            /// ✅ اختيار اليوم من القائمة المنسدلة
+            DropdownButtonFormField<int>(
+              value: _selectedDay,
+              onChanged: (value) => setState(() => _selectedDay = value),
+              decoration: InputDecoration(labelText: "اختر اليوم"),
+              items: List.generate(
+                7,
+                    (index) => DropdownMenuItem(
+                  value: index,
+                  child: Text(_getDayName(index)),
+                ),
+              ),
             ),
             SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _selectClassroom,
-              child: Text(_selectedClassroom ?? "اختر الصف الدراسي"),
+
+            /// ✅ اختيار الصف الدراسي
+            DropdownButtonFormField<String>(
+              value: _selectedClassroom,
+              onChanged: (value) => setState(() => _selectedClassroom = value),
+              decoration: InputDecoration(labelText: "اختر الصف الدراسي"),
+              items: ["الصف الأول", "الصف الثاني"]
+                  .map((classroom) => DropdownMenuItem(value: classroom, child: Text(classroom)))
+                  .toList(),
             ),
             SizedBox(height: 20),
+
+            /// ✅ اختيار وقت البداية
+            TextField(
+              controller: _timeFromController,
+              readOnly: true,
+              decoration: InputDecoration(labelText: "وقت البداية"),
+              onTap: () => _selectTime(_timeFromController),
+            ),
+            SizedBox(height: 20),
+
+            /// ✅ اختيار وقت النهاية
+            TextField(
+              controller: _timeToController,
+              readOnly: true,
+              decoration: InputDecoration(labelText: "وقت النهاية"),
+              onTap: () => _selectTime(_timeToController),
+            ),
+            SizedBox(height: 20),
+
             ElevatedButton(
               onPressed: _saveGroup,
               child: Text(widget.group == null ? "حفظ المجموعة" : "تحديث المجموعة"),
             ),
+
             if (widget.group != null) ...[
               SizedBox(height: 20),
               ElevatedButton(
@@ -155,5 +148,11 @@ class _CreateEditGroupScreenState extends State<CreateEditGroupScreen> {
         ),
       ),
     );
+  }
+
+  /// ✅ **تحويل `day` من رقم إلى اسم اليوم**
+  String _getDayName(int day) {
+    const days = ["الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"];
+    return days[day % 7];
   }
 }

@@ -20,10 +20,12 @@ class StudentAdapter extends TypeAdapter<Student> {
       id: fields[0] as String,
       name: fields[1] as String,
       phone: fields[2] as String,
-      grade: fields[3] as String,
-      password: fields[4] as String,
-      attended: fields[5] as bool,
-      homeworkDone: fields[6] as bool,
+      parentPhone:fields[3]as String,
+      gradeId:fields[4] as int,
+      password: fields[5] as String,
+      attended: fields[6] as bool,
+      homeworkDone: fields[7] as bool,
+        accessToken:fields[8]as String,
     );
   }
 
@@ -38,7 +40,6 @@ class StudentAdapter extends TypeAdapter<Student> {
       ..writeByte(2)
       ..write(obj.phone)
       ..writeByte(3)
-      ..write(obj.grade)
       ..writeByte(4)
       ..write(obj.password)
       ..writeByte(5)
@@ -57,3 +58,5 @@ class StudentAdapter extends TypeAdapter<Student> {
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
+
+
