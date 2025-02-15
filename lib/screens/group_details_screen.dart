@@ -79,15 +79,19 @@ class GroupDetailsScreen extends StatelessWidget {
 
   /// ✅ **عرض قائمة الطلاب**
   Widget _buildStudentList(Group updatedGroup) {
-    return updatedGroup.studentsIds.isEmpty
-        ? Center(child: Text("❌ لا يوجد طلاب في هذه المجموعة ❌", style: TextStyle(fontSize: 18)))
-        : ListView.builder(
-      itemCount: updatedGroup.studentsIds.length,
-      itemBuilder: (context, index) {
-        final student = updatedGroup.studentsIds[index];
-        return _buildStudentTile(context, updatedGroup.id, student);
-      },
-    );
+
+    return Center(child: Text("❌ لا يوجد طلاب في هذه المجموعة ❌", style: TextStyle(fontSize: 18)));
+
+    //
+    // return updatedGroup.studentsIds.isEmpty
+    //     ? Center(child: Text("❌ لا يوجد طلاب في هذه المجموعة ❌", style: TextStyle(fontSize: 18)))
+    //     : ListView.builder(
+    //   itemCount: updatedGroup.studentsIds.length,
+    //   itemBuilder: (context, index) {
+    //     final student = updatedGroup.studentsIds[index];
+    //     return _buildStudentTile(context, updatedGroup.id, student);
+    //   },
+    // );
   }
 
   /// ✅ **عرض معلومات الطالب مع خيارات الحضور والواجب والحذف**

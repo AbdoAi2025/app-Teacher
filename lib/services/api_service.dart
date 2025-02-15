@@ -151,14 +151,14 @@ import '../AuthStorage.dart';
 import '../models/student.dart';
 import '../models/group.dart';
 
+
+
 class ApiService {
-  final Dio _dio;
-  late Box authBox;
+  static Dio dio = Dio();
+  static Box? authBox;
 
-  ApiService(this._dio) {
-
-
-    _dio.interceptors.add
+  static init() async {
+    dio.interceptors.add
       (
       TalkerDioLogger(
         settings: const TalkerDioLoggerSettings(
@@ -169,7 +169,7 @@ class ApiService {
       ),
     );
 
-    _dio.options = BaseOptions(
+    dio.options = BaseOptions(
       baseUrl: "https://assistant-app-2136afb92d95.herokuapp.com",
       connectTimeout: Duration(seconds: 30),
       receiveTimeout: Duration(seconds: 30),
@@ -178,23 +178,24 @@ class ApiService {
       },
     );
 
-    // ✅ تحميل بيانات التوكن من التخزين المحلي
-    _loadToken();
+    await _loadToken();
   }
 
-  // ✅ تحميل التوكن من Hive عند بدء التطبيق
-  Future<void> _loadToken() async {
+  static Future<void> _loadToken() async {
     authBox = await Hive.openBox('authBox');
-    String? token = authBox.get('token');
+    String? token = authBox?.get('token') ?? "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZWFjaGVyMSIsImlhdCI6MTczOTU3NzI2MywiZXhwIjozNTEwNjkwNTI3fQ.rDBPiBxoBn-yjnrTEow_ZhImL70MQ9z0VRDYl3Zm3hc";
     if (token != null) {
-      _dio.options.headers["Authorization"] = "Bearer $token";
+      dio.options.headers["Authorization"] = "Bearer $token";
     }
+
+
   }
+
 
   // ✅ تحديث التوكن بعد تسجيل الدخول
   Future<void> updateAuthToken(String token) async {
-    _dio.options.headers["Authorization"] = "Bearer $token";
-    await authBox.put('token', token); // حفظ التوكن محليًا
+    dio.options.headers["Authorization"] = "Bearer $token";
+    await authBox?.put('token', token); // حفظ التوكن محليًا
   }
 
 
@@ -202,7 +203,7 @@ class ApiService {
   // ✅ تسجيل الدخول وجلب التوكن
   Future<String?> login(String username, String password) async {
     try {
-      Response response = await _dio.post(
+      Response response = await dio.post(
         '/api/v1/users/signin',
         data: {
           "username": username,
@@ -242,13 +243,13 @@ class ApiService {
   // ✅ تسجيل الخروج
   void logout() {
     AuthStorage.clearToken();
-    _dio.options.headers.remove("Authorization");
+    dio.options.headers.remove("Authorization");
   }
 
   // ✅ جلب جميع الطلاب
   Future<List<Student>> fetchStudents() async {
     try {
-      Response response = await _dio.get('/api/v1/students/myStudents');
+      Response response = await dio.get('/api/v1/students/myStudents');
       return (response.data as List).map((s) => Student.fromJson(s)).toList();
     } catch (e) {
       throw Exception("فشل في جلب بيانات الطلاب");
@@ -258,7 +259,7 @@ class ApiService {
   // ✅ إضافة طالب جديد
   Future<void> createStudent(Student student) async {
     try {
-      await _dio.post('/api/v1/students/add', data: student.toJson());
+      await dio.post('/api/v1/students/add', data: student.toJson());
     } catch (e) {
       throw Exception("فشل في إضافة الطالب");
     }
@@ -267,7 +268,7 @@ class ApiService {
   // ✅ تحديث بيانات طالب
   Future<void> updateStudent(Student student) async {
     try {
-      await _dio.put('/api/v1/students/update/${student.id}', data: student.toJson());
+      await dio.put('/api/v1/students/update/${student.id}', data: student.toJson());
     } catch (e) {
       throw Exception("فشل في تحديث بيانات الطالب");
     }
@@ -276,7 +277,7 @@ class ApiService {
   // ✅ حذف طالب
   Future<void> deleteStudent(String studentId) async {
     try {
-      await _dio.delete('/students/$studentId');
+      await dio.delete('/students/$studentId');
     } catch (e) {
       throw Exception("فشل في حذف الطالب");
     }
@@ -285,47 +286,36 @@ class ApiService {
   // ✅ حذف جميع الطلاب
   Future<void> deleteAllStudents() async {
     try {
-      await _dio.delete('/students');
+      await dio.delete('/students');
     } catch (e) {
       throw Exception("فشل في حذف جميع الطلاب");
     }
   }
 
-  // ✅ جلب جميع المجموعات
-  Future<List<Group>> fetchGroups() async {
-    try {
-      Response response = await _dio.get('/api/v1/groups/myGroups');
-      print("📢 البيانات المسترجعة من API: ${response.data}");  // ✅ طباعة بيانات API
-      return (response.data as List).map((g) => Group.fromJson(g)).toList();
-    } catch (e) {
-      print("❌ خطأ أثناء جلب المجموعات: $e");
-      throw Exception("❌ فشل في جلب بيانات المجموعات");
-    }
-  }
 
 
   // ✅ إضافة مجموعة جديدة
   Future<void> createGroup(Group group) async {
-    try {
-      await _dio.post('/api/v1/groups/add', data: group.toJson());
-    } catch (e) {
-      throw Exception("فشل في إضافة المجموعة");
-    }
+    // try {
+    //   await dio.post('/api/v1/groups/add', data: group.toJson());
+    // } catch (e) {
+    //   throw Exception("فشل في إضافة المجموعة");
+    // }
   }
 
   // ✅ تحديث بيانات مجموعة
   Future<void> updateGroup(Group group) async {
-    try {
-      await _dio.put('/api/v1/groups/update/${group.id}', data: group.toJson());
-    } catch (e) {
-      throw Exception("فشل في تحديث بيانات المجموعة");
-    }
+    // try {
+    //   await dio.put('/api/v1/groups/update/${group.id}', data: group.toJson());
+    // } catch (e) {
+    //   throw Exception("فشل في تحديث بيانات المجموعة");
+    // }
   }
 
   // ✅ حذف مجموعة
   Future<void> deleteGroup(String groupId) async {
     try {
-      await _dio.delete('/groups/$groupId');
+      await dio.delete('/groups/$groupId');
     } catch (e) {
       throw Exception("فشل في حذف المجموعة");
     }
@@ -334,7 +324,7 @@ class ApiService {
   // ✅ حذف جميع المجموعات
   Future<void> deleteAllGroups() async {
     try {
-      await _dio.delete('/groups');
+      await dio.delete('/groups');
     } catch (e) {
       throw Exception("فشل في حذف جميع المجموعات");
     }

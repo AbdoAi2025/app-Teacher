@@ -98,15 +98,14 @@ void main() async {
   await Hive.openBox('studentsBox'); // ✅ فتح صندوق الطلاب
 
   // ✅ تهيئة Dio وإنشاء ApiService
-  final Dio dio = Dio();
-  final ApiService apiService = ApiService(dio);
+  await ApiService.init();
 
-  runApp(MyApp(apiService: apiService));
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final ApiService apiService;
-  const MyApp({Key? key, required this.apiService}) : super(key: key);
+  final ApiService apiService = ApiService();
+  MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -121,12 +120,13 @@ class MyApp extends StatelessWidget {
 
         // ✅ تمرير `apiService` إلى `GroupsBloc` لاستخدام API
         BlocProvider(
-          create: (context) => GroupsBloc(apiService: apiService)..add(LoadGroupsEvent()),
+          create: (context) => GroupsBloc()..add(LoadGroupsEvent()),
         ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: LoginScreen(apiService: apiService),
+        // home: LoginScreen(apiService: apiService),
+        home: HomeScreen(),
 
         //LoginScreen(apiService: apiService), // ✅ إصلاح الخطأ هنا!
       ),

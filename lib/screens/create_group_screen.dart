@@ -57,19 +57,19 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   }
 
   void _saveGroup() {
-    if (_selectedDay != null && _selectedTimeFrom != null && _selectedTimeTo != null) {
-      final newGroup = Group(
-        id: "", // سيُنشأ في الـ API
-        name: _nameController.text.isEmpty ? "بدون اسم" : _nameController.text,
-        studentsIds: [], // ✅ API يحتاج قائمة `studentsIds`
-        day: _selectedDay!,
-        timeFrom: "${_selectedTimeFrom!.hour}:${_selectedTimeFrom!.minute}",
-        timeTo: "${_selectedTimeTo!.hour}:${_selectedTimeTo!.minute}",
-      );
-
-      BlocProvider.of<GroupsBloc>(context).add(AddGroupEvent(newGroup));
-      Navigator.pop(context);
-    }
+    // if (_selectedDay != null && _selectedTimeFrom != null && _selectedTimeTo != null) {
+    //   final newGroup = Group(
+    //     id: "", // سيُنشأ في الـ API
+    //     name: _nameController.text.isEmpty ? "بدون اسم" : _nameController.text,
+    //     studentsIds: [], // ✅ API يحتاج قائمة `studentsIds`
+    //     day: _selectedDay!,
+    //     timeFrom: "${_selectedTimeFrom!.hour}:${_selectedTimeFrom!.minute}",
+    //     timeTo: "${_selectedTimeTo!.hour}:${_selectedTimeTo!.minute}",
+    //   );
+    //
+    //   BlocProvider.of<GroupsBloc>(context).add(AddGroupEvent(newGroup));
+    //   Navigator.pop(context);
+    // }
   }
 
   @override

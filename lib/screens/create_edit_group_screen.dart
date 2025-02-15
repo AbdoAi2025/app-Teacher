@@ -46,24 +46,24 @@ class _CreateEditGroupScreenState extends State<CreateEditGroupScreen> {
   }
 
   void _saveGroup() {
-    if (_selectedDay != null && _selectedClassroom != null && _timeFromController.text.isNotEmpty && _timeToController.text.isNotEmpty) {
-      final newGroup = Group(
-        id: widget.group?.id ?? DateTime.now().toString(),
-        name: _nameController.text.isEmpty ?"بدون اسم": _nameController.text,
-        day: _selectedDay!,
-        timeFrom: _timeFromController.text,
-        timeTo: _timeToController.text,
-        studentsIds: [],
-      );
-
-      if (widget.group == null) {
-        BlocProvider.of<GroupsBloc>(context).add(AddGroupEvent(newGroup));
-      } else {
-        BlocProvider.of<GroupsBloc>(context).add(UpdateGroupEvent(newGroup));
-      }
-
-      Navigator.pop(context);
-    }
+    // if (_selectedDay != null && _selectedClassroom != null && _timeFromController.text.isNotEmpty && _timeToController.text.isNotEmpty) {
+    //   final newGroup = Group(
+    //     id: widget.group?.id ?? DateTime.now().toString(),
+    //     name: _nameController.text.isEmpty ?"بدون اسم": _nameController.text,
+    //     day: _selectedDay!,
+    //     timeFrom: _timeFromController.text,
+    //     timeTo: _timeToController.text,
+    //     studentsIds: [],
+    //   );
+    //
+    //   if (widget.group == null) {
+    //     BlocProvider.of<GroupsBloc>(context).add(AddGroupEvent(newGroup));
+    //   } else {
+    //     BlocProvider.of<GroupsBloc>(context).add(UpdateGroupEvent(newGroup));
+    //   }
+    //
+    //   Navigator.pop(context);
+    // }
   }
 
   void _deleteGroup() {

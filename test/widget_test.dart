@@ -7,11 +7,10 @@ import 'package:teacher_app/services/api_service.dart';
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // ✅ إنشاء `ApiService`
-    final Dio dio = Dio();
-    final ApiService apiService = ApiService(dio,);
+
 
     // ✅ تمرير `apiService` عند إنشاء `MyApp`
-    await tester.pumpWidget(MyApp(apiService: apiService));
+    await tester.pumpWidget(MyApp());
 
     // ✅ تحقق من أن العداد يبدأ من 0
     expect(find.text('0'), findsOneWidget);
