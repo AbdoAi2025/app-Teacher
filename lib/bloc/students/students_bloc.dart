@@ -5,6 +5,7 @@ import 'students_event.dart';
 import 'students_state.dart';
 
 class StudentsBloc extends Bloc<StudentsEvent, StudentsState> {
+
   final ApiService apiService;
 
   StudentsBloc({required this.apiService}) : super(StudentsInitial()) {
@@ -15,8 +16,7 @@ class StudentsBloc extends Bloc<StudentsEvent, StudentsState> {
     on<DeleteAllStudentsEvent>(_onDeleteAllStudents);
   }
 
-  Future<void> _onLoadStudents(
-      LoadStudentsEvent event, Emitter<StudentsState> emit) async {
+  Future<void> _onLoadStudents(LoadStudentsEvent event, Emitter<StudentsState> emit) async {
     emit(StudentsLoading());
     try {
       final students = await apiService.fetchStudents();

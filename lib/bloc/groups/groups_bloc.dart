@@ -6,8 +6,11 @@ import 'groups_event.dart';
 import 'groups_state.dart';
 
 class GroupsBloc extends Bloc<GroupsEvent, GroupsState> {
+
+
   final GroupsRepository groupsRepository = GroupsRepository();
-  List<Group> groups = []; // ✅ قائمة محلية للمجموعات
+
+  List<Group> groups = [];
 
   GroupsBloc() : super(GroupsInitial()) {
     on<LoadGroupsEvent>(_onLoadGroups);

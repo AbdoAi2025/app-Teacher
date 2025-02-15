@@ -2,11 +2,13 @@ import 'package:dio/dio.dart';
 import 'package:teacher_app/models/group.dart';
 import 'package:teacher_app/responses/get_my_groups_response.dart';
 import 'package:teacher_app/services/api_service.dart';
+import 'package:teacher_app/services/endpoints.dart';
 
 class GroupsRepository {
+
   Future<List<Group>> fetchGroups() async {
     try {
-      Response response = await ApiService.dio.get('/api/v1/groups/myGroups');
+      Response response = await ApiService.dio.get(EndPoints.getMyGroups);
 
       GetMyGroupsResponse responseResult =
           GetMyGroupsResponse.fromJson(response.data);

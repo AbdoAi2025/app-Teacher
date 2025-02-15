@@ -115,17 +115,21 @@ import '../bloc/students/students_event.dart';
 import '../models/student.dart';
 
 class AddStudentScreen extends StatefulWidget {
+
+
   @override
   _AddStudentScreenState createState() => _AddStudentScreenState();
 }
 
 class _AddStudentScreenState extends State<AddStudentScreen> {
+
+
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _parentPhoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  int? _selectedGradeId; // ✅ تغيير نوع المتغير ليكون `int?`
+  int? _selectedGradeId;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -176,7 +180,6 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
     );
   }
 
-  /// ✅ **إدخال البيانات النصية**
   Widget _buildTextField(TextEditingController controller, String label, {bool isPassword = false}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),

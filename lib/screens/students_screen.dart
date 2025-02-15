@@ -225,6 +225,7 @@ class _StudentsScreenState extends State<StudentsScreen> {
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:teacher_app/navigation/app_navigator.dart';
 import '../bloc/students/students_bloc.dart';
 import '../bloc/students/students_event.dart';
 import '../bloc/students/students_state.dart';
@@ -268,10 +269,7 @@ class _StudentsScreenState extends State<StudentsScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => AddStudentScreen()), // ✅ الانتقال لصفحة إضافة الطالب
-        ),
+        onPressed: () => AppNavigator.navigateToAddStudent(context),
         child: Icon(Icons.add),
       ),
     );

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:teacher_app/domain/grades/get_grades_list_use_case.dart';
+import 'package:teacher_app/domain/students/get_my_students_list_use_case.dart';
+import 'package:teacher_app/requests/get_my_students_request.dart';
 import '../bloc/groups/groups_bloc.dart';
 import '../bloc/groups/groups_event.dart';
 import '../models/group.dart';
@@ -14,6 +17,20 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   int? _selectedDay;
   TimeOfDay? _selectedTimeFrom;
   TimeOfDay? _selectedTimeTo;
+
+  @override
+  void initState() {
+    super.initState();
+
+    GetGradesListUseCase().execute().then((grades) {
+      print("GetGradesListUseCase :$grades");
+    });
+    
+
+    GetMyStudentsListUseCase().execute(GetMyStudentsRequest()).then((value) {
+      print("GetMyStudentsListUseCase :$value");
+    });
+  }
 
   void _pickTime(bool isStart) async {
     TimeOfDay? pickedTime = await showTimePicker(
