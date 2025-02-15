@@ -6,4 +6,5 @@ class EndPoints{
   static const String getMyGroups = "$apiV1/groups/myGroups";
   static const String getMyStudents = "$apiV1/students/myStudents";
   static const String getGrades = "$apiV1/grade/all";
+  static const String addStudents = "$apiV1/students/add";
 }

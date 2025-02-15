@@ -110,6 +110,8 @@ int? _selectedGradeId;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:teacher_app/apimodels/grade_api_model.dart';
+import 'package:teacher_app/domain/grades/get_grades_list_use_case.dart';
 import '../bloc/students/students_bloc.dart';
 import '../bloc/students/students_event.dart';
 import '../models/student.dart';
@@ -128,10 +130,24 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _parentPhoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
+  final GetGradesListUseCase getGradesListUseCase = GetGradesListUseCase();
   int? _selectedGradeId;
 
   final _formKey = GlobalKey<FormState>();
+
+  List<GradeApiModel> grades = [];
+
+
+  @override
+  void initState() {
+    super.initState();
+    getGradesListUseCase.execute().then((value) {
+      setState(() {
+        grades = value.data ?? List.empty();
+      });
+
+    },);
+  }
 
   void _saveStudent() {
     if (_formKey.currentState!.validate()) {
@@ -211,11 +227,7 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
           labelText: label,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         ),
-        items: [
-          DropdownMenuItem(value: 1, child: Text("الصف الأول")),
-          DropdownMenuItem(value: 2, child: Text("الصف الثاني")),
-          DropdownMenuItem(value: 3, child: Text("الصف الثالث")),
-        ],
+        items: grades.map((e) => DropdownMenuItem(value: e.id, child: Text(e.nameAr ?? ""))).toList(),
       ),
     );
   }

@@ -102,9 +102,9 @@ class _EditStudentScreenState extends State<EditStudentScreen> {
           border: OutlineInputBorder(),
         ),
         items: [
-          DropdownMenuItem(value: 1073741824, child: Text("الصف الأول")),
-          DropdownMenuItem(value: 1073741825, child: Text("الصف الثاني")),
-          DropdownMenuItem(value: 1073741826, child: Text("الصف الثالث")),
+          DropdownMenuItem(value: 1, child: Text("الصف الأول")),
+          DropdownMenuItem(value: 2, child: Text("الصف الثاني")),
+          DropdownMenuItem(value: 3, child: Text("الصف الثالث")),
         ],
       ),
     );

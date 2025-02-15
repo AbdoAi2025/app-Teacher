@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:teacher_app/apimodels/grade_api_model.dart';
+import 'package:teacher_app/apimodels/student_list_item_api_model.dart';
 import 'package:teacher_app/domain/grades/get_grades_list_use_case.dart';
 import 'package:teacher_app/domain/students/get_my_students_list_use_case.dart';
 import 'package:teacher_app/requests/get_my_students_request.dart';
@@ -26,6 +28,11 @@ class _CreateEditGroupScreenState extends State<CreateEditGroupScreen> {
   String? _selectedClassroom;
   int? _selectedDay;
 
+  List<StudentListItemApiModel> students = [];
+  List<StudentListItemApiModel> selectedStudents = [];
+  List<GradeApiModel> grades = [];
+
+
 
   @override
   void initState() {
@@ -34,12 +41,16 @@ class _CreateEditGroupScreenState extends State<CreateEditGroupScreen> {
     /*text load grades*/
     GetGradesListUseCase().execute().then((value) {
       print("GetGradesListUseCase :${value.data?.length}");
+      grades = value.data ?? List.empty();
     });
 
 
     /*Test load student without groups*/
     GetMyStudentsListUseCase().execute(GetMyStudentsRequest(hasGroups: false)).then((value) {
       print("GetMyStudentsListUseCase :${value.data?.length}");
+
+       students = value.data ?? List.empty();
+
     });
 
     if (widget.group != null) {

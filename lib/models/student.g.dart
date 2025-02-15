@@ -21,7 +21,7 @@ class StudentAdapter extends TypeAdapter<Student> {
       name: fields[1] as String,
       phone: fields[2] as String,
       parentPhone:fields[3]as String,
-      gradeId:fields[4] as int,
+      gradeId: fields[4] as int,
       password: fields[5] as String,
       attended: fields[6] as bool,
       homeworkDone: fields[7] as bool,
