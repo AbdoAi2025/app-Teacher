@@ -20,7 +20,7 @@ class GroupsRepository {
                   day: e.groupDay ?? 0,
                   studentCount: e.studentCount ?? 0,
                   timeFrom: '',
-                  timeTo: ''
+                  timeTo: '', studentsIds: []
       )).toList() ??
           List.empty();
     } catch (e) {

@@ -29,9 +29,6 @@ class StudentsBloc extends Bloc<StudentsEvent, StudentsState> {
       LoadStudentsEvent event, Emitter<StudentsState> emit) async {
     emit(StudentsLoading());
 
-
-
-
       final studentsResult = await getMyStudentsListUseCase.execute(GetMyStudentsRequest());
 
       if (studentsResult.isSuccess) {
@@ -47,12 +44,9 @@ class StudentsBloc extends Bloc<StudentsEvent, StudentsState> {
           ),
         ).toList() ?? List.empty();
 
-
         emit(StudentsLoaded(students));
         return;
       }
-
-
       if(studentsResult.isError){
         emit(StudentsError(studentsResult.error?.toString() ?? ""));
       }

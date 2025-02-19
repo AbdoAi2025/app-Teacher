@@ -91,7 +91,9 @@ class Student {
   final bool attended; // ✅ تم إضافته
 
   @HiveField(8)
-  final bool homeworkDone; // ✅ تم إضافته
+  final bool homeworkDone;
+
+
 
   Student({
     required this.id,
@@ -103,12 +105,13 @@ class Student {
     required this.accessToken,
     this.attended = false, // ✅ القيمة الافتراضية `false`
     this.homeworkDone = false, // ✅ القيمة الافتراضية `false`
+
   });
 
   /// ✅ **تحويل JSON إلى كائن `Student` عند استلامه من API**
   factory Student.fromJson(Map<String, dynamic> json) {
     return Student(
-      id: json['studentId'],
+      id: json['studentId']?.toString()??"" ,
       name: json['name'],
       phone: json['phone'],
       parentPhone: json['parentPhone'],
@@ -119,6 +122,8 @@ class Student {
       homeworkDone: json.containsKey('homeworkDone') ? json['homeworkDone'] : false, // ✅ دعم الواجب
     );
   }
+
+  String get studentId => "";           //add this student id after doing bottom sheet for students
 
   /// ✅ **تحويل الكائن إلى JSON لإرساله إلى API**
   Map<String, dynamic> toJson() {

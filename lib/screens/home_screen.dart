@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:teacher_app/screens/create_group_screen.dart';
 import 'groups_screen.dart';
 import 'students_screen.dart';
 import 'create_edit_group_screen.dart';
@@ -43,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => CreateEditGroupScreen()),
+            MaterialPageRoute(builder: (_) => CreateGroupScreen()),
           );
         },
         backgroundColor: Colors.blue,

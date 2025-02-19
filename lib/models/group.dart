@@ -72,9 +72,11 @@ class Group {
 */
 
 import 'package:hive/hive.dart';
+import 'package:teacher_app/apimodels/student_list_item_api_model.dart';
 import 'package:teacher_app/models/student.dart';
 
 class Group {
+
   final String id;
   final String name;
   final int studentCount;
@@ -88,5 +90,6 @@ class Group {
       required this.studentCount,
       required this.day,
       required this.timeFrom,
-      required this.timeTo});
+      required this.timeTo,
+        required List<StudentListItemApiModel> studentsIds});
 }
