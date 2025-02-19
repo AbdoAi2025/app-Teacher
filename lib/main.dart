@@ -67,6 +67,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:dio/dio.dart';
+import 'package:teacher_app/bloc/students_selection/students_selection_bloc.dart';
 import 'package:teacher_app/navigation/app_routes_screens.dart';
 import 'package:teacher_app/screens/add_teacher_screen.dart';
 import 'package:teacher_app/screens/signup_screen.dart';
@@ -123,6 +124,12 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => GroupsBloc()..add(LoadGroupsEvent()),
         ),
+
+        BlocProvider(
+          create: (context) => StudentsSelectionBloc(),
+        ),
+
+
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

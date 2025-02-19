@@ -25,8 +25,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("المجموعات الدراسية")),
-      body: BlocListener<GroupsBloc, GroupsState>(
-        listener: (context, state) {
+      body: BlocListener<GroupsBloc, GroupsState>(listener: (context, state) {
           if (state is GroupsError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -40,7 +39,8 @@ class _GroupsScreenState extends State<GroupsScreen> {
           builder: (context, state) {
             if (state is GroupsLoading) {
               return Center(child: CircularProgressIndicator());
-            } else if (state is GroupsLoaded && state.groups.isNotEmpty) {
+            }
+            else if (state is GroupsLoaded && state.groups.isNotEmpty) {
               return RefreshIndicator(
                 onRefresh: () async {
                   BlocProvider.of<GroupsBloc>(context)
