@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teacher_app/bloc/students_selection/students_selection_event.dart';
 import 'package:teacher_app/bloc/students_selection/students_selection_state.dart';
-import 'package:teacher_app/domain/students/add_student_use_case.dart';
-import 'package:teacher_app/domain/students/get_my_students_list_use_case.dart';
+import 'package:teacher_app/domain/usecases/add_student_use_case.dart';
+import 'package:teacher_app/domain/usecases/get_my_students_list_use_case.dart';
 import 'package:teacher_app/models/student_selection_model.dart';
 import 'package:teacher_app/requests/get_my_students_request.dart';
 

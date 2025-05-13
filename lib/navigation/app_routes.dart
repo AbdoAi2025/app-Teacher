@@ -2,6 +2,7 @@ class AppRoutes {
 
 
 
+  static const String root = "/";
   static const String login = "/login";
   static const String signup = "/signup";
   static const String home = "/home";
@@ -15,6 +16,5 @@ class AppRoutes {
   static const String editStudent = "/editStudent";
   static const String groupDetails = "/groupDetails";
 
-
-
+  AppRoutes._();
 }

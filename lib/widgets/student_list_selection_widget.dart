@@ -7,35 +7,28 @@ import 'package:teacher_app/models/student_selection_model.dart';
 
 class StudentListSelectionWidget extends StatefulWidget {
 
-  const StudentListSelectionWidget({super.key});
+  final  List<StudentSelectionModel> students;
+  final Function(List<StudentSelectionModel>) onStudentsSelected;
+  const StudentListSelectionWidget({super.key, required this.onStudentsSelected, required this.students});
 
   @override
   State<StudentListSelectionWidget> createState() =>
       _StudentListSelectionWidgetState();
 }
 
-class _StudentListSelectionWidgetState
-    extends State<StudentListSelectionWidget> {
-  late StudentsSelectionBloc studentSelectionBloc =
-      BlocProvider.of<StudentsSelectionBloc>(context);
+class _StudentListSelectionWidgetState extends State<StudentListSelectionWidget> {
 
   List<StudentSelectionModel> students = [];
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<StudentsSelectionBloc, StudentsSelectionState>(
-      listener: (context, state) {},
-      child: BlocBuilder<StudentsSelectionBloc, StudentsSelectionState>(
-        builder: (context, state) {
-          if (state is StudentsLoading) {
-            return _showLoading();
-          } else if (state is StudentsLoaded) {
-            return _studentLoaded(state);
-          }
-
-          return _error();
-        },
-      ),
+    return Column(
+      children: [
+        Expanded(
+          child: _showStudentList(),
+        ),
+        _saveButton()
+      ],
     );
   }
 
@@ -43,9 +36,8 @@ class _StudentListSelectionWidgetState
     return Text("loading.......");
   }
 
-  Widget _showStudentList(StudentsLoaded state) {
-    var items = state.students;
-    students = items;
+  Widget _showStudentList() {
+    var items = widget.students;
     return ListView.separated(
         itemBuilder: (context, index) => _studentItem(items[index]),
         separatorBuilder: (context, index) => _separator(),
@@ -102,18 +94,19 @@ class _StudentListSelectionWidgetState
 
   void onSaveClick() {
     var selectedStudents = students.where((element) => element.isSelected).toList();
-    studentSelectionBloc.add(StudentsSelectedEvent(selectedStudents));
+    // studentSelectionBloc.add(StudentsSelectedEvent(selectedStudents));
+    widget.onStudentsSelected(selectedStudents);
     Navigator.pop(context);
   }
 
-  Widget _studentLoaded(StudentsLoaded state) {
-    return Column(
-      children: [
-        Expanded(
-          child: _showStudentList(state),
-        ),
-        _saveButton()
-      ],
-    );
-  }
+  // Widget _studentLoaded(StudentsLoaded state) {
+  //   return Column(
+  //     children: [
+  //       Expanded(
+  //         child: _showStudentList(state),
+  //       ),
+  //       _saveButton()
+  //     ],
+  //   );
+  // }
 }

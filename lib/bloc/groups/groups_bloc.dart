@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:teacher_app/repositories/groups_repository.dart';
+import 'package:teacher_app/data/repositories/groups_repository.dart';
 import '../../services/api_service.dart';
 import '../../models/group.dart';
 import 'groups_event.dart';

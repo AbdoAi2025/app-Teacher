@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:teacher_app/domain/students/add_student_use_case.dart';
-import 'package:teacher_app/domain/students/get_my_students_list_use_case.dart';
+import 'package:teacher_app/domain/usecases/add_student_use_case.dart';
+import 'package:teacher_app/domain/usecases/get_my_students_list_use_case.dart';
 import 'package:teacher_app/models/student.dart';
 import 'package:teacher_app/requests/add_student_request.dart';
 import 'package:teacher_app/requests/get_my_students_request.dart';

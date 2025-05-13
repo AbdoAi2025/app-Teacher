@@ -1,7 +1,3 @@
-/// id : "eab22dbb-8d95-4820-bc8f-592c433f4798"
-/// username : "teacher1"
-/// roleName : "teacher"
-/// accessToken : "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZWFjaGVyMSIsImlhdCI6MTczOTIzMDQ2NywiZXhwIjozNTA5OTk2OTM1fQ.zLtzVCvpXvxAFrQJanLj1bDVGxdB0Npe3r5dF21R4Ok"
 
 class LoginResponse {
   LoginResponse({

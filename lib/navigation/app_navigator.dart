@@ -1,8 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:teacher_app/navigation/app_routes.dart';
 
 class AppNavigator {
 
+  AppNavigator._();
+
+
+  static navigateToHome() {
+    Get.offAllNamed(AppRoutes.home);
+  }
+
+  static navigateToLogin() {
+    Get.offAllNamed(AppRoutes.login);
+  }
 
   static Future<dynamic> navigateToAddStudent(BuildContext context) {
     return Navigator.pushNamed(context, AppRoutes.addStudent);

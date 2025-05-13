@@ -111,7 +111,7 @@ int? _selectedGradeId;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teacher_app/apimodels/grade_api_model.dart';
-import 'package:teacher_app/domain/grades/get_grades_list_use_case.dart';
+import 'package:teacher_app/domain/usecases/get_grades_list_use_case.dart';
 import '../bloc/students/students_bloc.dart';
 import '../bloc/students/students_event.dart';
 import '../models/student.dart';

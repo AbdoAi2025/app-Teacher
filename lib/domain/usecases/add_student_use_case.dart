@@ -1,9 +1,8 @@
-  import 'package:teacher_app/apimodels/student_list_item_api_model.dart';
 import 'package:teacher_app/base/AppResult.dart';
-import 'package:teacher_app/repositories/students_repository.dart';
+import 'package:teacher_app/data/repositories/students_repository.dart';
 import 'package:teacher_app/requests/add_student_request.dart';
-import 'package:teacher_app/requests/get_my_students_request.dart';
-import 'package:teacher_app/responses/add_student_response.dart';
+
+import '../../data/responses/add_student_response.dart';
 
 class AddStudentUseCase {
 

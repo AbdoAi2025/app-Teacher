@@ -1,6 +1,6 @@
 import 'package:teacher_app/apimodels/grade_api_model.dart';
 import 'package:teacher_app/base/AppResult.dart';
-import 'package:teacher_app/repositories/grades_repository.dart';
+import 'package:teacher_app/data/repositories/grades_repository.dart';
 
 class GetGradesListUseCase {
 

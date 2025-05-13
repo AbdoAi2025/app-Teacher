@@ -63,18 +63,26 @@ class MyApp extends StatelessWidget {
 }
 */
 
+import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:dio/dio.dart';
+import 'package:teacher_app/appSetting/appSetting.dart';
 import 'package:teacher_app/bloc/students_selection/students_selection_bloc.dart';
+import 'package:teacher_app/navigation/app_routes.dart';
 import 'package:teacher_app/navigation/app_routes_screens.dart';
 import 'package:teacher_app/screens/add_teacher_screen.dart';
 import 'package:teacher_app/screens/signup_screen.dart';
-
+import 'package:teacher_app/themes/app_colors.dart';
+import 'package:teacher_app/utils/LogUtils.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'AuthStorage.dart';
+import 'localization/app_translation.dart';
 import 'screens/home_screen.dart';
-import 'screens/login_screen.dart';
+import 'screens/login/login_screen.dart';
 
 import 'bloc/auth/auth_bloc.dart';
 import 'bloc/groups/groups_bloc.dart';
@@ -86,21 +94,26 @@ import 'models/group.dart';
 import 'models/student.dart';
 import 'services/api_service.dart';
 
+Locale appLocale = const Locale("en", "US");
+GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+  //   statusBarColor: AppColors.white, // status bar color
+  //   statusBarIconBrightness: Brightness.dark, // icon/text color: light or dark
+  // ));
 
-  // ✅ تهيئة Hive وتخزين التوكن
-  await Hive.initFlutter();
-  await AuthStorage.init(); // ✅ تهيئة Hive
- // Hive.registerAdapter(GroupAdapter());
-  Hive.registerAdapter(StudentAdapter());
-  await Hive.openBox('authBox'); // ✅ فتح صندوق المستخدم
-  await Hive.openBox('groupsBox'); // ✅ فتح صندوق المجموعات
-  await Hive.openBox('studentsBox'); // ✅ فتح صندوق الطلاب
-
-  // ✅ تهيئة Dio وإنشاء ApiService
-  await ApiService.init();
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+      statusBarBrightness: Brightness.light,
+      systemNavigationBarIconBrightness: Brightness.light,
+      systemNavigationBarColor: AppColors.color_161516));
+  await SystemChrome.setPreferredOrientations(
+    [DeviceOrientation.portraitUp],
+  );
 
   runApp(MyApp());
 }
@@ -111,33 +124,82 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => AuthBloc(apiService)),
-
-        // ✅ تمرير `apiService` إلى `StudentsBloc` لاستخدام API
-        BlocProvider(
-          create: (context) => StudentsBloc(apiService: apiService)..add(LoadStudentsEvent()),
-        ),
-
-        // ✅ تمرير `apiService` إلى `GroupsBloc` لاستخدام API
-        BlocProvider(
-          create: (context) => GroupsBloc()..add(LoadGroupsEvent()),
-        ),
-
-        BlocProvider(
-          create: (context) => StudentsSelectionBloc(),
-        ),
-
-
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        // home: LoginScreen(apiService: apiService),
-        home: HomeScreen(),
-        onGenerateRoute: (settings) => AppRoutesScreens.get(settings),
-        //LoginScreen(apiService: apiService), // ✅ إصلاح الخطأ هنا!
-      ),
-    );
+    return ValueListenableBuilder(
+        valueListenable: appSettingNotifier,
+        builder: (context, AppSetting setting, _) {
+          return GetMaterialApp(
+            textDirection: (rtlLanguages.contains(Get.locale?.languageCode)
+                ? TextDirection.rtl
+                : TextDirection.ltr
+            ),
+            transitionDuration: const Duration(milliseconds: transitionDuration),
+            popGesture: true,
+            onGenerateRoute: (settings) => AppRoutesScreens.get(settings),
+            routingCallback: (value) {
+              appLog("GetMaterialApp routingCallback value:${value?.current}");
+            },
+            translationsKeys: AppTranslation.translationsKeys,
+            locale: appLocale,
+            supportedLocales: const [
+              Locale("en", "US"),
+              Locale("ar"),
+            ],
+            localizationsDelegates: const [
+              CountryLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            navigatorKey: navigatorKey,
+            fallbackLocale: const Locale("en", "US"),
+            debugShowCheckedModeBanner: false,
+            title: 'Assistant',
+            initialRoute: AppRoutes.root,
+            getPages: appRoutes(),
+            theme: ThemeData(
+              pageTransitionsTheme: PageTransitionsTheme(builders: {
+                TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+              }),
+              bottomSheetTheme: BottomSheetThemeData(dragHandleSize: Size(134, 5), dragHandleColor: Colors.black.withAlpha(50)),
+              brightness: Brightness.light,
+              splashColor: AppColors.splashColor,
+              // highlightColor: Colors.transparent,
+              scaffoldBackgroundColor: AppColors.white,
+              colorScheme: ColorScheme.fromSeed(seedColor: AppColors.appMainColor),
+              primaryColor: AppColors.appMainColor,
+              secondaryHeaderColor: Colors.white,
+              useMaterial3: true,
+              appBarTheme: AppBarTheme(
+                systemOverlayStyle: SystemUiOverlayStyle.dark,
+                backgroundColor: AppColors.appBarBackgroundColor,
+                surfaceTintColor: AppColors.appBarBackgroundColor,
+                foregroundColor: AppColors.appBarForegroundColor,
+              ),
+              elevatedButtonTheme: ElevatedButtonThemeData(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primaryButtonColor,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                ),
+              ),
+              inputDecorationTheme: InputDecorationTheme(
+                enabledBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(
+                    width: 1,
+                    color: AppColors.color_DBD5CC,
+                  ),
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide:
+                  const BorderSide(width: 1, color: AppColors.appMainColor),
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+              ),
+            ),
+          );
+        });
   }
 }
