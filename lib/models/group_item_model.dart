@@ -75,7 +75,7 @@ import 'package:hive/hive.dart';
 import 'package:teacher_app/apimodels/student_list_item_api_model.dart';
 import 'package:teacher_app/models/student.dart';
 
-class Group {
+class GroupItemModel {
 
   final String id;
   final String name;
@@ -84,7 +84,7 @@ class Group {
   final String timeFrom;
   final String timeTo;
 
-  Group(
+  GroupItemModel(
       {required this.id,
       required this.name,
       required this.studentCount,

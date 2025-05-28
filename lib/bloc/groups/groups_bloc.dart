@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teacher_app/data/repositories/groups_repository.dart';
+import '../../models/group_item_model.dart';
 import '../../services/api_service.dart';
-import '../../models/group.dart';
 import 'groups_event.dart';
 import 'groups_state.dart';
 
@@ -10,7 +10,7 @@ class GroupsBloc extends Bloc<GroupsEvent, GroupsState> {
 
   final GroupsRepository groupsRepository = GroupsRepository();
 
-  List<Group> groups = [];
+  List<GroupItemModel> groups = [];
 
   GroupsBloc() : super(GroupsInitial()) {
     on<LoadGroupsEvent>(_onLoadGroups);

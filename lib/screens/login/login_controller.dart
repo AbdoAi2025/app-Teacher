@@ -5,12 +5,14 @@ import 'package:teacher_app/domain/models/login_model.dart';
 import 'package:teacher_app/domain/usecases/login_use_case.dart';
 import 'package:teacher_app/screens/login/login_state.dart';
 
+import '../../main.dart';
+
 class LoginController extends GetxController{
 
   LoginUseCase loginUseCase = LoginUseCase();
 
-  TextEditingController usernameController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  TextEditingController usernameController = TextEditingController(text : isDev ? "teacher1" : "");
+  TextEditingController passwordController = TextEditingController(text:  isDev ? "123456" : "");
 
   Stream<LoginState> login() async* {
 

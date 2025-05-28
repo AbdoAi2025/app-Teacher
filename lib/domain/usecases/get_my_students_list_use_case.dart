@@ -5,11 +5,11 @@ import 'package:teacher_app/requests/get_my_students_request.dart';
 
 class GetMyStudentsListUseCase {
 
-  StudentsRepository repository = StudentsRepository();
+  final StudentsRepository _repository = StudentsRepository();
 
   Future<AppResult<List<StudentListItemApiModel>>> execute(GetMyStudentsRequest request) async {
     try{
-       var items =  await repository.fetchMyStudent(request);
+       var items =  await _repository.fetchMyStudent(request);
        return AppResult.success(items);
     }on Exception catch(ex){
       return AppResult.error(ex);

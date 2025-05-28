@@ -50,7 +50,7 @@ class DeleteGroupEvent extends GroupsEvent {
 */
 
 
-import '../../models/group.dart';
+import '../../models/group_item_model.dart';
 import '../../models/student.dart';
 
 abstract class CreateGroupsEvent {}
@@ -60,7 +60,7 @@ class LoadMyStudentsWithoutGroupsEvent extends CreateGroupsEvent {}
 class LoadGradesEvent extends CreateGroupsEvent {}
 
 class AddGroupEvent extends CreateGroupsEvent {
-  final Group group;
+  final GroupItemModel group;
   AddGroupEvent(this.group);
 }
 
@@ -87,7 +87,7 @@ class UpdateStudentInGroupEvent extends CreateGroupsEvent {
 class DeleteAllGroupsEvent extends CreateGroupsEvent {}
 
 class UpdateGroupEvent extends CreateGroupsEvent {
-  final Group updatedGroup;
+  final GroupItemModel updatedGroup;
   UpdateGroupEvent(this.updatedGroup);
 }
 

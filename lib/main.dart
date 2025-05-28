@@ -63,47 +63,32 @@ class MyApp extends StatelessWidget {
 }
 */
 
+import 'dart:ui';
+
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:dio/dio.dart';
 import 'package:teacher_app/appSetting/appSetting.dart';
-import 'package:teacher_app/bloc/students_selection/students_selection_bloc.dart';
 import 'package:teacher_app/navigation/app_routes.dart';
 import 'package:teacher_app/navigation/app_routes_screens.dart';
-import 'package:teacher_app/screens/add_teacher_screen.dart';
-import 'package:teacher_app/screens/signup_screen.dart';
 import 'package:teacher_app/themes/app_colors.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'AuthStorage.dart';
+import 'domain/usecases/get_app_setting_use_case.dart';
 import 'localization/app_translation.dart';
-import 'screens/home_screen.dart';
-import 'screens/login/login_screen.dart';
 
-import 'bloc/auth/auth_bloc.dart';
-import 'bloc/groups/groups_bloc.dart';
-import 'bloc/groups/groups_event.dart';
-import 'bloc/students/students_bloc.dart';
-import 'bloc/students/students_event.dart';
 
-import 'models/group.dart';
-import 'models/student.dart';
 import 'services/api_service.dart';
 
-Locale appLocale = const Locale("en", "US");
-GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+Locale? appLocale;
 
+const bool isDev = true;
+
+GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-  //   statusBarColor: AppColors.white, // status bar color
-  //   statusBarIconBrightness: Brightness.dark, // icon/text color: light or dark
-  // ));
 
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -111,30 +96,35 @@ void main() async {
       statusBarBrightness: Brightness.light,
       systemNavigationBarIconBrightness: Brightness.light,
       systemNavigationBarColor: AppColors.color_161516));
+
   await SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitUp],
   );
 
+  initAppLocale();
+
   runApp(MyApp());
 }
 
+
+
 class MyApp extends StatelessWidget {
   final ApiService apiService = ApiService();
-  MyApp({Key? key}) : super(key: key);
+
+  MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
-        valueListenable: appSettingNotifier,
+        valueListenable: getAppSettingNotifier(),
         builder: (context, AppSetting setting, _) {
           return GetMaterialApp(
             textDirection: (rtlLanguages.contains(Get.locale?.languageCode)
                 ? TextDirection.rtl
-                : TextDirection.ltr
-            ),
-            transitionDuration: const Duration(milliseconds: transitionDuration),
+                : TextDirection.ltr),
+            transitionDuration:
+                const Duration(milliseconds: transitionDuration),
             popGesture: true,
-            onGenerateRoute: (settings) => AppRoutesScreens.get(settings),
             routingCallback: (value) {
               appLog("GetMaterialApp routingCallback value:${value?.current}");
             },
@@ -160,12 +150,15 @@ class MyApp extends StatelessWidget {
               pageTransitionsTheme: PageTransitionsTheme(builders: {
                 TargetPlatform.android: CupertinoPageTransitionsBuilder(),
               }),
-              bottomSheetTheme: BottomSheetThemeData(dragHandleSize: Size(134, 5), dragHandleColor: Colors.black.withAlpha(50)),
+              bottomSheetTheme: BottomSheetThemeData(
+                  dragHandleSize: Size(134, 5),
+                  dragHandleColor: Colors.black.withAlpha(50)),
               brightness: Brightness.light,
               splashColor: AppColors.splashColor,
               // highlightColor: Colors.transparent,
               scaffoldBackgroundColor: AppColors.white,
-              colorScheme: ColorScheme.fromSeed(seedColor: AppColors.appMainColor),
+              colorScheme:
+                  ColorScheme.fromSeed(seedColor: AppColors.appMainColor),
               primaryColor: AppColors.appMainColor,
               secondaryHeaderColor: Colors.white,
               useMaterial3: true,
@@ -194,7 +187,7 @@ class MyApp extends StatelessWidget {
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderSide:
-                  const BorderSide(width: 1, color: AppColors.appMainColor),
+                      const BorderSide(width: 1, color: AppColors.appMainColor),
                   borderRadius: BorderRadius.circular(12.0),
                 ),
               ),
@@ -202,4 +195,16 @@ class MyApp extends StatelessWidget {
           );
         });
   }
+}
+
+Future<void> initAppLocale() async {
+  var getAppSettingUseCase = GetAppSettingUseCase();
+  Locale deviceLocale = PlatformDispatcher.instance.locale;
+  appLog("Device locale: ${deviceLocale.languageCode}-${deviceLocale.countryCode}");
+  appLog("App locale Get.locale?.languageCode  :${Get.locale?.languageCode}");
+  var savedAppLocale = await getAppSettingUseCase.execute();
+  var lang = savedAppLocale?.language ?? ( deviceLocale.languageCode == "ar" ? deviceLocale.languageCode : "en");
+  var country = savedAppLocale?.country ?? deviceLocale.countryCode;
+  appLocale = Locale(lang , country);
+  Get.locale = appLocale;
 }

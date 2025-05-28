@@ -4,6 +4,11 @@ import 'package:get/get.dart';
 class AppTextStyle {
 
 
+  AppTextStyle._();
+
+  static TextStyle get title =>
+      teshrinArLtRegular.copyWith(fontSize: 16, fontWeight: FontWeight.w600);
+
   static TextStyle get appToolBarTitle =>
       teshrinArLtRegular.copyWith(fontSize: 18, fontWeight: FontWeight.w600);
 

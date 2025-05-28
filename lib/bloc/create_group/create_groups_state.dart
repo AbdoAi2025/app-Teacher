@@ -1,4 +1,3 @@
-import '../../models/group.dart';
 
 abstract class CreateGroupsState {}
 

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:teacher_app/appSetting/appSetting.dart';
 import 'package:teacher_app/models/user_auth_model.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
 
@@ -13,7 +14,8 @@ class LocalIdentityDataSource {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     var userAuthString = jsonEncode(model.toJson());
     _log("saveUserAuth userAuthString:$userAuthString");
-    prefs.setString(_userAuthKey,userAuthString );
+    await prefs.setString(_userAuthKey,userAuthString );
+    updateAppSetting(getAppSetting().copyWith(accessToken: model.accessToken));
   }
 
   Future<UserAuthModel?> getUserAuth() async {

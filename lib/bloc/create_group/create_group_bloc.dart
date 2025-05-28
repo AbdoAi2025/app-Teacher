@@ -2,8 +2,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teacher_app/bloc/create_group/create_groups_event.dart';
 import 'package:teacher_app/bloc/create_group/create_groups_state.dart';
 import 'package:teacher_app/data/repositories/groups_repository.dart';
+import '../../models/group_item_model.dart';
 import '../../services/api_service.dart';
-import '../../models/group.dart';
 import '../groups/groups_event.dart';
 import '../groups/groups_state.dart';
 
@@ -12,7 +12,7 @@ class CreateGroupBloc extends Bloc<CreateGroupsEvent, CreateGroupsState> {
 
   final GroupsRepository groupsRepository = GroupsRepository();
 
-  List<Group> groups = [];
+  List<GroupItemModel> groups = [];
 
   CreateGroupBloc() : super(CreateGroupsInitial()) {
     // on<LoadMyStudentsWithoutGroupsEvent>(_onLoadMyStudentsWithoutGroups);

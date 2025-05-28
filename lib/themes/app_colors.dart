@@ -12,6 +12,8 @@ class AppColors{
   static const Color primaryButtonColor = appMainColor;
   static const Color appBarBackgroundColor = white;
   static const Color appBarForegroundColor= white;
+  static const Color colorError= color_E75260;
+  static const Color colorSeparator = color_767676;
 
 
   static const Color appMainColor = Color(0xff122953);

@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:teacher_app/appSetting/appSetting.dart';
 import 'package:teacher_app/domain/usecases/get_user_auth_use_case.dart';
 import 'package:teacher_app/screens/splash/SplashEvent.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
@@ -13,8 +14,8 @@ class SplashController extends GetxController{
   void onInit() {
     super.onInit();
     _getUserAuthUseCase.execute().then((value) {
-      appLog("onInit getUserAuthUseCase.execute : $value" , "SplashController");
-
+      appLog("onInit getUserAuthUseCase.execute : ${value?.accessToken}" , "SplashController");
+      setUserAuthModel(value);
       if(value == null || value.accessToken.isEmpty){
         updateEvent(SplashEventGoToLogin());
       }else {

@@ -141,13 +141,13 @@ class ApiService {
 }
 */
 
-
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:talker_dio_logger/talker_dio_logger.dart';
+import 'package:teacher_app/appSetting/appSetting.dart';
+import '../models/group_item_model.dart';
 import '../models/student.dart';
-import '../models/group.dart';
 
 
 
@@ -157,14 +157,17 @@ class ApiService {
 
 
   static Dio getInstance() {
-    var instance = _dio;
-    if(instance == null){
-      instance = Dio();
-      _dio = instance;
-      _init(instance);
-    }
-    return instance;
+    // var instance = _dio;
+    // if(instance == null){
+    //   instance = Dio();
+    //   _dio = instance;
+    //   _init(instance);
+    // }
 
+    var instance = Dio();
+    _dio = instance;
+    _init(instance);
+    return instance;
   }
 
   static _init(Dio dio) async {
@@ -179,16 +182,17 @@ class ApiService {
       ),
     );
 
+    var token = getAppSetting().accessToken;
+
     dio.options = BaseOptions(
       baseUrl: "https://assistant-app-2136afb92d95.herokuapp.com",
       connectTimeout: Duration(seconds: 30),
       receiveTimeout: Duration(seconds: 30),
       headers: {
         "Content-Type": "application/json",
+        "Authorization": "Bearer $token",
       },
     );
-
-    // await _loadToken();
   }
 
   // static Future<void> _loadToken() async {
@@ -305,7 +309,7 @@ class ApiService {
 
 
   // ✅ إضافة مجموعة جديدة
-  Future<void> createGroup(Group group) async {
+  Future<void> createGroup(GroupItemModel group) async {
     // try {
     //   await dio.post('/api/v1/groups/add', data: group.toJson());
     // } catch (e) {
@@ -314,7 +318,7 @@ class ApiService {
   }
 
   // ✅ تحديث بيانات مجموعة
-  Future<void> updateGroup(Group group) async {
+  Future<void> updateGroup(GroupItemModel group) async {
     // try {
     //   await dio.put('/api/v1/groups/update/${group.id}', data: group.toJson());
     // } catch (e) {

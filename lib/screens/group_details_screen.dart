@@ -3,13 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/groups/groups_bloc.dart';
 import '../bloc/groups/groups_event.dart';
 import '../bloc/groups/groups_state.dart';
-import '../models/group.dart';
+import '../models/group_item_model.dart';
 import '../models/student.dart';
 import 'add_student_screen.dart';
 import 'edit_student_screen.dart';
 
 class GroupDetailsScreen extends StatelessWidget {
-  final Group group;
+  final GroupItemModel group;
 
   GroupDetailsScreen({required this.group});
 
@@ -78,7 +78,7 @@ class GroupDetailsScreen extends StatelessWidget {
   }
 
   /// ✅ **عرض قائمة الطلاب**
-  Widget _buildStudentList(Group updatedGroup) {
+  Widget _buildStudentList(GroupItemModel updatedGroup) {
 
     return Center(child: Text("❌ لا يوجد طلاب في هذه المجموعة ❌", style: TextStyle(fontSize: 18)));
 

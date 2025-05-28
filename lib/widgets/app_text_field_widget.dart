@@ -12,6 +12,11 @@ class AppTextFieldWidget extends StatelessWidget {
   final TextStyle? textStyle;
   final TextStyle? hintTextStyle;
   final bool obscureText;
+  final Widget? suffixIcon;
+  final bool readOnly;
+  final Function()? onTap;
+  final FormFieldValidator<String>? validator;
+
 
   const AppTextFieldWidget(
       {super.key,
@@ -22,15 +27,21 @@ class AppTextFieldWidget extends StatelessWidget {
         this.border,
         this.textStyle,
         this.hintTextStyle,
-        this.obscureText = false
+        this.obscureText = false,
+        this.readOnly = false,
+        this.suffixIcon,
+        this.onTap,
+        this.validator,
       });
 
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       controller: controller,
       style: textStyle ?? AppTextStyle.textFieldStyle,
+      readOnly: readOnly,
+      onTap: onTap,
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: prefixIcon,
@@ -39,7 +50,10 @@ class AppTextFieldWidget extends StatelessWidget {
         border: border ?? OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
         ),
+        suffixIcon: suffixIcon,
       ),
+      validator: validator,
+
     );
   }
 

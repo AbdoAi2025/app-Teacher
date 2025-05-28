@@ -320,12 +320,26 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
 */
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:teacher_app/bloc/students_selection/students_selection_bloc.dart';
-import 'package:teacher_app/bloc/students_selection/students_selection_event.dart';
-import 'package:teacher_app/bloc/students_selection/students_selection_state.dart';
-import 'package:teacher_app/widgets/student_list_selection_widget.dart';
-import '../models/student.dart';
+import 'package:form_field_validator/form_field_validator.dart';
+import 'package:get/get.dart';
+import 'package:teacher_app/bloc/create_group/create_groups_state.dart';
+import 'package:teacher_app/screens/create_group/states/create_group_state.dart';
+import 'package:teacher_app/screens/create_group/students_selection/states/students_selection_state.dart';
+import 'package:teacher_app/screens/groups/groups_controller.dart';
+import 'package:teacher_app/utils/day_utils.dart';
+import 'package:teacher_app/widgets/app_txt_widget.dart';
+import 'package:teacher_app/widgets/loading_widget.dart';
+import 'package:teacher_app/widgets/primary_button_widget.dart';
+import '../../bottomsheets/week_days_selection_bottom_sheet.dart';
+import '../../models/student.dart';
+import '../../themes/app_colors.dart';
+import '../../widgets/app_text_field_widget.dart';
+import '../../widgets/app_toolbar_widget.dart';
+import '../../widgets/dialog_loading_widget.dart';
+import '../login/login_state.dart';
+import 'create_group_controller.dart';
+import 'students_selection/student_list_selection_widget.dart';
+import 'students_selection/states/student_selection_item_ui_state.dart';
 
 class CreateGroupScreen extends StatefulWidget {
   const CreateGroupScreen({super.key});
@@ -335,11 +349,9 @@ class CreateGroupScreen extends StatefulWidget {
 }
 
 class _CreateGroupScreenState extends State<CreateGroupScreen> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _timeFromController = TextEditingController();
-  final TextEditingController _timeToController = TextEditingController();
+  final GroupsController _groupsController = Get.find();
 
-  StudentsSelectionBloc studentsSelectionBloc = StudentsSelectionBloc();
+  final CreateGroupController _controller = Get.put(CreateGroupController());
 
   int? _selectedDay;
   List<Student> studentsList = [];
@@ -354,206 +366,253 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("إنشاء مجموعة جديدة")),
-      body: BlocProvider(
-        create: (context) => studentsSelectionBloc,
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              spacing: 20,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                _groupNameField(),
-                /*select day*/
-                _dayField(),
-                /*select time from*/
-                _timeFromField(),
-                /*Select time to*/
-                _timeToField(),
-                /*Selected students list*/
-                _selectedStudentsList(),
-              ],
-            ),
-          ),
-        ),
-      ),
+      appBar: AppToolbarWidget.appBar("Create Group".tr),
+      body: _content(),
       bottomNavigationBar: _saveButton(),
     );
   }
 
-  String _getDayName(int day) {
-    const days = [
-      "الأحد",
-      "الإثنين",
-      "الثلاثاء",
-      "الأربعاء",
-      "الخميس",
-      "الجمعة",
-      "السبت"
-    ];
-    return days[day % 7];
-  }
-
-  _groupNameField() => TextField(
-        controller: _nameController,
-        decoration: InputDecoration(labelText: "اسم المجموعة (اختياري)"),
-      );
-
-  _dayField() => DropdownButtonFormField<int>(
-        value: _selectedDay,
-        onChanged: (value) => setState(() => _selectedDay = value),
-        decoration: InputDecoration(labelText: "اختر اليوم"),
-        items: List.generate(
-          7,
-          (index) => DropdownMenuItem(
-            value: index,
-            child: Text(_getDayName(index)),
+  _content() {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _controller.formKey,
+          child: Column(
+            spacing: 20,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _groupNameField(),
+              /*select day*/
+              _dayField(),
+              /*select time from*/
+              _timeFromField(),
+              /*Select time to*/
+              _timeToField(),
+              /*Selected students list*/
+              _selectedStudentsList(),
+            ],
           ),
         ),
+      ),
+    );
+  }
+
+  _groupNameField() => AppTextFieldWidget(
+        controller: _controller.nameController,
+        label: "Group Name".tr,
+        hint: "Group Name".tr,
+        validator: MultiValidator([
+          RequiredValidator(errorText: "Group Name is required".tr),
+        ]).call,
       );
 
-  _timeFromField() => TextField(
-        controller: _timeFromController,
-        readOnly: true,
-        decoration: InputDecoration(labelText: "وقت البدء"),
-        onTap: () => _pickTime(_timeFromController),
-      );
+  _dayField() => Obx(() {
+        var day = _controller.selectedDayRx.value;
+        return AppTextFieldWidget(
+          controller: TextEditingController(text: getDayName(day)),
+          label: "Select Day".tr,
+          hint: "Select Day".tr,
+          readOnly: true,
+          onTap: () {
+            _selectDay();
+          },
+          prefixIcon: Icon(Icons.calendar_today_outlined),
+          validator: MultiValidator([
+            RequiredValidator(errorText: "Day is required".tr),
+          ]).call,
+        );
+      });
 
-  _timeToField() => TextField(
-        controller: _timeToController,
-        readOnly: true,
-        decoration: InputDecoration(labelText: "وقت الانتهاء"),
-        onTap: () => _pickTime(_timeToController),
-      );
+  _timeField(TimeOfDay? time, String label, Function(TimeOfDay) onTimeSelected,
+      {required String? Function(dynamic value) validator}) {
+    return AppTextFieldWidget(
+      controller: TextEditingController(text: _controller.getTimeFormat(time)),
+      label: label,
+      hint: label,
+      readOnly: true,
+      onTap: () {
+        _pickTime(time, onTimeSelected);
+      },
+      validator: validator,
+      prefixIcon: Icon(Icons.access_time),
+    );
+  }
+
+  _timeFromField() => Obx(() {
+        var time = _controller.selectedTimeFromRx.value;
+        return _timeField(
+            time,
+            "Select Time From".tr,
+            validator: MultiValidator([
+              RequiredValidator(errorText: "Time From required".tr),
+            ]).call,
+            (pickedTime) => _controller.onTimeFromSelected(pickedTime));
+      });
+
+  _timeToField() => Obx(() {
+        var time = _controller.selectedTimeToRx.value;
+        return _timeField(
+            time,
+            "Select Time To".tr,
+            validator: MultiValidator([
+              RequiredValidator(errorText: "Time to required".tr),
+            ]).call,
+            (pickedTime) => _controller.onTimeToSelected(pickedTime));
+      });
 
   _saveButton() => Padding(
         padding: const EdgeInsets.all(16.0),
-        child: ElevatedButton(
-          onPressed: _saveGroup,
-          child: Text("حفظ المجموعة"),
+        child: PrimaryButtonWidget(
+          onClick: _saveGroup,
+          text: "Create Group".tr,
         ),
       );
 
-  /*Pickup time*/
-  void _pickTime(TextEditingController controller) async {
+  void _pickTime(TimeOfDay? initial, Function(TimeOfDay) onTimeSelected) async {
     TimeOfDay? pickedTime = await showTimePicker(
       context: context,
-      initialTime: TimeOfDay.now(),
+      initialTime: initial ?? TimeOfDay.now(),
     );
-
     if (pickedTime != null) {
-      setState(() {
-        controller.text = "${pickedTime.hour}:${pickedTime.minute}";
-      });
+      onTimeSelected(pickedTime);
     }
   }
 
   /*Select day*/
   void _selectDay() {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return Container(
-          height: 300,
-          child: Column(
-            children: List.generate(7, (index) {
-              return ListTile(
-                title: Text(_getDayName(index)),
-                onTap: () {
-                  setState(() {
-                    _selectedDay = index;
-                  });
-                  Navigator.pop(context);
-                },
-              );
-            }),
-          ),
-        );
+    WeekDaysSelectionBottomSheet.showBottomSheet(
+        (index) => _controller.onDaySelected(index));
+  }
+
+  void _saveGroup() {
+    _controller.createGroup().listen(
+      (event) {
+        var result = event;
+        hideDialogLoading();
+        switch (result) {
+          case CreateGroupStateLoading():
+            showDialogLoading();
+            break;
+          case CreateGroupStateSuccess():
+            onCreateGroupSuccess(result);
+            break;
+          case CreateGroupStateFormValidation():
+            break;
+          case CreateGroupStateError():
+            showError(result);
+        }
       },
     );
   }
-
-  void _onSelectStudentsClick() {
-    print("_selectStudents");
-    // studentsSelectionBloc.add(LoadStudentsEvent());
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true, // ✅ جعل `BottomSheet` قابل للتمدد
-      builder: (context) {
-        return BlocProvider(
-            create: (context) => StudentsSelectionBloc()..add(LoadStudentsEvent()),
-            child: BlocBuilder<StudentsSelectionBloc, StudentsSelectionState>(
-              builder: (context, state) {
-                return SizedBox(
-                    width: double.infinity,
-                    height: MediaQuery.of(context).size.height * 0.66,
-                    child: _selectStudentBottomSheetWidget(state));
-              },
-            ));
-      },
-    );
-    return;
-  }
-
-  Widget _selectStudentBottomSheetWidget(StudentsSelectionState state) {
-    if (state is StudentsLoaded) {
-      return StudentListSelectionWidget(
-        onStudentsSelected: (selectedItems) {
-          studentsSelectionBloc.add(StudentsSelectedEvent(selectedItems));
-        },
-        students: state.students,
-      );
-    }
-
-
-    if (state is StudentsLoading) {
-      return SizedBox(height: 30, width: 30, child: CircularProgressIndicator());
-    }
-
-    return Container();
-
-  }
-
-  void _saveGroup() {}
 
   _selectedStudentsList() {
     return Column(
+      spacing: 20,
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
         /*Title selected students*/
-        InkWell(onTap: _onSelectStudentsClick, child: Text("selected students")),
+        InkWell(
+            onTap: _onSelectStudentsClick,
+            child: Row(
+              children: [
+                Expanded(child: AppTextWidget("selected students".tr)),
+                Icon(Icons.arrow_downward)
+              ],
+            )),
         /*Show students list*/
         _selectedStudentsState()
       ],
     );
   }
 
-  _selectedStudentList(SelectedStudents state) {
-    var items = state.students;
+  void _onSelectStudentsClick() {
+    var bottomSheetWidget = Obx(() {
+      var value = _controller.studentsSelectionState.value;
+      switch (value) {
+        case StudentsSelectionStateError():
+          return _errorMessage(value);
+        case StudentsSelectionStateSuccess():
+          return SizedBox(
+              height: Get.height * .9,
+              width: double.infinity,
+              child: StudentListSelectionWidget(
+                students: value.students,
+                onSaved: (students) => _controller.onSelectedStudents(students),
+              ));
+      }
+      return LoadingWidget();
+    });
+
+    Get.bottomSheet(bottomSheetWidget,
+        backgroundColor: AppColors.white,
+        isScrollControlled: true,
+        useRootNavigator: true,
+        // ignoreSafeArea: false,
+        enableDrag: true);
+  }
+
+  _selectedStudentsState() {
+    return Obx(() {
+      var selectedStudents = _controller.selectedStudents.value;
+      return _selectedStudentList(selectedStudents);
+    });
+  }
+
+  _selectedStudentList(List<StudentSelectionItemUiState> students) {
+    var items = students;
+
+    if (items.isEmpty) {
+      return _emptyStudentsSelection();
+    }
+
     return ListView.separated(
         shrinkWrap: true,
         itemBuilder: (context, index) {
           var item = items[index];
-          return Text("selected student : ${item.studentName}");
+          return _selectedStudentItem(item);
         },
         separatorBuilder: (context, index) => Container(
-              height: 1,
-              color: Colors.red,
+              height: 10,
             ),
         itemCount: items.length);
   }
 
-  _selectedStudentsState() {
-    return BlocBuilder<StudentsSelectionBloc, StudentsSelectionState>(
-      builder: (context, state) {
-        print("_selectedStudentsState state:$state");
-        if (state is SelectedStudents) {
-          return _selectedStudentList(state);
-        }
-        return Container();
-      },
+  Widget _errorMessage(StudentsSelectionStateError value) {
+    return Text(value.message);
+  }
+
+  _selectedStudentItem(StudentSelectionItemUiState item) {
+    return Card(
+        margin: EdgeInsets.zero,
+        elevation: 2,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              AppTextWidget(item.studentName),
+              Spacer(),
+              InkWell(
+                  onTap: () => _controller.onRemoveStudentClick(item),
+                  child: Icon(Icons.remove))
+            ],
+          ),
+        ));
+  }
+
+  void showError(CreateGroupStateError result) {
+    Get.snackbar("Error", result.exception.toString());
+  }
+
+  _emptyStudentsSelection() {
+    return Center(
+      child: AppTextWidget("No students Selected".tr),
     );
+  }
+
+  void onCreateGroupSuccess(CreateGroupStateSuccess result) {
+    _groupsController.refreshGroups();
+    Get.back();
   }
 }

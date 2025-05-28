@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import '../models/group.dart';
+
+import '../models/group_item_model.dart';
 
 class GroupTile extends StatelessWidget {
-  final Group group;
+  final GroupItemModel group;
 
   GroupTile({required this.group});
 

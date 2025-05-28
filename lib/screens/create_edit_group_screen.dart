@@ -200,13 +200,13 @@ import 'package:teacher_app/apimodels/grade_api_model.dart';
 import 'package:teacher_app/apimodels/student_list_item_api_model.dart';
 import 'package:teacher_app/domain/usecases/get_grades_list_use_case.dart';
 import 'package:teacher_app/domain/usecases/get_my_students_list_use_case.dart';
+import 'package:teacher_app/models/group_item_model.dart';
 import 'package:teacher_app/requests/get_my_students_request.dart';
 import '../bloc/groups/groups_bloc.dart';
 import '../bloc/groups/groups_event.dart';
-import '../models/group.dart';
 
 class CreateEditGroupScreen extends StatefulWidget {
-  final Group? group;
+  final GroupItemModel? group;
 
   const CreateEditGroupScreen({super.key, this.group});
 
@@ -354,7 +354,7 @@ class _CreateEditGroupScreenState extends State<CreateEditGroupScreen> {
 
   /// ✅ **حفظ أو تحديث المجموعة**
   void _saveGroup() {
-    final newGroup = Group(
+    final newGroup = GroupItemModel(
       id: widget.group?.id ?? DateTime.now().toString(),
       name: _nameController.text.isEmpty ? "بدون اسم" : _nameController.text,
       day: _selectedDay ?? 0,

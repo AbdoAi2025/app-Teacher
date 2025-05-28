@@ -19,8 +19,8 @@ class AppNavigator {
     return Navigator.pushNamed(context, AppRoutes.addStudent);
   }
 
-  static Future<dynamic> navigateToCreateGroup(BuildContext context) {
-    return Navigator.pushNamed(context, AppRoutes.createGroup);
+  static  navigateToCreateGroup(BuildContext context) {
+     Get.toNamed(AppRoutes.createGroup);
   }
 
   static Future<dynamic> navigateToGroupDetails(BuildContext context) {
