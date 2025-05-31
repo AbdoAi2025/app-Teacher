@@ -8,6 +8,7 @@ class AppRoutes {
   static const String home = "/home";
   static const String addTeacher = "/addTeacher";
   static const String addStudent = "/addStudent";
+  static const String studentDetails = "/studentDetails";
   /*Groups*/
   static const String createGroup = "/createGroup";
   static const String editGroup = "/editGroup";

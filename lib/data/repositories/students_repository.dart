@@ -6,8 +6,10 @@ import 'package:teacher_app/requests/update_student_request.dart';
 import 'package:teacher_app/services/api_service.dart';
 import 'package:teacher_app/services/endpoints.dart';
 
+import '../../requests/get_student_details_request.dart';
 import '../responses/add_student_response.dart';
 import '../responses/get_my_students_responses.dart';
+import '../responses/get_student_details_response.dart';
 
 class StudentsRepository {
 
@@ -28,5 +30,12 @@ class StudentsRepository {
       Response response = await ApiService.getInstance().put(EndPoints.updateStudents , data: request.toJson());
       AddStudentResponse responseResult = AddStudentResponse.fromJson(response.data);
       return responseResult;
+  }
+
+  Future<StudentDetailsApiModel?> getStudentDetails(GetStudentDetailsRequest request) async {
+    var url = "${EndPoints.getStudentDetails}/${request.id}";
+      Response response = await ApiService.getInstance().get(url);
+    GetStudentDetailsResponse responseResult = GetStudentDetailsResponse.fromJson(response.data);
+      return responseResult.data;
   }
 }

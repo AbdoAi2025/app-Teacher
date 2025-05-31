@@ -19,7 +19,7 @@ class AddStudentRequest {
     name = json['name'];
     password = json['password'];
   }
-  int? gradeId;
+  String? gradeId;
   String? phone;
   String? parentPhone;
   String? name;

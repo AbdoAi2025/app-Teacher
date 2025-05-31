@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../bloc/students/students_bloc.dart';
-import '../bloc/students/students_event.dart';
 import '../models/student.dart';
 
 class EditStudentScreen extends StatefulWidget {
@@ -42,9 +40,7 @@ class _EditStudentScreenState extends State<EditStudentScreen> {
         accessToken: widget.student.accessToken, // ✅ الاحتفاظ بالتوكن كما هو
       );
 
-      BlocProvider.of<StudentsBloc>(context).add(UpdateStudentEvent(
-          studentId: updatedStudent.id, // ✅ تمرير `studentId` الصحيح
-        updatedStudent: updatedStudent));
+
 
       Navigator.pop(context);
     }

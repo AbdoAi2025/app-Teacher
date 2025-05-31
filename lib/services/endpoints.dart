@@ -10,6 +10,7 @@ class EndPoints{
   static const String getGrades = "$apiV1/grade/all";
   static const String addStudents = "$apiV1/students/add";
   static const String updateStudents = "$apiV1/students/update";
+  static const String getStudentDetails = "$apiV1/students";
 
 
   ///api/v1/users/signin

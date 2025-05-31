@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'groups/groups_screen.dart';
+import 'students_list/students_screen.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -47,9 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   _groupsScreen() => GroupsScreen();
 
-  _studentsScreen() => Center(
-    child: AppTextWidget("_studentsScreen"),
-  );
+  _studentsScreen() => StudentsScreen();
 
   getBody() {
     switch (_currentIndex) {

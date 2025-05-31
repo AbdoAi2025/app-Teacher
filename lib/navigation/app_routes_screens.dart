@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:teacher_app/navigation/app_routes.dart';
+import 'package:teacher_app/screens/student_add/add_student_screen.dart';
 import 'package:teacher_app/screens/edit_group/edit_group_screen.dart';
 import 'package:teacher_app/screens/splash/SplashScreen.dart';
 import 'package:teacher_app/screens/create_group/create_group_screen.dart';
@@ -9,6 +10,7 @@ import 'package:teacher_app/screens/home_screen.dart';
 import 'package:teacher_app/screens/login/login_screen.dart';
 
 import '../screens/group_details/group_details_screen.dart';
+import '../screens/student_details/student_details_screen.dart';
 
 
 const int transitionDuration = 600;
@@ -18,9 +20,11 @@ List<GetPage> appRoutes() => [
   _getPage(AppRoutes.root, SplashScreen() , duration: Duration()),
   _getPage(AppRoutes.login, LoginScreen()),
   _getPage(AppRoutes.home, HomeScreen()),
-  _getPage(AppRoutes.createGroup, CreateGroupScreen()),
+  _getPage(AppRoutes.createGroup, AddStudentScreen()),
   _getPage(AppRoutes.groupDetails, GroupDetailsScreen()),
   _getPage(AppRoutes.editGroup, EditGroupScreen()),
+  _getPage(AppRoutes.addStudent, AddStudentScreen()),
+  _getPage(AppRoutes.studentDetails, StudentDetailsScreen()),
 
 ];
 

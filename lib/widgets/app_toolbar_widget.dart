@@ -17,6 +17,7 @@ class AppToolbarWidget {
     List<Widget>? actions,
     SystemUiOverlayStyle? systemOverlayStyle,
     Color? backgroundColor,
+    bool hasLeading = true,
     Function()? onLeadingClick,
   }){
 
@@ -29,7 +30,7 @@ class AppToolbarWidget {
         ),
         centerTitle: true,
         backgroundColor: backgroundColor ?? Colors.transparent,
-        leading: Center(
+        leading: !hasLeading ? null : Center(
           child: leading ??
               BackIconWidget(
                 onClick: (){

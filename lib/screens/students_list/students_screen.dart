@@ -224,91 +224,97 @@ class _StudentsScreenState extends State<StudentsScreen> {
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:teacher_app/navigation/app_navigator.dart';
-import '../bloc/students/students_bloc.dart';
-import '../bloc/students/students_event.dart';
-import '../bloc/students/students_state.dart';
-import '../models/student.dart';
-import 'add_student_screen.dart'; // ✅ استيراد صفحة إضافة الطالب
+import 'package:get/get.dart';
+import 'package:teacher_app/screens/students_list/states/student_item_ui_state.dart';
+import 'package:teacher_app/screens/students_list/students_controller.dart';
+import 'package:teacher_app/widgets/app_toolbar_widget.dart';
+import '../../navigation/app_navigator.dart';
+import '../../widgets/app_error_widget.dart';
+import '../../widgets/loading_widget.dart';
+import '../student_details/args/student_details_arg_model.dart';
+import 'states/students_state.dart';
+import 'widgets/student_item_widget.dart';
 
 class StudentsScreen extends StatefulWidget {
+  const StudentsScreen({super.key});
+
   @override
-  _StudentsScreenState createState() => _StudentsScreenState();
+  State<StudentsScreen> createState() => _StudentsScreenState();
 }
 
 class _StudentsScreenState extends State<StudentsScreen> {
+  StudentsController controller = Get.put(StudentsController());
+
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<StudentsBloc>(context).add(LoadStudentsEvent()); // ✅ تحميل الطلاب عند بدء الشاشة
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("قائمة الطلاب"),
-      ),
-      body: BlocConsumer<StudentsBloc, StudentsState>(
-        listener: (context, state) {
-          if (state is StudentsError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message), backgroundColor: Colors.red),
-            );
-          }
-        },
-        builder: (context, state) {
-          if (state is StudentsLoading) {
-            return Center(child: CircularProgressIndicator());
-          } else if (state is StudentsLoaded) {
-            return _buildStudentsList(state.students);
-          } else {
-            return Center(child: Text("❌ فشل تحميل الطلاب"));
-          }
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => AppNavigator.navigateToAddStudent(context),
-        child: Icon(Icons.add),
-      ),
-    );
-  }
-
-  /// ✅ **عرض قائمة الطلاب**
-  Widget _buildStudentsList(List<Student> students) {
-    return students.isEmpty
-        ? Center(child: Text("❌ لا يوجد طلاب مسجلين ❌", style: TextStyle(fontSize: 18)))
-        : ListView.builder(
-      itemCount: students.length,
-      itemBuilder: (context, index) {
-        return _buildStudentTile(context, students[index]);
-      },
-    );
-  }
-
-  /// ✅ **عرض معلومات الطالب مع زر الحذف**
-  Widget _buildStudentTile(BuildContext context, Student student) {
-    return Card(
-      elevation: 4,
-      margin: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      child: ListTile(
-        title: Text(student.name, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(children: [Icon(Icons.phone, color: Colors.green, size: 18), SizedBox(width: 6), Text(student.phone)]),
-            Row(children: [Icon(Icons.school, color: Colors.blue, size: 18), SizedBox(width: 6), Text(student.gradeId.toString())]),
-          ],
-        ),
-        trailing: IconButton(
-          icon: Icon(Icons.delete, color: Colors.red),
+        appBar: AppToolbarWidget.appBar("Students".tr, hasLeading: false),
+        body: _content(),
+        floatingActionButton: FloatingActionButton(
           onPressed: () {
-            BlocProvider.of<StudentsBloc>(context).add(DeleteStudentEvent(student.id));
+            AppNavigator.navigateToAddStudent();
           },
-        ),
-      ),
+          backgroundColor: Colors.blue,
+          child: Icon(Icons.add, color: Colors.white),
+        ));
+  }
+
+  Widget _content() {
+    return Obx(() {
+      var state = controller.state.value;
+
+      switch (state) {
+        case StudentsStateLoading():
+          return Center(child: LoadingWidget());
+
+        case StudentsStateSuccess():
+          return _studentsList(state);
+
+        case StudentsStateError():
+          return Center(
+              child: AppErrorWidget(message: state.message?.toString() ?? ""));
+      }
+
+      return _emptyView();
+    });
+  }
+
+  refresh() {
+    controller.refreshStudnets();
+  }
+
+  Widget _studentsList(StudentsStateSuccess state) {
+    var items = state.uiStates;
+    if (items.isEmpty) {
+      return _emptyView();
+    }
+    return RefreshIndicator(
+      onRefresh: () async {
+        refresh();
+      },
+      child: ListView.separated(
+          itemBuilder: (context, index) => StudentItemWidget(
+                uiState: items[index],
+                onItemClick: onStudentItemClick,
+              ),
+          separatorBuilder: (context, index) => SizedBox(
+                height: 15,
+              ),
+          itemCount: items.length),
     );
+  }
+
+  Widget _emptyView() {
+    return Center(
+        child: Text("لا توجد طلاب متاحة", style: TextStyle(fontSize: 18)));
+  }
+
+  onStudentItemClick(StudentItemUiState p1) {
+    AppNavigator.navigateToStudentDetails(StudentDetailsArgModel(id: p1.id));
   }
 }
