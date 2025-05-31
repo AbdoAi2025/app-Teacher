@@ -12,7 +12,7 @@ class WeekDaysSelectionBottomSheet {
         Column(
           children: List.generate(7, (index) {
             return ListTile(
-              title: AppTextWidget(getDayName(index)),
+              title: AppTextWidget(AppDateUtils.getDayName(index)),
               onTap: () {
                 onDaySelected(index);
                 Get.back();

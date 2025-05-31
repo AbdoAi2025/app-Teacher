@@ -9,6 +9,12 @@ class AppTextStyle {
   static TextStyle get title =>
       teshrinArLtRegular.copyWith(fontSize: 16, fontWeight: FontWeight.w600);
 
+  static TextStyle get label =>
+      teshrinArLtRegular.copyWith(fontSize: 14, fontWeight: FontWeight.w600);
+
+  static TextStyle get value =>
+      teshrinArLtRegular.copyWith(fontSize: 14, fontWeight: FontWeight.w500);
+
   static TextStyle get appToolBarTitle =>
       teshrinArLtRegular.copyWith(fontSize: 18, fontWeight: FontWeight.w600);
 

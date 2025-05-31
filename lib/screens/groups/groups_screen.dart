@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:teacher_app/navigation/app_navigator.dart';
 import 'package:teacher_app/widgets/app_toolbar_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
 import '../../widgets/app_error_widget.dart';
 import '../../widgets/groups/group_item_widget.dart';
+import '../group_details/args/group_details_arg_model.dart';
 import 'groups_controller.dart';
 import 'groups_state.dart';
 
@@ -62,19 +64,32 @@ class _GroupsScreenState extends State<GroupsScreen> {
         controller.refreshGroups();
       },
       child: ListView.separated(
-          itemBuilder: (context, index) => GroupItemWidget(uiState: items[index], onClick: onGroupItemClick,),
+          itemBuilder: (context, index) => GroupItemWidget(
+            uiState: items[index],
+            onClick: onGroupItemClick,
+            onDeleteClick: onDeleteClick,
+            onEditClick: onEditClick,
+          ),
           separatorBuilder: (context, index) => SizedBox(height: 15,),
           itemCount: items.length),
     );
   }
 
   onGroupItemClick(GroupItemUiState p1) {
-
+      AppNavigator.navigateToGroupDetails(GroupDetailsArgModel(id: p1.groupId));
   }
 
   _emptyView() {
     return Center(
         child: Text("لا توجد مجموعات متاحة",
             style: TextStyle(fontSize: 18)));
+  }
+
+  onDeleteClick(GroupItemUiState p1) {
+
+  }
+
+  onEditClick(GroupItemUiState p1) {
+
   }
 }

@@ -34,6 +34,8 @@ class Data {
       this.groupId, 
       this.groupName, 
       this.groupDay, 
+      this.timeFrom,
+      this.timeTo,
       this.studentCount,});
 
   Data.fromJson(dynamic json) {
@@ -41,10 +43,14 @@ class Data {
     groupName = json['groupName'];
     groupDay = json['groupDay'];
     studentCount = json['studentCount'];
+    timeFrom = json['timeFrom'];
+    timeTo = json['timeTo'];
   }
   String? groupId;
   String? groupName;
   int? groupDay;
+  String? timeFrom;
+  String? timeTo;
   int? studentCount;
 
   Map<String, dynamic> toJson() {

@@ -37,6 +37,14 @@ class AppToolbarWidget {
                 },
               ),
         ),
-        actions: actions);
+        actions: [
+          if(actions != null)...{
+            ...actions,
+            SizedBox(width: 10,)
+          }
+
+
+        ]
+    );
   }
 }

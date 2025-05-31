@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:teacher_app/utils/day_utils.dart';
 
 import '../../domain/usecases/get_groups_list_use_case.dart';
 import 'groups_state.dart';
@@ -23,7 +24,7 @@ class GroupsController extends GetxController{
         groupId: e.id,
         groupName: e.name,
         studentsCount: e.studentCount,
-        date: e.day.toString(),
+        date: AppDateUtils.getDayName(e.day),
         timeFrom: e.timeFrom,
         timeTo: e.timeTo,
       )).toList() ?? List.empty();

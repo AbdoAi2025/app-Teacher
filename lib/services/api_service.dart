@@ -149,7 +149,9 @@ import 'package:teacher_app/appSetting/appSetting.dart';
 import '../models/group_item_model.dart';
 import '../models/student.dart';
 
-
+const String devBaseUrl = "https://assistant-app-2136afb92d95.herokuapp.com";
+const String localBaseUrl = "http://192.168.2.117:8080";
+var baseUrl = localBaseUrl;
 
 class ApiService {
   static Dio? _dio;
@@ -185,7 +187,7 @@ class ApiService {
     var token = getAppSetting().accessToken;
 
     dio.options = BaseOptions(
-      baseUrl: "https://assistant-app-2136afb92d95.herokuapp.com",
+      baseUrl: baseUrl,
       connectTimeout: Duration(seconds: 30),
       receiveTimeout: Duration(seconds: 30),
       headers: {

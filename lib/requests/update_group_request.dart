@@ -1,3 +1,5 @@
+import 'add_group_request.dart';
+
 /// groupId : "string"
 /// name : "string"
 /// studentsIds : ["string"]
@@ -5,39 +7,25 @@
 /// timeFrom : "string"
 /// timeTo : "string"
 
-class UpdateGroupRequest {
-  UpdateGroupRequest({
-      this.groupId, 
-      this.name, 
-      this.studentsIds, 
-      this.day, 
-      this.timeFrom, 
-      this.timeTo,});
+class UpdateGroupRequest extends AddGroupRequest {
 
-  UpdateGroupRequest.fromJson(dynamic json) {
-    groupId = json['groupId'];
-    name = json['name'];
-    studentsIds = json['studentsIds'] != null ? json['studentsIds'].cast<String>() : [];
-    day = json['day'];
-    timeFrom = json['timeFrom'];
-    timeTo = json['timeTo'];
-  }
   String? groupId;
-  String? name;
-  List<String>? studentsIds;
-  int? day;
-  String? timeFrom;
-  String? timeTo;
 
+  UpdateGroupRequest({
+    this.groupId,
+    super.name,
+    super.studentsIds,
+    super.day,
+    super.timeFrom,
+    super.timeTo,
+    super.gradeId,
+  });
+
+
+  @override
   Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
+    final map = super.toJson();
     map['groupId'] = groupId;
-    map['name'] = name;
-    map['studentsIds'] = studentsIds;
-    map['day'] = day;
-    map['timeFrom'] = timeFrom;
-    map['timeTo'] = timeTo;
     return map;
   }
-
 }

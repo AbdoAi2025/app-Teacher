@@ -1,21 +1,22 @@
-/// groupId : "string"
-/// groupName : "string"
-/// groupDate : "string"
-/// grade : {"nameEn":"string","nameAr":"string"}
-/// students : [{"studentId":"string","studentName":"string","studentPhone":"string","studentParentPhone":"string"}]
+import '../../utils/localized_name_model.dart';
 
 class GetGroupDetailsResponse {
   GetGroupDetailsResponse({
-      this.groupId, 
-      this.groupName, 
-      this.groupDate, 
-      this.grade, 
-      this.students,});
+    this.groupId,
+    this.groupName,
+    this.groupDay,
+    this.timeFrom,
+    this.timeTo,
+    this.grade,
+    this.students,
+  });
 
   GetGroupDetailsResponse.fromJson(dynamic json) {
     groupId = json['groupId'];
     groupName = json['groupName'];
-    groupDate = json['groupDate'];
+    groupDay = int.tryParse(json['groupDay'].toString());
+    timeFrom = json['timeFrom'];
+    timeTo = json['timeTo'];
     grade = json['grade'] != null ? Grade.fromJson(json['grade']) : null;
     if (json['students'] != null) {
       students = [];
@@ -24,9 +25,12 @@ class GetGroupDetailsResponse {
       });
     }
   }
+
   String? groupId;
   String? groupName;
-  String? groupDate;
+  int? groupDay;
+  String? timeFrom;
+  String? timeTo;
   Grade? grade;
   List<Students>? students;
 
@@ -34,7 +38,7 @@ class GetGroupDetailsResponse {
     final map = <String, dynamic>{};
     map['groupId'] = groupId;
     map['groupName'] = groupName;
-    map['groupDate'] = groupDate;
+    map['groupDate'] = groupDay;
     if (grade != null) {
       map['grade'] = grade?.toJson();
     }
@@ -43,7 +47,6 @@ class GetGroupDetailsResponse {
     }
     return map;
   }
-
 }
 
 /// studentId : "string"
@@ -53,10 +56,11 @@ class GetGroupDetailsResponse {
 
 class Students {
   Students({
-      this.studentId, 
-      this.studentName, 
-      this.studentPhone, 
-      this.studentParentPhone,});
+    this.studentId,
+    this.studentName,
+    this.studentPhone,
+    this.studentParentPhone,
+  });
 
   Students.fromJson(dynamic json) {
     studentId = json['studentId'];
@@ -64,6 +68,7 @@ class Students {
     studentPhone = json['studentPhone'];
     studentParentPhone = json['studentParentPhone'];
   }
+
   String? studentId;
   String? studentName;
   String? studentPhone;
@@ -77,7 +82,6 @@ class Students {
     map['studentParentPhone'] = studentParentPhone;
     return map;
   }
-
 }
 
 /// nameEn : "string"
@@ -85,21 +89,29 @@ class Students {
 
 class Grade {
   Grade({
-      this.nameEn, 
-      this.nameAr,});
+    this.nameEn,
+    this.nameAr,
+    this.id,
+    this.localizedName,
+  });
 
   Grade.fromJson(dynamic json) {
     nameEn = json['nameEn'];
     nameAr = json['nameAr'];
+    id = json['id'];
+    localizedName = LocalizedNameModel(nameEn: nameEn ?? "", nameAr: nameAr ?? "");
   }
+
+  String? id;
   String? nameEn;
   String? nameAr;
+  LocalizedNameModel? localizedName;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['nameEn'] = nameEn;
     map['nameAr'] = nameAr;
+    map['id'] = id;
     return map;
   }
-
 }

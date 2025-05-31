@@ -49,8 +49,8 @@ class GroupsRepository {
                 name: e.groupName ?? "",
                 day: e.groupDay ?? 0,
                 studentCount: e.studentCount ?? 0,
-                timeFrom: '',
-                timeTo: '',
+                timeFrom: e.timeFrom ?? "",
+                timeTo: e.timeTo ?? "",
                 studentsIds: []))
             .toList() ??
         List.empty();

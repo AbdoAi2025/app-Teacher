@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/navigation/app_routes.dart';
 
+import '../screens/edit_group/args/edit_group_args_model.dart';
+import '../screens/group_details/args/group_details_arg_model.dart';
+
 class AppNavigator {
 
   AppNavigator._();
@@ -23,8 +26,12 @@ class AppNavigator {
      Get.toNamed(AppRoutes.createGroup);
   }
 
-  static Future<dynamic> navigateToGroupDetails(BuildContext context) {
-    return Navigator.pushNamed(context, AppRoutes.groupDetails);
+  static  navigateToGroupDetails(GroupDetailsArgModel model) {
+     Get.toNamed(AppRoutes.groupDetails , arguments: model);
+  }
+
+  static Future<dynamic> navigateToEditGroup(EditGroupArgsModel model) async {
+    return await Get.toNamed(AppRoutes.editGroup , arguments: model);
   }
 
   static Future<dynamic> navigateToEditStudent(BuildContext context) {

@@ -322,7 +322,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:get/get.dart';
-import 'package:teacher_app/bloc/create_group/create_groups_state.dart';
+import 'package:teacher_app/screens/create_group/grades/grades_selection_state.dart';
 import 'package:teacher_app/screens/create_group/states/create_group_state.dart';
 import 'package:teacher_app/screens/create_group/students_selection/states/students_selection_state.dart';
 import 'package:teacher_app/screens/groups/groups_controller.dart';
@@ -336,19 +336,21 @@ import '../../themes/app_colors.dart';
 import '../../widgets/app_text_field_widget.dart';
 import '../../widgets/app_toolbar_widget.dart';
 import '../../widgets/dialog_loading_widget.dart';
-import '../login/login_state.dart';
+import '../../widgets/item_selection_widget/student_list_selection_widget.dart';
 import 'create_group_controller.dart';
 import 'students_selection/student_list_selection_widget.dart';
 import 'students_selection/states/student_selection_item_ui_state.dart';
 
 class CreateGroupScreen extends StatefulWidget {
+
   const CreateGroupScreen({super.key});
 
   @override
-  State<StatefulWidget> createState() => _CreateGroupScreenState();
+  State<CreateGroupScreen> createState() => CreateGroupScreenState();
 }
 
-class _CreateGroupScreenState extends State<CreateGroupScreen> {
+class CreateGroupScreenState extends State<CreateGroupScreen> {
+
   final GroupsController _groupsController = Get.find();
 
   final CreateGroupController _controller = Get.put(CreateGroupController());
@@ -363,10 +365,13 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
     super.initState();
   }
 
+
+  CreateGroupController getController() => _controller;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppToolbarWidget.appBar("Create Group".tr),
+      appBar: AppToolbarWidget.appBar(getScreenTitle()),
       body: _content(),
       bottomNavigationBar: _saveButton(),
     );
@@ -377,12 +382,13 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
-          key: _controller.formKey,
+          key: getController().formKey,
           child: Column(
             spacing: 20,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               _groupNameField(),
+              _gradeField(),
               /*select day*/
               _dayField(),
               /*select time from*/
@@ -399,7 +405,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   }
 
   _groupNameField() => AppTextFieldWidget(
-        controller: _controller.nameController,
+        controller: getController().nameController,
         label: "Group Name".tr,
         hint: "Group Name".tr,
         validator: MultiValidator([
@@ -407,10 +413,26 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
         ]).call,
       );
 
+  _gradeField() {
+    return Obx((){
+     return AppTextFieldWidget(
+        controller: TextEditingController(text: getController().selectedGrade.value?.name),
+        label: "Grade".tr,
+        hint: "Grade".tr,
+        readOnly: true,
+        suffixIcon: Icon(Icons.arrow_downward),
+        validator: MultiValidator([
+          RequiredValidator(errorText: "Grade is required".tr),
+        ]).call,
+       onTap: _onSelectGradesClick,
+      );
+    });
+  }
+
   _dayField() => Obx(() {
-        var day = _controller.selectedDayRx.value;
+        var day = getController().selectedDayRx.value;
         return AppTextFieldWidget(
-          controller: TextEditingController(text: getDayName(day)),
+          controller: TextEditingController(text: AppDateUtils.getDayName(day)),
           label: "Select Day".tr,
           hint: "Select Day".tr,
           readOnly: true,
@@ -427,7 +449,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   _timeField(TimeOfDay? time, String label, Function(TimeOfDay) onTimeSelected,
       {required String? Function(dynamic value) validator}) {
     return AppTextFieldWidget(
-      controller: TextEditingController(text: _controller.getTimeFormat(time)),
+      controller: TextEditingController(text: getController().getTimeFormat(time)),
       label: label,
       hint: label,
       readOnly: true,
@@ -440,32 +462,32 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   }
 
   _timeFromField() => Obx(() {
-        var time = _controller.selectedTimeFromRx.value;
+        var time = getController().selectedTimeFromRx.value;
         return _timeField(
             time,
             "Select Time From".tr,
             validator: MultiValidator([
               RequiredValidator(errorText: "Time From required".tr),
             ]).call,
-            (pickedTime) => _controller.onTimeFromSelected(pickedTime));
+            (pickedTime) => getController().onTimeFromSelected(pickedTime));
       });
 
   _timeToField() => Obx(() {
-        var time = _controller.selectedTimeToRx.value;
+        var time = getController().selectedTimeToRx.value;
         return _timeField(
             time,
             "Select Time To".tr,
             validator: MultiValidator([
               RequiredValidator(errorText: "Time to required".tr),
             ]).call,
-            (pickedTime) => _controller.onTimeToSelected(pickedTime));
+            (pickedTime) => getController().onTimeToSelected(pickedTime));
       });
 
   _saveButton() => Padding(
         padding: const EdgeInsets.all(16.0),
         child: PrimaryButtonWidget(
-          onClick: _saveGroup,
-          text: "Create Group".tr,
+          onClick: onSaveGroupClick,
+          text: getSubmitButtonText(),
         ),
       );
 
@@ -482,29 +504,10 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   /*Select day*/
   void _selectDay() {
     WeekDaysSelectionBottomSheet.showBottomSheet(
-        (index) => _controller.onDaySelected(index));
+        (index) => getController().onDaySelected(index));
   }
 
-  void _saveGroup() {
-    _controller.createGroup().listen(
-      (event) {
-        var result = event;
-        hideDialogLoading();
-        switch (result) {
-          case CreateGroupStateLoading():
-            showDialogLoading();
-            break;
-          case CreateGroupStateSuccess():
-            onCreateGroupSuccess(result);
-            break;
-          case CreateGroupStateFormValidation():
-            break;
-          case CreateGroupStateError():
-            showError(result);
-        }
-      },
-    );
-  }
+
 
   _selectedStudentsList() {
     return Column(
@@ -529,7 +532,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
 
   void _onSelectStudentsClick() {
     var bottomSheetWidget = Obx(() {
-      var value = _controller.studentsSelectionState.value;
+      var value = getController().studentsSelectionState.value;
       switch (value) {
         case StudentsSelectionStateError():
           return _errorMessage(value);
@@ -539,7 +542,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
               width: double.infinity,
               child: StudentListSelectionWidget(
                 students: value.students,
-                onSaved: (students) => _controller.onSelectedStudents(students),
+                onSaved: (students) => getController().onSelectedStudents(students),
               ));
       }
       return LoadingWidget();
@@ -553,9 +556,38 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
         enableDrag: true);
   }
 
+  void _onSelectGradesClick() {
+    var bottomSheetWidget = Obx(() {
+      var value = getController().gradeSelectionState.value;
+      switch (value) {
+        case GradesSelectionStateError():
+          return _errorMessageView(value.message);
+        case GradesSelectionStateSuccess():
+          return SizedBox(
+              // height: Get.height * .9,
+              width: double.infinity,
+              child: ItemSelectionWidget(
+                items: value.items,
+                title: "Select Grade",
+                isSingleSelection: true,
+                onSaved: (selectedItems) => getController().onSelectedGrade(selectedItems.firstOrNull),
+              ));
+      }
+      return LoadingWidget();
+    });
+
+    Get.bottomSheet(bottomSheetWidget,
+        backgroundColor: AppColors.white,
+        // isScrollControlled: true,
+        useRootNavigator: true,
+        // ignoreSafeArea: false,
+        enableDrag: true
+    );
+  }
+
   _selectedStudentsState() {
     return Obx(() {
-      var selectedStudents = _controller.selectedStudents.value;
+      var selectedStudents = getController().selectedStudents.value;
       return _selectedStudentList(selectedStudents);
     });
   }
@@ -594,7 +626,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
               AppTextWidget(item.studentName),
               Spacer(),
               InkWell(
-                  onTap: () => _controller.onRemoveStudentClick(item),
+                  onTap: () => getController().onRemoveStudentClick(item),
                   child: Icon(Icons.remove))
             ],
           ),
@@ -611,8 +643,47 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
     );
   }
 
-  void onCreateGroupSuccess(CreateGroupStateSuccess result) {
+  void onCreateGroupSuccess(SaveGroupStateSuccess result) {
     _groupsController.refreshGroups();
-    Get.back();
+    Get.back(result: true);
   }
+
+  String getScreenTitle() {
+    return "Create Group".tr;
+  }
+
+  String getSubmitButtonText() {
+    return "Create Group".tr;
+  }
+
+  void onSaveGroupResult(CreateGroupState event) {
+    var result = event;
+    hideDialogLoading();
+    switch (result) {
+      case CreateGroupStateLoading():
+        showDialogLoading();
+        break;
+      case SaveGroupStateSuccess():
+        onCreateGroupSuccess(result);
+        break;
+      case CreateGroupStateFormValidation():
+        break;
+      case CreateGroupStateError():
+        showError(result);
+    }
+  }
+
+  Widget _errorMessageView(String message) {
+    return AppTextWidget(message);
+  }
+
+
+  void onSaveGroupClick() {
+    getController().saveGroup().listen(
+          (event) {
+        onSaveGroupResult(event);
+      },
+    );
+  }
+
 }

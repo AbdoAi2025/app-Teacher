@@ -25,7 +25,7 @@ class BackIconWidget extends StatelessWidget {
           padding: const EdgeInsets.symmetric(
               horizontal: paddingSmall, vertical: paddingSmall),
           child: Transform.flip(
-              flipX: AppSetting.isArabic,
+              flipX: !AppSetting.isArabic,
               child: SvgPicture.asset(Assets.svgArrowRight)),
         ));
   }
