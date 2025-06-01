@@ -1,17 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
+import 'package:teacher_app/screens/group_details/states/group_details_ui_state.dart';
+import 'package:teacher_app/screens/student_details/args/student_details_arg_model.dart';
 import 'package:teacher_app/utils/app_background_styles.dart';
 import 'package:teacher_app/utils/day_utils.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
+import 'package:teacher_app/widgets/day_with_icon_widget.dart';
 import 'package:teacher_app/widgets/delete_icon_widget.dart';
 import 'package:teacher_app/widgets/edit_icon_widget.dart';
+import 'package:teacher_app/widgets/grade_with_icon_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
+import 'package:teacher_app/widgets/primary_button_widget.dart';
+import 'package:teacher_app/widgets/students/student_item_widget.dart';
 
 import '../../themes/app_colors.dart';
 import '../../themes/txt_styles.dart';
 import '../../widgets/app_toolbar_widget.dart';
+import '../../widgets/groups/group_student_item_widget.dart';
+import '../../widgets/groups/states/group_student_item_ui_state.dart';
 import '../group_edit/args/edit_group_args_model.dart';
+import '../groups/groups_state.dart';
 import 'group_details_controller.dart';
 import 'states/group_details_state.dart';
 import 'states/group_details_student_item_ui_state.dart';
@@ -30,7 +39,7 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppToolbarWidget.appBar("Group Details".tr,
-            actions: [_editIcon(), _deleteIcon()]),
+            actions: [_deleteIcon()]),
         body: Padding(
           padding: const EdgeInsets.all(20.0),
           child: _content(),
@@ -59,57 +68,85 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
 
   _groupDetails(GroupDetailsStateSuccess state) {
     var uiState = state.uiState;
+    return SingleChildScrollView(
+      child: Column(
+        spacing: 10,
+        children: [
+          _groupInfoSection(uiState),
+          _studentsSection(uiState)
+        ],
+      ),
+    );
+  }
+
+  Widget _groupInfoSection(GroupDetailsUiState uiState) {
+    var content = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      child: Column(
+        spacing: 10,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _groupName(uiState.groupName),
+          _groupDay("${AppDateUtils.getDayName(uiState.groupDay)} : ${uiState
+              .timeFrom} - ${uiState.timeTo}"),
+          _grade(uiState.grade),
+          _startSession()
+        ],
+      ),
+    );
+
+    var endIcon = EditIconWidget(onClick: onEditClick);
+    return _sectionLabelValue("Group Info".tr, content, endIcon);
+  }
+
+  Widget _studentsSection(GroupDetailsUiState uiState) {
+    return _sectionLabelValue("Students".tr, _studentsList(uiState.students));
+  }
+
+
+  _groupName(String groupName) {
     return Column(
-      spacing: 20,
+      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _groupName(uiState.groupName),
-        // _divider(),
-        _groupDay(
-            "${AppDateUtils.getDayName(uiState.groupDay)} : ${uiState.timeFrom} - ${uiState.timeTo}"),
-        // _divider(),
-        _grade(uiState.grade),
-        // _divider(),
-        _students(uiState.students),
+        _label("Group Name".tr),
+        Padding(
+          padding: const EdgeInsetsDirectional.only(start: 10),
+          child: _value(groupName),
+        ),
       ],
     );
   }
 
-  _groupName(String groupName) {
-    return _sectionLabelValue("Group Name".tr, _value(groupName));
-  }
-
   _groupDay(String day) {
-    return _sectionLabelValue("Day".tr, _value(day));
+    return DayWithIconWidget(day);
   }
 
   _grade(String grade) {
-    return _sectionLabelValue("Grade".tr, _value(grade));
+    return GradeWithIconWidget(grade);
   }
 
-  Widget _students(List<GroupDetailsStudentItemUiState> students) {
-    return _sectionLabelValue(
-      "Students".tr,
-      _studentsList(students),
-    );
-  }
+  Widget _label(String text) => AppTextWidget(text, style: AppTextStyle.label);
 
-  _label(String text) => AppTextWidget(text, style: AppTextStyle.label);
+  Widget _value(String text) => AppTextWidget(text, style: AppTextStyle.value);
 
-  _value(String text) => AppTextWidget(text, style: AppTextStyle.value);
-
-  Widget _sectionLabelValue(String label, Widget content) {
+  Widget _sectionLabelValue(String label, Widget content, [Widget? endIcon]) {
     return Container(
       width: double.infinity,
-      decoration: AppBackgroundStyle.getColoredBackgroundRounded(
-          15, AppColors.color_E8E5E0),
+      decoration: AppBackgroundStyle.backgroundWithShadow(),
       padding: EdgeInsets.all(10),
       child: Column(
         spacing: 10,
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _label(label),
+          Row(
+            children: [
+              Expanded(child: _label(label)),
+              if(endIcon != null)endIcon
+            ],
+          ),
           Padding(
             padding: const EdgeInsets.all(0.0),
             child: SizedBox(width: double.infinity, child: content),
@@ -122,14 +159,24 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
   _studentsList(List<GroupDetailsStudentItemUiState> student) {
     return ListView.separated(
         shrinkWrap: true,
-        itemBuilder: (context, index) =>
-            AppTextWidget(student[index].studentName),
-        separatorBuilder: (context, index) => Divider(
+        itemBuilder: (context, index) {
+          var item = student[index];
+          return GroupStudentItemWidget(
+            uiState: GroupStudentItemUiState(
+              id: item.studentId,
+              name: item.studentName,
+              parentPhone: "item.parentPhone",
+            ),
+            onItemClick: (uiState) {
+              onStudentItemClick(uiState);
+            },
+          );
+        },
+        separatorBuilder: (context, index) =>
+            Divider(
               height: 1,
             ),
         itemCount: student.length);
-
-    return AppTextWidget("student : ${student.length}");
   }
 
   _editIcon() {
@@ -161,7 +208,21 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
 
   onDeleteClick() {}
 
-  _divider() => Divider(
+  _divider() =>
+      Divider(
         height: 0,
       );
+
+  _startSession() => Center(
+    child: PrimaryButtonWidget(
+      text: "Start session".tr,
+      onClick: (){},
+    ),
+  );
+
+  void onStudentItemClick(GroupStudentItemUiState uiState) {
+    AppNavigator.navigateToStudentDetails(StudentDetailsArgModel(id: uiState.id));
+  }
+
+
 }

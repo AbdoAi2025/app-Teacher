@@ -156,10 +156,12 @@ class MyApp extends StatelessWidget {
               brightness: Brightness.light,
               splashColor: AppColors.splashColor,
               // highlightColor: Colors.transparent,
-              scaffoldBackgroundColor: AppColors.white,
-              colorScheme:
-                  ColorScheme.fromSeed(seedColor: AppColors.appMainColor),
+              scaffoldBackgroundColor: AppColors.colorOffWhite,
+              colorScheme: ColorScheme.fromSeed(
+                  seedColor: AppColors.appMainColor,
+              ),
               primaryColor: AppColors.appMainColor,
+              cardColor: AppColors.white,
               secondaryHeaderColor: Colors.white,
               useMaterial3: true,
               appBarTheme: AppBarTheme(
@@ -167,6 +169,7 @@ class MyApp extends StatelessWidget {
                 backgroundColor: AppColors.appBarBackgroundColor,
                 surfaceTintColor: AppColors.appBarBackgroundColor,
                 foregroundColor: AppColors.appBarForegroundColor,
+
               ),
               elevatedButtonTheme: ElevatedButtonThemeData(
                 style: ElevatedButton.styleFrom(
