@@ -12,7 +12,7 @@ class AppNavigator {
 
 
   static navigateToHome() {
-    Get.offAllNamed(AppRoutes.home);
+    Get.offAllNamed(AppRoutes.bottomBar);
   }
 
   static navigateToLogin() {

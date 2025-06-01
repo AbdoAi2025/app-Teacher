@@ -3,17 +3,19 @@ import 'package:get/get.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'groups/groups_screen.dart';
+import 'home/home_screen.dart';
 import 'students_list/students_screen.dart';
 
+class BottomBarScreen extends StatefulWidget {
+  const BottomBarScreen({super.key});
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<BottomBarScreen> createState() => _BottomBarScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _BottomBarScreenState extends State<BottomBarScreen> {
   int _currentIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,9 +26,11 @@ class _HomeScreenState extends State<HomeScreen> {
         selectedItemColor: Colors.blue,
         unselectedItemColor: Colors.grey,
         items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home".tr),
           BottomNavigationBarItem(icon: Icon(Icons.group), label: "Groups".tr),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: "Students"),
-          BottomNavigationBarItem(icon: Icon(Icons.account_box_rounded), label: "Profile".tr),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.account_box_rounded), label: "Profile".tr),
         ],
       ),
     );
@@ -38,6 +42,8 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  _homeScreen() => HomeScreen();
+
   _groupsScreen() => GroupsScreen();
 
   _studentsScreen() => StudentsScreen();
@@ -45,15 +51,16 @@ class _HomeScreenState extends State<HomeScreen> {
   getBody() {
     switch (_currentIndex) {
       case 1:
-        return _studentsScreen();
+        return _groupsScreen();
       case 2:
+        return _studentsScreen();
+      case 3:
         return _profileScreen();
     }
-    return _groupsScreen();
+    return _homeScreen();
   }
 
   _profileScreen() {
-   return AppTextWidget("_profileScreen");
+    return AppTextWidget("_profileScreen");
   }
-
 }
