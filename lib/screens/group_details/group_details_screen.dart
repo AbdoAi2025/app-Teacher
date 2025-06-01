@@ -5,15 +5,18 @@ import 'package:teacher_app/screens/group_details/states/group_details_ui_state.
 import 'package:teacher_app/screens/student_details/args/student_details_arg_model.dart';
 import 'package:teacher_app/utils/app_background_styles.dart';
 import 'package:teacher_app/utils/day_utils.dart';
+import 'package:teacher_app/utils/message_utils.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'package:teacher_app/widgets/day_with_icon_widget.dart';
 import 'package:teacher_app/widgets/delete_icon_widget.dart';
+import 'package:teacher_app/widgets/dialog_loading_widget.dart';
 import 'package:teacher_app/widgets/edit_icon_widget.dart';
 import 'package:teacher_app/widgets/grade_with_icon_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
 import 'package:teacher_app/widgets/primary_button_widget.dart';
 import 'package:teacher_app/widgets/students/student_item_widget.dart';
 
+import '../../domain/states/start_session_state.dart';
 import '../../themes/app_colors.dart';
 import '../../themes/txt_styles.dart';
 import '../../widgets/app_toolbar_widget.dart';
@@ -216,12 +219,31 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
   _startSession() => Center(
     child: PrimaryButtonWidget(
       text: "Start session".tr,
-      onClick: (){},
+      onClick: (){
+        onStartSession();
+      },
     ),
   );
 
   void onStudentItemClick(GroupStudentItemUiState uiState) {
     AppNavigator.navigateToStudentDetails(StudentDetailsArgModel(id: uiState.id));
+  }
+
+  void onStartSession() {
+    controller.startSession().listen((event) {
+      hideDialogLoading();
+      switch(event){
+        case StartSessionStateLoading():
+          showDialogLoading();
+          break;
+        case StartSessionStateSuccess():
+          showSuccessMessage("StartSessionStateSuccess");
+          break;
+        case StartSessionStateError():
+          ShowErrorMessage(event.exception.toString());
+          break;
+      }
+    });
   }
 
 

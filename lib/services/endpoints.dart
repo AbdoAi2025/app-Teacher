@@ -24,5 +24,9 @@ class EndPoints{
   static const String getGroupDetails = "$apiV1/groups";
   static const String deleteGroup = "$apiV1/groups/delete";
 
+  /*Sessions*/
+  static const String startSession = "$apiV1/sessions/startSession";
+
+
 
 }
