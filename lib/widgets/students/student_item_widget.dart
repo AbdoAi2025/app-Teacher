@@ -1,34 +1,30 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:teacher_app/themes/txt_styles.dart';
-import 'package:teacher_app/widgets/app_txt_widget.dart';
+import 'package:teacher_app/screens/students_list/states/student_item_ui_state.dart';
+import 'package:teacher_app/widgets/delete_icon_widget.dart';
+import 'package:teacher_app/widgets/grade_with_icon_widget.dart';
+import 'package:teacher_app/widgets/phone_with_icon_widget.dart';
 
-import '../../screens/groups/groups_state.dart';
-import '../../themes/app_colors.dart';
-import '../day_with_icon_widget.dart';
-import '../delete_icon_widget.dart';
-import '../time_with_icon_widget.dart';
+import '../../themes/txt_styles.dart';
+import '../app_txt_widget.dart';
+import '../forward_arrow_widget.dart';
 
-class GroupItemWidget extends StatelessWidget {
+class StudentItemWidget extends StatelessWidget {
 
   final StudentItemUiState uiState;
-  final Function(StudentItemUiState) onClick;
-  final Function(StudentItemUiState) onEditClick;
+  final Function(StudentItemUiState) onItemClick;
   final Function(StudentItemUiState) onDeleteClick;
 
-  const GroupItemWidget(
+  const StudentItemWidget(
       {super.key,
       required this.uiState,
-      required this.onClick,
-      required this.onEditClick,
+      required this.onItemClick,
       required this.onDeleteClick});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        onClick(uiState);
+        onItemClick(uiState);
       },
       child: Card(
         margin: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -42,7 +38,7 @@ class GroupItemWidget extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  _groupName(),
+                  _studentName(),
                   Spacer(),
                   _deleteIcon(),
                 ],
@@ -53,7 +49,7 @@ class GroupItemWidget extends StatelessWidget {
                       child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
-                    children: [_date(), _time()],
+                    children: [_parentPhone(), _grade()],
                   )),
                   _arrowIcon()
                 ],
@@ -65,21 +61,13 @@ class GroupItemWidget extends StatelessWidget {
     );
   }
 
-  _arrowIcon() => Icon(Icons.arrow_forward_ios, color: Colors.grey);
+  _parentPhone() => PhoneWithIconWidget(uiState.parentPhone);
 
-  _date() => DayWithIconWidget(uiState.date);
+  _grade() => GradeWithIconWidget(uiState.grade);
 
-  _time() => TimeWithIconWidget(uiState.timeFrom, uiState.timeTo);
+  _arrowIcon() => ForwardArrowWidget();
 
-  _groupName() => AppTextWidget(
-        uiState.groupName,
-        style: AppTextStyle.title,
-      );
+  _studentName() => AppTextWidget(uiState.name, style: AppTextStyle.title);
 
-  _deleteIcon() => DeleteIconWidget(
-      onClick: () => onDeleteClick(uiState));
-
-  _editIcon() => InkWell(
-      onTap: () => onEditClick(uiState),
-      child: Icon(Icons.edit));
+  _deleteIcon() => DeleteIconWidget(onClick: (){onDeleteClick(uiState);});
 }

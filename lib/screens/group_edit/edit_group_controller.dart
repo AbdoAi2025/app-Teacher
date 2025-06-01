@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/domain/usecases/update_group_use_case.dart';
-import 'package:teacher_app/localization/localArabic.dart';
 import 'package:teacher_app/requests/update_group_request.dart';
 import 'package:teacher_app/screens/create_group/create_group_controller.dart';
-import 'package:teacher_app/screens/edit_group/args/edit_group_args_model.dart';
-import 'package:teacher_app/screens/edit_group/states/update_group_state.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
 import 'package:teacher_app/utils/day_utils.dart';
 
@@ -15,6 +12,8 @@ import '../../widgets/item_selection_widget/item_selection_ui_state.dart';
 import '../create_group/states/create_group_state.dart';
 import '../create_group/students_selection/states/student_selection_item_ui_state.dart';
 import '../create_group/students_selection/states/students_selection_state.dart';
+import 'args/edit_group_args_model.dart';
+import 'states/update_group_state.dart';
 
 class EditGroupController extends CreateGroupController {
 

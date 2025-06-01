@@ -18,14 +18,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: getBody(),
-      floatingActionButton: _currentIndex == 0 ? FloatingActionButton(
-        onPressed: () {
-          AppNavigator.navigateToCreateGroup(context);
-        },
-        backgroundColor: Colors.blue,
-        child: Icon(Icons.add, color: Colors.white),
-      )
-          : null,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: _onItemTapped,

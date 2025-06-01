@@ -11,11 +11,10 @@ import 'package:teacher_app/widgets/loading_widget.dart';
 import '../../themes/app_colors.dart';
 import '../../themes/txt_styles.dart';
 import '../../widgets/app_toolbar_widget.dart';
-import '../edit_group/args/edit_group_args_model.dart';
+import '../student_edit/args/edit_student_args_model.dart';
 import 'states/student_details_state.dart';
 
 class StudentDetailsScreen extends StatefulWidget {
-
   const StudentDetailsScreen({super.key});
 
   @override
@@ -23,8 +22,8 @@ class StudentDetailsScreen extends StatefulWidget {
 }
 
 class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
-
-  final StudentDetailsController controller = Get.put(StudentDetailsController());
+  final StudentDetailsController controller =
+      Get.put(StudentDetailsController());
 
   @override
   Widget build(BuildContext context) {
@@ -65,8 +64,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
       children: [
         _studentName(uiState.studentName),
         _parentPhone(uiState.parentPhone),
-        if(uiState.phone.isNotEmpty)
-        _studentPhone(uiState.phone),
+        if (uiState.phone.isNotEmpty) _studentPhone(uiState.phone),
         _groupName(uiState.groupName),
         _grade(uiState.gradeName),
       ],
@@ -80,6 +78,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
   _parentPhone(String name) {
     return _sectionLabelValue("Parent Phone".tr, _value(name));
   }
+
   _studentPhone(String name) {
     return _sectionLabelValue("Student Phone".tr, _value(name));
   }
@@ -95,7 +94,6 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
   _grade(String grade) {
     return _sectionLabelValue("Grade".tr, _value(grade));
   }
-
 
   _label(String text) => AppTextWidget(text, style: AppTextStyle.label);
 
@@ -122,7 +120,6 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
     );
   }
 
-
   _editIcon() {
     return EditIconWidget(onClick: onEditClick);
   }
@@ -132,22 +129,19 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
   }
 
   onEditClick() async {
-    // var uiState = controller.getStudentDetailsUiState();
-    // var args = EditGroupArgsModel(
-    //     groupId: uiState?.groupId ?? "",
-    //     groupName: uiState?.groupName ?? "",
-    //     groupDay: uiState?.groupDay ?? 0,
-    //     timeFrom: uiState?.timeFrom ?? "",
-    //     timeTo: uiState?.timeTo ?? "",
-    //     gradeName: uiState?.grade ?? "",
-    //     gradeId: uiState?.gradeId ?? "",
-    // );
-    //
-    // var result = await AppNavigator.navigateToEditGroup(args);
-    //
-    // if (result == true) {
-    //   controller.reload();
-    // }
+    var uiState = controller.getStudentDetailsUiState();
+    var args = EditStudentArgsModel(
+      studentId: uiState?.studentId ?? "",
+      studentName: uiState?.studentName ?? "",
+      gradeId: uiState?.groupId ?? "",
+      gradeName: uiState?.gradeName ?? "",
+      parentPhone: uiState?.parentPhone ?? "",
+      studentPhone: uiState?.phone ?? "",
+    );
+    var result = await AppNavigator.navigateToEditStudent(args);
+    if (result == true) {
+      controller.reload();
+    }
   }
 
   onDeleteClick() {}

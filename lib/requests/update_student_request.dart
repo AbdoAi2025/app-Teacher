@@ -20,7 +20,7 @@ class UpdateStudentRequest {
     name = json['name'];
   }
   String? studentId;
-  int? gradeId;
+  String? gradeId;
   String? phone;
   String? parentPhone;
   String? name;

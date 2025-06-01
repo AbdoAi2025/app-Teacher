@@ -20,7 +20,7 @@ class GroupsController extends GetxController{
   Future<void> _loadGroups() async {
     var groupsResult = await getGroupsListUseCase.execute();
     if (groupsResult.isSuccess){
-      var uiStates = groupsResult.data?.map((e) => GroupItemUiState(
+      var uiStates = groupsResult.data?.map((e) => StudentItemUiState(
         groupId: e.id,
         groupName: e.name,
         studentsCount: e.studentCount,

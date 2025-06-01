@@ -31,7 +31,14 @@ class _GroupsScreenState extends State<GroupsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppToolbarWidget.appBar("Groups".tr),
-        body: _content()
+        body: _content(),
+        floatingActionButton:  FloatingActionButton(
+          onPressed: () {
+            AppNavigator.navigateToCreateGroup(context);
+          },
+          backgroundColor: Colors.blue,
+          child: Icon(Icons.add, color: Colors.white),
+        )
     );
   }
 
@@ -70,12 +77,12 @@ class _GroupsScreenState extends State<GroupsScreen> {
             onDeleteClick: onDeleteClick,
             onEditClick: onEditClick,
           ),
-          separatorBuilder: (context, index) => SizedBox(height: 15,),
+          separatorBuilder: (context, index) => SizedBox(height: 5,),
           itemCount: items.length),
     );
   }
 
-  onGroupItemClick(GroupItemUiState p1) {
+  onGroupItemClick(StudentItemUiState p1) {
       AppNavigator.navigateToGroupDetails(GroupDetailsArgModel(id: p1.groupId));
   }
 
@@ -85,11 +92,11 @@ class _GroupsScreenState extends State<GroupsScreen> {
             style: TextStyle(fontSize: 18)));
   }
 
-  onDeleteClick(GroupItemUiState p1) {
+  onDeleteClick(StudentItemUiState p1) {
 
   }
 
-  onEditClick(GroupItemUiState p1) {
+  onEditClick(StudentItemUiState p1) {
 
   }
 }

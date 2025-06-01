@@ -233,7 +233,8 @@ import '../../widgets/app_error_widget.dart';
 import '../../widgets/loading_widget.dart';
 import '../student_details/args/student_details_arg_model.dart';
 import 'states/students_state.dart';
-import 'widgets/student_item_widget.dart';
+import '../../widgets/students/student_item_widget.dart';
+import '../../widgets/students/student_item_widget.dart';
 
 class StudentsScreen extends StatefulWidget {
   const StudentsScreen({super.key});
@@ -301,10 +302,9 @@ class _StudentsScreenState extends State<StudentsScreen> {
           itemBuilder: (context, index) => StudentItemWidget(
                 uiState: items[index],
                 onItemClick: onStudentItemClick,
+                onDeleteClick: onDeleteStudentClick,
               ),
-          separatorBuilder: (context, index) => SizedBox(
-                height: 15,
-              ),
+          separatorBuilder: (context, index) => SizedBox(height: 5,),
           itemCount: items.length),
     );
   }
@@ -317,4 +317,6 @@ class _StudentsScreenState extends State<StudentsScreen> {
   onStudentItemClick(StudentItemUiState p1) {
     AppNavigator.navigateToStudentDetails(StudentDetailsArgModel(id: p1.id));
   }
+
+  onDeleteStudentClick(StudentItemUiState uiState) {}
 }

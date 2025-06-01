@@ -323,7 +323,6 @@ import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/screens/create_group/grades/grades_selection_state.dart';
-import 'package:teacher_app/screens/create_group/states/create_group_state.dart';
 import 'package:teacher_app/screens/student_add/add_student_controller.dart';
 import 'package:teacher_app/screens/student_add/states/add_student_state.dart';
 import 'package:teacher_app/utils/message_utils.dart';
@@ -335,6 +334,7 @@ import '../../widgets/app_text_field_widget.dart';
 import '../../widgets/app_toolbar_widget.dart';
 import '../../widgets/dialog_loading_widget.dart';
 import '../../widgets/item_selection_widget/student_list_selection_widget.dart';
+import '../student_edit/states/update_student_state.dart';
 import '../students_list/students_controller.dart';
 
 class AddStudentScreen extends StatefulWidget {
@@ -346,17 +346,14 @@ class AddStudentScreen extends StatefulWidget {
 }
 
 class AddStudentScreenState extends State<AddStudentScreen> {
-
   final StudentsController _studentsController = Get.find();
 
   final AddStudentController _controller = Get.put(AddStudentController());
-
 
   @override
   void initState() {
     super.initState();
   }
-
 
   AddStudentController getController() => _controller;
 
@@ -399,7 +396,6 @@ class AddStudentScreenState extends State<AddStudentScreen> {
         ]).call,
       );
 
-
   _parentPhoneField() => AppTextFieldWidget(
         controller: getController().parentPhoneController,
         label: "Parent Phone".tr,
@@ -410,18 +406,17 @@ class AddStudentScreenState extends State<AddStudentScreen> {
       );
 
   _phoneField() => AppTextFieldWidget(
-    controller: getController().phoneController,
-    label: "Phone".tr,
-    hint: "Phone".tr,
-    validator: MultiValidator([
-    ]).call,
-  );
-
+        controller: getController().phoneController,
+        label: "Phone".tr,
+        hint: "Phone".tr,
+        validator: MultiValidator([]).call,
+      );
 
   _gradeField() {
-    return Obx((){
-     return AppTextFieldWidget(
-        controller: TextEditingController(text: getController().selectedGrade.value?.name),
+    return Obx(() {
+      return AppTextFieldWidget(
+        controller: TextEditingController(
+            text: getController().selectedGrade.value?.name),
         label: "Grade".tr,
         hint: "Grade".tr,
         readOnly: true,
@@ -429,11 +424,10 @@ class AddStudentScreenState extends State<AddStudentScreen> {
         validator: MultiValidator([
           RequiredValidator(errorText: "Grade is required".tr),
         ]).call,
-       onTap: _onSelectGradesClick,
+        onTap: _onSelectGradesClick,
       );
     });
   }
-
 
   _saveButton() => Padding(
         padding: const EdgeInsets.all(16.0),
@@ -442,8 +436,6 @@ class AddStudentScreenState extends State<AddStudentScreen> {
           text: getSubmitButtonText(),
         ),
       );
-
-
 
   void _onSelectGradesClick() {
     var bottomSheetWidget = Obx(() {
@@ -460,7 +452,8 @@ class AddStudentScreenState extends State<AddStudentScreen> {
                 items: value.items,
                 title: "Select Grade",
                 isSingleSelection: true,
-                onSaved: (selectedItems) => getController().onSelectedGrade(selectedItems.firstOrNull),
+                onSaved: (selectedItems) =>
+                    getController().onSelectedGrade(selectedItems.firstOrNull),
               ));
       }
       return LoadingWidget();
@@ -471,13 +464,10 @@ class AddStudentScreenState extends State<AddStudentScreen> {
         // isScrollControlled: true,
         useRootNavigator: true,
         // ignoreSafeArea: false,
-        enableDrag: true
-    );
+        enableDrag: true);
   }
 
-
-
-  void onCreateGroupSuccess(SaveStateSuccess result) {
+  void onSaveSuccess(SaveStateSuccess result) {
     _studentsController.refreshStudnets();
     Get.back(result: true);
   }
@@ -498,7 +488,7 @@ class AddStudentScreenState extends State<AddStudentScreen> {
         showDialogLoading();
         break;
       case SaveStateSuccess():
-        onCreateGroupSuccess(result);
+        onSaveSuccess(result);
         break;
       case AddStudentStateFormValidation():
         break;
@@ -511,13 +501,11 @@ class AddStudentScreenState extends State<AddStudentScreen> {
     return AppTextWidget(message);
   }
 
-
   void onSaveGroupClick() {
     getController().onSave().listen(
-          (event) {
+      (event) {
         onSaveGroupResult(event);
       },
     );
   }
-
 }

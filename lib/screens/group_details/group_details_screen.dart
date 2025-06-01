@@ -11,7 +11,7 @@ import 'package:teacher_app/widgets/loading_widget.dart';
 import '../../themes/app_colors.dart';
 import '../../themes/txt_styles.dart';
 import '../../widgets/app_toolbar_widget.dart';
-import '../edit_group/args/edit_group_args_model.dart';
+import '../group_edit/args/edit_group_args_model.dart';
 import 'group_details_controller.dart';
 import 'states/group_details_state.dart';
 import 'states/group_details_student_item_ui_state.dart';

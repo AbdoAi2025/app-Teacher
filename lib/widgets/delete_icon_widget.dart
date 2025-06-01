@@ -13,7 +13,7 @@ class DeleteIconWidget extends StatelessWidget {
         onTap: () => onClick(),
         child: Icon(
           Icons.delete,
-          color: color ?? AppColors.colorBlack,
+          color: color ?? AppColors.colorError,
         ));
   }
 }

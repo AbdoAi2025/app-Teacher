@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:teacher_app/themes/app_colors.dart';
 
 class AppTextStyle {
-
-
   AppTextStyle._();
 
   static TextStyle get title =>
@@ -18,8 +17,10 @@ class AppTextStyle {
   static TextStyle get appToolBarTitle =>
       teshrinArLtRegular.copyWith(fontSize: 18, fontWeight: FontWeight.w600);
 
-  static TextStyle get textFieldStyle =>
-      teshrinArLtRegular;
+  static TextStyle get textFieldStyle => teshrinArLtRegular;
+
+  static TextStyle get textErrorStyle =>
+      teshrinArLtRegular.copyWith(color: AppColors.colorError);
 
   static const TextStyle inter =
       TextStyle(fontSize: 12, color: Colors.black, fontFamily: "inter");
