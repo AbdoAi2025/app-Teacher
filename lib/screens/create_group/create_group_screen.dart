@@ -351,7 +351,6 @@ class CreateGroupScreen extends StatefulWidget {
 
 class CreateGroupScreenState extends State<CreateGroupScreen> {
 
-  final GroupsController _groupsController = Get.find();
 
   final CreateGroupController _controller = Get.put(CreateGroupController());
 
@@ -644,7 +643,6 @@ class CreateGroupScreenState extends State<CreateGroupScreen> {
   }
 
   void onCreateGroupSuccess(SaveGroupStateSuccess result) {
-    _groupsController.refreshGroups();
     Get.back(result: true);
   }
 

@@ -17,6 +17,7 @@ class EditGroupScreen extends CreateGroupScreen {
 }
 
 class _EditGroupScreenState extends CreateGroupScreenState {
+
   final EditGroupController _controller = Get.put(EditGroupController());
 
   @override

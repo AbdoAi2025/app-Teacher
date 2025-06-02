@@ -13,6 +13,7 @@ import 'package:teacher_app/widgets/day_with_icon_widget.dart';
 import 'package:teacher_app/widgets/delete_icon_widget.dart';
 import 'package:teacher_app/widgets/dialog_loading_widget.dart';
 import 'package:teacher_app/widgets/edit_icon_widget.dart';
+import 'package:teacher_app/widgets/forward_arrow_widget.dart';
 import 'package:teacher_app/widgets/grade_with_icon_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
 import 'package:teacher_app/widgets/primary_button_widget.dart';
@@ -50,7 +51,13 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
             actions: [_deleteIcon()]),
         body: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: _content(),
+          child: RefreshIndicator(
+              onRefresh: () async {
+                controller.reload();
+              },
+              child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: _content())),
         ));
   }
 
@@ -76,15 +83,17 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
 
   _groupDetails(GroupDetailsStateSuccess state) {
     var uiState = state.uiState;
-    return SingleChildScrollView(
-      child: Column(
-        spacing: 10,
-        children: [
-          _sessionSection(uiState),
-          _groupInfoSection(uiState),
-          _studentsSection(uiState)
-        ],
-      ),
+    return Column(
+      spacing: 10,
+      children: [
+        _sessionSection(uiState),
+        _groupInfoSection(uiState),
+        _studentsSection(uiState),
+        _viewSessionsSection(),
+        SizedBox(
+          height: 20,
+        )
+      ],
     );
   }
 
@@ -166,13 +175,15 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
   _studentsList(List<GroupDetailsStudentItemUiState> student) {
     return ListView.separated(
         shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        // disables ListView scroll
         itemBuilder: (context, index) {
           var item = student[index];
           return GroupStudentItemWidget(
             uiState: GroupStudentItemUiState(
               id: item.studentId,
               name: item.studentName,
-              parentPhone: "item.parentPhone",
+              parentPhone: item.studentParentPhone,
             ),
             onItemClick: (uiState) {
               onStudentItemClick(uiState);
@@ -267,4 +278,23 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
           },
         ),
       );
+
+  _viewSessionsSection() {
+    return InkWell(
+      onTap: () {},
+      child: Container(
+        width: double.infinity,
+        decoration: AppBackgroundStyle.backgroundWithShadow(),
+        padding: EdgeInsets.all(15),
+        child: Row(
+          children: [
+            Expanded(
+                child: AppTextWidget("View All Sessions".tr,
+                    style: AppTextStyle.value)),
+            ForwardArrowWidget()
+          ],
+        ),
+      ),
+    );
+  }
 }

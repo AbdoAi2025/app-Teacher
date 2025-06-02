@@ -44,7 +44,8 @@ class GroupDetailsController extends GetxController {
       List<GroupDetailsStudentItemUiState> students = data.students
               ?.map((e) => GroupDetailsStudentItemUiState(
                   studentId: e.studentId ?? "",
-                  studentName: e.studentName ?? ""))
+                  studentName: e.studentName ?? "",
+                  studentParentPhone: e.studentParentPhone ?? ""))
               .toList() ??
           List.empty();
 
@@ -57,8 +58,7 @@ class GroupDetailsController extends GetxController {
           grade: data.grade?.localizedName?.toLocalizedName() ?? "",
           gradeId: data.grade?.id ?? "",
           students: students,
-          activeSession : data.activeSession
-      );
+          activeSession: data.activeSession);
       updateState(GroupDetailsStateSuccess(uiState: uiState));
     } else {
       updateState(GroupDetailsStateError(exception: result.error!));
