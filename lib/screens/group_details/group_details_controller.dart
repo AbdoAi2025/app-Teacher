@@ -1,7 +1,9 @@
 import 'package:get/get.dart';
 import 'package:teacher_app/domain/usecases/get_group_details_use_case.dart';
 import 'package:teacher_app/domain/usecases/start_session_use_case.dart';
+import '../../domain/states/end_session_state.dart';
 import '../../domain/states/start_session_state.dart';
+import '../../domain/usecases/end_session_use_case.dart';
 import 'args/group_details_arg_model.dart';
 import 'states/group_details_state.dart';
 import 'states/group_details_student_item_ui_state.dart';
@@ -54,7 +56,9 @@ class GroupDetailsController extends GetxController {
           timeTo: data.timeTo ?? "",
           grade: data.grade?.localizedName?.toLocalizedName() ?? "",
           gradeId: data.grade?.id ?? "",
-          students: students);
+          students: students,
+          activeSession : data.activeSession
+      );
       updateState(GroupDetailsStateSuccess(uiState: uiState));
     } else {
       updateState(GroupDetailsStateError(exception: result.error!));
@@ -72,26 +76,5 @@ class GroupDetailsController extends GetxController {
   void reload() {
     updateState(GroupDetailsStateLoading());
     _loadGroupDetails();
-  }
-  
-  Stream<StartSessionState> startSession() async* {
-    
-    yield StartSessionStateLoading();
-
-    var uiState = getGroupDetailsUiState();
-
-    if(uiState == null){
-      yield StartSessionStateError(Exception("Invalid args"));
-      return;
-    }
-    
-    var result = await StartSessionUseCase().execute(uiState.groupName, uiState.groupId);
-
-    if(result.isSuccess){
-      yield StartSessionStateSuccess(result.data ?? "");
-    }else{
-      yield StartSessionStateError(result.error);
-    }
-
   }
 }

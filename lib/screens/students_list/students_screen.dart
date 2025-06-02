@@ -304,7 +304,7 @@ class _StudentsScreenState extends State<StudentsScreen> {
                 onItemClick: onStudentItemClick,
                 onDeleteClick: onDeleteStudentClick,
               ),
-          separatorBuilder: (context, index) => SizedBox(height: 5,),
+          separatorBuilder: (context, index) => SizedBox(height: 15,),
           itemCount: items.length),
     );
   }

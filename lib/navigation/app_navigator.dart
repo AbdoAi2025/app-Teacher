@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/navigation/app_routes.dart';
+import 'package:teacher_app/screens/session_details/args/session_details_args_model.dart';
 import 'package:teacher_app/screens/student_details/args/student_details_arg_model.dart';
 import 'package:teacher_app/screens/student_edit/args/edit_student_args_model.dart';
 import '../screens/group_details/args/group_details_arg_model.dart';
@@ -45,6 +46,11 @@ class AppNavigator {
 
   static void navigateToStudentDetails(StudentDetailsArgModel studentDetailsArgModel) {
     Get.toNamed(AppRoutes.studentDetails , arguments: studentDetailsArgModel);
+  }
+
+  /*Sessions*/
+  static void navigateToSessionDetails(SessionDetailsArgsModel args) {
+    Get.toNamed(AppRoutes.sessionDetails , arguments: args);
   }
 
 }

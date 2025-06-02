@@ -1,3 +1,5 @@
+import 'package:teacher_app/data/responses/get_group_details_response.dart';
+
 import 'group_details_student_item_ui_state.dart';
 
 class GroupDetailsUiState {
@@ -8,6 +10,7 @@ class GroupDetailsUiState {
   final String timeTo;
   final String grade;
   final String gradeId;
+  final ActiveSessionApiModel? activeSession;
   final List<GroupDetailsStudentItemUiState> students;
 
   GroupDetailsUiState(
@@ -18,5 +21,9 @@ class GroupDetailsUiState {
       required this.timeTo,
       required this.grade,
       required this.gradeId,
-      required this.students});
+      required this.students,
+        this.activeSession
+      });
+
+  bool get hasActiveSession => activeSession != null;
 }

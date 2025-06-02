@@ -16,6 +16,9 @@ class AppTextFieldWidget extends StatelessWidget {
   final bool readOnly;
   final Function()? onTap;
   final FormFieldValidator<String>? validator;
+  final TextAlign? textAlign;
+  final  TextInputType? keyboardType;
+  final  Function(String?)? onChanged;
 
 
   const AppTextFieldWidget(
@@ -32,6 +35,9 @@ class AppTextFieldWidget extends StatelessWidget {
         this.suffixIcon,
         this.onTap,
         this.validator,
+        this.textAlign,
+        this.keyboardType,
+        this.onChanged,
       });
 
 
@@ -41,7 +47,9 @@ class AppTextFieldWidget extends StatelessWidget {
       controller: controller,
       style: textStyle ?? AppTextStyle.textFieldStyle,
       readOnly: readOnly,
+      textAlign: textAlign?? TextAlign.start,
       onTap: onTap,
+      keyboardType: keyboardType,
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: prefixIcon,
@@ -53,6 +61,7 @@ class AppTextFieldWidget extends StatelessWidget {
         suffixIcon: suffixIcon,
       ),
       validator: validator,
+      onChanged: onChanged,
 
     );
   }

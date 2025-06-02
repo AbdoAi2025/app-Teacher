@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:teacher_app/data/responses/get_group_details_response.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
 import 'package:teacher_app/screens/group_details/states/group_details_ui_state.dart';
+import 'package:teacher_app/screens/home/states/running_session_item_ui_state.dart';
 import 'package:teacher_app/screens/student_details/args/student_details_arg_model.dart';
 import 'package:teacher_app/utils/app_background_styles.dart';
 import 'package:teacher_app/utils/day_utils.dart';
@@ -14,8 +16,11 @@ import 'package:teacher_app/widgets/edit_icon_widget.dart';
 import 'package:teacher_app/widgets/grade_with_icon_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
 import 'package:teacher_app/widgets/primary_button_widget.dart';
+import 'package:teacher_app/widgets/sessions/running_session_item_widget.dart';
+import 'package:teacher_app/widgets/sessions/start_session_button_widget.dart';
 import 'package:teacher_app/widgets/students/student_item_widget.dart';
 
+import '../../domain/states/end_session_state.dart';
 import '../../domain/states/start_session_state.dart';
 import '../../themes/app_colors.dart';
 import '../../themes/txt_styles.dart';
@@ -75,6 +80,7 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
       child: Column(
         spacing: 10,
         children: [
+          _sessionSection(uiState),
           _groupInfoSection(uiState),
           _studentsSection(uiState)
         ],
@@ -91,10 +97,9 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           _groupName(uiState.groupName),
-          _groupDay("${AppDateUtils.getDayName(uiState.groupDay)} : ${uiState
-              .timeFrom} - ${uiState.timeTo}"),
+          _groupDay(
+              "${AppDateUtils.getDayName(uiState.groupDay)} : ${uiState.timeFrom} - ${uiState.timeTo}"),
           _grade(uiState.grade),
-          _startSession()
         ],
       ),
     );
@@ -106,7 +111,6 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
   Widget _studentsSection(GroupDetailsUiState uiState) {
     return _sectionLabelValue("Students".tr, _studentsList(uiState.students));
   }
-
 
   _groupName(String groupName) {
     return Column(
@@ -147,7 +151,7 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
           Row(
             children: [
               Expanded(child: _label(label)),
-              if(endIcon != null)endIcon
+              if (endIcon != null) endIcon
             ],
           ),
           Padding(
@@ -175,8 +179,7 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
             },
           );
         },
-        separatorBuilder: (context, index) =>
-            Divider(
+        separatorBuilder: (context, index) => Divider(
               height: 1,
             ),
         itemCount: student.length);
@@ -211,40 +214,57 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
 
   onDeleteClick() {}
 
-  _divider() =>
-      Divider(
+  _divider() => Divider(
         height: 0,
       );
 
-  _startSession() => Center(
-    child: PrimaryButtonWidget(
-      text: "Start session".tr,
-      onClick: (){
-        onStartSession();
-      },
-    ),
-  );
-
   void onStudentItemClick(GroupStudentItemUiState uiState) {
-    AppNavigator.navigateToStudentDetails(StudentDetailsArgModel(id: uiState.id));
+    AppNavigator.navigateToStudentDetails(
+        StudentDetailsArgModel(id: uiState.id));
   }
 
-  void onStartSession() {
-    controller.startSession().listen((event) {
-      hideDialogLoading();
-      switch(event){
-        case StartSessionStateLoading():
-          showDialogLoading();
-          break;
-        case StartSessionStateSuccess():
-          showSuccessMessage("StartSessionStateSuccess");
-          break;
-        case StartSessionStateError():
-          ShowErrorMessage(event.exception.toString());
-          break;
-      }
-    });
+  _sessionSection(GroupDetailsUiState uiState) {
+    var activeSession = uiState.activeSession;
+    return Container(
+      width: double.infinity,
+      decoration: AppBackgroundStyle.backgroundWithShadow(),
+      padding: EdgeInsets.all(15),
+      child: activeSession != null
+          ? _activeSession(uiState, activeSession)
+          : _noActiveSession(uiState),
+    );
   }
 
+  _activeSession(
+      GroupDetailsUiState uiState, ActiveSessionApiModel activeSession) {
+    return RunningSessionItemWidget(
+      item: RunningSessionItemUiState(
+          id: activeSession.sessionId ?? "",
+          date: AppDateUtils.parseStringToDateTime(
+              activeSession.startDate ?? "")),
+      onSessionEnded: () {
+        controller.reload();
+      },
+    );
+  }
 
+  _noActiveSession(GroupDetailsUiState uiState) {
+    return Column(spacing: 15, mainAxisSize: MainAxisSize.min, children: [
+      AppTextWidget(
+        "No Active Sessions".tr,
+        style: AppTextStyle.value,
+      ),
+      _startSession(uiState.groupId)
+    ]);
+  }
+
+  _startSession(String groupId) => Center(
+        child: StartSessionButtonWidget(
+          name: "",
+          groupId: groupId,
+          onSessionStarted: () {
+            controller.reload();
+          },
+        ),
+      );
 }

@@ -26,6 +26,10 @@ class EndPoints{
 
   /*Sessions*/
   static const String startSession = "$apiV1/sessions/startSession";
+  static const String endSession = "$apiV1/sessions/endSession";
+  static const String getRunningSession = "$apiV1/sessions/getRunningSession";
+  static const String getSessionDetails = "$apiV1/sessions";
+  static const String updateSessionActivities = "$apiV1/activities/updateStudentsActivities";
 
 
 

@@ -17,6 +17,8 @@ class EmptyViewWidget extends ErrorViewWidget {
   @override
   Widget messageView() {
     return AppTextWidget(message,
-        style: style ?? AppTextStyle.teshrinArLtRegular);
+        style: style ?? AppTextStyle.value.copyWith(
+          fontSize: 16
+        ));
   }
 }

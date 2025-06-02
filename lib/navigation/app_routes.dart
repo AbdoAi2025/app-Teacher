@@ -20,5 +20,10 @@ class AppRoutes {
   static const String students = "/students";
   static const String editStudent = "/editStudent";
 
+  /*sessions*/
+  static const String sessionDetails = "/sessionDetails";
+
+
+
   AppRoutes._();
 }

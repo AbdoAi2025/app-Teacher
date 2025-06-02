@@ -30,7 +30,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppToolbarWidget.appBar("Groups".tr),
+        appBar: AppToolbarWidget.appBar("Groups".tr , hasLeading: false),
         body: _content(),
         floatingActionButton:  FloatingActionButton(
           onPressed: () {
@@ -75,9 +75,8 @@ class _GroupsScreenState extends State<GroupsScreen> {
             uiState: items[index],
             onClick: onGroupItemClick,
             onDeleteClick: onDeleteClick,
-            onEditClick: onEditClick,
           ),
-          separatorBuilder: (context, index) => SizedBox(height: 5,),
+          separatorBuilder: (context, index) => SizedBox(height: 15,),
           itemCount: items.length),
     );
   }
@@ -93,10 +92,6 @@ class _GroupsScreenState extends State<GroupsScreen> {
   }
 
   onDeleteClick(StudentItemUiState p1) {
-
-  }
-
-  onEditClick(StudentItemUiState p1) {
 
   }
 }

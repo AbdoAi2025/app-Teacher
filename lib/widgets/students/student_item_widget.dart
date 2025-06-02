@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:teacher_app/screens/students_list/states/student_item_ui_state.dart';
+import 'package:teacher_app/utils/app_background_styles.dart';
 import 'package:teacher_app/widgets/delete_icon_widget.dart';
 import 'package:teacher_app/widgets/grade_with_icon_widget.dart';
 import 'package:teacher_app/widgets/phone_with_icon_widget.dart';
@@ -25,10 +26,9 @@ class StudentItemWidget extends StatelessWidget {
       onTap: () {
         onItemClick(uiState);
       },
-      child: Card(
-        margin: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        elevation: 4,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Container(
+        decoration: AppBackgroundStyle.backgroundWithShadow(),
+        margin: EdgeInsets.symmetric(horizontal: 20),
         child: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Column(

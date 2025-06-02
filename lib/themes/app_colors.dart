@@ -14,6 +14,10 @@ class AppColors{
   static const Color appBarForegroundColor= white;
   static const Color colorError= color_E75260;
   static const Color colorSeparator = color_767676;
+  static const Color sectionBackgroundColor = color_DBD5CC;
+  static const Color textValueColor = color_6F6A6F;
+  static const Color activeColor = color_3FCBA6;
+  static const Color inactiveColor = color_6F6A6F;
 
 
   static const Color appMainColor = Color(0xff122953);

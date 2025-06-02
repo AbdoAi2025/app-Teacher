@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
 
 
@@ -34,9 +35,32 @@ class AppDateUtils{
     }catch(ex){
       appLog("AppDateUtils : ${ex.toString()}");
     }
-
     return null;
+  }
 
+  static DateTime? parseStringToDateTime(String dateString) {
+    try{
+      final dateTime = DateTime.parse(dateString);
+      appLog("parseStringToDateTime dateTime:$dateTime"); // Your device's local time
+      // Output: 2025-06-01 22:31:07.017Z
+      final localTime = dateTime.toLocal();
+      appLog("parseStringToDateTime localTime:$localTime"); // Your device's local time
+      return localTime;
+    }catch(ex){
+      appLog("parseStringToDateTime ex:${ex.toString()}");
+      return null;
+    }
+
+  }
+
+  static String parsDateToString(DateTime? date, [String format = 'yyyy-MM-dd HH:mm']) {
+    try{
+      String formatted = DateFormat(format).format(date!);
+      return formatted;
+    }catch(e){
+      appLog("parsDateToString e:${e.toString()}");
+      return date?.toString() ?? "";
+    }
   }
 
 }

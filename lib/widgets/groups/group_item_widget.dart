@@ -2,8 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/themes/txt_styles.dart';
+import 'package:teacher_app/utils/app_background_styles.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
 
+import '../../navigation/app_navigator.dart';
+import '../../screens/group_details/args/group_details_arg_model.dart';
 import '../../screens/groups/groups_state.dart';
 import '../../themes/app_colors.dart';
 import '../day_with_icon_widget.dart';
@@ -13,27 +16,24 @@ import '../time_with_icon_widget.dart';
 class GroupItemWidget extends StatelessWidget {
 
   final StudentItemUiState uiState;
-  final Function(StudentItemUiState) onClick;
-  final Function(StudentItemUiState) onEditClick;
-  final Function(StudentItemUiState) onDeleteClick;
+  final Function(StudentItemUiState)? onClick;
+  final Function(StudentItemUiState)? onDeleteClick;
 
   const GroupItemWidget(
       {super.key,
       required this.uiState,
-      required this.onClick,
-      required this.onEditClick,
-      required this.onDeleteClick});
+        this.onClick,
+       this.onDeleteClick});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        onClick(uiState);
+        onClick?.call(uiState) ?? onGroupItemClick();
       },
-      child: Card(
-        margin: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        elevation: 4,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Container(
+        decoration: AppBackgroundStyle.backgroundWithShadow(),
+        margin: EdgeInsets.symmetric(horizontal: 20, ),
         child: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Column(
@@ -77,9 +77,15 @@ class GroupItemWidget extends StatelessWidget {
       );
 
   _deleteIcon() => DeleteIconWidget(
-      onClick: () => onDeleteClick(uiState));
+      onClick: () => onDeleteClick?.call(uiState) ?? _onDeleteClick()
+  ) ;
 
-  _editIcon() => InkWell(
-      onTap: () => onEditClick(uiState),
-      child: Icon(Icons.edit));
+
+  onGroupItemClick() {
+    AppNavigator.navigateToGroupDetails(GroupDetailsArgModel(id: uiState.groupId));
+  }
+
+  _onDeleteClick() {
+
+  }
 }

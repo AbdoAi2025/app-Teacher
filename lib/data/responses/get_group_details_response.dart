@@ -9,6 +9,7 @@ class GetGroupDetailsResponse {
     this.timeTo,
     this.grade,
     this.students,
+    this.activeSession,
   });
 
   GetGroupDetailsResponse.fromJson(dynamic json) {
@@ -17,6 +18,10 @@ class GetGroupDetailsResponse {
     groupDay = int.tryParse(json['groupDay'].toString());
     timeFrom = json['timeFrom'];
     timeTo = json['timeTo'];
+
+    if(json["activeSession"] != null){
+      activeSession = ActiveSessionApiModel.fromJson(json["activeSession"]);
+    }
     grade = json['grade'] != null ? Grade.fromJson(json['grade']) : null;
     if (json['students'] != null) {
       students = [];
@@ -32,6 +37,7 @@ class GetGroupDetailsResponse {
   String? timeFrom;
   String? timeTo;
   Grade? grade;
+  ActiveSessionApiModel? activeSession;
   List<Students>? students;
 
   Map<String, dynamic> toJson() {
@@ -39,6 +45,7 @@ class GetGroupDetailsResponse {
     map['groupId'] = groupId;
     map['groupName'] = groupName;
     map['groupDate'] = groupDay;
+    map['activeSession'] = activeSession;
     if (grade != null) {
       map['grade'] = grade?.toJson();
     }
@@ -115,3 +122,31 @@ class Grade {
     return map;
   }
 }
+
+
+
+class ActiveSessionApiModel {
+
+  ActiveSessionApiModel({
+    this.sessionId,
+    this.startDate,
+  });
+
+  ActiveSessionApiModel.fromJson(dynamic json) {
+    sessionId = json['sessionId'];
+    startDate = json['startDate'];
+  }
+
+  String? sessionId;
+  String? startDate;
+
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['sessionId'] = sessionId;
+    map['startDate'] = startDate;
+    return map;
+  }
+}
+
+
+
