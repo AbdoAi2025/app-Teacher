@@ -42,7 +42,8 @@ class ConfirmDailogWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            margin: margin ?? const EdgeInsets.symmetric(horizontal: 50),
+            width: double.infinity,
+            margin: margin ?? const EdgeInsets.symmetric(horizontal: 30),
             decoration: BoxDecoration(
                 borderRadius: const BorderRadius.all(Radius.circular(20)),
                 color: Theme.of(context).scaffoldBackgroundColor,

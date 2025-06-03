@@ -36,7 +36,7 @@ class StartSessionButtonWidget extends StatelessWidget{
           onSessionStarted();
           break;
         case StartSessionStateError():
-          ShowErrorMessage(event.exception.toString());
+          showErrorMessage(event.exception.toString());
           break;
       }
     });

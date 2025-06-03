@@ -16,7 +16,7 @@ void showSuccessMessage(message) {
   ));
 }
 
-void ShowErrorMessage(message) {
+void showErrorMessage(message) {
   showErrorMessagePopup(message);
   // ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(SnackBar(
   //   content: Text(message),
@@ -35,12 +35,15 @@ Future<void> showDailog(context, widget) async {
 void showErrorMessagePopup(String message) {
   showDailog(
       Get.context,
-      ConfirmDailogWidget(
-    title: message,
-    positive_button_text: "ok_well".tr,
-    showCancelBtn: false,
-    onSuccess: () {},
-  ));
+      SizedBox(
+        width: double.infinity,
+        child: ConfirmDailogWidget(
+            title: message,
+            positive_button_text: "Ok".tr,
+            showCancelBtn: false,
+            onSuccess: () {},
+          ),
+      ));
 }
 
 void showSuccessMessagePopup(String message, [Function()? onClose]) {

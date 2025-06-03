@@ -229,6 +229,7 @@ import 'package:teacher_app/screens/students_list/states/student_item_ui_state.d
 import 'package:teacher_app/screens/students_list/students_controller.dart';
 import 'package:teacher_app/widgets/app_toolbar_widget.dart';
 import '../../navigation/app_navigator.dart';
+import '../../themes/app_colors.dart';
 import '../../widgets/app_error_widget.dart';
 import '../../widgets/loading_widget.dart';
 import '../student_details/args/student_details_arg_model.dart';
@@ -260,7 +261,7 @@ class _StudentsScreenState extends State<StudentsScreen> {
           onPressed: () {
             AppNavigator.navigateToAddStudent();
           },
-          backgroundColor: Colors.blue,
+          backgroundColor: AppColors.appMainColor,
           child: Icon(Icons.add, color: Colors.white),
         ));
   }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/navigation/app_routes.dart';
-import 'package:teacher_app/screens/bottom_bar_screen.dart';
+import 'package:teacher_app/screens/bottom_bar/bottom_bar_screen.dart';
 import 'package:teacher_app/screens/create_group/create_group_screen.dart';
 import 'package:teacher_app/screens/session_details/session_details_screen.dart';
 import 'package:teacher_app/screens/student_add/add_student_screen.dart';

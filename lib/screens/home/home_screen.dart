@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
 import 'package:teacher_app/screens/home/home_controller.dart';
-import 'package:teacher_app/screens/session_details/args/session_details_args_model.dart';
 import 'package:teacher_app/themes/app_colors.dart';
 import 'package:teacher_app/themes/txt_styles.dart';
 import 'package:teacher_app/utils/app_background_styles.dart';
@@ -12,10 +11,7 @@ import 'package:teacher_app/widgets/loading_widget.dart';
 import 'package:teacher_app/widgets/primary_button_widget.dart';
 import 'package:teacher_app/widgets/sessions/running_session_item_widget.dart';
 
-import '../../domain/states/end_session_state.dart';
-import '../../utils/message_utils.dart';
 import '../../widgets/app_toolbar_widget.dart';
-import '../../widgets/dialog_loading_widget.dart';
 import '../../widgets/groups/group_item_widget.dart';
 import '../groups/groups_state.dart';
 import 'states/running_session_item_ui_state.dart';
@@ -34,12 +30,18 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppToolbarWidget.appBar("Home".tr, hasLeading: false),
-      body: _content(),
+      // appBar: AppToolbarWidget.appBar("Home".tr, hasLeading: false),
+      body: SafeArea(
+          child: Column(
+        children: [
+          _nameAndLogout(),
+          Expanded(child: _content()),
+        ],
+      )),
     );
   }
 
-  _content() {
+  Widget _content() {
     return RefreshIndicator(
       onRefresh: () async {
         controller.onRefresh();
@@ -70,8 +72,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           Expanded(child: Obx(() {
             var state = controller.runningState.value;
+
             if (state is RunningSessionsStateLoading) {
-              return LoadingWidget();
+              return Center(child: LoadingWidget());
             }
 
             List<RunningSessionItemUiState> uiStates = [];
@@ -97,19 +100,18 @@ class _HomeScreenState extends State<HomeScreen> {
       );
 
   Widget _todayGroups() {
-   return  Obx((){
+    return Obx(() {
       var state = controller.todayGroupsState.value;
-      switch(state){
+      switch (state) {
         case GroupsStateLoading():
           return LoadingWidget();
         case GroupsStateSuccess():
-         return _todayGroupsList(state.uiStates);
-        default : return _noTodayGroups();
+          return _todayGroupsList(state.uiStates);
+        default:
+          return _noTodayGroups();
       }
     });
   }
-
-
 
   _runningSessions(List<RunningSessionItemUiState> uiStates) {
     // return _runningSessionEmpty();
@@ -139,9 +141,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _runningSessionItem(RunningSessionItemUiState item) {
-    return RunningSessionItemWidget(item: item , onSessionEnded: (){
-      controller.onRefresh();
-    },);
+    return RunningSessionItemWidget(
+      item: item,
+      onSessionEnded: () {
+        controller.onRefresh();
+      },
+    );
   }
 
   _runningSessionEmpty() {
@@ -155,23 +160,61 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _todayGroupsList(List<StudentItemUiState> uiStates) {
-
-    if(uiStates.isEmpty){
+    if (uiStates.isEmpty) {
       return _noTodayGroups();
     }
 
-   return ListView.separated(
-     shrinkWrap: true,
+    return ListView.separated(
+        shrinkWrap: true,
         itemBuilder: (context, index) => GroupItemWidget(
-          uiState: uiStates[index],
-        ),
-        separatorBuilder: (context, index) => SizedBox(height: 15,),
+              uiState: uiStates[index],
+            ),
+        separatorBuilder: (context, index) => SizedBox(
+              height: 15,
+            ),
         itemCount: uiStates.length);
   }
 
   Widget _noTodayGroups() {
-    return EmptyViewWidget(message: "No Doday Groups".tr);
+    return Column(
+      spacing: 20,
+      children: [
+        EmptyViewWidget(message: "No Doday Groups".tr),
+        PrimaryButtonWidget(
+            text: "Create New Groups".tr,
+            onClick: () {
+              AppNavigator.navigateToCreateGroup();
+            })
+      ],
+    );
   }
 
+  _nameAndLogout() {
+   return Obx(() {
+      var state = controller.profileInfo.value;
 
+      return Padding(
+        padding: const EdgeInsets.all(20),
+        child: Row(
+          children: [
+            Expanded(
+                child: AppTextWidget(
+              "Hey, ${state?.name ?? ""}" ,
+              style: AppTextStyle.title.copyWith(color: AppColors.appMainColor),
+            )),
+            InkWell(
+                onTap: () {
+                  onLogout();
+                },
+                child: Icon(Icons.logout))
+          ],
+        ),
+      );
+    });
+  }
+
+  void onLogout() {
+    controller.logout();
+    AppNavigator.navigateToLogin();
+  }
 }

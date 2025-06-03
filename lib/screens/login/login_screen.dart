@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
 import 'package:teacher_app/screens/login/login_controller.dart';
 import 'package:teacher_app/screens/login/login_state.dart';
+import 'package:teacher_app/utils/message_utils.dart';
 import 'package:teacher_app/widgets/app_text_field_widget.dart';
 import 'package:teacher_app/widgets/dialog_loading_widget.dart';
 import 'package:teacher_app/widgets/primary_button_widget.dart';
@@ -80,14 +81,11 @@ class _LoginScreenState extends State<LoginScreen> {
             AppNavigator.navigateToHome();
             break;
           case LoginStateError():
-            showError(result);
+            showErrorMessage(result.exception.toString());
         }
       },
     );
   }
 
-  void showError(LoginStateError result) {
-
-  }
 
 }

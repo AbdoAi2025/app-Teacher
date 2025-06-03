@@ -4,6 +4,7 @@ import 'package:teacher_app/data/repositories/identity/identity_repository.dart'
 import 'package:teacher_app/data/requests/login_request.dart';
 import 'package:teacher_app/domain/models/login_model.dart';
 import 'package:teacher_app/domain/models/login_result.dart';
+import 'package:teacher_app/models/profile_info_model.dart';
 import 'package:teacher_app/models/user_auth_model.dart';
 
 class IdentityRepositoryImpl extends IdentityRepository {
@@ -29,7 +30,23 @@ class IdentityRepositoryImpl extends IdentityRepository {
   }
 
   @override
-  Future saveUserAuth(UserAuthModel userAuthModel) {
+  Future saveUserAuth(UserAuthModel? userAuthModel) {
     return localIdentityDataSource.saveUserAuth(userAuthModel);
+  }
+
+  @override
+  Future<ProfileInfoModel?> getProfileInfo() {
+    return localIdentityDataSource.getProfileInfo();
+  }
+
+  @override
+  Future saveProfileInfo(ProfileInfoModel? profileInfoModel) {
+    return localIdentityDataSource.saveProfileInfo(profileInfoModel);
+  }
+
+  @override
+  Future logout() async {
+    await saveUserAuth(null);
+    await saveProfileInfo(null);
   }
 }

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
 import 'package:teacher_app/screens/splash/SplashController.dart';
 import 'package:teacher_app/screens/splash/SplashEvent.dart';
+import 'package:teacher_app/themes/app_colors.dart';
 
 class SplashScreen  extends StatefulWidget{
 
@@ -27,7 +28,7 @@ class _SplashscreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Colors.amber,
+        color: AppColors.splashColor,
         child: const Center(
           child: Text("Splash Screen"),
         ),

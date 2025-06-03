@@ -24,7 +24,7 @@ class AppNavigator {
     return Get.toNamed(AppRoutes.addStudent);
   }
 
-  static  navigateToCreateGroup(BuildContext context) {
+  static  navigateToCreateGroup() {
      Get.toNamed(AppRoutes.createGroup);
   }
 

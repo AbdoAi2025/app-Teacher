@@ -35,7 +35,7 @@ class EndSessionButtonWidget extends StatelessWidget {
           onSessionEnded();
           break;
         case EndSessionStateError():
-          ShowErrorMessage(event.exception.toString());
+          showErrorMessage(event.exception.toString());
           break;
       }
     });

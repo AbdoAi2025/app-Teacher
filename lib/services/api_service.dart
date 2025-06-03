@@ -146,12 +146,14 @@ import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:talker_dio_logger/talker_dio_logger.dart';
 import 'package:teacher_app/appSetting/appSetting.dart';
+import 'package:teacher_app/main.dart';
 import '../models/group_item_model.dart';
 import '../models/student.dart';
 
+const String prodBaseUrl = "https://assistant-app-2136afb92d95.herokuapp.com";
 const String devBaseUrl = "https://assistant-app-2136afb92d95.herokuapp.com";
 const String localBaseUrl = "http://192.168.2.117:8080";
-var baseUrl = localBaseUrl;
+var baseUrl = isDev ? localBaseUrl : prodBaseUrl;
 
 class ApiService {
   static Dio? _dio;

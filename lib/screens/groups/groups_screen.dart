@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
+import 'package:teacher_app/themes/app_colors.dart';
 import 'package:teacher_app/widgets/app_toolbar_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
 import '../../widgets/app_error_widget.dart';
@@ -34,9 +35,9 @@ class _GroupsScreenState extends State<GroupsScreen> {
         body: _content(),
         floatingActionButton:  FloatingActionButton(
           onPressed: () {
-            AppNavigator.navigateToCreateGroup(context);
+            AppNavigator.navigateToCreateGroup();
           },
-          backgroundColor: Colors.blue,
+          backgroundColor: AppColors.appMainColor,
           child: Icon(Icons.add, color: Colors.white),
         )
     );

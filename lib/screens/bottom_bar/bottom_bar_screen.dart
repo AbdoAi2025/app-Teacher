@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
+import 'package:teacher_app/themes/app_colors.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
-import 'groups/groups_screen.dart';
-import 'home/home_screen.dart';
-import 'students_list/students_screen.dart';
+import '../groups/groups_screen.dart';
+import '../home/home_screen.dart';
+import '../students_list/students_screen.dart';
 
 class BottomBarScreen extends StatefulWidget {
   const BottomBarScreen({super.key});
@@ -14,6 +15,9 @@ class BottomBarScreen extends StatefulWidget {
 }
 
 class _BottomBarScreenState extends State<BottomBarScreen> {
+
+
+
   int _currentIndex = 0;
 
   @override
@@ -23,14 +27,13 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: _onItemTapped,
-        selectedItemColor: Colors.blue,
+        selectedItemColor: AppColors.appMainColor,
         unselectedItemColor: Colors.grey,
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home".tr),
           BottomNavigationBarItem(icon: Icon(Icons.group), label: "Groups".tr),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: "Students"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.account_box_rounded), label: "Profile".tr),
+          // BottomNavigationBarItem(icon: Icon(Icons.account_box_rounded), label: "Profile".tr),
         ],
       ),
     );
