@@ -30,8 +30,13 @@ class LoginUseCase {
       return AppResult.success(loginResult);
     }  catch (ex) {
       if(ex is DioException){
-        var errorResponse = ErrorResponse.fromJson(ex.response?.data);
-        return AppResult.error(AppHttpException(errorResponse.message));
+
+        try{
+          var errorResponse = ErrorResponse.fromJson(ex.response?.data);
+          return AppResult.error(AppHttpException(errorResponse.message));
+        }catch(ex){
+          appLog("StartSessionUseCase execute ex:${ex.toString()}");
+        }
       }
       appLog("StartSessionUseCase execute ex:${ex.toString()}");
       return AppResult.error(Exception(ex));
