@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
 import 'package:teacher_app/themes/app_colors.dart';
 import 'package:teacher_app/widgets/app_toolbar_widget.dart';
+import 'package:teacher_app/widgets/empty_view_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
 import '../../widgets/app_error_widget.dart';
 import '../../widgets/groups/group_item_widget.dart';
@@ -88,8 +89,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
 
   _emptyView() {
     return Center(
-        child: Text("لا توجد مجموعات متاحة",
-            style: TextStyle(fontSize: 18)));
+        child: EmptyViewWidget(message: "No Groups Found".tr));
   }
 
   onDeleteClick(StudentItemUiState p1) {
