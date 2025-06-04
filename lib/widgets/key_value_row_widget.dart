@@ -7,7 +7,7 @@ import '../themes/txt_styles.dart';
 class KeyValueRowWidget extends StatelessWidget {
 
   final String keyText;
-  final String value;
+  final String? value;
   final MainAxisSize? mainAxisSize;
   final Widget? keyWidget;
   final Widget? valueWidget;
@@ -15,7 +15,7 @@ class KeyValueRowWidget extends StatelessWidget {
   const KeyValueRowWidget({
     super.key,
     required this.keyText,
-    required this.value ,
+    this.value ,
     this.mainAxisSize,
     this.keyWidget,
     this.valueWidget,
@@ -24,20 +24,25 @@ class KeyValueRowWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Row(
         spacing: 5,
         mainAxisSize: mainAxisSize ?? MainAxisSize.min, children: [
 
-      valueWidget?? AppTextWidget(keyText, style: AppTextStyle.label),
+      keyWidget?? AppTextWidget(keyText, style: AppTextStyle.label),
 
-      if(mainAxisSize == MainAxisSize.min)...{
-        _valueText()
-      }else ...{
-        Expanded(child:_valueText())
+      if(value != null || value != "" || valueWidget != null )...{
+        if(mainAxisSize == MainAxisSize.min)...{
+          _valueText(value ?? "")
+        }else ...{
+          Expanded(child:_valueText(value ?? ""))
+        },
       }
 
     ]);
   }
 
-  _valueText() => valueWidget ?? AppTextWidget(value , style: AppTextStyle.value);
+  _valueText(String value) => valueWidget ?? AppTextWidget(value , style: AppTextStyle.value);
+
+
 }

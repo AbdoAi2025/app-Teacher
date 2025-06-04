@@ -26,7 +26,7 @@ class SessionItemUiState {
 
       });
 
-  get date => AppDateUtils.parsStringToString(sessionCreatedAt , "yyyy-MM-dd");
+  get date => AppDateUtils.parsStringToString(sessionCreatedAt , "EEE dd MMM , HH:mm");
 
 
 

@@ -20,7 +20,9 @@ class ErrorViewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+    return Column(
+        spacing: 20,
+        mainAxisAlignment: MainAxisAlignment.center, children: [
      messageView(),
       if (onRetry != null)
         PrimaryButtonWidget(

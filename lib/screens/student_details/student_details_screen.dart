@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
+import 'package:teacher_app/screens/group_details/args/group_details_arg_model.dart';
+import 'package:teacher_app/screens/sessions_list/args/session_list_args_model.dart';
+import 'package:teacher_app/screens/student_details/states/student_details_ui_state.dart';
 import 'package:teacher_app/screens/student_details/student_details_controller.dart';
 import 'package:teacher_app/utils/app_background_styles.dart';
 import 'package:teacher_app/utils/day_utils.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'package:teacher_app/widgets/delete_icon_widget.dart';
 import 'package:teacher_app/widgets/edit_icon_widget.dart';
+import 'package:teacher_app/widgets/forward_arrow_widget.dart';
+import 'package:teacher_app/widgets/key_value_row_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
+import 'package:teacher_app/widgets/phone_with_icon_widget.dart';
+import 'package:teacher_app/widgets/time_with_icon_widget.dart';
 import '../../themes/app_colors.dart';
 import '../../themes/txt_styles.dart';
 import '../../widgets/app_toolbar_widget.dart';
+import '../../widgets/section_widget.dart';
 import '../student_edit/args/edit_student_args_model.dart';
 import 'states/student_details_state.dart';
 
@@ -32,11 +40,18 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
             actions: [_editIcon(), _deleteIcon()]),
         body: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: _content(),
+          child: RefreshIndicator(
+            onRefresh: () async {
+              onRefresh();
+            },
+            child: SingleChildScrollView(
+                physics: AlwaysScrollableScrollPhysics(),
+                child: _contentState()),
+          ),
         ));
   }
 
-  Widget _content() {
+  Widget _contentState() {
     return Obx(() {
       var state = controller.state.value;
       switch (state) {
@@ -45,7 +60,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
         case StudentDetailsStateInvalidArgs():
           return Center(child: Text("Invalid Args"));
         case StudentDetailsStateSuccess():
-          return _groupDetails(state);
+          return _content(state);
         case StudentDetailsStateError():
           return Center(child: Text(state.exception.toString()));
       }
@@ -56,43 +71,126 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
     return Center(child: LoadingWidget());
   }
 
-  _groupDetails(StudentDetailsStateSuccess state) {
+  _content(StudentDetailsStateSuccess state) {
     var uiState = state.uiState;
     return Column(
       spacing: 20,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
       children: [
-        _studentName(uiState.studentName),
-        _parentPhone(uiState.parentPhone),
-        if (uiState.phone.isNotEmpty) _studentPhone(uiState.phone),
-        _groupName(uiState.groupName),
-        _grade(uiState.gradeName),
+        _studentInfoSection(uiState),
+        _groupSection(uiState),
+        if (uiState.groupId.isNotEmpty) _viewAllSessionSection(uiState)
       ],
     );
   }
 
+  _studentInfoSection(StudentDetailsUiState uiState) {
+    return SectionWidget(
+      title: "Student Info",
+      child: Column(
+        spacing: 10,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _studentName(uiState.studentName),
+          _parentPhone(uiState.parentPhone),
+          if (uiState.phone.isNotEmpty) _studentPhone(uiState.phone),
+          _grade(uiState.gradeName),
+        ],
+      ),
+    );
+  }
+
+  _groupSection(StudentDetailsUiState uiState) {
+    return SectionWidget(
+      title: "Group Info",
+      child: InkWell(
+        onTap: () {
+          onGroupClick(uiState);
+        },
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                spacing: 10,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _groupName(uiState.groupName),
+                  if (uiState.groupId.isNotEmpty) ...{
+                    _groupDateTime(uiState),
+                  }
+                  // _groupDay(""),
+                ],
+              ),
+            ),
+            if (uiState.groupId.isNotEmpty) ForwardArrowWidget()
+          ],
+        ),
+      ),
+    );
+  }
+
+  _viewAllSessionSection(StudentDetailsUiState uiState) {
+    return SectionWidget(
+      child: InkWell(
+        onTap: () {
+          onViewAllSessionsClick(uiState);
+        },
+        child: Row(
+          children: [
+            Expanded(
+              child: AppTextWidget(
+                "View all sessions".tr,
+                style: AppTextStyle.value,
+              ),
+            ),
+            if (uiState.groupId.isNotEmpty) ForwardArrowWidget()
+          ],
+        ),
+      ),
+    );
+  }
+
   _studentName(String name) {
-    return _sectionLabelValue("Student Name".tr, _value(name));
+    return KeyValueRowWidget(keyText: "Student Name".tr, value: name);
   }
 
   _parentPhone(String name) {
-    return _sectionLabelValue("Parent Phone".tr, _value(name));
+    return KeyValueRowWidget(
+      keyText: "Parent Phone".tr,
+      valueWidget: PhoneWithIconWidget(
+        name,
+        hideIcon: true,
+        showCallIcon: true,
+      ),
+    );
   }
 
   _studentPhone(String name) {
-    return _sectionLabelValue("Student Phone".tr, _value(name));
+    return KeyValueRowWidget(
+      keyText: "Student Phone".tr,
+      valueWidget: PhoneWithIconWidget(
+        name,
+        hideIcon: true,
+        showCallIcon: true,
+      ),
+    );
+  }
+
+  _grade(String value) {
+    return KeyValueRowWidget(keyText: "Grade Name".tr, value: value);
   }
 
   _groupName(String groupName) {
-    return _sectionLabelValue("Group Name".tr, _value(groupName));
+    return KeyValueRowWidget(
+        keyText: "Group Name".tr,
+        value: groupName.isEmpty ? "No Group".tr : groupName);
   }
 
-  _groupDay(String day) {
-    return _sectionLabelValue("Day".tr, _value(day));
-  }
-
-  _grade(String grade) {
-    return _sectionLabelValue("Grade".tr, _value(grade));
+  _groupDateTime(StudentDetailsUiState uiState) {
+    var day = AppDateUtils.getDayName(uiState.groupDay);
+    return KeyValueRowWidget(
+        keyText: "Day".tr,
+        value: "$day , ${uiState.groupTimeFrom} - ${uiState.groupTimeTo}");
   }
 
   _label(String text) => AppTextWidget(text, style: AppTextStyle.label);
@@ -146,7 +244,24 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
 
   onDeleteClick() {}
 
-  _divider() => Divider(
-        height: 0,
-      );
+  onRefresh() {
+    controller.onRefresh();
+  }
+
+  Future<void> onGroupClick(StudentDetailsUiState uiState) async {
+    if (uiState.groupId.isEmpty) {
+      return;
+    }
+
+    var result = await AppNavigator.navigateToGroupDetails(
+        GroupDetailsArgModel(id: uiState.groupId));
+    if (result == true) {
+      onRefresh();
+    }
+  }
+
+  void onViewAllSessionsClick(StudentDetailsUiState uiState) {
+    AppNavigator.navigateToSessionsList(
+        SessionListArgsModel(studentId: uiState.studentId));
+  }
 }

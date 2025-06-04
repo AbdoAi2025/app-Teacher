@@ -48,6 +48,9 @@ class StudentDetailsController extends GetxController {
                 nameEn: data.gradeNameEn ?? "",
             nameAr: data.gradeNameAr ?? ""
         ).toLocalizedName(),
+        groupDay: data.groupDay ?? 0,
+        groupTimeFrom: data.groupTimeFrom ?? "",
+        groupTimeTo: data.groupTimeTo ?? "",
       );
       updateState(StudentDetailsStateSuccess(uiState: uiState));
     } else {
@@ -66,5 +69,9 @@ class StudentDetailsController extends GetxController {
   void reload() {
     updateState(StudentDetailsStateLoading());
     _loadStudentDetails();
+  }
+
+  void onRefresh() {
+    reload();
   }
 }

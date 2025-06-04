@@ -25,6 +25,7 @@ class SessionItemWidget extends StatelessWidget {
           _groupName(),
           if(uiState.sessionName.isNotEmpty)
           _name(),
+          _groupTime(),
           _date(),
           _status(),
         ],
@@ -40,8 +41,12 @@ class SessionItemWidget extends StatelessWidget {
     return KeyValueRowWidget(keyText: "Group:", value: uiState.groupName);
   }
 
+  _groupTime() {
+    return KeyValueRowWidget(keyText: "Group Time:", value: "${uiState.timeFrom } - ${uiState.timeTo}");
+  }
+
   _date() {
-    return KeyValueRowWidget(keyText: "Date:", value: "${uiState.date} ${uiState.timeFrom } - ${uiState.timeTo}");
+    return KeyValueRowWidget(keyText: "Date:", value: "${uiState.date}");
   }
 
   _status() {

@@ -228,6 +228,8 @@ import 'package:get/get.dart';
 import 'package:teacher_app/screens/students_list/states/student_item_ui_state.dart';
 import 'package:teacher_app/screens/students_list/students_controller.dart';
 import 'package:teacher_app/widgets/app_toolbar_widget.dart';
+import 'package:teacher_app/widgets/empty_view_widget.dart';
+import 'package:teacher_app/widgets/error_view_widget.dart';
 import '../../navigation/app_navigator.dart';
 import '../../themes/app_colors.dart';
 import '../../widgets/app_error_widget.dart';
@@ -256,7 +258,10 @@ class _StudentsScreenState extends State<StudentsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppToolbarWidget.appBar("Students".tr, hasLeading: false),
-        body: _content(),
+        body: Padding(
+          padding: const EdgeInsets.all(20),
+          child: _content(),
+        ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             AppNavigator.navigateToAddStudent();
@@ -267,6 +272,7 @@ class _StudentsScreenState extends State<StudentsScreen> {
   }
 
   Widget _content() {
+
     return Obx(() {
       var state = controller.state.value;
 
@@ -279,7 +285,10 @@ class _StudentsScreenState extends State<StudentsScreen> {
 
         case StudentsStateError():
           return Center(
-              child: AppErrorWidget(message: state.message?.toString() ?? ""));
+              child: ErrorViewWidget(
+            message: state.message?.toString() ?? "",
+            onRetry: refresh,
+          ));
       }
 
       return _emptyView();
@@ -292,9 +301,11 @@ class _StudentsScreenState extends State<StudentsScreen> {
 
   Widget _studentsList(StudentsStateSuccess state) {
     var items = state.uiStates;
+
     if (items.isEmpty) {
       return _emptyView();
     }
+
     return RefreshIndicator(
       onRefresh: () async {
         refresh();
@@ -305,14 +316,21 @@ class _StudentsScreenState extends State<StudentsScreen> {
                 onItemClick: onStudentItemClick,
                 onDeleteClick: onDeleteStudentClick,
               ),
-          separatorBuilder: (context, index) => SizedBox(height: 15,),
+          separatorBuilder: (context, index) => SizedBox(
+                height: 15,
+              ),
           itemCount: items.length),
     );
   }
 
   Widget _emptyView() {
     return Center(
-        child: Text("لا توجد طلاب متاحة", style: TextStyle(fontSize: 18)));
+        child: EmptyViewWidget(
+      message: "No students found".tr,
+      onRetry: () {
+        refresh();
+      },
+    ));
   }
 
   onStudentItemClick(StudentItemUiState p1) {

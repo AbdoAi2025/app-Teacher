@@ -25,6 +25,7 @@ class SessionListController extends GetxController {
 
     if(args is SessionListArgsModel){
       request.groupId = args.groupId;
+      request.studentId = args.studentId;
     }
 
     _loadSessions();
