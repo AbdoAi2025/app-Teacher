@@ -30,6 +30,7 @@ import '../../widgets/groups/group_student_item_widget.dart';
 import '../../widgets/groups/states/group_student_item_ui_state.dart';
 import '../group_edit/args/edit_group_args_model.dart';
 import '../groups/groups_state.dart';
+import '../sessions_list/args/session_list_args_model.dart';
 import 'group_details_controller.dart';
 import 'states/group_details_state.dart';
 import 'states/group_details_student_item_ui_state.dart';
@@ -89,7 +90,7 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
         _sessionSection(uiState),
         _groupInfoSection(uiState),
         _studentsSection(uiState),
-        _viewSessionsSection(),
+        _viewSessionsSection(uiState),
         SizedBox(
           height: 20,
         )
@@ -279,9 +280,11 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
         ),
       );
 
-  _viewSessionsSection() {
+  _viewSessionsSection(GroupDetailsUiState uiState) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        onViewAllSessionClick(uiState);
+      },
       child: Container(
         width: double.infinity,
         decoration: AppBackgroundStyle.backgroundWithShadow(),
@@ -296,5 +299,9 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
         ),
       ),
     );
+  }
+
+  void onViewAllSessionClick(GroupDetailsUiState uiState) {
+    AppNavigator.navigateToSessionsList(SessionListArgsModel(groupId: uiState.groupId));
   }
 }

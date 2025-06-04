@@ -83,7 +83,7 @@ import 'services/api_service.dart';
 
 Locale? appLocale;
 
-const bool isDev = false;
+const bool isDev = true;
 
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 

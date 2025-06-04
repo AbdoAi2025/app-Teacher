@@ -22,6 +22,7 @@ class AppRoutes {
 
   /*sessions*/
   static const String sessionDetails = "/sessionDetails";
+  static const String sessionsList = "/sessionsList";
 
 
 

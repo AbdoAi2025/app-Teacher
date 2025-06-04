@@ -7,8 +7,17 @@ class ErrorResponse {
       this.message,});
 
   ErrorResponse.fromJson(dynamic json) {
-    status = json['status'];
-    message = json['message'];
+
+    if(json == null) return;
+
+    if (json['status'] != null) {
+      status = json['status'];
+    }
+
+    if (json['message'] != null) {
+      message = json['message'];
+    }
+
   }
   String? status;
   String? message;

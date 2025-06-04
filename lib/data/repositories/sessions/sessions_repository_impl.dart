@@ -1,6 +1,8 @@
 import 'package:teacher_app/data/repositories/sessions/sessions_repository.dart';
+import 'package:teacher_app/data/requests/get_my_sessions_request.dart';
 import 'package:teacher_app/data/requests/start_session_request.dart';
 import 'package:teacher_app/data/requests/update_session_activities_request.dart';
+import 'package:teacher_app/data/responses/get_my_sessions_response.dart';
 import 'package:teacher_app/data/responses/get_session_details_response.dart';
 
 import '../../dataSource/sessions_remote_data_source.dart';
@@ -39,5 +41,11 @@ class SessionsRepositoryImpl extends SessionsRepository {
   @override
   Future<dynamic> endSession(String sessionId) async {
      return await remoteIdentityDataSource.endSession(sessionId);
+  }
+
+  @override
+  Future<List<MySessionItemApiModel>> getMySessions(GetMySessionsRequest request) async {
+    var response = await remoteIdentityDataSource.getMySessions(request);
+    return response.data ?? List.empty();
   }
 }

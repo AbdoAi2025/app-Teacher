@@ -63,5 +63,15 @@ class AppDateUtils{
     }
   }
 
+  static String parsStringToString(String? dateString, [String format = 'yyyy-MM-dd HH:mm']) {
+    try{
+      String formatted = DateFormat(format).format(parseStringToDateTime(dateString!)!);
+      return formatted;
+    }catch(e){
+      appLog("parsDateToString e:${e.toString()}");
+      return dateString ?? "";
+    }
+  }
+
 }
 

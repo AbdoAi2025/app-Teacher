@@ -1,10 +1,12 @@
 import 'package:teacher_app/data/requests/login_request.dart';
 import 'package:teacher_app/data/requests/start_session_request.dart';
+import 'package:teacher_app/data/responses/get_my_sessions_response.dart';
 import 'package:teacher_app/data/responses/login_response.dart';
 import 'package:teacher_app/data/responses/start_session_response.dart';
 import 'package:teacher_app/services/api_service.dart';
 import 'package:teacher_app/services/endpoints.dart';
 
+import '../requests/get_my_sessions_request.dart';
 import '../requests/update_session_activities_request.dart';
 import '../responses/get_running_sessions_response.dart';
 import '../responses/get_session_details_response.dart';
@@ -40,6 +42,11 @@ class SessionsRemoteDataSource {
     await  ApiService.getInstance().post(EndPoints.endSession , data: {
       "sessionId": sessionId
     });
+  }
+
+  Future<GetMySessionsResponse> getMySessions(GetMySessionsRequest request) async{
+    var response  = await  ApiService.getInstance().get(EndPoints.getMySessions , queryParameters: request.toJson());
+    return GetMySessionsResponse.fromJson(response.data);
   }
 
 }

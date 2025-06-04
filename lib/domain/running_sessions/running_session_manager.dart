@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:teacher_app/utils/day_utils.dart';
 
 import '../../screens/home/states/running_session_item_ui_state.dart';
 import '../../screens/home/states/running_sessions_state.dart';
@@ -16,7 +17,7 @@ class RunningSessionManager {
     if (result.isSuccess) {
       var uiStates = result.data
           ?.map((e) => RunningSessionItemUiState(
-          id: e.id ?? "", date: DateTime.now()))
+          id: e.id ?? "", date: AppDateUtils.parseStringToDateTime(e.startDate ?? "")))
           .toList() ??
           List.empty();
       _updateRunningSessionState(RunningSessionsStateSuccess(uiStates));
