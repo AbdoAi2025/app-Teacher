@@ -14,6 +14,7 @@ import 'package:teacher_app/widgets/sessions/running_session_item_widget.dart';
 import '../../widgets/app_toolbar_widget.dart';
 import '../../widgets/groups/group_item_widget.dart';
 import '../groups/groups_state.dart';
+import 'states/home_state.dart';
 import 'states/running_session_item_ui_state.dart';
 import 'states/running_sessions_state.dart';
 
@@ -48,13 +49,23 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(), // <-- key line
-        child: Column(
-          spacing: 20,
-          mainAxisSize: MainAxisSize.min,
-          children: [_runningSession(), _todayGroups()],
-        ),
+        child: _contentState(),
       ),
     );
+  }
+
+  _contentState() {
+    return  Obx((){
+      var state = controller.homeState.value;
+      if(state is HomeStateLoading){
+        return Center(child: LoadingWidget());
+      }
+      return Column(
+        spacing: 20,
+        mainAxisSize: MainAxisSize.min,
+        children: [_runningSession(), _todayGroups()],
+      );
+    });
   }
 
   _runningSession() {
@@ -217,4 +228,6 @@ class _HomeScreenState extends State<HomeScreen> {
     controller.logout();
     AppNavigator.navigateToLogin();
   }
+
+
 }

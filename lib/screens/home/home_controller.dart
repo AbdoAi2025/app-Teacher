@@ -5,20 +5,28 @@ import '../../domain/groups/groups_managers.dart';
 import '../../domain/running_sessions/running_session_manager.dart';
 import '../../domain/usecases/get_profile_info_use_case.dart';
 import '../../domain/usecases/logout_use_case.dart';
+import 'states/home_state.dart';
 
 class HomeController extends GetxController {
 
   Rx<RunningSessionsState> runningState = RunningSessionManager.runningState;
   var todayGroupsState = GroupsManagers.todayGroupsState;
 
+  Rx<HomeState> homeState = Rx(HomeStateLoading());
+
   Rx<ProfileInfoModel?> profileInfo = Rx<ProfileInfoModel?>(null);
 
   @override
   void onInit() {
     super.onInit();
-    _loadRunningSession();
-    _initLoadGroups();
+    _initLoadHomeData();
     _initGetProfileInfo();
+  }
+
+  Future<void> _initLoadHomeData() async {
+    await _loadRunningSession();
+    await _initLoadGroups();
+    _updateHomeState(HomeStateLoaded(runningState: runningState, todayGroupsState: todayGroupsState));
   }
 
   Future<void> _loadRunningSession() async {
@@ -26,16 +34,16 @@ class HomeController extends GetxController {
   }
 
   onRefresh() {
-    RunningSessionManager.onRefresh();
-    GroupsManagers.onRefresh();
+    _updateHomeState(HomeStateLoading());
+    _initLoadHomeData();
   }
 
   void updateRunningSessionState(RunningSessionsState state) {
     runningState.value = state;
   }
 
-  void _initLoadGroups() {
-    GroupsManagers.loadGroups();
+  Future<void> _initLoadGroups() async {
+    await GroupsManagers.loadGroups();
   }
 
   Future<void> _initGetProfileInfo() async {
@@ -46,4 +54,10 @@ class HomeController extends GetxController {
   logout() async {
     await LogoutUseCase().execute();
   }
+
+  void _updateHomeState(HomeState state) {
+    homeState.value = state;
+  }
+
+
 }
