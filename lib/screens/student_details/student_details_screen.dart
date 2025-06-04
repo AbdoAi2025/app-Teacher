@@ -114,7 +114,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
                 spacing: 10,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _groupName(uiState.groupName),
+                  _groupName(uiState),
                   if (uiState.groupId.isNotEmpty) ...{
                     _groupDateTime(uiState),
                   }
@@ -180,10 +180,22 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
     return KeyValueRowWidget(keyText: "Grade Name".tr, value: value);
   }
 
-  _groupName(String groupName) {
+  _groupName(StudentDetailsUiState uiState) {
+
+    var groupId = uiState.groupId;
+    var groupName = uiState.groupName;
+     groupName = groupId.isEmpty ? "No Group".tr : groupName ;
+
     return KeyValueRowWidget(
         keyText: "Group Name".tr,
-        value: groupName.isEmpty ? "No Group".tr : groupName);
+        mainAxisSize: MainAxisSize.max,
+        valueWidget:  Row(
+          children: [
+            Expanded(child: AppTextWidget(groupName , style: AppTextStyle.value,)),
+            // if(groupId.isEmpty)
+            //   _addToGroup(uiState)
+          ],
+        ));
   }
 
   _groupDateTime(StudentDetailsUiState uiState) {
@@ -263,5 +275,22 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
   void onViewAllSessionsClick(StudentDetailsUiState uiState) {
     AppNavigator.navigateToSessionsList(
         SessionListArgsModel(studentId: uiState.studentId));
+  }
+
+  _addToGroup(StudentDetailsUiState uiState) {
+    return InkWell(
+      onTap: (){
+        onAddToGroupClick(uiState);
+      },
+      child: Container(
+          decoration: AppBackgroundStyle.getColoredBackgroundRounded(10, AppColors.appMainColor),
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+          child: AppTextWidget("Add to Group".tr , style: AppTextStyle.value.copyWith(color: Colors.white),)),
+    );
+  }
+
+  void onAddToGroupClick(StudentDetailsUiState uiState) {
+     controller.addStudentToGroup(uiState);
+
   }
 }

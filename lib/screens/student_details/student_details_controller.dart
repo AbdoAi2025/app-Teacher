@@ -1,8 +1,11 @@
 import 'package:get/get.dart';
+import 'package:teacher_app/domain/usecases/get_group_details_use_case.dart';
+import 'package:teacher_app/domain/usecases/get_groups_list_use_case.dart';
 import 'package:teacher_app/screens/student_details/args/student_details_arg_model.dart';
 import 'package:teacher_app/screens/student_details/states/student_details_ui_state.dart';
 import 'package:teacher_app/utils/extensions_utils.dart';
 import 'package:teacher_app/utils/localized_name_model.dart';
+import '../../base/AppResult.dart';
 import '../../domain/usecases/get_student_details_use_case.dart';
 import 'states/student_details_state.dart';
 
@@ -73,5 +76,23 @@ class StudentDetailsController extends GetxController {
 
   void onRefresh() {
     reload();
+  }
+
+  Stream<AppResult<dynamic>> addStudentToGroup(StudentDetailsUiState uiState) async*{
+
+    //
+    // GetGroupsListUseCase useCase = GetGroupsListUseCase();
+    //
+    // if(groupsState)
+    //
+    //
+    // GetGroupDetailsUseCase useCase = GetGroupDetailsUseCase();
+    // var groupDetailsResult = await useCase.execute(uiState.groupId);
+    //
+    // if(!groupDetailsResult.isSuccess){
+    //
+    // }
+
+
   }
 }
