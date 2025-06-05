@@ -38,9 +38,18 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+
+
     return Scaffold(
         appBar: AppToolbarWidget.appBar("Session Details".tr,
-            actions: [_actions()]),
+            actions: [
+              Obx((){
+                var state = controller.state.value;
+                var isShowEdit = state is SessionDetailsStateSuccess && state.uiState.isSessionActive();
+                return isShowEdit ? _actions() : Container();
+              })
+            ]),
         body: RefreshIndicator(
           onRefresh: () async {
             onRefresh();
@@ -97,7 +106,7 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
         spacing: 15,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(child: _activities(uiState.activities)),
+          Expanded(child: _activities(uiState.activities , uiState.isSessionActive())),
           _sessionInfoSection(uiState),
           if (uiState.isSessionActive()) _enSessionButton(uiState)
         ]);
@@ -186,10 +195,10 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
     );
   }
 
-  _activities(List<SessionActivityItemUiState> activities) {
+  _activities(List<SessionActivityItemUiState> activities , bool isActive) {
     return ListView.separated(
         itemBuilder: (context, index) {
-          return _activityItem(activities[index]);
+          return _activityItem(activities[index],isActive);
         },
         separatorBuilder: (context, index) => SizedBox(
               height: 10,
@@ -197,10 +206,11 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
         itemCount: activities.length);
   }
 
-  _activityItem(SessionActivityItemUiState uiState) {
+  _activityItem(SessionActivityItemUiState uiState , bool isActive) {
     return StudentActivityItemWidget(
       key: UniqueKey(),
       uiState: uiState,
+      isActive: isActive,
       isEditable: isEditable,
       onChanged: (uiState) {
         controller.onItemChanged(uiState);

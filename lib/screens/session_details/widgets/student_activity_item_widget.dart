@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/themes/app_colors.dart';
+import 'package:teacher_app/utils/LogUtils.dart';
 import 'package:teacher_app/utils/app_background_styles.dart';
+import 'package:teacher_app/utils/whatsapp_utils.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'package:teacher_app/widgets/edit_icon_widget.dart';
 import 'package:teacher_app/widgets/phone_with_icon_widget.dart';
@@ -16,6 +18,7 @@ import '../states/session_details_ui_state.dart';
 
 class StudentActivityItemWidget extends StatefulWidget {
   final SessionActivityItemUiState uiState;
+  final bool isActive;
   final bool isEditable;
   final Function(SessionActivityItemUiState) onChanged;
   final Function(SessionActivityItemUiState) onDone;
@@ -23,6 +26,7 @@ class StudentActivityItemWidget extends StatefulWidget {
   const StudentActivityItemWidget(
       {super.key,
       required this.uiState,
+      required this.isActive,
       this.isEditable = false,
       required this.onChanged,
       required this.onDone});
@@ -58,13 +62,16 @@ class _StudentActivityItemWidgetState extends State<StudentActivityItemWidget> {
               Expanded(
                 child: _studentName(),
               ),
-              _editIcon()
+
+              if(widget.isActive)_editIcon()
             ],
           ),
           _parentPhone(),
           _attended(),
           _behaviorGood(),
           _quizGrade(),
+          if(!isEditable)
+          _sendReport()
         ],
       ),
     );
@@ -213,6 +220,30 @@ class _StudentActivityItemWidgetState extends State<StudentActivityItemWidget> {
         color: bool == true ? AppColors.color_3FCBA6 : Colors.red,
       ),
 
+    );
+  }
+
+  _sendReport() {
+    return InkWell(
+      onTap: (){
+        onSendReport();
+      },
+      child: Container(
+        decoration: AppBackgroundStyle.getColoredBackgroundRounded(12 ,AppColors.appMainColor),
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+        child: AppTextWidget("Send Report".tr  ,color: AppColors.white,)
+      ),
+    );
+  }
+
+  void onSendReport() {
+    appLog("onSendReport click");
+    WhatsappUtils.sendToWhatsApp(
+        "Report about ${uiState.studentName}\n"
+        "attended: ${uiState.attended ?? false}\n"
+        "Behavior: ${uiState.behaviorGood ?? false}\n"
+        "Quiz Grade: ${uiState.quizGrade ?? 0}\n",
+        "+201063271529"
     );
   }
 }
