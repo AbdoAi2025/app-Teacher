@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:teacher_app/themes/app_colors.dart';
+import 'package:teacher_app/themes/txt_styles.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'package:teacher_app/widgets/primary_button_widget.dart';
 
@@ -70,24 +72,42 @@ class ConfirmDailogWidget extends StatelessWidget {
                 const SizedBox(
                   height: 10,
                 ),
-                PrimaryButtonWidget(
-                  text: positive_button_text ?? 'ok'.tr,
-                  onClick: () {
-                    if (autoDismiss) {
-                      Navigator.pop(context);
-                    }
-                    onSuccess?.call();
-                  },
-                ),
-                Visibility(
-                    visible: showCancelBtn,
-                    child: PrimaryButtonWidget(
-                      text: negative_button_text ?? 'cancel'.tr,
-                      onClick: () {
-                        Navigator.pop(context);
-                        onCancel?.call();
-                      },
-                    ))
+
+
+                Row(
+                  spacing: 15,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: PrimaryButtonWidget(
+                        text: positive_button_text ?? 'ok'.tr,
+                        padding: EdgeInsets.symmetric(vertical: 7, horizontal: 10),
+                        textStyle: AppTextStyle.value.copyWith(color: AppColors.white),
+                        onClick: () {
+                          if (autoDismiss) {
+                            Navigator.pop(context);
+                          }
+                          onSuccess?.call();
+                        },
+                      ),
+                    ),
+                    Expanded(
+                      child: Visibility(
+                          visible: showCancelBtn,
+                          child: PrimaryButtonWidget(
+                            text: negative_button_text ?? 'cancel'.tr,
+                            padding: EdgeInsets.symmetric(vertical: 7, horizontal: 10),
+                            textStyle: AppTextStyle.value.copyWith(color: AppColors.white),
+                            onClick: () {
+                              Navigator.pop(context);
+                              onCancel?.call();
+                            },
+                          )),
+                    )
+                  ],
+                )
+
+
               ],
             ),
           ),

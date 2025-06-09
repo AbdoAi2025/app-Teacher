@@ -5,9 +5,16 @@ import 'package:teacher_app/widgets/app_txt_widget.dart';
 class PrimaryButtonWidget extends StatelessWidget {
   final String text;
   final Function() onClick;
+  final EdgeInsetsGeometry? padding;
+  final TextStyle? textStyle;
 
   const PrimaryButtonWidget(
-      {super.key, required this.text, required this.onClick});
+      {super.key,
+        required this.text,
+        required this.onClick ,
+        this.padding,
+        this.textStyle,
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -16,12 +23,12 @@ class PrimaryButtonWidget extends StatelessWidget {
         onClick();
       },
       style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+        padding: padding ?? EdgeInsets.symmetric(horizontal: 50, vertical: 15),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
       ),
-      child: AppTextWidget(text, style: TextStyle(fontSize: 18)),
+      child: AppTextWidget(text, style: textStyle ?? TextStyle(fontSize: 18)),
     );
   }
 }
