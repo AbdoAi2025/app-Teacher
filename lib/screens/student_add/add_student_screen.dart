@@ -346,7 +346,6 @@ class AddStudentScreen extends StatefulWidget {
 }
 
 class AddStudentScreenState extends State<AddStudentScreen> {
-  final StudentsController _studentsController = Get.find();
 
   final AddStudentController _controller = Get.put(AddStudentController());
 
@@ -468,7 +467,6 @@ class AddStudentScreenState extends State<AddStudentScreen> {
   }
 
   void onSaveSuccess(SaveStateSuccess result) {
-    _studentsController.refreshStudnets();
     Get.back(result: true);
   }
 

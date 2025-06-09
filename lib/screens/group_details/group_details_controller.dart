@@ -1,9 +1,8 @@
 import 'package:get/get.dart';
 import 'package:teacher_app/domain/usecases/get_group_details_use_case.dart';
-import 'package:teacher_app/domain/usecases/start_session_use_case.dart';
-import '../../domain/states/end_session_state.dart';
-import '../../domain/states/start_session_state.dart';
-import '../../domain/usecases/end_session_use_case.dart';
+import '../../base/AppResult.dart';
+import '../../domain/events/students_events.dart';
+import '../../domain/usecases/delete_group_use_case.dart';
 import 'args/group_details_arg_model.dart';
 import 'states/group_details_state.dart';
 import 'states/group_details_student_item_ui_state.dart';
@@ -23,8 +22,8 @@ class GroupDetailsController extends GetxController {
     if (arg is GroupDetailsArgModel) {
       groupDetailsArgsModel = arg;
     }
-
     _loadGroupDetails();
+    _initOnStudentEvents();
   }
 
   void updateState(GroupDetailsState state) {
@@ -76,5 +75,17 @@ class GroupDetailsController extends GetxController {
   void reload() {
     updateState(GroupDetailsStateLoading());
     _loadGroupDetails();
+  }
+
+  void _initOnStudentEvents() {
+    StudentsEvents.studentsEvents.listen((event) {
+      if(event == null) return;
+      reload();
+    });
+  }
+
+  Stream<AppResult<dynamic>>  deleteGroup(GroupDetailsUiState uiState)  async*{
+    var useCase = DeleteGroupUseCase();
+    yield await useCase.execute(uiState.groupId);
   }
 }

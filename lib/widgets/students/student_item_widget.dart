@@ -29,27 +29,34 @@ class StudentItemWidget extends StatelessWidget {
         onItemClick(uiState);
       },
       child: SectionWidget(
-        child: Column(
-          spacing: 15,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
           children: [
-            /*title with student name*/
-            _titleWithStudentName(),
-            Row(
-              children: [
-                Expanded(
-                    child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _parentPhone(),
-                    _grade(),
+            Expanded(
+              child: Column(
+                spacing: 15,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  /*title with student name*/
+                  _titleWithStudentName(),
+                  Row(
+                    children: [
+                      Expanded(
+                          child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          _parentPhone(),
+                          _grade(),
 
-                  ],
-                )),
-                _arrowIcon()
-              ],
+                        ],
+                      )),
+                    ],
+                  ),
+                ],
+              ),
             ),
+
+            _arrowIcon()
           ],
         ),
       ),
@@ -69,8 +76,8 @@ class StudentItemWidget extends StatelessWidget {
             ],
           ),
         ),
-        if(onDeleteClick != null)
-          _deleteIcon(),
+        // if(onDeleteClick != null)
+        //   _deleteIcon(),
       ],
     );
   }

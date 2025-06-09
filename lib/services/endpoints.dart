@@ -11,6 +11,7 @@ class EndPoints{
   static const String addStudents = "$apiV1/students/add";
   static const String updateStudents = "$apiV1/students/update";
   static const String getStudentDetails = "$apiV1/students";
+  static const String deleteStudent = "$apiV1/students/delete";
 
 
   ///api/v1/users/signin

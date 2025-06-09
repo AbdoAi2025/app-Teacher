@@ -22,8 +22,6 @@ class AppResultSuccess<T> extends AppResult<T>{
 }
 
 class AppResultError<T> extends AppResult<T>{
-
   final Exception? ex;
   AppResultError(this.ex , super.data);
-
 }

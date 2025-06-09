@@ -4,6 +4,9 @@ import 'package:teacher_app/screens/students_list/states/students_state.dart';
 import 'package:teacher_app/utils/extensions_utils.dart';
 import 'package:teacher_app/utils/localized_name_model.dart';
 
+import '../../base/AppResult.dart';
+import '../../domain/events/students_events.dart';
+import '../../domain/usecases/delete_student_use_case.dart';
 import '../../requests/get_my_students_request.dart';
 import 'states/student_item_ui_state.dart';
 
@@ -17,6 +20,7 @@ class StudentsController extends GetxController {
   void onInit() {
     super.onInit();
     _loadStudents();
+    _initOnStudentEvents();
   }
 
   Future<void> _loadStudents() async {
@@ -52,5 +56,17 @@ class StudentsController extends GetxController {
 
   void _updateState(StudentsState state) {
     this.state.value = state;
+  }
+
+  void _initOnStudentEvents() {
+    StudentsEvents.studentsEvents.listen((event) {
+      if(event == null) return;
+      refreshStudnets();
+    });
+  }
+
+  Stream<AppResult<dynamic>> deleteStudent(StudentItemUiState uiState)  async*{
+    var useCase = DeleteStudentUseCase();
+    yield await useCase.execute(uiState.id);
   }
 }

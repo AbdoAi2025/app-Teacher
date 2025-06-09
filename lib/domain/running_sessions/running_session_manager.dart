@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:teacher_app/utils/LogUtils.dart';
 import 'package:teacher_app/utils/day_utils.dart';
 
 import '../../screens/home/states/running_session_item_ui_state.dart';
@@ -14,6 +15,7 @@ class RunningSessionManager {
 
   static Future<void> loadRunningSession() async {
     var result = await GetRunningSessionUseCase().execute();
+    appLog("RunningSessionManager result:$RunningSessionManager");
     if (result.isSuccess) {
       var uiStates = result.data
           ?.map((e) => RunningSessionItemUiState(

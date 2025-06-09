@@ -13,19 +13,18 @@ class GetRunningSessionUseCase {
   final SessionsRepository _repository = SessionsRepositoryImpl();
 
   Future<AppResult<List<RunningSessionsItemApiModel>?>> execute() async {
+
     try{
        var items =  await _repository.getRunningSession();
        return AppResult.success(items);
-    }
-    catch(ex){
+    } catch(ex){
 
       if(ex is DioException){
         var errorResponse = ErrorResponse.fromJson(ex.response?.data);
         return AppResult.error(AppHttpException(errorResponse.message));
       }
-
       appLog("GetRunningSessionUseCase execute ex:${ex.toString()}");
-      return AppResult.error(Exception(ex));
+      return AppResult.error(AppHttpException(ex.toString()));
     }
   }
 }

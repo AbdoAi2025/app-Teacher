@@ -7,8 +7,10 @@ import 'package:teacher_app/screens/student_details/states/student_details_ui_st
 import 'package:teacher_app/screens/student_details/student_details_controller.dart';
 import 'package:teacher_app/utils/app_background_styles.dart';
 import 'package:teacher_app/utils/day_utils.dart';
+import 'package:teacher_app/utils/message_utils.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'package:teacher_app/widgets/delete_icon_widget.dart';
+import 'package:teacher_app/widgets/dialog_loading_widget.dart';
 import 'package:teacher_app/widgets/edit_icon_widget.dart';
 import 'package:teacher_app/widgets/forward_arrow_widget.dart';
 import 'package:teacher_app/widgets/key_value_row_widget.dart';
@@ -254,7 +256,26 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
     }
   }
 
-  onDeleteClick() {}
+  onDeleteClick() {
+
+    showConfirmationMessage("${"Are you sure to delete ?".tr} ${controller.getStudentDetailsUiState()?.studentName ?? ""}", (){
+      showDialogLoading();
+      controller.deleteStudent().listen((event) {
+        hideDialogLoading();
+        if(event.isSuccess){
+           onBack();
+           return;
+        }
+
+        if(event.isError){
+          showErrorMessage(event.error?.toString());
+        }
+
+      },);
+
+    });
+
+  }
 
   onRefresh() {
     controller.onRefresh();
@@ -292,5 +313,9 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
   void onAddToGroupClick(StudentDetailsUiState uiState) {
      controller.addStudentToGroup(uiState);
 
+  }
+
+  void onBack() {
+    Get.back(result: true);
   }
 }

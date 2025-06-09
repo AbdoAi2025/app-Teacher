@@ -232,7 +232,9 @@ import 'package:teacher_app/widgets/empty_view_widget.dart';
 import 'package:teacher_app/widgets/error_view_widget.dart';
 import '../../navigation/app_navigator.dart';
 import '../../themes/app_colors.dart';
+import '../../utils/message_utils.dart';
 import '../../widgets/app_error_widget.dart';
+import '../../widgets/dialog_loading_widget.dart';
 import '../../widgets/loading_widget.dart';
 import '../student_details/args/student_details_arg_model.dart';
 import 'states/students_state.dart';
@@ -327,9 +329,6 @@ class _StudentsScreenState extends State<StudentsScreen> {
     return Center(
         child: EmptyViewWidget(
       message: "No students found".tr,
-      onRetry: () {
-        refresh();
-      },
     ));
   }
 
@@ -337,5 +336,18 @@ class _StudentsScreenState extends State<StudentsScreen> {
     AppNavigator.navigateToStudentDetails(StudentDetailsArgModel(id: p1.id));
   }
 
-  onDeleteStudentClick(StudentItemUiState uiState) {}
+  onDeleteStudentClick(StudentItemUiState uiState) {
+    showConfirmationMessage("${"Are you sure to delete ?".tr} ${uiState.name}", (){
+      showDialogLoading();
+      controller.deleteStudent(uiState).listen((event) {
+        hideDialogLoading();
+        if(event.isSuccess){
+          return;
+        }
+        if(event.isError){
+          showErrorMessage(event.error?.toString());
+        }
+      },);
+    });
+  }
 }

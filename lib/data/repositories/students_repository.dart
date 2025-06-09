@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:teacher_app/apimodels/student_list_item_api_model.dart';
+import 'package:teacher_app/base/AppResult.dart';
 import 'package:teacher_app/requests/add_student_request.dart';
 import 'package:teacher_app/requests/get_my_students_request.dart';
 import 'package:teacher_app/requests/update_student_request.dart';
@@ -37,5 +38,11 @@ class StudentsRepository {
       Response response = await ApiService.getInstance().get(url);
     GetStudentDetailsResponse responseResult = GetStudentDetailsResponse.fromJson(response.data);
       return responseResult.data;
+  }
+
+  Future<dynamic>  deleteStudent(String id) async {
+    var url = "${EndPoints.deleteStudent}/$id";
+    Response response = await ApiService.getInstance().delete(url);
+    return response.data;
   }
 }

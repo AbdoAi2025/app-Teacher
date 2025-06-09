@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 
+import '../../exceptions/app_http_exception.dart';
 import '../../screens/groups/groups_state.dart';
 import '../../utils/day_utils.dart';
 import '../usecases/get_groups_list_use_case.dart';
@@ -30,6 +31,10 @@ class GroupsManagers {
           List.empty();
       _updateState(GroupsStateSuccess(uiStates: uiStates));
       return;
+    }
+
+    if(groupsResult.isError){
+      _updateState(GroupsStateError(AppHttpException(groupsResult.error?.toString())));
     }
   }
 

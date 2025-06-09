@@ -153,6 +153,7 @@ import '../models/student.dart';
 const String prodBaseUrl = "https://assistant-app-2136afb92d95.herokuapp.com";
 const String devBaseUrl = "https://assistant-app-2136afb92d95.herokuapp.com";
 const String localBaseUrl = "http://192.168.2.117:8080";
+// const String localBaseUrl = "http://192.168.100.70:8080";
 var baseUrl = isDev ? localBaseUrl : prodBaseUrl;
 
 class ApiService {

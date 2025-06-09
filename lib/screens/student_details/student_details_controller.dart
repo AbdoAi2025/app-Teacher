@@ -6,6 +6,8 @@ import 'package:teacher_app/screens/student_details/states/student_details_ui_st
 import 'package:teacher_app/utils/extensions_utils.dart';
 import 'package:teacher_app/utils/localized_name_model.dart';
 import '../../base/AppResult.dart';
+import '../../domain/events/students_events.dart';
+import '../../domain/usecases/delete_student_use_case.dart';
 import '../../domain/usecases/get_student_details_use_case.dart';
 import 'states/student_details_state.dart';
 
@@ -94,5 +96,10 @@ class StudentDetailsController extends GetxController {
     // }
 
 
+  }
+
+  Stream<AppResult<dynamic>> deleteStudent()  async*{
+    var useCase = DeleteStudentUseCase();
+    yield await useCase.execute(getStudentDetailsUiState()?.studentId ?? "");
   }
 }

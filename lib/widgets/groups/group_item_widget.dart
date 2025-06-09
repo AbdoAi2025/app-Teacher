@@ -36,28 +36,34 @@ class GroupItemWidget extends StatelessWidget {
         margin: EdgeInsets.symmetric(horizontal: 20, ),
         child: Padding(
           padding: const EdgeInsets.all(15.0),
-          child: Column(
-            spacing: 15,
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Row(
             children: [
-              Row(
-                children: [
-                  _groupName(),
-                  Spacer(),
-                  _deleteIcon(),
-                ],
+              Expanded(
+                child: Column(
+                  spacing: 15,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        _groupName(),
+                        Spacer(),
+                        // _deleteIcon(),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                            child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [_date(), _time()],
+                        )),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-              Row(
-                children: [
-                  Expanded(
-                      child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [_date(), _time()],
-                  )),
-                  _arrowIcon()
-                ],
-              ),
+              _arrowIcon()
             ],
           ),
         ),

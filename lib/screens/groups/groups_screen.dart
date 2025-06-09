@@ -5,7 +5,9 @@ import 'package:teacher_app/themes/app_colors.dart';
 import 'package:teacher_app/widgets/app_toolbar_widget.dart';
 import 'package:teacher_app/widgets/empty_view_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
+import '../../utils/message_utils.dart';
 import '../../widgets/app_error_widget.dart';
+import '../../widgets/dialog_loading_widget.dart';
 import '../../widgets/groups/group_item_widget.dart';
 import '../group_details/args/group_details_arg_model.dart';
 import 'groups_controller.dart';
@@ -92,7 +94,18 @@ class _GroupsScreenState extends State<GroupsScreen> {
         child: EmptyViewWidget(message: "No Groups Found".tr));
   }
 
-  onDeleteClick(StudentItemUiState p1) {
-
+  onDeleteClick(StudentItemUiState uiState) {
+    showConfirmationMessage("${"Are you sure to delete ?".tr} ${uiState.groupName}", (){
+      showDialogLoading();
+      controller.deleteGroup(uiState).listen((event) {
+        hideDialogLoading();
+        if(event.isSuccess){
+          return;
+        }
+        if(event.isError){
+          showErrorMessage(event.error?.toString());
+        }
+      },);
+    });
   }
 }

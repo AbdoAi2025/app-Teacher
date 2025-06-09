@@ -3,6 +3,7 @@ import 'package:teacher_app/data/repositories/students_repository.dart';
 import 'package:teacher_app/requests/update_student_request.dart';
 
 import '../../data/responses/add_student_response.dart';
+import '../events/students_events.dart';
 
 class UpdateStudentUseCase {
 
@@ -11,6 +12,7 @@ class UpdateStudentUseCase {
   Future<AppResult<AddStudentResponse?>> execute(UpdateStudentRequest request) async {
     try{
        var items =  await repository.updateStudent(request);
+       StudentsEvents.onStudentUpdated();
        return AppResult.success(items);
     }on Exception catch(ex){
       return AppResult.error(ex);

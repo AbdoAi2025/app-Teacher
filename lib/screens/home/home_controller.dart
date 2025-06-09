@@ -38,9 +38,6 @@ class HomeController extends GetxController {
     _initLoadHomeData();
   }
 
-  void updateRunningSessionState(RunningSessionsState state) {
-    runningState.value = state;
-  }
 
   Future<void> _initLoadGroups() async {
     await GroupsManagers.loadGroups();

@@ -4,6 +4,7 @@ import 'package:teacher_app/navigation/app_navigator.dart';
 import 'package:teacher_app/screens/home/home_controller.dart';
 import 'package:teacher_app/themes/app_colors.dart';
 import 'package:teacher_app/themes/txt_styles.dart';
+import 'package:teacher_app/utils/LogUtils.dart';
 import 'package:teacher_app/utils/app_background_styles.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'package:teacher_app/widgets/empty_view_widget.dart';
@@ -84,6 +85,8 @@ class _HomeScreenState extends State<HomeScreen> {
           Expanded(child: Obx(() {
             var state = controller.runningState.value;
 
+            appLog("home screen _runningSession state:$state");
+
             if (state is RunningSessionsStateLoading) {
               return Center(child: LoadingWidget());
             }
@@ -125,7 +128,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   _runningSessions(List<RunningSessionItemUiState> uiStates) {
-    // return _runningSessionEmpty();
 
     if (uiStates.isEmpty) {
       return _runningSessionEmpty();

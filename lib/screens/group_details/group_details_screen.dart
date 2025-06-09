@@ -202,7 +202,15 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
   }
 
   _deleteIcon() {
-    return DeleteIconWidget(onClick: onDeleteClick);
+   return Obx((){
+      var state = controller.state.value;
+      if(state is GroupDetailsStateSuccess){
+        return DeleteIconWidget(onClick: (){
+          onDeleteClick(state.uiState);
+        });
+      }
+      return Container();
+    });
   }
 
   onEditClick() async {
@@ -224,7 +232,21 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
     }
   }
 
-  onDeleteClick() {}
+  onDeleteClick(GroupDetailsUiState uiState) {
+    showConfirmationMessage("${"Are you sure to delete ?".tr} ${uiState.groupName}", (){
+      showDialogLoading();
+      controller.deleteGroup(uiState).listen((event) {
+        hideDialogLoading();
+        if(event.isSuccess){
+          Get.back();
+          return;
+        }
+        if(event.isError){
+          showErrorMessage(event.error?.toString());
+        }
+      },);
+    });
+  }
 
   _divider() => Divider(
         height: 0,

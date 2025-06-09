@@ -1,3 +1,5 @@
+import 'package:teacher_app/utils/LogUtils.dart';
+
 /// status : "failed"
 /// message : "there is another session started, end it first then start new session"
 
@@ -8,14 +10,19 @@ class ErrorResponse {
 
   ErrorResponse.fromJson(dynamic json) {
 
-    if(json == null) return;
+    try{
 
-    if (json['status'] != null) {
-      status = json['status'];
-    }
+      if(json == null) return;
 
-    if (json['message'] != null) {
-      message = json['message'];
+      if (json['status'] != null) {
+        status = json['status'];
+      }
+
+      if (json['message'] != null) {
+        message = json['message'];
+      }
+    }catch(ex){
+      appLog("ErrorResponse ex:${ex.toString()}");
     }
 
   }

@@ -1,7 +1,9 @@
 import 'package:get/get.dart';
 import 'package:teacher_app/domain/groups/groups_managers.dart';
+import 'package:teacher_app/domain/usecases/delete_group_use_case.dart';
 import 'package:teacher_app/utils/day_utils.dart';
 
+import '../../base/AppResult.dart';
 import '../../domain/usecases/get_groups_list_use_case.dart';
 import 'groups_state.dart';
 
@@ -26,6 +28,12 @@ class GroupsController extends GetxController{
       return;
     }
     GroupsManagers.loadGroups();
+  }
+
+
+  Stream<AppResult<dynamic>>  deleteGroup(StudentItemUiState uiState)  async*{
+    var useCase = DeleteGroupUseCase();
+    yield await useCase.execute(uiState.groupId);
   }
 
 }
