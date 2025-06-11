@@ -14,9 +14,9 @@ class SessionsRepositoryImpl extends SessionsRepository {
       SessionsRemoteDataSource();
 
   @override
-  Future<String?> startSession(String name, String groupId) async {
+  Future<String?> startSession(StartSessionRequest request) async {
     var response = await remoteIdentityDataSource
-        .startSession(StartSessionRequest(name: name, groupId: groupId));
+        .startSession(request);
     return response.id ;
   }
 

@@ -29,7 +29,8 @@ class GetSessionDetailsResponse {
 class SessionDetailsApiModel {
   SessionDetailsApiModel({
       this.sessionId, 
-      this.sessionStatus, 
+      this.sessionName,
+      this.sessionStatus,
       this.sessionCreatedAt, 
       this.groupId, 
       this.groupName, 
@@ -37,7 +38,9 @@ class SessionDetailsApiModel {
 
   SessionDetailsApiModel.fromJson(dynamic json) {
     sessionId = json['sessionId'];
+    sessionName = json['sessionName'];
     sessionStatus = json['sessionStatus'];
+    sessionQuizGrade = json['sessionQuizGrade'];
     sessionCreatedAt = json['sessionCreatedAt'];
     groupId = json['groupId'];
     groupName = json['groupName'];
@@ -49,7 +52,9 @@ class SessionDetailsApiModel {
     }
   }
   String? sessionId;
+  String? sessionName;
   int? sessionStatus;
+  int? sessionQuizGrade;
   String? sessionCreatedAt;
   String? groupId;
   String? groupName;
@@ -58,7 +63,9 @@ class SessionDetailsApiModel {
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['sessionId'] = sessionId;
+    map['sessionName'] = sessionName;
     map['sessionStatus'] = sessionStatus;
+    map['sessionQuizGrade'] = sessionQuizGrade;
     map['sessionCreatedAt'] = sessionCreatedAt;
     map['groupId'] = groupId;
     map['groupName'] = groupName;

@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:teacher_app/themes/app_colors.dart';
+import 'package:teacher_app/utils/Keyboard_utils.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
 import 'package:teacher_app/utils/app_background_styles.dart';
 import 'package:teacher_app/utils/whatsapp_utils.dart';
@@ -48,31 +50,36 @@ class _StudentActivityItemWidgetState extends State<StudentActivityItemWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: AppBackgroundStyle.backgroundWithShadow(),
-      padding: EdgeInsets.all(15),
-      child: Column(
-        spacing: 10,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            spacing: 10,
-            children: [
-              Expanded(
-                child: _studentName(),
-              ),
+    return InkWell(
+      onTap: (){
+        KeyboardUtils.hideKeyboard(context);
+      },
+      child: Container(
+        decoration: AppBackgroundStyle.backgroundWithShadow(),
+        padding: EdgeInsets.all(15),
+        child: Column(
+          spacing: 10,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              spacing: 10,
+              children: [
+                Expanded(
+                  child: _studentName(),
+                ),
 
-              if(widget.isActive)_editIcon()
-            ],
-          ),
-          _parentPhone(),
-          _attended(),
-          _behaviorGood(),
-          _quizGrade(),
-          if(!isEditable)
-          _sendReport()
-        ],
+                if(widget.isActive)_editIcon()
+              ],
+            ),
+            _parentPhone(),
+            _attended(),
+            _behaviorGood(),
+            _quizGrade(),
+            if(!isEditable)
+            _sendReport()
+          ],
+        ),
       ),
     );
   }
@@ -151,21 +158,29 @@ class _StudentActivityItemWidgetState extends State<StudentActivityItemWidget> {
       spacing: 5,
       children: [
         AppTextWidget("Quiz Grade:",style: AppTextStyle.label),
-        if (!isEditable) AppTextWidget("${quizGrade ?? "0"}"),
+        if (!isEditable) AppTextWidget("${_getGradeFormat()} / ${uiState.sessionQuizGrade}"),
         Spacer(),
         if (isEditable)
           SizedBox(
-            width: 60,
-            height: 50,
+            height: 60,
+            width: 100,
+            // alignment: Alignment.center,
+            // constraints: BoxConstraints(minWidth: 200 , minHeight: 50),
             child: AppTextFieldWidget(
               hint: 0.toString(),
               textAlign: TextAlign.center,
-              controller: TextEditingController(text: (quizGrade ?? "0").toString()),
+              controller: TextEditingController(text: _getGradeFormat()),
               keyboardType: TextInputType.number,
               onChanged: (value){
                 quizGrade = double.tryParse(value ?? "");
                 _onChanged();
               },
+              suffixIcon: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  AppTextWidget("/${uiState.sessionQuizGrade}"),
+                ],
+              ),
             ),
           )
       ],
@@ -185,6 +200,7 @@ class _StudentActivityItemWidgetState extends State<StudentActivityItemWidget> {
   }
 
   onDoneClick() {
+    KeyboardUtils.hideKeyboard(context);
     widget.onDone(_getUiStateChanged());
   }
 
@@ -245,5 +261,9 @@ class _StudentActivityItemWidgetState extends State<StudentActivityItemWidget> {
         "Quiz Grade: ${uiState.quizGrade ?? 0}\n",
         "+201063271529"
     );
+  }
+
+  _getGradeFormat() {
+    return NumberFormat.compact().format(quizGrade ?? 0);
   }
 }

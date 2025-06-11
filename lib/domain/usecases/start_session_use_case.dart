@@ -6,15 +6,16 @@ import 'package:teacher_app/domain/running_sessions/running_session_manager.dart
 import 'package:teacher_app/utils/LogUtils.dart';
 
 import '../../data/repositories/sessions/sessions_repository.dart';
+import '../../data/requests/start_session_request.dart';
 import '../../exceptions/app_http_exception.dart';
 
 class StartSessionUseCase {
 
   final SessionsRepository _repository = SessionsRepositoryImpl();
 
-  Future<AppResult<String?>> execute(String name , String groupId) async {
+  Future<AppResult<String?>> execute(StartSessionRequest request) async {
     try{
-       var items =  await _repository.startSession(name, groupId);
+       var items =  await _repository.startSession(request);
        RunningSessionManager.onRefresh();
        return AppResult.success(items);
     }

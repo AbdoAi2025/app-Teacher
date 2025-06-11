@@ -35,41 +35,60 @@ Future<void> showDailog(context, widget) async {
 void showErrorMessagePopup(String message) {
   showDailog(
       Get.context,
-      SizedBox(
-        width: double.infinity,
-        child: ConfirmDailogWidget(
-            title: message,
-            positive_button_text: "Ok".tr,
-            showCancelBtn: false,
-            onSuccess: () {},
-          ),
+      Dialog(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ConfirmDailogWidget(
+                title: message,
+                positive_button_text: "Ok".tr,
+                showCancelBtn: false,
+                onSuccess: () {},
+              ),
+          ],
+        ),
       ));
 }
 
 void showSuccessMessagePopup(String message, [Function()? onClose]) {
   showDailog(
       Get.context,
-      ConfirmDailogWidget(
-        title: message,
-        positive_button_text: "ok_well".tr,
-        showCancelBtn: false,
-        onSuccess: () {
-          onClose?.call();
-        },
+      Dialog(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ConfirmDailogWidget(
+              title: message,
+              positive_button_text: "ok_well".tr,
+              showCancelBtn: false,
+              onSuccess: () {
+                onClose?.call();
+              },
+            ),
+          ],
+        ),
       ));
 }
 
-void showConfirmationMessage(String message, Function() action,
-    [Function()? onCancel]) {
+void showConfirmationMessage(String message, Function() action, {String? positiveButtonText,String? negativeButtonText, Function()? onCancel}) {
+
   showDailog(
       Get.context,
-      ConfirmDailogWidget(
-        title: message,
-        positive_button_text: "yes".tr,
-        showCancelBtn: true,
-        onSuccess: () {
-          action();
-        },
-        onCancel: onCancel,
+      Dialog(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ConfirmDailogWidget(
+              title: message,
+              positive_button_text: positiveButtonText ?? "yes".tr,
+              negative_button_text: negativeButtonText ?? "Cancel".tr,
+              showCancelBtn: true,
+              onSuccess: () {
+                action();
+              },
+              onCancel: onCancel,
+            ),
+          ],
+        ),
       ));
 }

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:teacher_app/enums/session_status_enum.dart';
 import 'package:teacher_app/screens/session_details/states/session_details_ui_state.dart';
 import 'package:teacher_app/themes/app_colors.dart';
+import 'package:teacher_app/utils/Keyboard_utils.dart';
 import 'package:teacher_app/utils/app_background_styles.dart';
 import 'package:teacher_app/utils/day_utils.dart';
 import 'package:teacher_app/utils/message_utils.dart';
@@ -38,18 +39,16 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-
-
     return Scaffold(
-        appBar: AppToolbarWidget.appBar("Session Details".tr,
-            actions: [
-              Obx((){
-                var state = controller.state.value;
-                var isShowEdit = state is SessionDetailsStateSuccess && state.uiState.isSessionActive();
-                return isShowEdit ? _actions() : Container();
-              })
-            ]),
+        appBar: AppToolbarWidget.appBar("Session Details".tr, actions: [
+          Obx(() {
+            var state = controller.state.value;
+            var isShowEdit = state is SessionDetailsStateSuccess &&
+                state.uiState.isSessionActive();
+            return isShowEdit ? _actions() : Container();
+          })
+        ]),
+        resizeToAvoidBottomInset: false,
         body: RefreshIndicator(
           onRefresh: () async {
             onRefresh();
@@ -106,28 +105,51 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
         spacing: 15,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(child: _activities(uiState.activities , uiState.isSessionActive())),
+          Expanded(
+              child:
+                  _activities(uiState.activities, uiState.isSessionActive())),
           _sessionInfoSection(uiState),
           if (uiState.isSessionActive()) _enSessionButton(uiState)
         ]);
   }
 
   _sessionInfoSection(SessionDetailsUiState uiState) {
+   var sessionName = uiState.sessionName;
     return Container(
       width: double.infinity,
       decoration: AppBackgroundStyle.getColoredBackgroundRounded(
           12, AppColors.sectionBackgroundColor),
       padding: EdgeInsets.all(15),
       child: Column(
-        spacing: 10,
+        spacing: 5,
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
+          if(sessionName.isNotEmpty)
+            _sessionName(sessionName),
           _groupInfoTitle(uiState),
+          _sessionQuize(uiState),
           _sessionStartData(uiState),
           _sessionStatus(uiState),
         ],
       ),
+    );
+  }
+
+  _sessionName(String name) {
+    return Row(
+      spacing: 5,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        AppTextWidget(
+          "Session Name:".tr,
+          style: AppTextStyle.label,
+        ),
+        AppTextWidget(
+          name,
+          style: AppTextStyle.value,
+        )
+      ],
     );
   }
 
@@ -148,6 +170,23 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
     );
   }
 
+  _sessionQuize(SessionDetailsUiState uiState) {
+    return Row(
+      spacing: 5,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        AppTextWidget(
+          "Quiz:".tr,
+          style: AppTextStyle.label,
+        ),
+        AppTextWidget(
+          uiState.sessionQuizGrade.toString(),
+          style: AppTextStyle.value,
+        )
+      ],
+    );
+  }
+
   _sessionStartData(SessionDetailsUiState uiState) {
     return Row(
       spacing: 5,
@@ -162,14 +201,12 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
               uiState.sessionCreatedAt, "yyy-MM-dd HH:mm"),
           style: AppTextStyle.value,
         ),
-
-        if(uiState.isSessionActive())
-        TimerCounterWidget(
-          dateTime: uiState.sessionCreatedAt,
-          textStyle:AppTextStyle.title
-              .copyWith(fontSize: 25,
-              color: AppColors.appMainColor),
-        )
+        if (uiState.isSessionActive())
+          TimerCounterWidget(
+            dateTime: uiState.sessionCreatedAt,
+            textStyle: AppTextStyle.title
+                .copyWith(fontSize: 25, color: AppColors.appMainColor),
+          )
       ],
     );
   }
@@ -195,10 +232,10 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
     );
   }
 
-  _activities(List<SessionActivityItemUiState> activities , bool isActive) {
+  _activities(List<SessionActivityItemUiState> activities, bool isActive) {
     return ListView.separated(
         itemBuilder: (context, index) {
-          return _activityItem(activities[index],isActive);
+          return _activityItem(activities[index], isActive);
         },
         separatorBuilder: (context, index) => SizedBox(
               height: 10,
@@ -206,7 +243,7 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
         itemCount: activities.length);
   }
 
-  _activityItem(SessionActivityItemUiState uiState , bool isActive) {
+  _activityItem(SessionActivityItemUiState uiState, bool isActive) {
     return StudentActivityItemWidget(
       key: UniqueKey(),
       uiState: uiState,

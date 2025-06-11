@@ -2,7 +2,9 @@ import '../../../enums/session_status_enum.dart';
 
 class SessionDetailsUiState {
   final String id;
+  final String sessionName;
   final SessionStatus sessionStatus;
+  final int sessionQuizGrade;
   final DateTime? sessionCreatedAt;
   final String groupId;
   final String groupName;
@@ -11,7 +13,9 @@ class SessionDetailsUiState {
   SessionDetailsUiState(
       {
         required this.id,
+        required this.sessionName,
         required this.sessionStatus,
+        required this.sessionQuizGrade,
         required this.sessionCreatedAt,
         required this.groupId,
         required this.groupName,
@@ -21,7 +25,9 @@ class SessionDetailsUiState {
 
   SessionDetailsUiState copyWith({
     String? id,
+    String? sessionName,
     SessionStatus? sessionStatus,
+    int? sessionQuizGrade,
     DateTime? sessionCreatedAt,
     String? groupId,
     String? groupName,
@@ -29,6 +35,8 @@ class SessionDetailsUiState {
   }) {
     return SessionDetailsUiState(
       id: id ?? this.id,
+      sessionName: sessionName ?? this.sessionName,
+      sessionQuizGrade: sessionQuizGrade ?? this.sessionQuizGrade,
       sessionStatus: sessionStatus ?? this.sessionStatus,
       sessionCreatedAt: sessionCreatedAt ?? this.sessionCreatedAt,
       groupId: groupId ?? this.groupId,
@@ -45,6 +53,7 @@ class SessionActivityItemUiState {
   final String studentName;
   final String studentParentPhone;
   final String studentPhone;
+  final int? sessionQuizGrade;
   final double? quizGrade;
   final bool? attended;
   final bool? behaviorGood;
@@ -54,6 +63,7 @@ class SessionActivityItemUiState {
       required this.studentName,
       required this.studentParentPhone,
       required this.studentPhone,
+      required this.sessionQuizGrade,
       required this.quizGrade,
       required this.attended,
       required this.behaviorGood});
@@ -65,6 +75,7 @@ class SessionActivityItemUiState {
     String? studentParentPhone,
     String? studentPhone,
     double? quizGrade,
+    int? sessionQuizGrade,
     bool? attended,
     bool? behaviorGood,
   }) {
@@ -74,6 +85,7 @@ class SessionActivityItemUiState {
       studentParentPhone: studentParentPhone ?? this.studentParentPhone,
       studentPhone: studentPhone ?? this.studentPhone,
       quizGrade: quizGrade ?? this.quizGrade,
+      sessionQuizGrade: sessionQuizGrade ?? this.sessionQuizGrade,
       attended: attended ?? this.attended,
       behaviorGood: behaviorGood ?? this.behaviorGood,
     );

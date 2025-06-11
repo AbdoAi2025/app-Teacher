@@ -44,6 +44,8 @@ class SessionDetailsController extends GetxController {
 
     if (result.isSuccess) {
       var data = result.data;
+
+      var sessionQuizGrade = data?.sessionQuizGrade ?? 0;
       if (data == null) {
         _updateState(SessionDetailsStateNotFound());
       } else {
@@ -52,6 +54,7 @@ class SessionDetailsController extends GetxController {
                   (e) => SessionActivityItemUiState(
                       studentId: e.studentId ?? "",
                       quizGrade: e.quizGrade,
+                      sessionQuizGrade: sessionQuizGrade,
                       attended: e.attended,
                       behaviorGood: e.behaviorGood,
                       studentName: e.studentName ?? '',
@@ -63,6 +66,8 @@ class SessionDetailsController extends GetxController {
 
         _updateState(SessionDetailsStateSuccess(SessionDetailsUiState(
             id: id,
+            sessionName: data.sessionName ?? "",
+            sessionQuizGrade: sessionQuizGrade,
             activities: activities,
             sessionStatus: SessionStatus.fromValue(data.sessionStatus ?? 0),
             sessionCreatedAt:

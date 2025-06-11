@@ -16,20 +16,14 @@ import 'package:teacher_app/widgets/edit_icon_widget.dart';
 import 'package:teacher_app/widgets/forward_arrow_widget.dart';
 import 'package:teacher_app/widgets/grade_with_icon_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
-import 'package:teacher_app/widgets/primary_button_widget.dart';
 import 'package:teacher_app/widgets/sessions/running_session_item_widget.dart';
 import 'package:teacher_app/widgets/sessions/start_session_button_widget.dart';
-import 'package:teacher_app/widgets/students/student_item_widget.dart';
 
-import '../../domain/states/end_session_state.dart';
-import '../../domain/states/start_session_state.dart';
-import '../../themes/app_colors.dart';
 import '../../themes/txt_styles.dart';
 import '../../widgets/app_toolbar_widget.dart';
 import '../../widgets/groups/group_student_item_widget.dart';
 import '../../widgets/groups/states/group_student_item_ui_state.dart';
 import '../group_edit/args/edit_group_args_model.dart';
-import '../groups/groups_state.dart';
 import '../sessions_list/args/session_list_args_model.dart';
 import 'group_details_controller.dart';
 import 'states/group_details_state.dart';
@@ -202,10 +196,10 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
   }
 
   _deleteIcon() {
-   return Obx((){
+    return Obx(() {
       var state = controller.state.value;
-      if(state is GroupDetailsStateSuccess){
-        return DeleteIconWidget(onClick: (){
+      if (state is GroupDetailsStateSuccess) {
+        return DeleteIconWidget(onClick: () {
           onDeleteClick(state.uiState);
         });
       }
@@ -233,18 +227,21 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
   }
 
   onDeleteClick(GroupDetailsUiState uiState) {
-    showConfirmationMessage("${"Are you sure to delete ?".tr} ${uiState.groupName}", (){
+    showConfirmationMessage(
+        "${"Are you sure to delete ?".tr} ${uiState.groupName}", () {
       showDialogLoading();
-      controller.deleteGroup(uiState).listen((event) {
-        hideDialogLoading();
-        if(event.isSuccess){
-          Get.back();
-          return;
-        }
-        if(event.isError){
-          showErrorMessage(event.error?.toString());
-        }
-      },);
+      controller.deleteGroup(uiState).listen(
+        (event) {
+          hideDialogLoading();
+          if (event.isSuccess) {
+            Get.back();
+            return;
+          }
+          if (event.isError) {
+            showErrorMessage(event.error?.toString());
+          }
+        },
+      );
     });
   }
 
@@ -294,7 +291,6 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
 
   _startSession(String groupId) => Center(
         child: StartSessionButtonWidget(
-          name: "",
           groupId: groupId,
           onSessionStarted: () {
             controller.reload();
@@ -324,6 +320,7 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
   }
 
   void onViewAllSessionClick(GroupDetailsUiState uiState) {
-    AppNavigator.navigateToSessionsList(SessionListArgsModel(groupId: uiState.groupId));
+    AppNavigator.navigateToSessionsList(
+        SessionListArgsModel(groupId: uiState.groupId));
   }
 }
