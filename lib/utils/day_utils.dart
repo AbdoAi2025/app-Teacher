@@ -50,8 +50,8 @@ class AppDateUtils{
       appLog("parseStringToDateTime ex:${ex.toString()}");
       return null;
     }
-
   }
+
 
   static String parsDateToString(DateTime? date, [String format = 'yyyy-MM-dd HH:mm']) {
     try{
@@ -71,6 +71,12 @@ class AppDateUtils{
       appLog("parsDateToString e:${e.toString()}");
       return dateString ?? "";
     }
+  }
+
+
+  static sessionStartDateToString(DateTime? date){
+    return parsDateToString(date, "yyy-MM-dd HH:mm");
+
   }
 
 }

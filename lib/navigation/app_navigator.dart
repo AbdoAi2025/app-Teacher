@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/navigation/app_routes.dart';
+import 'package:teacher_app/screens/report/args/student_report_args.dart';
 import 'package:teacher_app/screens/session_details/args/session_details_args_model.dart';
 import 'package:teacher_app/screens/sessions_list/args/session_list_args_model.dart';
 import 'package:teacher_app/screens/student_details/args/student_details_arg_model.dart';
@@ -56,6 +57,10 @@ class AppNavigator {
 
   static void navigateToSessionsList(SessionListArgsModel args) {
     Get.toNamed(AppRoutes.sessionsList , arguments: args);
+  }
+
+  static void navigateToStudentReport(StudentReportArgs args) {
+    Get.toNamed(AppRoutes.studentReport , arguments: args);
   }
 
 }

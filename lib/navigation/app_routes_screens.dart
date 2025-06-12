@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:teacher_app/navigation/app_routes.dart';
 import 'package:teacher_app/screens/bottom_bar/bottom_bar_screen.dart';
 import 'package:teacher_app/screens/create_group/create_group_screen.dart';
+import 'package:teacher_app/screens/report/student_report_screen.dart';
 import 'package:teacher_app/screens/session_details/session_details_screen.dart';
 import 'package:teacher_app/screens/sessions_list/session_list_screen.dart';
 import 'package:teacher_app/screens/student_add/add_student_screen.dart';
@@ -29,6 +30,7 @@ List<GetPage> appRoutes() => [
   _getPage(AppRoutes.studentDetails, StudentDetailsScreen()),
   _getPage(AppRoutes.sessionDetails, SessionDetailsScreen()),
   _getPage(AppRoutes.sessionsList, SessionListScreen()),
+  _getPage(AppRoutes.studentReport, StudentReportScreen()),
 
 ];
 
