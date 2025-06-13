@@ -13,8 +13,11 @@ import 'package:teacher_app/themes/app_colors.dart';
 import 'package:teacher_app/themes/txt_styles.dart';
 import 'package:teacher_app/utils/Keyboard_utils.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
+import 'package:teacher_app/utils/app_background_styles.dart';
 import 'package:teacher_app/widgets/app_text_field_widget.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
+import 'package:teacher_app/widgets/done_icon_widget.dart';
+import 'package:teacher_app/widgets/edit_icon_widget.dart';
 import 'package:teacher_app/widgets/key_value_row_widget.dart';
 import 'package:teacher_app/widgets/primary_button_widget.dart';
 import 'dart:ui' as ui;
@@ -33,12 +36,18 @@ class StudentReportScreen extends StatefulWidget {
 class _StudentReportScreenState extends State<StudentReportScreen> {
   final StudentReportController controller = Get.put(StudentReportController());
   final GlobalKey _screenshotKey = GlobalKey();
+  final TextEditingController noteEditTextController = TextEditingController();
+  bool notesEditable = false;
+  Function()? executeAction;
 
   @override
   Widget build(BuildContext context) {
+
+    WidgetsBinding.instance.addPostFrameCallback(addPostFrameCallback);
+
     return Scaffold(
         appBar: AppToolbarWidget.appBar("Student Report".tr),
-        resizeToAvoidBottomInset: false,
+        // resizeToAvoidBottomInset: false,
         body: Padding(
           padding: const EdgeInsets.all(20.0),
           child: _content(),
@@ -61,29 +70,39 @@ class _StudentReportScreenState extends State<StudentReportScreen> {
       spacing: 20,
       children: [
         Expanded(
-          child: RepaintBoundary(
-            key: _screenshotKey, // Assign a GlobalKey
-            child: Container(
-              color: AppColors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 30.0 , vertical: 40),
-              child: Column(
-                spacing: 15,
-                children: [
-                  Expanded(
+          child: Center(
+            child: SingleChildScrollView(
+              physics: AlwaysScrollableScrollPhysics(),
+              child: RepaintBoundary(
+                key: _screenshotKey, // Assign a GlobalKey
+                child: Container(
+                  color: AppColors.scaffoldBackgroundColor,
+                  // decoration: AppBackgroundStyle.getColoredBackgroundRounded( 20,  AppColors.scaffoldBackgroundColor),
+                  child: Container(
+                    // decoration: AppBackgroundStyle.getColoredBackgroundRoundedBorder(radius: 20, borderColor:  AppColors.appMainColor, bgColor: AppColors.white),
+                    margin: EdgeInsets.all(10),
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+                    child: GestureDetector(
+                      onTapDown: (details) => KeyboardUtils.hideKeyboard(context),
                       child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 15,
-                    children: [
-                      _title(state),
-                      ..._attendanceText(state),
-                      _notes(state),
-                    ],
-                  )),
-                ],
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        spacing: 15,
+                        children: [
+                          _title(state),
+                          ..._attendanceText(state),
+                          _notes(state),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ),
           ),
         ),
+
+        if(!notesEditable)
         _viewButton(state)
       ],
     );
@@ -95,7 +114,7 @@ class _StudentReportScreenState extends State<StudentReportScreen> {
       child: PrimaryButtonWidget(
           text: "View".tr,
           onClick: () {
-            onViewReport(state);
+             onViewButtonClick(state);
           }),
     );
   }
@@ -113,21 +132,51 @@ class _StudentReportScreenState extends State<StudentReportScreen> {
 
   _notes(StudentReportArgs state) {
     return Column(
-      spacing: 10,
+      spacing: 5,
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        AppTextWidget(
-          "Notes".tr,
-          style: AppTextStyle.title,
+        Row(
+          children: [
+            Expanded(
+              child: AppTextWidget(
+                "Notes".tr,
+                style: AppTextStyle.title,
+              ),
+            ),
+
+
+            if(executeAction == null)...{
+              if(!notesEditable)...{
+                EditIconWidget(onClick: onEditNotes)
+              }else ...{
+                DoneIconWidget(onClick: onNotesEditDone)
+              }
+            }
+          ],
         ),
-        AppTextFieldWidget(
-          minLines: 4,
-          textStyle: _getReportTextStyle(),
-          controller: TextEditingController(),
-          hint: "No Notes".tr,
-          border: InputBorder.none,
-        ),
+
+
+        if(notesEditable)...{
+          AppTextFieldWidget(
+            minLines: 3,
+            maxLines: 3,
+            maxLength: 100,
+            textStyle: _getReportTextStyle(),
+            controller: noteEditTextController,
+            hint: "No Notes".tr,
+            readOnly: !notesEditable,
+            border: InputBorder.none,
+            disabledBorder: InputBorder.none,
+          ),
+        }else ...{
+
+          AppTextWidget(
+          noteEditTextController.text.isNotEmpty ? noteEditTextController.text : "No note".tr,
+            style: _getReportTextStyle(),
+          ),
+        }
+
       ],
     );
   }
@@ -167,7 +216,11 @@ class _StudentReportScreenState extends State<StudentReportScreen> {
           children: [
             _text("${'infoText'.tr} / "),
             _value("${state.studentName} "),
-            _text("${'hasAttended'.tr} / "),
+            if(state.attended)...{
+              _text("${'hasAttended'.tr} / "),
+            }else ...{
+              _text("${'hasNotAttended'.tr} / "),
+            },
             _value("${state.day} "),
             _text("${'withDate'.tr} / "),
             _value("${state.sessionStartDate}."),
@@ -175,27 +228,30 @@ class _StudentReportScreenState extends State<StudentReportScreen> {
         ),
       ),
 
-      /*Behavior*/
-      RichText(
-        text: TextSpan(
-          style: TextStyle(fontSize: 16, color: Colors.black),
-          children: [
-            _text("${'His behavior during the session was'.tr} / "),
-            _value("${state.behaviorGood ? "Good".tr : "Bad".tr}."),
-          ],
-        ),
-      ),
 
-      /*quiz*/
-      RichText(
-        text: TextSpan(
-          style: TextStyle(fontSize: 16, color: Colors.black),
-          children: [
-            _text("${'The test score for the above was'.tr} / "),
-            _value("${state.quizGrade}/${state.sessionQuizGrade}."),
-          ],
+      if(state.attended)...{
+        /*Behavior*/
+        RichText(
+          text: TextSpan(
+            style: TextStyle(fontSize: 16, color: Colors.black),
+            children: [
+              _text("${'His behavior during the session was'.tr} / "),
+              _value("${state.behaviorGood ? "Good".tr : "Bad".tr}."),
+            ],
+          ),
         ),
-      ),
+
+        /*quiz*/
+        RichText(
+          text: TextSpan(
+            style: TextStyle(fontSize: 16, color: Colors.black),
+            children: [
+              _text("${'The test score for the above was'.tr} / "),
+              _value("${state.quizGrade}/${state.sessionQuizGrade}."),
+            ],
+          ),
+        ),
+      }
     ];
   }
 
@@ -226,14 +282,12 @@ class _StudentReportScreenState extends State<StudentReportScreen> {
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             spacing: 20,
             children: [
               _closeIcon(),
-              Expanded(
-                  child: Image.file(
-                file,
-                fit: BoxFit.fill,
-              )),
+              Image.file(file,
+                            ),
               _sendButton(state, file)
             ],
           ),
@@ -242,7 +296,10 @@ class _StudentReportScreenState extends State<StudentReportScreen> {
       barrierDismissible: false,
     );
 
-    file.delete();
+    setState(() {
+      executeAction = null;
+      file.delete();
+    });
   }
 
   Future<Uint8List?> captureWidget() async {
@@ -274,7 +331,7 @@ class _StudentReportScreenState extends State<StudentReportScreen> {
   }
 
   void onSendReport(StudentReportArgs state, File file) {
-      WhatsappUtils.sendToWhatsAppFile(file, "+201063271529");
+    WhatsappUtils.sendToWhatsAppFile(file, "+201063271529");
   }
 
   _closeIcon() {
@@ -288,5 +345,30 @@ class _StudentReportScreenState extends State<StudentReportScreen> {
             child: Icon(Icons.close)),
       ],
     );
+  }
+
+  onEditNotes() {
+      setState(() {
+        notesEditable = true;
+      });
+  }
+
+  onNotesEditDone() {
+    setState(() {
+      notesEditable = false;
+    });
+  }
+
+  void addPostFrameCallback(Duration timeStamp) {
+    executeAction?.call();
+    executeAction = null;
+  }
+
+  void onViewButtonClick(StudentReportArgs state) {
+    setState(() {
+      executeAction = (){
+        onViewReport(state);
+      };
+    });
   }
 }

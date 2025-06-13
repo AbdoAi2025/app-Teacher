@@ -28,14 +28,24 @@ class WhatsappUtils {
   static void sendToWhatsAppFile(File file, String phoneNumber) async {
     var filePath = file.path;
     try {
-      await _whatsappChannel.invokeMethod('sendFileToWhatsApp', {
+
+      var result  = await _whatsappChannel.invokeMethod('sendFileToWhatsApp', {
         'filePath': filePath,
         'phone': phoneNumber.replaceAll(RegExp(r'[+\s-]'), ''),
       });
+      appLog("sendToWhatsAppFile result:${result.toString()}");
+      if(result == true) return;
+
     } catch (e) {
+      appLog("sendToWhatsAppFile ex:${e.toString()}");
       // Fallback to share_plus if WhatsApp not installed
       // await Share.shareXFiles([XFile(filePath)]);
     }
+
+    await SharePlus.instance.share(
+        ShareParams(
+          files:[XFile(filePath)],
+        ));
 
     // final uri = Uri.parse(
     //   "whatsapp://send?text=Check this out!&file=${file.path}",

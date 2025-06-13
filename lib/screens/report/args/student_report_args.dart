@@ -12,7 +12,7 @@ class StudentReportArgs {
 
   StudentReportArgs({required this.uiState , required this.sessionDetailsUiState});
 
-  get sessionStartDate => AppDateUtils.sessionStartDateToString(sessionDetailsUiState.sessionCreatedAt);
+  get sessionStartDate => AppDateUtils.parsDateToString(sessionDetailsUiState.sessionCreatedAt, "yyy-MM-dd");
   String get sessionName => sessionDetailsUiState.sessionName;
   String get quizGrade => NumberFormat.compact().format(uiState.quizGrade ?? 0);
   get sessionQuizGrade =>  NumberFormat.compact().format(uiState.sessionQuizGrade ?? 0);

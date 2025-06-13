@@ -10,6 +10,7 @@ class AppTextFieldWidget extends StatelessWidget {
   final Widget? prefixIcon;
   final InputBorder? border;
   final InputBorder? focusedBorder;
+  final InputBorder? disabledBorder;
   final TextStyle? textStyle;
   final TextStyle? hintTextStyle;
   final bool obscureText;
@@ -17,6 +18,7 @@ class AppTextFieldWidget extends StatelessWidget {
   final bool readOnly;
   final int? minLines;
   final int? maxLines;
+  final int? maxLength;
   final Function()? onTap;
   final FormFieldValidator<String>? validator;
   final TextAlign? textAlign;
@@ -32,6 +34,7 @@ class AppTextFieldWidget extends StatelessWidget {
         this.prefixIcon,
         this.border,
         this.focusedBorder,
+        this.disabledBorder,
         this.textStyle,
         this.hintTextStyle,
         this.obscureText = false,
@@ -44,6 +47,7 @@ class AppTextFieldWidget extends StatelessWidget {
         this.onChanged,
         this.minLines,
         this.maxLines,
+        this.maxLength,
       });
 
 
@@ -57,6 +61,7 @@ class AppTextFieldWidget extends StatelessWidget {
       onTap: onTap,
       minLines: minLines,
       maxLines: maxLines,
+      maxLength: maxLength,
       keyboardType: keyboardType,
       decoration: InputDecoration(
         labelText: label,
@@ -64,6 +69,8 @@ class AppTextFieldWidget extends StatelessWidget {
         hintText: hint,
         hintStyle: hintTextStyle,
         focusedBorder: focusedBorder,
+        disabledBorder: disabledBorder,
+        enabled: !readOnly,
         border: border ?? OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
         ),

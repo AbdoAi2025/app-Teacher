@@ -18,6 +18,7 @@ class AppColors{
   static const Color textValueColor = color_6F6A6F;
   static const Color activeColor = color_3FCBA6;
   static const Color inactiveColor = color_6F6A6F;
+  static const Color scaffoldBackgroundColor = colorOffWhite;
 
 
   static const Color appMainColor = Color(0xff122953);

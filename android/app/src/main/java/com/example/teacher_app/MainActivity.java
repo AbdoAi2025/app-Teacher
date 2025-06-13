@@ -1,12 +1,17 @@
 package com.example.teacher_app;
+
 import androidx.annotation.NonNull;
+
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
+
 import android.content.Intent;
 import android.net.Uri;
+
 import androidx.core.content.FileProvider;
+
 import java.io.File;
 
 public class MainActivity extends FlutterActivity {
@@ -22,11 +27,15 @@ public class MainActivity extends FlutterActivity {
                 new MethodChannel.MethodCallHandler() {
                     @Override
                     public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
-                        if (call.method.equals("sendFileToWhatsApp")) {
-                            String filePath = call.argument("filePath");
-                            String phone = call.argument("phone");
-                            sendToWhatsApp(filePath, phone);
-                            result.success(true);
+                        try {
+                            if (call.method.equals("sendFileToWhatsApp")) {
+                                String filePath = call.argument("filePath");
+                                String phone = call.argument("phone");
+                                sendToWhatsApp(filePath, phone);
+                                result.success(true);
+                            }
+                        } catch (java.lang.Exception e) {
+                            result.success(false);
                         }
                     }
                 }

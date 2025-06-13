@@ -24,7 +24,7 @@ class IdentityRepositoryImpl extends IdentityRepository {
     return LoginResult(
       accessToken: response.accessToken ?? "",
       id: response.id ?? "",
-      name: response.username ?? "",
+      name: response.name ?? "",
       refreshToken: "",
     );
   }

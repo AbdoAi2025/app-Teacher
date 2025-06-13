@@ -76,7 +76,6 @@ class AppDateUtils{
 
   static sessionStartDateToString(DateTime? date){
     return parsDateToString(date, "yyy-MM-dd HH:mm");
-
   }
 
 }
