@@ -325,6 +325,7 @@ import 'package:get/get.dart';
 import 'package:teacher_app/screens/create_group/grades/grades_selection_state.dart';
 import 'package:teacher_app/screens/student_add/add_student_controller.dart';
 import 'package:teacher_app/screens/student_add/states/add_student_state.dart';
+import 'package:teacher_app/utils/Keyboard_utils.dart';
 import 'package:teacher_app/utils/message_utils.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
@@ -366,20 +367,26 @@ class AddStudentScreenState extends State<AddStudentScreen> {
   }
 
   _content() {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: getController().formKey,
-          child: Column(
-            spacing: 20,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              _nameField(),
-              _parentPhoneField(),
-              _phoneField(),
-              _gradeField(),
-            ],
+    return GestureDetector(
+      onTapDown: (details) => KeyboardUtils.hideKeyboard(context),
+      child: SizedBox(
+        height: double.infinity,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: getController().formKey,
+              child: Column(
+                spacing: 20,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  _nameField(),
+                  _parentPhoneField(),
+                  _phoneField(),
+                  _gradeField(),
+                ],
+              ),
+            ),
           ),
         ),
       ),

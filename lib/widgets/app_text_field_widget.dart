@@ -16,6 +16,7 @@ class AppTextFieldWidget extends StatelessWidget {
   final bool obscureText;
   final Widget? suffixIcon;
   final bool readOnly;
+  final bool enabled;
   final int? minLines;
   final int? maxLines;
   final int? maxLength;
@@ -48,6 +49,7 @@ class AppTextFieldWidget extends StatelessWidget {
         this.minLines,
         this.maxLines,
         this.maxLength,
+        this.enabled = true,
       });
 
 
@@ -70,7 +72,7 @@ class AppTextFieldWidget extends StatelessWidget {
         hintStyle: hintTextStyle,
         focusedBorder: focusedBorder,
         disabledBorder: disabledBorder,
-        enabled: !readOnly,
+        enabled: enabled,
         border: border ?? OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
         ),

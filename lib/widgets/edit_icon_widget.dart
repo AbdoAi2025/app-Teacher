@@ -13,7 +13,10 @@ class EditIconWidget extends StatelessWidget{
   Widget build(BuildContext context) {
    return InkWell(
        onTap: () => onClick(),
-       child: Icon(Icons.edit  , color: color ?? AppColors.colorBlack ,));
+       child: Padding(
+         padding: const EdgeInsets.all(5.0),
+         child: Icon(Icons.edit  , color: color ?? AppColors.colorBlack ,),
+       ));
   }
 
 }

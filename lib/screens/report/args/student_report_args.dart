@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 import 'package:intl/intl.dart';
 
@@ -21,5 +20,7 @@ class StudentReportArgs {
 
   String get studentName => uiState.studentName;
   String get day => AppDateUtils.parsDateToString( sessionDetailsUiState.sessionCreatedAt, "EEE");
+
+  String get parentPhone => uiState.studentParentPhone;
 
 }

@@ -166,6 +166,7 @@ class _StudentReportScreenState extends State<StudentReportScreen> {
             controller: noteEditTextController,
             hint: "No Notes".tr,
             readOnly: !notesEditable,
+            enabled: notesEditable,
             border: InputBorder.none,
             disabledBorder: InputBorder.none,
           ),
@@ -216,7 +217,7 @@ class _StudentReportScreenState extends State<StudentReportScreen> {
           children: [
             _text("${'infoText'.tr} / "),
             _value("${state.studentName} "),
-            if(state.attended)...{
+            if(state.attended == true)...{
               _text("${'hasAttended'.tr} / "),
             }else ...{
               _text("${'hasNotAttended'.tr} / "),
@@ -229,7 +230,7 @@ class _StudentReportScreenState extends State<StudentReportScreen> {
       ),
 
 
-      if(state.attended)...{
+      if(state.attended == true)...{
         /*Behavior*/
         RichText(
           text: TextSpan(
@@ -331,7 +332,7 @@ class _StudentReportScreenState extends State<StudentReportScreen> {
   }
 
   void onSendReport(StudentReportArgs state, File file) {
-    WhatsappUtils.sendToWhatsAppFile(file, "+201063271529");
+    WhatsappUtils.sendToWhatsAppFile(file, state.parentPhone);
   }
 
   _closeIcon() {

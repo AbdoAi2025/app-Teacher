@@ -326,6 +326,7 @@ import 'package:teacher_app/screens/create_group/grades/grades_selection_state.d
 import 'package:teacher_app/screens/create_group/states/create_group_state.dart';
 import 'package:teacher_app/screens/create_group/students_selection/states/students_selection_state.dart';
 import 'package:teacher_app/screens/groups/groups_controller.dart';
+import 'package:teacher_app/utils/Keyboard_utils.dart';
 import 'package:teacher_app/utils/day_utils.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
@@ -377,26 +378,32 @@ class CreateGroupScreenState extends State<CreateGroupScreen> {
   }
 
   _content() {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: getController().formKey,
-          child: Column(
-            spacing: 20,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              _groupNameField(),
-              _gradeField(),
-              /*select day*/
-              _dayField(),
-              /*select time from*/
-              _timeFromField(),
-              /*Select time to*/
-              _timeToField(),
-              /*Selected students list*/
-              _selectedStudentsList(),
-            ],
+    return GestureDetector(
+      onTapDown: (details) => KeyboardUtils.hideKeyboard(context),
+      child: SizedBox(
+        height: double.infinity,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: getController().formKey,
+              child: Column(
+                spacing: 20,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  _groupNameField(),
+                  _gradeField(),
+                  /*select day*/
+                  _dayField(),
+                  /*select time from*/
+                  _timeFromField(),
+                  /*Select time to*/
+                  _timeToField(),
+                  /*Selected students list*/
+                  _selectedStudentsList(),
+                ],
+              ),
+            ),
           ),
         ),
       ),

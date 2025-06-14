@@ -1,7 +1,4 @@
-import 'dart:ffi';
 
-/// name : "string"
-/// groupId : "string"
 
 class StartSessionRequest {
   StartSessionRequest({

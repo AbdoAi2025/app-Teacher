@@ -13,6 +13,7 @@ import 'package:teacher_app/widgets/day_with_icon_widget.dart';
 import 'package:teacher_app/widgets/delete_icon_widget.dart';
 import 'package:teacher_app/widgets/dialog_loading_widget.dart';
 import 'package:teacher_app/widgets/edit_icon_widget.dart';
+import 'package:teacher_app/widgets/empty_view_widget.dart';
 import 'package:teacher_app/widgets/forward_arrow_widget.dart';
 import 'package:teacher_app/widgets/grade_with_icon_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
@@ -43,7 +44,7 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppToolbarWidget.appBar("Group Details".tr,
-            actions: [_deleteIcon()]),
+            actions: [_deleteIcon(),SizedBox(width: 10,),]),
         body: Padding(
           padding: const EdgeInsets.all(20.0),
           child: RefreshIndicator(
@@ -168,6 +169,16 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
   }
 
   _studentsList(List<GroupDetailsStudentItemUiState> student) {
+
+    if(student.isEmpty){
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          EmptyViewWidget(message: "No students found".tr),
+        ],
+      );
+    }
+
     return ListView.separated(
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),

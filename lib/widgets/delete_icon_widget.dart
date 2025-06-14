@@ -11,9 +11,12 @@ class DeleteIconWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
         onTap: () => onClick(),
-        child: Icon(
-          Icons.delete,
-          color: color ?? AppColors.colorError,
+        child: Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Icon(
+            Icons.delete,
+            color: color ?? AppColors.colorError,
+          ),
         ));
   }
 }

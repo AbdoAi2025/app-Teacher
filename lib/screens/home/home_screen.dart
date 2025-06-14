@@ -173,19 +173,31 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _todayGroupsList(List<StudentItemUiState> uiStates) {
+
     if (uiStates.isEmpty) {
       return _noTodayGroups();
     }
 
-    return ListView.separated(
-        shrinkWrap: true,
-        itemBuilder: (context, index) => GroupItemWidget(
-              uiState: uiStates[index],
-            ),
-        separatorBuilder: (context, index) => SizedBox(
-              height: 15,
-            ),
-        itemCount: uiStates.length);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+          child: AppTextWidget("Today Groups".tr , style: AppTextStyle.title,),
+        ),
+
+        ListView.separated(
+            shrinkWrap: true,
+            itemBuilder: (context, index) => GroupItemWidget(
+                  uiState: uiStates[index],
+                ),
+            separatorBuilder: (context, index) => SizedBox(
+                  height: 15,
+                ),
+            itemCount: uiStates.length),
+      ],
+    );
   }
 
   Widget _noTodayGroups() {
