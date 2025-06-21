@@ -1,6 +1,8 @@
 
 import 'package:intl/intl.dart';
+import 'package:teacher_app/enums/homework_enum.dart';
 
+import '../../../enums/student_behavior_enum.dart';
 import '../../../utils/day_utils.dart';
 import '../../session_details/states/session_details_ui_state.dart';
 
@@ -16,7 +18,13 @@ class StudentReportArgs {
   String get quizGrade => NumberFormat.compact().format(uiState.quizGrade ?? 0);
   get sessionQuizGrade =>  NumberFormat.compact().format(uiState.sessionQuizGrade ?? 0);
   get attended => uiState.attended;
-  bool get behaviorGood => uiState.behaviorGood ?? false ;
+
+
+  StudentBehaviorEnum? get behaviorStatus => uiState.behaviorStatus ;
+  String get behaviorNotes => uiState.behaviorNotes ?? "" ;
+
+  HomeworkEnum? get homeworkStatus => uiState.homeworkStatus;
+  String get homeworkNotes => uiState.homeworkNotes ?? "";
 
   String get studentName => uiState.studentName;
   String get day => AppDateUtils.parsDateToString( sessionDetailsUiState.sessionCreatedAt, "EEE");

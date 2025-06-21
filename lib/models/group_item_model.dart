@@ -71,9 +71,7 @@ class Group {
 }
 */
 
-import 'package:hive/hive.dart';
 import 'package:teacher_app/apimodels/student_list_item_api_model.dart';
-import 'package:teacher_app/models/student.dart';
 
 class GroupItemModel {
 

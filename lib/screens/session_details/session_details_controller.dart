@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:teacher_app/domain/usecases/get_session_details_use_case.dart';
+import 'package:teacher_app/enums/homework_enum.dart';
 import 'package:teacher_app/enums/session_status_enum.dart';
+import 'package:teacher_app/enums/student_behavior_enum.dart';
 import 'package:teacher_app/screens/session_details/states/session_details_ui_state.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
 import 'package:teacher_app/utils/day_utils.dart';
@@ -56,10 +58,14 @@ class SessionDetailsController extends GetxController {
                       quizGrade: e.quizGrade,
                       sessionQuizGrade: sessionQuizGrade,
                       attended: e.attended,
-                      behaviorGood: e.behaviorGood,
+                      behaviorStatus: e.behaviorStatus.toBehaviorEnum(),
                       studentName: e.studentName ?? '',
                       studentParentPhone: e.studentParentPhone ?? '',
-                      studentPhone: e.studentPhone ?? ''),
+                      studentPhone: e.studentPhone ?? '',
+                      behaviorNotes: e.behaviorNotes,
+                      homeworkStatus: e.homeworkStatus.toHomeworkEnum(),
+                      homeworkNotes: e.homeworkNotes
+                  ),
                 )
                 .toList() ??
             List.empty();
@@ -102,10 +108,14 @@ class SessionDetailsController extends GetxController {
     var request =
         UpdateSessionActivitiesRequest(sessionId: args?.id ?? "", activities: [
       StudentActivityItemRequest(
-          studentId: uiState.studentId,
-          attended: uiState.attended,
-          behaviorGood: uiState.behaviorGood,
-          quizGrade: uiState.quizGrade)
+        studentId: uiState.studentId,
+        attended: uiState.attended,
+        behaviorStatus: uiState.behaviorStatus,
+        quizGrade: uiState.quizGrade,
+        behaviorNotes: uiState.behaviorNotes,
+        homeworkStatus: uiState.homeworkStatus,
+        homeworkNotes: uiState.homeworkNotes,
+      )
     ]);
 
     var result = await _updateSessionActivities(request);
@@ -118,35 +128,35 @@ class SessionDetailsController extends GetxController {
     }
   }
 
-  Stream<UpdateSessionActivitiesState> onDoneAll() async* {
-    var itemsChanged = itemChangedMap.values;
-    for (var element in itemsChanged) {
-      appLog("onDoneAll item:${element.toString()}");
-    }
-
-    yield UpdateSessionActivitiesStateLoading();
-
-    var request = UpdateSessionActivitiesRequest(
-        sessionId: args?.id ?? "",
-        activities: itemsChanged.map(
-          (uiState) {
-            return StudentActivityItemRequest(
-                studentId: uiState.studentId,
-                attended: uiState.attended,
-                behaviorGood: uiState.behaviorGood,
-                quizGrade: uiState.quizGrade);
-          },
-        ).toList());
-
-    var result = await _updateSessionActivities(request);
-    if (result.isSuccess) {
-      itemChangedMap.clear();
-      onRefresh();
-      yield UpdateSessionActivitiesStateSuccess();
-    } else {
-      yield UpdateSessionActivitiesStateError(result.error);
-    }
-  }
+  // Stream<UpdateSessionActivitiesState> onDoneAll() async* {
+  //   var itemsChanged = itemChangedMap.values;
+  //   for (var element in itemsChanged) {
+  //     appLog("onDoneAll item:${element.toString()}");
+  //   }
+  //
+  //   yield UpdateSessionActivitiesStateLoading();
+  //
+  //   var request = UpdateSessionActivitiesRequest(
+  //       sessionId: args?.id ?? "",
+  //       activities: itemsChanged.map(
+  //         (uiState) {
+  //           return StudentActivityItemRequest(
+  //               studentId: uiState.studentId,
+  //               attended: uiState.attended,
+  //               behaviorStatus: uiState.behaviorStatus,
+  //               quizGrade: uiState.quizGrade);
+  //         },
+  //       ).toList());
+  //
+  //   var result = await _updateSessionActivities(request);
+  //   if (result.isSuccess) {
+  //     itemChangedMap.clear();
+  //     onRefresh();
+  //     yield UpdateSessionActivitiesStateSuccess();
+  //   } else {
+  //     yield UpdateSessionActivitiesStateError(result.error);
+  //   }
+  // }
 
   _updateSessionActivities(UpdateSessionActivitiesRequest request) {
     UpdateSessionActivitiesUseCase useCase = UpdateSessionActivitiesUseCase();

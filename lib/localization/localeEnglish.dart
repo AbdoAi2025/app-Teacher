@@ -4,7 +4,7 @@ final Map<String, String> enUS = {
   "Students" : "Students",
   "Profile" : "Profile",
 
-  "report_parent_title" : "Guardian follow-up report",
+  "report_parent_title" : "Parent Follow-Up Report",
   "infoText" : "We would like to inform you that the student",
   "hasAttended" : "attended today's",
   "hasNotAttended" : "didn't attend today's",

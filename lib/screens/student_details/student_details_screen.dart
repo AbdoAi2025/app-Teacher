@@ -153,12 +153,12 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
   }
 
   _studentName(String name) {
-    return KeyValueRowWidget(keyText: "Student Name".tr, value: name);
+    return LabelValueRowWidget(label: "Student Name".tr, value: name);
   }
 
   _parentPhone(String name) {
-    return KeyValueRowWidget(
-      keyText: "Parent Phone".tr,
+    return LabelValueRowWidget(
+      label: "Parent Phone".tr,
       valueWidget: PhoneWithIconWidget(
         name,
         hideIcon: true,
@@ -168,8 +168,8 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
   }
 
   _studentPhone(String name) {
-    return KeyValueRowWidget(
-      keyText: "Student Phone".tr,
+    return LabelValueRowWidget(
+      label: "Student Phone".tr,
       valueWidget: PhoneWithIconWidget(
         name,
         hideIcon: true,
@@ -179,7 +179,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
   }
 
   _grade(String value) {
-    return KeyValueRowWidget(keyText: "Grade Name".tr, value: value);
+    return LabelValueRowWidget(label: "Grade Name".tr, value: value);
   }
 
   _groupName(StudentDetailsUiState uiState) {
@@ -188,8 +188,8 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
     var groupName = uiState.groupName;
      groupName = groupId.isEmpty ? "No Group".tr : groupName ;
 
-    return KeyValueRowWidget(
-        keyText: "Group Name".tr,
+    return LabelValueRowWidget(
+        label: "Group Name".tr,
         mainAxisSize: MainAxisSize.max,
         valueWidget:  Row(
           children: [
@@ -202,8 +202,8 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
 
   _groupDateTime(StudentDetailsUiState uiState) {
     var day = AppDateUtils.getDayName(uiState.groupDay);
-    return KeyValueRowWidget(
-        keyText: "Day".tr,
+    return LabelValueRowWidget(
+        label: "Day".tr,
         value: "$day , ${uiState.groupTimeFrom} - ${uiState.groupTimeTo}");
   }
 

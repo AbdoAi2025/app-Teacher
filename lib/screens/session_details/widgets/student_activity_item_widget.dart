@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:teacher_app/enums/homework_enum.dart';
+import 'package:teacher_app/enums/student_behavior_enum.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
 import 'package:teacher_app/screens/report/args/student_report_args.dart';
 import 'package:teacher_app/themes/app_colors.dart';
@@ -11,12 +13,17 @@ import 'package:teacher_app/utils/app_background_styles.dart';
 import 'package:teacher_app/utils/whatsapp_utils.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'package:teacher_app/widgets/edit_icon_widget.dart';
+import 'package:teacher_app/widgets/homework_status_widget.dart';
+import 'package:teacher_app/widgets/key_value_row_widget.dart';
 import 'package:teacher_app/widgets/phone_with_icon_widget.dart';
 
+import '../../../bottomsheets/app_bottom_sheets.dart';
 import '../../../themes/txt_styles.dart';
 import '../../../widgets/app_text_field_widget.dart';
+import '../../../widgets/behavior_status_widget.dart';
 import '../../../widgets/cancel_icon_widget.dart';
 import '../../../widgets/done_icon_widget.dart';
+import '../../../widgets/sessions/student_activities/update_student_activity_widget.dart';
 import '../../../widgets/switch_button_widget.dart';
 import '../states/session_details_ui_state.dart';
 
@@ -25,7 +32,6 @@ class StudentActivityItemWidget extends StatefulWidget {
   final SessionActivityItemUiState uiState;
   final bool isActive;
   final bool isEditable;
-  final Function(SessionActivityItemUiState) onChanged;
   final Function(SessionActivityItemUiState) onDone;
 
   const StudentActivityItemWidget(
@@ -34,7 +40,6 @@ class StudentActivityItemWidget extends StatefulWidget {
       required this.sessionDetailsUiState,
       required this.isActive,
       this.isEditable = false,
-      required this.onChanged,
       required this.onDone});
 
   @override
@@ -43,20 +48,19 @@ class StudentActivityItemWidget extends StatefulWidget {
 }
 
 class _StudentActivityItemWidgetState extends State<StudentActivityItemWidget> {
-  late SessionActivityItemUiState uiState = widget.uiState;
-  late SessionDetailsUiState sessionDetailsUiState =
-      widget.sessionDetailsUiState;
 
-  late bool isEditable = widget.isEditable;
-  late bool? attended = widget.uiState.attended;
-  late double? quizGrade = widget.uiState.quizGrade;
-  late bool? behaviorGood = widget.uiState.behaviorGood;
+  late SessionActivityItemUiState uiState = widget.uiState;
+  late SessionDetailsUiState sessionDetailsUiState = widget.sessionDetailsUiState;
+  late bool? attended = uiState.attended;
+  late double? quizGrade = uiState.quizGrade;
+  late StudentBehaviorEnum? behaviorStatus = uiState.behaviorStatus;
+  late HomeworkEnum? homeworkStatus = uiState.homeworkStatus;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        KeyboardUtils.hideKeyboard(context);
+        onEditClick();
       },
       child: Container(
         decoration: AppBackgroundStyle.backgroundWithShadow(),
@@ -78,9 +82,10 @@ class _StudentActivityItemWidgetState extends State<StudentActivityItemWidget> {
             if(uiState.studentParentPhone.isNotEmpty)
             _parentPhone(),
             _attended(),
+            _homeworkStatus(),
             _behaviorGood(),
             _quizGrade(),
-            if (!isEditable) _sendReport()
+            _sendReport()
           ],
         ),
       ),
@@ -96,66 +101,50 @@ class _StudentActivityItemWidgetState extends State<StudentActivityItemWidget> {
   }
 
   _editIcon() {
-    if (isEditable) {
-      return Row(
-        spacing: 10,
-        mainAxisSize: MainAxisSize.min,
-        children: [_doneIcon(), _cancelIcon()],
-      );
-    }
-
     return EditIconWidget(onClick: () {
       onEditClick();
     });
   }
 
   void onEditClick() {
-    setState(() {
-      isEditable = true;
-    });
+    showAppBottomSheet(
+        UpdateStudentActivityWidget(
+            uiState: uiState,
+          onCloseClick: (){
+              Get.back();
+          },
+          onSaveClick: (uiState){
+            onUpdateStudentActivityClick(uiState);
+          },
+        ), isScrollControlled : true);
   }
 
   _attended() {
-    return Row(
-      spacing: 5,
-      children: [
-        AppTextWidget(
-          "Attended:".tr,
-          style: AppTextStyle.label,
-        ),
-        if (!isEditable) _yesNoText(attended),
-        Spacer(),
-        if (isEditable)
-          SwitchButtonWidget(
-              value: attended ?? false,
-              onChanged: (value) {
-                setState(() {
-                  attended = value;
-                  _onChanged();
-                });
-              })
-      ],
-    );
+    return LabelValueRowWidget(
+      label: "Attended:".tr,
+      valueWidget: _yesNoText(uiState.attended ?? false),);
   }
 
   _behaviorGood() {
-    return Row(
-      spacing: 5,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        AppTextWidget("Behavior Good:".tr, style: AppTextStyle.label),
-        if (!isEditable) _yesNoText(behaviorGood),
-        Spacer(),
-        if (isEditable)
-          SwitchButtonWidget(
-              value: behaviorGood ?? false,
-              onChanged: (value) {
-                setState(() {
-                  behaviorGood = value;
-                  _onChanged();
-                });
-              })
-      ],
+    return LabelValueRowWidget(
+      label: "Behavior:".tr,
+      valueWidget: BehaviorStatusWidget(behaviorStatus),
+    );
+  }
+
+  _homeworkStatus() {
+    return LabelValueRowWidget(
+      label: "Homework:".tr,
+      valueWidget: HomeworkStatusWidget(uiState.homeworkStatus),
+    );
+  }
+
+  _yesNoText(bool? bool) {
+    return AppTextWidget(
+      bool == true ? "Yes" : "No",
+      style: AppTextStyle.label.copyWith(
+        color: bool == true ? AppColors.colorYes : AppColors.colorNo,
+      ),
     );
   }
 
@@ -164,52 +153,11 @@ class _StudentActivityItemWidgetState extends State<StudentActivityItemWidget> {
       spacing: 5,
       children: [
         AppTextWidget("Quiz Grade:", style: AppTextStyle.label),
-        if (!isEditable)
-          AppTextWidget("${_getGradeFormat()} / ${uiState.sessionQuizGrade}"),
-        Spacer(),
-        if (isEditable)
-          SizedBox(
-            height: 60,
-            width: 100,
-            // alignment: Alignment.center,
-            // constraints: BoxConstraints(minWidth: 200 , minHeight: 50),
-            child: AppTextFieldWidget(
-              hint: 0.toString(),
-              textAlign: TextAlign.center,
-              controller: TextEditingController(text: _getGradeFormat()),
-              keyboardType: TextInputType.number,
-              onChanged: (value) {
-                quizGrade = double.tryParse(value ?? "");
-                _onChanged();
-              },
-              suffixIcon: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  AppTextWidget("/${uiState.sessionQuizGrade}"),
-                ],
-              ),
-            ),
-          )
+        AppTextWidget("${_getGradeFormat()} / ${uiState.sessionQuizGrade}"),
       ],
     );
   }
 
-  _doneIcon() {
-    return DoneIconWidget(
-      onClick: onDoneClick,
-    );
-  }
-
-  _cancelIcon() {
-    return CancelIconWidget(
-      onClick: onCancelClick,
-    );
-  }
-
-  onDoneClick() {
-    KeyboardUtils.hideKeyboard(context);
-    widget.onDone(_getUiStateChanged());
-  }
 
   onCancelClick() {
     setState(() {
@@ -218,25 +166,16 @@ class _StudentActivityItemWidgetState extends State<StudentActivityItemWidget> {
   }
 
   void reset() {
-    isEditable = false;
+    // isEditable = false;
     attended = widget.uiState.attended;
     quizGrade = widget.uiState.quizGrade;
-    behaviorGood = widget.uiState.behaviorGood;
+    behaviorStatus = widget.uiState.behaviorStatus;
   }
 
-  void _onChanged() {
-    widget.onChanged(_getUiStateChanged());
-  }
 
-  SessionActivityItemUiState _getUiStateChanged() => widget.uiState.copyWith(
-      studentId: widget.uiState.studentId,
-      attended: attended,
-      quizGrade: quizGrade,
-      behaviorGood: behaviorGood);
-
-  _yesNoText(bool? bool) {
+  _text(String text) {
     return AppTextWidget(
-      bool == true ? "Yes" : "No",
+      text,
       style: AppTextStyle.label.copyWith(
         color: bool == true ? AppColors.color_3FCBA6 : Colors.red,
       ),
@@ -276,5 +215,11 @@ class _StudentActivityItemWidgetState extends State<StudentActivityItemWidget> {
 
   _getGradeFormat() {
     return NumberFormat.compact().format(quizGrade ?? 0);
+  }
+
+  onUpdateStudentActivityClick(SessionActivityItemUiState uiState) {
+    appLog("onUpdateStudentActivityClick p1:${uiState.toString()}");
+    widget.onDone(uiState);
+    Get.back();
   }
 }

@@ -20,13 +20,13 @@ class UpdateSessionActivitiesUseCase {
        return AppResult.success(apiModel);
     }
     catch(ex){
-
+      appLog("GetRunningSessionUseCase execute ex:${ex.toString()}");
       if(ex is DioException){
         var errorResponse = ErrorResponse.fromJson(ex.response?.data);
         return AppResult.error(AppHttpException(errorResponse.message));
       }
 
-      appLog("GetRunningSessionUseCase execute ex:${ex.toString()}");
+
       return AppResult.error(Exception(ex));
     }
   }

@@ -75,6 +75,8 @@ import 'package:teacher_app/navigation/app_routes_screens.dart';
 import 'package:teacher_app/themes/app_colors.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:teacher_app/utils/app_localization_utils.dart';
+import 'domain/models/app_locale_model.dart';
 import 'domain/usecases/get_app_setting_use_case.dart';
 import 'localization/app_translation.dart';
 
@@ -118,10 +120,16 @@ class MyApp extends StatelessWidget {
     return ValueListenableBuilder(
         valueListenable: getAppSettingNotifier(),
         builder: (context, AppSetting setting, _) {
+
+          var appLocaleModel = setting.appLocaleModel;
+
+          var langCode =( appLocaleModel?.toLocale() ?? appLocale)?.languageCode;
+
           return GetMaterialApp(
-            textDirection: (rtlLanguages.contains(Get.locale?.languageCode)
+            textDirection: (rtlLanguages.contains(langCode)
                 ? TextDirection.rtl
                 : TextDirection.ltr),
+
             transitionDuration:
                 const Duration(milliseconds: transitionDuration),
             popGesture: true,
@@ -129,7 +137,7 @@ class MyApp extends StatelessWidget {
               appLog("GetMaterialApp routingCallback value:${value?.current}");
             },
             translationsKeys: AppTranslation.translationsKeys,
-            locale: appLocale,
+            locale: appLocaleModel?.toLocale() ?? appLocale,
             supportedLocales: const [
               Locale("en", "US"),
               Locale("ar"),
@@ -209,5 +217,6 @@ Future<void> initAppLocale() async {
   var lang = savedAppLocale?.language ?? ( deviceLocale.languageCode == "ar" ? deviceLocale.languageCode : "en");
   var country = savedAppLocale?.country ?? deviceLocale.countryCode;
   appLocale = Locale(lang , country);
+  AppLocalizationUtils.setLocale(AppLocaleModel(language: lang, country: country));
   Get.locale = appLocale;
 }

@@ -1,3 +1,6 @@
+import 'package:teacher_app/enums/homework_enum.dart';
+import 'package:teacher_app/enums/student_behavior_enum.dart';
+
 import '../../../enums/session_status_enum.dart';
 
 class SessionDetailsUiState {
@@ -11,17 +14,14 @@ class SessionDetailsUiState {
   final List<SessionActivityItemUiState> activities;
 
   SessionDetailsUiState(
-      {
-        required this.id,
-        required this.sessionName,
-        required this.sessionStatus,
-        required this.sessionQuizGrade,
-        required this.sessionCreatedAt,
-        required this.groupId,
-        required this.groupName,
-        required this.activities
-      });
-
+      {required this.id,
+      required this.sessionName,
+      required this.sessionStatus,
+      required this.sessionQuizGrade,
+      required this.sessionCreatedAt,
+      required this.groupId,
+      required this.groupName,
+      required this.activities});
 
   SessionDetailsUiState copyWith({
     String? id,
@@ -56,7 +56,10 @@ class SessionActivityItemUiState {
   final int? sessionQuizGrade;
   final double? quizGrade;
   final bool? attended;
-  final bool? behaviorGood;
+  final StudentBehaviorEnum? behaviorStatus;
+  final String? behaviorNotes;
+  final HomeworkEnum? homeworkStatus;
+  final String? homeworkNotes;
 
   SessionActivityItemUiState(
       {required this.studentId,
@@ -66,34 +69,42 @@ class SessionActivityItemUiState {
       required this.sessionQuizGrade,
       required this.quizGrade,
       required this.attended,
-      required this.behaviorGood});
+      required this.behaviorStatus,
+      required this.behaviorNotes,
+      required this.homeworkStatus,
+      required this.homeworkNotes});
 
+
+  @override
+  String toString() {
+    return 'SessionActivityItemUiState{studentId: $studentId, quizGrade: $quizGrade, attended: $attended, behaviorGood: $behaviorStatus}';
+  }
 
   SessionActivityItemUiState copyWith({
     String? studentId,
     String? studentName,
     String? studentParentPhone,
     String? studentPhone,
-    double? quizGrade,
     int? sessionQuizGrade,
+    double? quizGrade,
     bool? attended,
-    bool? behaviorGood,
+    StudentBehaviorEnum? behaviorStatus,
+    String? behaviorNotes,
+    HomeworkEnum? homeworkStatus,
+    String? homeworkNotes,
   }) {
     return SessionActivityItemUiState(
       studentId: studentId ?? this.studentId,
       studentName: studentName ?? this.studentName,
       studentParentPhone: studentParentPhone ?? this.studentParentPhone,
       studentPhone: studentPhone ?? this.studentPhone,
-      quizGrade: quizGrade ?? this.quizGrade,
       sessionQuizGrade: sessionQuizGrade ?? this.sessionQuizGrade,
+      quizGrade: quizGrade ?? this.quizGrade,
       attended: attended ?? this.attended,
-      behaviorGood: behaviorGood ?? this.behaviorGood,
+      behaviorStatus: behaviorStatus ?? this.behaviorStatus,
+      behaviorNotes: behaviorNotes ?? this.behaviorNotes,
+      homeworkStatus: homeworkStatus ?? this.homeworkStatus,
+      homeworkNotes: homeworkNotes ?? this.homeworkNotes,
     );
-  }
-
-
-  @override
-  String toString() {
-    return 'SessionActivityItemUiState{studentId: $studentId, quizGrade: $quizGrade, attended: $attended, behaviorGood: $behaviorGood}';
   }
 }

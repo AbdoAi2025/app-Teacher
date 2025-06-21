@@ -143,7 +143,6 @@ class ApiService {
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:hive/hive.dart';
 import 'package:talker_dio_logger/talker_dio_logger.dart';
 import 'package:teacher_app/appSetting/appSetting.dart';
 import 'package:teacher_app/main.dart';
@@ -158,7 +157,6 @@ var baseUrl = isDev ? localBaseUrl : prodBaseUrl;
 
 class ApiService {
   static Dio? _dio;
-  static Box? authBox;
 
 
   static Dio getInstance() {
@@ -187,7 +185,7 @@ class ApiService {
       ),
     );
 
-    var token = getAppSetting().accessToken;
+    var token = AppSetting.getAppSetting().accessToken;
 
     dio.options = BaseOptions(
       baseUrl: baseUrl,
@@ -196,6 +194,9 @@ class ApiService {
       headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token",
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST,OPTIONS',
+        "Access-Control-Allow-Headers" : "Content-Type, Authorization"
       },
     );
   }

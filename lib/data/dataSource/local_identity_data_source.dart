@@ -22,7 +22,7 @@ class LocalIdentityDataSource {
     var userAuthString = jsonEncode(model.toJson());
     _log("saveUserAuth userAuthString:$userAuthString");
     await prefs.setString(_userAuthKey,userAuthString );
-    updateAppSetting(getAppSetting().copyWith(accessToken: model.accessToken));
+    AppSetting.updateAppSetting(AppSetting.getAppSetting().copyWith(accessToken: model.accessToken));
   }
 
   Future<UserAuthModel?> getUserAuth() async {

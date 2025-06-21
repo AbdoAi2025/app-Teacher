@@ -13,9 +13,10 @@ class SplashController extends GetxController{
   @override
   void onInit() {
     super.onInit();
+
     _getUserAuthUseCase.execute().then((value) {
       appLog("onInit getUserAuthUseCase.execute : ${value?.accessToken}" , "SplashController");
-      setUserAuthModel(value);
+      AppSetting.setUserAuthModel(value);
       if(value == null || value.accessToken.isEmpty){
         updateEvent(SplashEventGoToLogin());
       }else {

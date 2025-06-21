@@ -44,15 +44,15 @@ class SessionItemWidget extends StatelessWidget {
   }
 
   _groupName() {
-    return KeyValueRowWidget(keyText: "Group:", value: uiState.groupName);
+    return LabelValueRowWidget(label: "Group:", value: uiState.groupName);
   }
 
   _groupTime() {
-    return KeyValueRowWidget(keyText: "Group Time:", value: "${uiState.timeFrom } - ${uiState.timeTo}");
+    return LabelValueRowWidget(label: "Group Time:", value: "${uiState.timeFrom } - ${uiState.timeTo}");
   }
 
   _date() {
-    return KeyValueRowWidget(keyText: "Date:", value: "${uiState.date}");
+    return LabelValueRowWidget(label: "Date:", value: "${uiState.date}");
   }
 
   _status() {

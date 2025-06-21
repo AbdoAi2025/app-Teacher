@@ -4,21 +4,23 @@ import 'package:teacher_app/widgets/app_txt_widget.dart';
 
 import '../themes/txt_styles.dart';
 
-class KeyValueRowWidget extends StatelessWidget {
+class LabelValueRowWidget extends StatelessWidget {
 
-  final String keyText;
+  final String label;
   final String? value;
   final MainAxisSize? mainAxisSize;
   final Widget? keyWidget;
   final Widget? valueWidget;
+  final CrossAxisAlignment crossAxisAlignment;
 
-  const KeyValueRowWidget({
+  const LabelValueRowWidget({
     super.key,
-    required this.keyText,
+    required this.label,
     this.value ,
     this.mainAxisSize,
     this.keyWidget,
     this.valueWidget,
+    this.crossAxisAlignment = CrossAxisAlignment.center,
   });
 
 
@@ -27,9 +29,10 @@ class KeyValueRowWidget extends StatelessWidget {
 
     return Row(
         spacing: 5,
+        crossAxisAlignment: crossAxisAlignment,
         mainAxisSize: mainAxisSize ?? MainAxisSize.min, children: [
 
-      keyWidget?? AppTextWidget(keyText, style: AppTextStyle.label),
+      keyWidget?? AppTextWidget(label, style: AppTextStyle.label),
 
       if(value != null || value != "" || valueWidget != null )...{
         if(mainAxisSize == MainAxisSize.min)...{

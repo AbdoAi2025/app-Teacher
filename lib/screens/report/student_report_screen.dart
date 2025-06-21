@@ -7,6 +7,8 @@ import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:teacher_app/enums/homework_enum.dart';
+import 'package:teacher_app/enums/student_behavior_enum.dart';
 import 'package:teacher_app/screens/report/args/student_report_args.dart';
 import 'package:teacher_app/screens/report/student_report_controller.dart';
 import 'package:teacher_app/themes/app_colors.dart';
@@ -182,6 +184,25 @@ class _StudentReportScreenState extends State<StudentReportScreen> {
     );
   }
 
+  /*
+  ده شكل التقرير الانجليزي اللي أنا عايزه
+
+    Parent Follow-Up Report
+
+We would like to inform you that the student /...... attended the class on
+Day: Saturday — Date: 14/6/2025
+
+The student's behavior during the class was:
+Good / Acceptable / Poor
+
+The status of the previous homework was :
+Fully done /
+Incomplete [missing (...) pages] /
+Not done
+
+The student got (... / ...) marks on the quiz.
+  * */
+
   _title(StudentReportArgs state) {
     var sessionName = state.sessionName;
     return Row(
@@ -215,15 +236,15 @@ class _StudentReportScreenState extends State<StudentReportScreen> {
         text: TextSpan(
           style: TextStyle(fontSize: 16, color: Colors.black),
           children: [
-            _text("${'infoText'.tr} / "),
+            _text("${'infoText'.tr}: "),
             _value("${state.studentName} "),
             if(state.attended == true)...{
-              _text("${'hasAttended'.tr} / "),
+              _text("${'hasAttended'.tr}: "),
             }else ...{
-              _text("${'hasNotAttended'.tr} / "),
+              _text("${'hasNotAttended'.tr}: "),
             },
             _value("${state.day} "),
-            _text("${'withDate'.tr} / "),
+            _text("${'withDate'.tr}: "),
             _value("${state.sessionStartDate}."),
           ],
         ),
@@ -236,8 +257,23 @@ class _StudentReportScreenState extends State<StudentReportScreen> {
           text: TextSpan(
             style: TextStyle(fontSize: 16, color: Colors.black),
             children: [
-              _text("${'His behavior during the session was'.tr} / "),
-              _value("${state.behaviorGood ? "Good".tr : "Bad".tr}."),
+              _text("${'His behavior during the session was'.tr}: "),
+              _value("${state.behaviorStatus.getString()}."),
+              if(state.behaviorNotes.isNotEmpty)
+                _text("(${state.behaviorNotes})."),
+            ],
+          ),
+        ),
+
+        /*homework*/
+        RichText(
+          text: TextSpan(
+            style: TextStyle(fontSize: 16, color: Colors.black),
+            children: [
+              _text("${'The status of the previous homework was'.tr}: "),
+              _value("${state.homeworkStatus.getString()}."),
+              if(state.homeworkNotes.isNotEmpty)
+                _text("(${state.homeworkNotes})."),
             ],
           ),
         ),
@@ -247,7 +283,7 @@ class _StudentReportScreenState extends State<StudentReportScreen> {
           text: TextSpan(
             style: TextStyle(fontSize: 16, color: Colors.black),
             children: [
-              _text("${'The test score for the above was'.tr} / "),
+              _text("${'The test score for the above was'.tr}: "),
               _value("${state.quizGrade}/${state.sessionQuizGrade}."),
             ],
           ),

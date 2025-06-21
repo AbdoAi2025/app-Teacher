@@ -1,10 +1,15 @@
+import 'package:teacher_app/enums/student_behavior_enum.dart';
+
+import '../../enums/homework_enum.dart';
+
 /// sessionId : "string"
 /// activities : [{"studentId":"string","attended":true,"behaviorGood":true,"quizGrade":0.1}]
 
 class UpdateSessionActivitiesRequest {
   UpdateSessionActivitiesRequest({
-      this.sessionId, 
-      this.activities,});
+    this.sessionId,
+    this.activities,
+  });
 
   UpdateSessionActivitiesRequest.fromJson(dynamic json) {
     sessionId = json['sessionId'];
@@ -15,6 +20,7 @@ class UpdateSessionActivitiesRequest {
       });
     }
   }
+
   String? sessionId;
   List<StudentActivityItemRequest>? activities;
 
@@ -26,39 +32,56 @@ class UpdateSessionActivitiesRequest {
     }
     return map;
   }
-
 }
 
-/// studentId : "string"
-/// attended : true
-/// behaviorGood : true
-/// quizGrade : 0.1
+// {
+// "studentId": "string",
+// "attended": true,
+// "behaviorStatus": 1073741824,
+// "behaviorNotes": "string",
+// "homeworkEnum": 1073741824,
+// "homeworkNotes": "string",
+// "quizGrade": 0.1
+// }
 
 class StudentActivityItemRequest {
   StudentActivityItemRequest({
-      this.studentId, 
-      this.attended, 
-      this.behaviorGood, 
-      this.quizGrade,});
+    required this.studentId,
+    required this.attended,
+    required this.behaviorStatus,
+    required this.behaviorNotes,
+    required this.homeworkStatus,
+    required this.homeworkNotes,
+    required this.quizGrade,
+  });
 
   StudentActivityItemRequest.fromJson(dynamic json) {
     studentId = json['studentId'];
     attended = json['attended'];
-    behaviorGood = json['behaviorGood'];
+    behaviorStatus = json['behaviorStatus'];
+    behaviorNotes = json['behaviorNotes'];
+    homeworkStatus = json['homeworkStatus'];
+    homeworkNotes = json['homeworkNotes'];
     quizGrade = json['quizGrade'];
   }
+
   String? studentId;
   bool? attended;
-  bool? behaviorGood;
+  StudentBehaviorEnum? behaviorStatus;
+  String? behaviorNotes;
+  HomeworkEnum? homeworkStatus;
+  String? homeworkNotes;
   double? quizGrade;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['studentId'] = studentId;
     map['attended'] = attended;
-    map['behaviorGood'] = behaviorGood;
+    map['behaviorStatus'] = behaviorStatus?.index;
+    map['behaviorNotes'] = behaviorNotes;
+    map['homeworkStatus'] = homeworkStatus?.index;
+    map['homeworkNotes'] = homeworkNotes;
     map['quizGrade'] = quizGrade;
     return map;
   }
-
 }

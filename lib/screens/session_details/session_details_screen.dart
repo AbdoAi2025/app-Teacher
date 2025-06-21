@@ -139,9 +139,6 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
       sessionDetailsUiState: sessionDetailsUiState,
       isActive: isActive,
       isEditable: isEditable,
-      onChanged: (uiState) {
-        controller.onItemChanged(uiState);
-      },
       onDone: (uiState) {
         onDoneItem(uiState);
       },
@@ -183,16 +180,16 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
   }
 
   onDoneClick() {
-    controller.onDoneAll().listen((state) {
-      hideDialogLoading();
-      onUpdateResultHandler(state);
-
-      if (state is UpdateSessionActivitiesStateSuccess) {
-        setState(() {
-          isEditable = false;
-        });
-      }
-    });
+    // controller.onDoneAll().listen((state) {
+    //   hideDialogLoading();
+    //   onUpdateResultHandler(state);
+    //
+    //   if (state is UpdateSessionActivitiesStateSuccess) {
+    //     setState(() {
+    //       isEditable = false;
+    //     });
+    //   }
+    // });
   }
 
   _cancelIcon() {
