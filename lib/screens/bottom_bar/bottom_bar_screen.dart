@@ -35,7 +35,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home".tr),
           BottomNavigationBarItem(icon: Icon(Icons.group), label: "Groups".tr),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Students"),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Students".tr),
           BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Settings".tr),
         ],
       ),

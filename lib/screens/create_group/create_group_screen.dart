@@ -438,7 +438,7 @@ class CreateGroupScreenState extends State<CreateGroupScreen> {
   _dayField() => Obx(() {
         var day = getController().selectedDayRx.value;
         return AppTextFieldWidget(
-          controller: TextEditingController(text: AppDateUtils.getDayName(day)),
+          controller: TextEditingController(text: AppDateUtils.getDayName(day).tr),
           label: "Select Day".tr,
           hint: "Select Day".tr,
           readOnly: true,

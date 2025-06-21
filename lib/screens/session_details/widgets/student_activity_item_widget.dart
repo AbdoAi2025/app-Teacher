@@ -121,7 +121,7 @@ class _StudentActivityItemWidgetState extends State<StudentActivityItemWidget> {
 
   _attended() {
     return LabelValueRowWidget(
-      label: "Attended:".tr,
+      label: "Attendance:".tr,
       valueWidget: _yesNoText(uiState.attended ?? false),);
   }
 
@@ -152,7 +152,7 @@ class _StudentActivityItemWidgetState extends State<StudentActivityItemWidget> {
     return Row(
       spacing: 5,
       children: [
-        AppTextWidget("Quiz Grade:", style: AppTextStyle.label),
+        AppTextWidget("Quiz Grade:".tr, style: AppTextStyle.label),
         AppTextWidget("${_getGradeFormat()} / ${uiState.sessionQuizGrade}"),
       ],
     );

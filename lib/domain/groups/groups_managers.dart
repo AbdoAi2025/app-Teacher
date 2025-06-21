@@ -23,7 +23,7 @@ class GroupsManagers {
                     groupId: e.id,
                     groupName: e.name,
                     studentsCount: e.studentCount,
-                    date: AppDateUtils.getDayName(e.day),
+                    date: AppDateUtils.getDayName(e.day).tr,
                     timeFrom: e.timeFrom,
                     timeTo: e.timeTo,
                   ))
@@ -48,7 +48,7 @@ class GroupsManagers {
     if (state is GroupsStateSuccess) {
       var todayGroups = state.uiStates
           .where((element) =>
-              element.date == AppDateUtils.getDayName(DateTime.now().weekday))
+              element.date == AppDateUtils.getDayName(DateTime.now().weekday).tr)
           .toList();
       GroupsManagers.todayGroupsState.value = GroupsStateSuccess(uiStates: todayGroups);
     } else {

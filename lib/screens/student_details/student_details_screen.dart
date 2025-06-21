@@ -201,7 +201,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
   }
 
   _groupDateTime(StudentDetailsUiState uiState) {
-    var day = AppDateUtils.getDayName(uiState.groupDay);
+    var day = AppDateUtils.getDayName(uiState.groupDay).tr;
     return LabelValueRowWidget(
         label: "Day".tr,
         value: "$day , ${uiState.groupTimeFrom} - ${uiState.groupTimeTo}");

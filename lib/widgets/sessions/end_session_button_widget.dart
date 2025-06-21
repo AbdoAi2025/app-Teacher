@@ -17,7 +17,7 @@ class EndSessionButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PrimaryButtonWidget(
-      text: "End Sesssion".tr,
+      text: "End Session".tr,
       onClick: () {
         onEndSession();
       },

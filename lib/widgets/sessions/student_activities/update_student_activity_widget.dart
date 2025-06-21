@@ -128,7 +128,7 @@ class _UpdateStudentActivityWidgetState extends State<UpdateStudentActivityWidge
               ...StudentBehaviorEnum.values.map((e) {
                 return AppRadioWidget(
                   value: e == behaviorStatus,
-                  label: e.getString(),
+                  label: e.getString().tr,
                   onChanged: () {
                     setState(() {
                       behaviorStatus = e;
@@ -162,7 +162,7 @@ class _UpdateStudentActivityWidgetState extends State<UpdateStudentActivityWidge
               ...HomeworkEnum.values.map((e) {
                 return AppRadioWidget(
                   value: e == homeworkStatus,
-                  label: e.getString(),
+                  label: e.getString().tr,
                   onChanged: () {
                     setState(() {
                       homeworkStatus = e;

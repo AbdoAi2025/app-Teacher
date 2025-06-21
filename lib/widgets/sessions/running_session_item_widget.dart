@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:teacher_app/widgets/sessions/end_session_button_widget.dart';
 import '../../navigation/app_navigator.dart';
 import '../../screens/home/states/running_session_item_ui_state.dart';
@@ -80,7 +81,7 @@ class _RunningSessionItemWidgetState extends State<RunningSessionItemWidget> {
     onTap: () {
       onViewSessionDetails(uiState);
     },
-    child: AppTextWidget("View Details",
+    child: AppTextWidget("View Details".tr,
         style: AppTextStyle.title.copyWith(
             color: AppColors.appMainColor,
             decoration: TextDecoration.underline)),

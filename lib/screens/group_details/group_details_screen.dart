@@ -103,7 +103,7 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
         children: [
           _groupName(uiState.groupName),
           _groupDay(
-              "${AppDateUtils.getDayName(uiState.groupDay)} : ${uiState.timeFrom} - ${uiState.timeTo}"),
+              "${AppDateUtils.getDayName(uiState.groupDay).tr} : ${uiState.timeFrom} - ${uiState.timeTo}"),
           _grade(uiState.grade),
         ],
       ),

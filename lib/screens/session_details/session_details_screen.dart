@@ -41,14 +41,7 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppToolbarWidget.appBar("Session Details".tr, actions: [
-          Obx(() {
-            var state = controller.state.value;
-            var isShowEdit = state is SessionDetailsStateSuccess &&
-                state.uiState.isSessionActive();
-            return isShowEdit ? _actions() : Container();
-          })
-        ]),
+        appBar: AppToolbarWidget.appBar("Session Details".tr, actions: []),
         resizeToAvoidBottomInset: false,
         body: RefreshIndicator(
           onRefresh: () async {

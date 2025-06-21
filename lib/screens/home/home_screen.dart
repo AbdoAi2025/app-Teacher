@@ -204,7 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       spacing: 20,
       children: [
-        EmptyViewWidget(message: "No Doday Groups".tr),
+        EmptyViewWidget(message: "No Today Groups".tr),
         PrimaryButtonWidget(
             text: "Create New Groups".tr,
             onClick: () {

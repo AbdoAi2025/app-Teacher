@@ -11,7 +11,7 @@ class AppDateUtils{
 
   static String getDayName(int day) {
     var days = [
-      "Sunday".tr,
+      "Sunday",
       "Monday",
       "Tuesday",
       "Wednesday",

@@ -258,7 +258,7 @@ The student got (... / ...) marks on the quiz.
             style: TextStyle(fontSize: 16, color: Colors.black),
             children: [
               _text("${'His behavior during the session was'.tr}: "),
-              _value("${state.behaviorStatus.getString()}."),
+              _value("${state.behaviorStatus.getString().tr}."),
               if(state.behaviorNotes.isNotEmpty)
                 _text("(${state.behaviorNotes})."),
             ],
@@ -271,7 +271,7 @@ The student got (... / ...) marks on the quiz.
             style: TextStyle(fontSize: 16, color: Colors.black),
             children: [
               _text("${'The status of the previous homework was'.tr}: "),
-              _value("${state.homeworkStatus.getString()}."),
+              _value("${state.homeworkStatus.getString().tr}."),
               if(state.homeworkNotes.isNotEmpty)
                 _text("(${state.homeworkNotes})."),
             ],
