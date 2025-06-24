@@ -1,12 +1,10 @@
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:teacher_app/enums/homework_enum.dart';
 import 'package:teacher_app/enums/student_behavior_enum.dart';
 import 'package:teacher_app/screens/report/args/student_report_args.dart';
@@ -15,16 +13,12 @@ import 'package:teacher_app/themes/app_colors.dart';
 import 'package:teacher_app/themes/txt_styles.dart';
 import 'package:teacher_app/utils/Keyboard_utils.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
-import 'package:teacher_app/utils/app_background_styles.dart';
 import 'package:teacher_app/widgets/app_text_field_widget.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'package:teacher_app/widgets/done_icon_widget.dart';
 import 'package:teacher_app/widgets/edit_icon_widget.dart';
-import 'package:teacher_app/widgets/key_value_row_widget.dart';
 import 'package:teacher_app/widgets/primary_button_widget.dart';
 import 'dart:ui' as ui;
-import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../../utils/whatsapp_utils.dart';
 import '../../widgets/app_toolbar_widget.dart';
 
@@ -138,15 +132,20 @@ class _StudentReportScreenState extends State<StudentReportScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
+
+
         Row(
           children: [
-            Expanded(
-              child: AppTextWidget(
-                "Notes".tr,
-                style: AppTextStyle.title,
+            if(_isShowNotes())...{
+              Expanded(
+                child: AppTextWidget(
+                  "Notes".tr,
+                  style: AppTextStyle.title,
+                ),
               ),
-            ),
-
+            }else ...{
+              Spacer()
+            },
 
             if(executeAction == null)...{
               if(!notesEditable)...{
@@ -173,7 +172,7 @@ class _StudentReportScreenState extends State<StudentReportScreen> {
             disabledBorder: InputBorder.none,
           ),
         }else ...{
-
+          if(_isShowNotes())
           AppTextWidget(
           noteEditTextController.text.isNotEmpty ? noteEditTextController.text : "No note".tr,
             style: _getReportTextStyle(),
@@ -236,16 +235,18 @@ The student got (... / ...) marks on the quiz.
         text: TextSpan(
           style: TextStyle(fontSize: 16, color: Colors.black),
           children: [
+            //We would like to inform you that the student /...... attended the class on
+            // Day: Saturday — Date: 14/6/2025
             _text("${'infoText'.tr}: "),
             _value("${state.studentName} "),
             if(state.attended == true)...{
-              _text("${'hasAttended'.tr}: "),
+              _text("${'attended the class on'.tr}: "),
             }else ...{
-              _text("${'hasNotAttended'.tr}: "),
+              _text("${"didn't attend the class on".tr}: "),
             },
-            _value("${state.day} "),
-            _text("${'withDate'.tr}: "),
-            _value("${state.sessionStartDate}."),
+            _value("${state.day.tr} - ${state.sessionStartDate}"),
+            // _text("${'withDate'.tr} : "),
+            // _value("${state.sessionStartDate}."),
           ],
         ),
       ),
@@ -253,19 +254,25 @@ The student got (... / ...) marks on the quiz.
 
       if(state.attended == true)...{
         /*Behavior*/
+        //The student's behavior during the class was:
+        // Good / Acceptable / Poor
         RichText(
           text: TextSpan(
             style: TextStyle(fontSize: 16, color: Colors.black),
             children: [
-              _text("${'His behavior during the session was'.tr}: "),
+              _text("${"The student's behavior during the class was".tr}: "),
               _value("${state.behaviorStatus.getString().tr}."),
               if(state.behaviorNotes.isNotEmpty)
-                _text("(${state.behaviorNotes})."),
+                _text(" (${state.behaviorNotes})."),
             ],
           ),
         ),
 
         /*homework*/
+        //The status of the previous homework was :
+        // Fully done /
+        // Incomplete [missing (...) pages] /
+        // Not done
         RichText(
           text: TextSpan(
             style: TextStyle(fontSize: 16, color: Colors.black),
@@ -273,18 +280,20 @@ The student got (... / ...) marks on the quiz.
               _text("${'The status of the previous homework was'.tr}: "),
               _value("${state.homeworkStatus.getString().tr}."),
               if(state.homeworkNotes.isNotEmpty)
-                _text("(${state.homeworkNotes})."),
+                _text(" (${state.homeworkNotes})."),
             ],
           ),
         ),
 
         /*quiz*/
+        //The student got (... / ...) marks on the quiz.
         RichText(
           text: TextSpan(
             style: TextStyle(fontSize: 16, color: Colors.black),
             children: [
-              _text("${'The test score for the above was'.tr}: "),
-              _value("${state.quizGrade}/${state.sessionQuizGrade}."),
+              _text('The student got'.tr),
+              _value(" (${state.quizGrade}/${state.sessionQuizGrade}) "),
+              _text('marks on the quiz'.tr),
             ],
           ),
         ),
@@ -408,4 +417,6 @@ The student got (... / ...) marks on the quiz.
       };
     });
   }
+
+  _isShowNotes() =>  executeAction == null ||  noteEditTextController.text.isNotEmpty;
 }

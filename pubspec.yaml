@@ -50,6 +50,7 @@ dependencies:
   screenshot: ^3.0.0  # For cross-platform screenshots
   path_provider: ^2.1.4  # For saving files
   share_plus: ^11.0.0  # For file sharing
+  sprintf: "^7.0.0"
 #  whatsapp_share: ^2.0.2
 
 

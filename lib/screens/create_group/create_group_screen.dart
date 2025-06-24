@@ -329,6 +329,7 @@ import 'package:teacher_app/screens/groups/groups_controller.dart';
 import 'package:teacher_app/utils/Keyboard_utils.dart';
 import 'package:teacher_app/utils/day_utils.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
+import 'package:teacher_app/widgets/empty_view_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
 import 'package:teacher_app/widgets/primary_button_widget.dart';
 import '../../bottomsheets/week_days_selection_bottom_sheet.dart';
@@ -343,7 +344,6 @@ import 'students_selection/student_list_selection_widget.dart';
 import 'students_selection/states/student_selection_item_ui_state.dart';
 
 class CreateGroupScreen extends StatefulWidget {
-
   const CreateGroupScreen({super.key});
 
   @override
@@ -351,8 +351,6 @@ class CreateGroupScreen extends StatefulWidget {
 }
 
 class CreateGroupScreenState extends State<CreateGroupScreen> {
-
-
   final CreateGroupController _controller = Get.put(CreateGroupController());
 
   int? _selectedDay;
@@ -364,7 +362,6 @@ class CreateGroupScreenState extends State<CreateGroupScreen> {
   void initState() {
     super.initState();
   }
-
 
   CreateGroupController getController() => _controller;
 
@@ -420,9 +417,10 @@ class CreateGroupScreenState extends State<CreateGroupScreen> {
       );
 
   _gradeField() {
-    return Obx((){
-     return AppTextFieldWidget(
-        controller: TextEditingController(text: getController().selectedGrade.value?.name),
+    return Obx(() {
+      return AppTextFieldWidget(
+        controller: TextEditingController(
+            text: getController().selectedGrade.value?.name),
         label: "Grade".tr,
         hint: "Grade".tr,
         readOnly: true,
@@ -430,7 +428,7 @@ class CreateGroupScreenState extends State<CreateGroupScreen> {
         validator: MultiValidator([
           RequiredValidator(errorText: "Grade is required".tr),
         ]).call,
-       onTap: _onSelectGradesClick,
+        onTap: _onSelectGradesClick,
       );
     });
   }
@@ -438,7 +436,8 @@ class CreateGroupScreenState extends State<CreateGroupScreen> {
   _dayField() => Obx(() {
         var day = getController().selectedDayRx.value;
         return AppTextFieldWidget(
-          controller: TextEditingController(text: AppDateUtils.getDayName(day).tr),
+          controller:
+              TextEditingController(text: AppDateUtils.getDayName(day).tr),
           label: "Select Day".tr,
           hint: "Select Day".tr,
           readOnly: true,
@@ -455,7 +454,8 @@ class CreateGroupScreenState extends State<CreateGroupScreen> {
   _timeField(TimeOfDay? time, String label, Function(TimeOfDay) onTimeSelected,
       {required String? Function(dynamic value) validator}) {
     return AppTextFieldWidget(
-      controller: TextEditingController(text: getController().getTimeFormat(time)),
+      controller:
+          TextEditingController(text: getController().getTimeFormat(time)),
       label: label,
       hint: label,
       readOnly: true,
@@ -513,8 +513,6 @@ class CreateGroupScreenState extends State<CreateGroupScreen> {
         (index) => getController().onDaySelected(index));
   }
 
-
-
   _selectedStudentsList() {
     return Column(
       spacing: 20,
@@ -526,7 +524,7 @@ class CreateGroupScreenState extends State<CreateGroupScreen> {
             onTap: _onSelectStudentsClick,
             child: Row(
               children: [
-                Expanded(child: AppTextWidget("selected students".tr)),
+                Expanded(child: AppTextWidget("Selected Students".tr)),
                 Icon(Icons.arrow_downward)
               ],
             )),
@@ -537,19 +535,22 @@ class CreateGroupScreenState extends State<CreateGroupScreen> {
   }
 
   void _onSelectStudentsClick() {
+    _controller.onSelectStudentClick();
+
     var bottomSheetWidget = Obx(() {
       var value = getController().studentsSelectionState.value;
       switch (value) {
         case StudentsSelectionStateError():
           return _errorMessage(value);
+
+        case StudentsSelectionStateSelectGrade():
+          return _selectedGradeFirst();
         case StudentsSelectionStateSuccess():
           return SizedBox(
               height: Get.height * .9,
               width: double.infinity,
-              child: StudentListSelectionWidget(
-                students: value.students,
-                onSaved: (students) => getController().onSelectedStudents(students),
-              ));
+              child: _studentsSelectionList(value)
+          );
       }
       return LoadingWidget();
     });
@@ -576,7 +577,8 @@ class CreateGroupScreenState extends State<CreateGroupScreen> {
                 items: value.items,
                 title: "Select Grade",
                 isSingleSelection: true,
-                onSaved: (selectedItems) => getController().onSelectedGrade(selectedItems.firstOrNull),
+                onSaved: (selectedItems) =>
+                    getController().onSelectedGrade(selectedItems.firstOrNull),
               ));
       }
       return LoadingWidget();
@@ -587,8 +589,7 @@ class CreateGroupScreenState extends State<CreateGroupScreen> {
         // isScrollControlled: true,
         useRootNavigator: true,
         // ignoreSafeArea: false,
-        enableDrag: true
-    );
+        enableDrag: true);
   }
 
   _selectedStudentsState() {
@@ -645,7 +646,7 @@ class CreateGroupScreenState extends State<CreateGroupScreen> {
 
   _emptyStudentsSelection() {
     return Center(
-      child: AppTextWidget("No students Selected".tr),
+      child: AppTextWidget("No Students Selected".tr),
     );
   }
 
@@ -682,13 +683,37 @@ class CreateGroupScreenState extends State<CreateGroupScreen> {
     return AppTextWidget(message);
   }
 
-
   void onSaveGroupClick() {
     getController().saveGroup().listen(
-          (event) {
+      (event) {
         onSaveGroupResult(event);
       },
     );
   }
 
+  Widget _selectedGradeFirst() {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(20),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          EmptyViewWidget(message: "Please select grade first".tr),
+        ],
+      ),
+    );
+  }
+
+  _studentsSelectionList(StudentsSelectionStateSuccess value) {
+
+    if(value.students.isEmpty){
+      return EmptyViewWidget(message: "No students found without groups");
+    }
+
+    return StudentListSelectionWidget(
+      students: value.students,
+      onSaved: (students) =>
+          getController().onSelectedStudents(students),
+    );
+  }
 }

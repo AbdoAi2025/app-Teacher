@@ -73,7 +73,7 @@ class GroupItemWidget extends StatelessWidget {
 
   _arrowIcon() => Icon(Icons.arrow_forward_ios, color: Colors.grey);
 
-  _date() => DayWithIconWidget(uiState.date);
+  _date() => DayWithIconWidget(uiState.date.tr);
 
   _time() => TimeWithIconWidget(uiState.timeFrom, uiState.timeTo);
 

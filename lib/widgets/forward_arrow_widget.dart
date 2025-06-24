@@ -8,10 +8,7 @@ class ForwardArrowWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return Transform
-      .flip(
-        flipX: LocalizationUtils.isArabic(),
-        child: Icon(Icons.arrow_forward_ios, color: Colors.grey));;
+    return Icon(Icons.arrow_forward_ios, color: Colors.grey);
   }
 
 

@@ -51,7 +51,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           spacing: 5,
           children: [
             Icon(Icons.language),
-            Expanded(child: AppTextWidget("Language")),
+            Expanded(child: AppTextWidget("Language".tr)),
             _selectedLanguage()
           ],
         ),
@@ -63,7 +63,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     var selectedLanguage = AppLocalizationUtils.getCurrentLocale();
     appLog("_selectedLanguage selectedLanguage:${selectedLanguage.language}");
    return  AppTextWidget(
-       AppLocalizationUtils.getCurrentLocale().label);
+       AppLocalizationUtils.getCurrentLocale().label.tr);
   }
 
   Future<void> onChangeLanguageClick() async {

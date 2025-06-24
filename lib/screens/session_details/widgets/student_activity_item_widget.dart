@@ -76,7 +76,8 @@ class _StudentActivityItemWidgetState extends State<StudentActivityItemWidget> {
                 Expanded(
                   child: _studentName(),
                 ),
-                if (widget.isActive) _editIcon()
+                // if (widget.isActive)
+                  _editIcon()
               ],
             ),
             if(uiState.studentParentPhone.isNotEmpty)

@@ -120,12 +120,10 @@ class MyApp extends StatelessWidget {
     return ValueListenableBuilder(
         valueListenable: getAppSettingNotifier(),
         builder: (context, AppSetting setting, _) {
-
           var appLocaleModel = setting.appLocaleModel;
-
           var langCode =( appLocaleModel?.toLocale() ?? appLocale)?.languageCode;
-
           return GetMaterialApp(
+            navigatorKey: navigatorKey,
             textDirection: (rtlLanguages.contains(langCode)
                 ? TextDirection.rtl
                 : TextDirection.ltr),
@@ -148,10 +146,9 @@ class MyApp extends StatelessWidget {
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
-            navigatorKey: navigatorKey,
             fallbackLocale: const Locale("en", "US"),
             debugShowCheckedModeBanner: false,
-            title: 'Assistant',
+            title: 'Assistant'.tr,
             initialRoute: AppRoutes.root,
             getPages: appRoutes(),
             theme: ThemeData(

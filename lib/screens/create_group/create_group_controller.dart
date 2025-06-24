@@ -44,7 +44,6 @@ class CreateGroupController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    loadMyStudents();
     _loadGrades();
   }
 
@@ -61,8 +60,17 @@ class CreateGroupController extends GetxController {
   }
 
   Future<void> loadMyStudents() async {
+
+    var selectedGradeId = selectedGrade.value?.id ?? "";
+
+    if(selectedGradeId.isEmpty){
+      studentsSelectionState.value = StudentsSelectionStateSelectGrade();
+      return;
+    }
+
+    studentsSelectionState.value = StudentsSelectionStateLoading();
     var result = await getMyStudentsListUseCase
-        .execute(GetMyStudentsRequest(hasGroups: false));
+        .execute(GetMyStudentsRequest(hasGroups: false , gradeId: selectedGradeId));
     if (result is AppResultSuccess) {
       var students = result.value
               ?.map((e) => StudentSelectionItemUiState(
@@ -169,13 +177,16 @@ class CreateGroupController extends GetxController {
   }
 
   void onSelectedGrade(ItemSelectionUiState? item) {
-    var grades = getGradesList();
 
+    if(item?.id == selectedGrade.value?.id) return;
+
+    var grades = getGradesList();
     for (var grade in grades) {
       grade.isSelected = grade.id == (item?.id ?? "") ;
     }
-
     selectedGrade.value = item;
+    loadMyStudents();
+    selectedStudents.value = [];
   }
 
   List<ItemSelectionUiState> getGradesList() {
@@ -184,5 +195,14 @@ class CreateGroupController extends GetxController {
       return grades.items;
     }
     return List.empty();
+  }
+
+  void onSelectStudentClick() {
+    var studentsState = studentsSelectionState.value;
+    if( studentsState is StudentsSelectionStateSuccess && studentsState.students.isNotEmpty) {
+      return ;
+    }
+    loadMyStudents();
+
   }
 }

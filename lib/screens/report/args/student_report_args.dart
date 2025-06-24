@@ -1,4 +1,5 @@
 
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:teacher_app/enums/homework_enum.dart';
 
@@ -13,7 +14,7 @@ class StudentReportArgs {
 
   StudentReportArgs({required this.uiState , required this.sessionDetailsUiState});
 
-  get sessionStartDate => AppDateUtils.parsDateToString(sessionDetailsUiState.sessionCreatedAt, "yyy-MM-dd");
+  get sessionStartDate => AppDateUtils.parsDateToString(sessionDetailsUiState.sessionCreatedAt, format:  "yyy-MM-dd");
   String get sessionName => sessionDetailsUiState.sessionName;
   String get quizGrade => NumberFormat.compact().format(uiState.quizGrade ?? 0);
   get sessionQuizGrade =>  NumberFormat.compact().format(uiState.sessionQuizGrade ?? 0);
@@ -27,7 +28,7 @@ class StudentReportArgs {
   String get homeworkNotes => uiState.homeworkNotes ?? "";
 
   String get studentName => uiState.studentName;
-  String get day => AppDateUtils.parsDateToString( sessionDetailsUiState.sessionCreatedAt, "EEE");
+  String get day => AppDateUtils.parsDateToString( sessionDetailsUiState.sessionCreatedAt, format:  "EEEE" , locale: Get.locale?.languageCode);
 
   String get parentPhone => uiState.studentParentPhone;
 

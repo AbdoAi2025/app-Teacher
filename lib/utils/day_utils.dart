@@ -53,9 +53,9 @@ class AppDateUtils{
   }
 
 
-  static String parsDateToString(DateTime? date, [String format = 'yyyy-MM-dd HH:mm']) {
+  static String parsDateToString(DateTime? date, {String format = 'yyyy-MM-dd HH:mm' , String? locale}) {
     try{
-      String formatted = DateFormat(format).format(date!);
+      String formatted = DateFormat(format , locale).format(date!);
       return formatted;
     }catch(e){
       appLog("parsDateToString e:${e.toString()}");
@@ -75,7 +75,7 @@ class AppDateUtils{
 
 
   static sessionStartDateToString(DateTime? date){
-    return parsDateToString(date, "yyy-MM-dd HH:mm");
+    return parsDateToString(date, format: "yyy-MM-dd HH:mm");
   }
 
 }

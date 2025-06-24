@@ -104,7 +104,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
 
   _groupSection(StudentDetailsUiState uiState) {
     return SectionWidget(
-      title: "Group Info",
+      title: "Group Info".tr,
       child: InkWell(
         onTap: () {
           onGroupClick(uiState);

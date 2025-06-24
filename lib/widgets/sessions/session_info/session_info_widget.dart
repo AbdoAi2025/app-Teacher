@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:teacher_app/navigation/app_navigator.dart';
+import 'package:teacher_app/screens/group_details/args/group_details_arg_model.dart';
 import 'package:teacher_app/screens/session_details/states/session_details_ui_state.dart';
 
 import '../../../enums/session_status_enum.dart';
@@ -69,7 +72,9 @@ class SessionInfoWidget extends StatelessWidget{
         AppTextWidget(
           uiState.groupName,
           style: AppTextStyle.value,
-        )
+        ),
+        Spacer(),
+        _infoIcon()
       ],
     );
   }
@@ -135,6 +140,12 @@ class SessionInfoWidget extends StatelessWidget{
       ],
     );
   }
+
+  _infoIcon() => InkWell(
+      onTap: (){
+        AppNavigator.navigateToGroupDetails(GroupDetailsArgModel(id: uiState.groupId));
+      },
+      child: Icon(Icons.info_outline , color: AppColors.appMainColor,));
 
 
 }
