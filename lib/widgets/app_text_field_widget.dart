@@ -23,12 +23,14 @@ class AppTextFieldWidget extends StatelessWidget {
   final Function()? onTap;
   final FormFieldValidator<String>? validator;
   final TextAlign? textAlign;
+  final TextDirection? textDirection;
   final  TextInputType? keyboardType;
   final  Function(String?)? onChanged;
 
 
   const AppTextFieldWidget(
-      {super.key,
+      {
+        super.key,
         required this.controller,
         this.label,
         this.hint,
@@ -44,6 +46,7 @@ class AppTextFieldWidget extends StatelessWidget {
         this.onTap,
         this.validator,
         this.textAlign,
+        this.textDirection,
         this.keyboardType,
         this.onChanged,
         this.minLines,
@@ -59,6 +62,7 @@ class AppTextFieldWidget extends StatelessWidget {
       controller: controller,
       style: textStyle ?? AppTextStyle.textFieldStyle,
       readOnly: readOnly,
+      textDirection: textDirection,
       textAlign: textAlign?? TextAlign.start,
       onTap: onTap,
       minLines: minLines,
@@ -68,6 +72,7 @@ class AppTextFieldWidget extends StatelessWidget {
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: prefixIcon,
+        hintTextDirection: textDirection,
         hintText: hint,
         hintStyle: hintTextStyle,
         focusedBorder: focusedBorder,

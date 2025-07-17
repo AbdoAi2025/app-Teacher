@@ -32,7 +32,7 @@ class _EditStudentScreenState extends AddStudentScreenState {
 
   @override
   String getSubmitButtonText() {
-    return "Update";
+    return "Update".tr;
   }
 
   @override

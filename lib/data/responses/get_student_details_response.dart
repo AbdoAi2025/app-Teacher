@@ -58,6 +58,7 @@ class StudentDetailsApiModel {
     groupDay = json['groupDay'];
     groupTimeFrom = json['groupTimeFrom'];
     groupTimeTo = json['groupTimeTo'];
+    gradeId = json['gradeId'];
   }
 
   String? studentId;
@@ -71,6 +72,7 @@ class StudentDetailsApiModel {
   int? groupDay;
   String? groupTimeFrom;
   String? groupTimeTo;
+  int? gradeId;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};

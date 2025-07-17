@@ -3,7 +3,7 @@ import '../../group_details/states/group_details_student_item_ui_state.dart';
 class EditStudentArgsModel {
   final String studentId;
   final String studentName;
-  final String gradeId;
+  final int gradeId;
   final String gradeName;
   final String parentPhone;
   final String studentPhone;

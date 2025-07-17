@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:teacher_app/app_mode.dart';
 import 'package:teacher_app/base/AppResult.dart';
 import 'package:teacher_app/domain/models/login_model.dart';
 import 'package:teacher_app/domain/usecases/login_use_case.dart';
@@ -11,8 +12,8 @@ class LoginController extends GetxController{
 
   LoginUseCase loginUseCase = LoginUseCase();
 
-  TextEditingController usernameController = TextEditingController(text : isDev ? "teacher1" : "");
-  TextEditingController passwordController = TextEditingController(text:  isDev ? "123456" : "");
+  TextEditingController usernameController = TextEditingController(text : AppMode.isDev || AppMode.isLocal ? "teacher1" : "");
+  TextEditingController passwordController = TextEditingController(text:  AppMode.isDev || AppMode.isLocal ? "123456" : "");
 
   Stream<LoginState> login() async* {
 

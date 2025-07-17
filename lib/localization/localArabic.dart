@@ -138,6 +138,10 @@ final Map<String, String> ar = {
   "Behavior Notes": "ملاحظات علي السلوك",
   "Group Time:": "وقت المجموعة:",
   "Date:": "التاريخ:",
+  "Update" : "تحديث",
+  "Student Info" : "معلومات الطالب",
+
+
 
 };
 

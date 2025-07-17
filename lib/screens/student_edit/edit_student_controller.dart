@@ -21,12 +21,11 @@ class EditStudentController extends AddStudentController {
       this.args = args;
       appLog("EditStudentController args : $args");
       nameController.text = args.studentName;
-      parentPhoneController.text = args.parentPhone;
-      phoneController.text = args.studentPhone;
-
+      parentPhoneController.text = args.parentPhone.replaceFirst("+20", "");
+      phoneController.text = args.studentPhone.replaceFirst("+20", "");
       /*Set selected grade*/
       selectedGrade.value = ItemSelectionUiState(
-        id: args.gradeId,
+        id: args.gradeId.toString(),
         name: args.gradeName,
         isSelected: true
       );
@@ -59,8 +58,8 @@ class EditStudentController extends AddStudentController {
     UpdateStudentRequest request = UpdateStudentRequest(
      studentId: args?.studentId,
       name: nameController.text,
-      parentPhone: parentPhoneController.text,
-      phone: phoneController.text,
+      parentPhone: "+20${parentPhoneController.text}",
+      phone: "+20${phoneController.text}",
       gradeId: selectedGrade.value?.id ,
     );
 

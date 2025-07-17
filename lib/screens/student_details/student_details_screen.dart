@@ -88,7 +88,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
 
   _studentInfoSection(StudentDetailsUiState uiState) {
     return SectionWidget(
-      title: "Student Info",
+      title: "Student Info".tr,
       child: Column(
         spacing: 10,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -245,7 +245,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
     var args = EditStudentArgsModel(
       studentId: uiState?.studentId ?? "",
       studentName: uiState?.studentName ?? "",
-      gradeId: uiState?.groupId ?? "",
+      gradeId: uiState?.gradeId ?? 0,
       gradeName: uiState?.gradeName ?? "",
       parentPhone: uiState?.parentPhone ?? "",
       studentPhone: uiState?.phone ?? "",

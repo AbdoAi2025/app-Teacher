@@ -11,6 +11,13 @@ import '../../requests/get_my_students_request.dart';
 import 'states/student_item_ui_state.dart';
 
 class StudentsController extends GetxController {
+
+
+  GetMyStudentsRequest request = GetMyStudentsRequest(
+    pageSize: 100,
+    pageIndex: 0
+  );
+
   GetMyStudentsListUseCase getMyStudentsListUseCase =
       GetMyStudentsListUseCase();
 
@@ -25,7 +32,7 @@ class StudentsController extends GetxController {
 
   Future<void> _loadStudents() async {
     var studentsResult =
-        await getMyStudentsListUseCase.execute(GetMyStudentsRequest());
+        await getMyStudentsListUseCase.execute(request);
     if (studentsResult.isSuccess) {
       var uiStates = studentsResult.data
               ?.map((e) => StudentItemUiState(

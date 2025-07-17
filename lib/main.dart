@@ -69,7 +69,9 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:shake/shake.dart';
 import 'package:teacher_app/appSetting/appSetting.dart';
+import 'package:teacher_app/app_mode.dart';
 import 'package:teacher_app/navigation/app_routes.dart';
 import 'package:teacher_app/navigation/app_routes_screens.dart';
 import 'package:teacher_app/themes/app_colors.dart';
@@ -84,12 +86,10 @@ import 'localization/app_translation.dart';
 import 'services/api_service.dart';
 
 Locale? appLocale;
-
-const bool isDev = false;
-
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-
 void main() async {
+
+
   WidgetsFlutterBinding.ensureInitialized();
 
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -110,10 +110,22 @@ void main() async {
 
 
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+
+  const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   final ApiService apiService = ApiService();
 
-  MyApp({super.key});
+  @override
+  void initState() {
+    super.initState();
+    _startApiLoggerIfNeeded();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -203,6 +215,15 @@ class MyApp extends StatelessWidget {
           );
         });
   }
+
+  _startApiLoggerIfNeeded() {
+    if (AppMode.isProd) { return; }
+    ShakeDetector.autoStart(
+        onPhoneShake: (ShakeEvent event) {
+          alice.showInspector();
+        }
+    );
+  }
 }
 
 Future<void> initAppLocale() async {
@@ -217,3 +238,5 @@ Future<void> initAppLocale() async {
   AppLocalizationUtils.setLocale(AppLocaleModel(language: lang, country: country));
   Get.locale = appLocale;
 }
+
+

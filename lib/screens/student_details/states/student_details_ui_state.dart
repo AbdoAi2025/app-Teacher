@@ -9,6 +9,7 @@ class StudentDetailsUiState {
   final int groupDay;
   final String groupTimeFrom;
   final String groupTimeTo;
+  final int gradeId;
 
   final String gradeName;
 
@@ -23,5 +24,6 @@ class StudentDetailsUiState {
     required this.groupDay,
     required this.groupTimeFrom,
     required this.groupTimeTo,
+    required this.gradeId,
   });
 }

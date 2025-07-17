@@ -143,23 +143,33 @@ class ApiService {
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_alice/alice.dart';
 import 'package:talker_dio_logger/talker_dio_logger.dart';
 import 'package:teacher_app/appSetting/appSetting.dart';
+import 'package:teacher_app/app_mode.dart';
 import 'package:teacher_app/main.dart';
 import '../models/group_item_model.dart';
 import '../models/student.dart';
 
 const String prodBaseUrl = "https://assistant-app-2136afb92d95.herokuapp.com";
 const String devBaseUrl = "https://assistant-app-2136afb92d95.herokuapp.com";
-// const String localBaseUrl = "http://192.168.2.117:8080";
-const String localBaseUrlOnPlus = "http://192.168.212.129:8080";
+const String localBaseUrlOrange = "http://192.168.2.117:8080";
+const String localBaseUrlTpLink = "http://192.168.1.105:8080";
+// const String localBaseUrlOnPlus = "http://192.168.212.129:8080";
 // const String localBaseUrl = "http://192.168.100.70:8080";
-const String localBaseUrl = localBaseUrlOnPlus;
-var baseUrl = isDev ? localBaseUrl : prodBaseUrl;
+const String localBaseUrl = localBaseUrlTpLink;
+
+var baseUrl = switch (AppMode.mode) {
+  AppMode.dev => devBaseUrl,
+  AppMode.local => localBaseUrl,
+  _ => prodBaseUrl
+};
+
+// Create Alice with the navigator key
+final alice = Alice(navigatorKey: navigatorKey);
 
 class ApiService {
   static Dio? _dio;
-
 
   static Dio getInstance() {
     // var instance = _dio;
@@ -176,8 +186,12 @@ class ApiService {
   }
 
   static _init(Dio dio) async {
-    dio.interceptors.add
-      (
+
+    if (AppMode.mode != AppMode.prod) {
+      dio.interceptors.add(alice.getDioInterceptor());
+    }
+
+    dio.interceptors.add(
       TalkerDioLogger(
         settings: const TalkerDioLoggerSettings(
           printRequestHeaders: !kReleaseMode,
@@ -198,7 +212,7 @@ class ApiService {
         "Authorization": "Bearer $token",
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET, POST,OPTIONS',
-        "Access-Control-Allow-Headers" : "Content-Type, Authorization"
+        "Access-Control-Allow-Headers": "Content-Type, Authorization"
       },
     );
   }
@@ -216,8 +230,6 @@ class ApiService {
   //   dio.options.headers["Authorization"] = "Bearer $token";
   //   await authBox?.put('token', token); // حفظ التوكن محليًا
   // }
-
-
 
   // ✅ تسجيل الدخول وجلب التوكن
   Future<String?> login(String username, String password) async {
@@ -267,7 +279,6 @@ class ApiService {
 
   // ✅ جلب جميع الطلاب
   Future<List<Student>> fetchStudents() async {
-
     return [];
 
     // try {
@@ -313,8 +324,6 @@ class ApiService {
     //   throw Exception("فشل في حذف جميع الطلاب");
     // }
   }
-
-
 
   // ✅ إضافة مجموعة جديدة
   Future<void> createGroup(GroupItemModel group) async {

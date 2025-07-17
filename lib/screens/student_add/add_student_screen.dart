@@ -331,6 +331,8 @@ import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
 import 'package:teacher_app/widgets/primary_button_widget.dart';
 import '../../themes/app_colors.dart';
+import '../../validations/phone_validation.dart';
+import '../../widgets/app_phone_input_text_field_widget.dart';
 import '../../widgets/app_text_field_widget.dart';
 import '../../widgets/app_toolbar_widget.dart';
 import '../../widgets/dialog_loading_widget.dart';
@@ -402,19 +404,18 @@ class AddStudentScreenState extends State<AddStudentScreen> {
         ]).call,
       );
 
-  _parentPhoneField() => AppTextFieldWidget(
+  _parentPhoneField() => AppPhoneInputTextFieldWidget(
         controller: getController().parentPhoneController,
         label: "Parent Phone".tr,
-        hint: "Parent Phone".tr,
         validator: MultiValidator([
           RequiredValidator(errorText: "Parent Phone is required".tr),
+          PhoneValidation(errorText: "Please enter valid phone number".tr),
         ]).call,
       );
 
-  _phoneField() => AppTextFieldWidget(
+  _phoneField() => AppPhoneInputTextFieldWidget(
         controller: getController().phoneController,
         label: "Phone".tr,
-        hint: "Phone".tr,
         validator: MultiValidator([]).call,
       );
 

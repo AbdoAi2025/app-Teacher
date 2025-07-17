@@ -123,6 +123,8 @@ final Map<String, String> enUS = {
 
   "Group Time:" : "Group Time:",
   "Date:" : "Date:",
+  "Update" : "Update",
+  "Student Info" : "Student Info",
 
 
 };

@@ -105,9 +105,9 @@ class AddStudentController extends GetxController{
 
   AddStudentRequest getRequest() {
     return AddStudentRequest(
-      name: nameController.text,
-      parentPhone: parentPhoneController.text,
-      phone: phoneController.text,
+      name: nameController.text.trim(),
+      parentPhone: parentPhoneController.text.trim(),
+      phone: phoneController.text.trim(),
       gradeId: selectedGrade.value?.id,
     );
   }
