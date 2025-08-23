@@ -4,9 +4,10 @@ import 'package:teacher_app/navigation/app_navigator.dart';
 import 'package:teacher_app/screens/splash/SplashController.dart';
 import 'package:teacher_app/screens/splash/SplashEvent.dart';
 import 'package:teacher_app/themes/app_colors.dart';
+import 'package:teacher_app/utils/message_utils.dart';
+import 'package:teacher_app/utils/open_store_utils.dart';
 
-class SplashScreen  extends StatefulWidget{
-
+class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
   @override
@@ -14,7 +15,6 @@ class SplashScreen  extends StatefulWidget{
 }
 
 class _SplashscreenState extends State<SplashScreen> {
-
   SplashController splashController = Get.put(SplashController());
 
   @override
@@ -22,7 +22,6 @@ class _SplashscreenState extends State<SplashScreen> {
     super.initState();
     initSplashEvents();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -37,19 +36,32 @@ class _SplashscreenState extends State<SplashScreen> {
   }
 
   void initSplashEvents() {
-    ever(splashController.splashEvent, (callback) {
-      switch(callback){
-        case SplashEventGoToLogin():
-          AppNavigator.navigateToLogin();
-          break;
-        case SplashEventGoToHome():
-          AppNavigator.navigateToHome();
-        case SplashEventLoading():
-         break;
-        case SplashError():
-          // TODO: Handle this case.
-          throw UnimplementedError();
-      }
-    },);
+    ever(
+      splashController.splashEvent,
+      (callback) {
+        switch (callback) {
+          case SplashEventGoToLogin():
+            AppNavigator.navigateToLogin();
+            break;
+          case SplashEventGoToHome():
+            AppNavigator.navigateToHome();
+          case SplashEventLoading():
+            break;
+          case SplashError():
+            showErrorMessagePopup(callback.message);
+          case SplashEventInvalidSession():
+            showErrorMessagePopup("User not active".tr);
+          case SplashEventForceUpdate():
+            showConfirmationMessage(
+              "force_update_message".tr,
+              () async {
+                await OpenStoreUtils.openStore();
+              },
+              barrierDismissible : false,
+              positiveButtonText: "Update".tr,
+            );
+        }
+      },
+    );
   }
 }

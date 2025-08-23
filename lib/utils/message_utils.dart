@@ -24,9 +24,10 @@ void showErrorMessage(message) {
   // ));
 }
 
-Future<void> showDailog(context, widget) async {
+Future<void> showDailog(context, widget , {bool barrierDismissible = true}) async {
   await showDialog(
       context: context,
+      barrierDismissible: barrierDismissible,
       barrierColor: Colors.grey.shade400.withOpacity(0.5),
       builder: (ctxt) => widget);
   KeyboardUtils.hideKeyboard(Get.context!);
@@ -70,19 +71,25 @@ void showSuccessMessagePopup(String message, [Function()? onClose]) {
       ));
 }
 
-void showConfirmationMessage(String message, Function() action, {String? positiveButtonText,String? negativeButtonText, Function()? onCancel}) {
+void showConfirmationMessage(String message, Function() action, {
+  bool barrierDismissible = true,
+  String? positiveButtonText,String? negativeButtonText,
+  Function()? onCancel
+}) {
 
   showDailog(
       Get.context,
+    barrierDismissible: barrierDismissible,
       Dialog(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             ConfirmDailogWidget(
               title: message,
+              autoDismiss : barrierDismissible,
               positive_button_text: positiveButtonText ?? "yes".tr,
               negative_button_text: negativeButtonText ?? "Cancel".tr,
-              showCancelBtn: true,
+              showCancelBtn: barrierDismissible,
               onSuccess: () {
                 action();
               },

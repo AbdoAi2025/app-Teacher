@@ -53,6 +53,9 @@ dependencies:
   sprintf: "^7.0.0"
   flutter_alice: ^2.0.1
   shake: ^3.0.0
+  package_info_plus: ^8.0.0
+
+
 
 #  whatsapp_share: ^2.0.2
 

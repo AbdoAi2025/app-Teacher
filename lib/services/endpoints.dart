@@ -17,6 +17,7 @@ class EndPoints{
   ///api/v1/users/signin
   static const String login = "$apiV1/users/signin";
   static const String logout = "$apiV1/users/signout";
+  static const String checkSession = "$apiV1/users/checkSession";
 
   /*Groups*/
   static const String getMyGroups = "$apiV1/groups/myGroups";
@@ -32,6 +33,7 @@ class EndPoints{
   static const String getSessionDetails = "$apiV1/sessions";
   static const String updateSessionActivities = "$apiV1/activities/updateStudentsActivities";
   static const String getMySessions = "$apiV1/sessions/getMySessions";
+  static const String checkAppVersion = "$apiV1/appConfig/checkAppVersion";
 
 
 
