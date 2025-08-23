@@ -56,7 +56,7 @@ class StudentDetailsController extends GetxController {
         groupDay: data.groupDay ?? 0,
         groupTimeFrom: data.groupTimeFrom ?? "",
         groupTimeTo: data.groupTimeTo ?? "",
-        gradeId: data.gradeId ?? -1,
+        gradeId: data.gradeId ?? 0,
       );
       updateState(StudentDetailsStateSuccess(uiState: uiState));
     } else {
