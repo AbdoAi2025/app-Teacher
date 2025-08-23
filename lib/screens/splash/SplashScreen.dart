@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:teacher_app/generated/assets.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
 import 'package:teacher_app/screens/splash/SplashController.dart';
 import 'package:teacher_app/screens/splash/SplashEvent.dart';
@@ -27,9 +28,12 @@ class _SplashscreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: AppColors.splashColor,
-        child: const Center(
-          child: Text("Splash Screen"),
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              fit: BoxFit.fill,
+              image: AssetImage(Assets.imagesImageSplashScreen))
         ),
       ),
     );

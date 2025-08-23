@@ -36,7 +36,8 @@ class AppBackgroundStyle {
   static Decoration getColoredBackgroundRounded(double radius, Color color) =>
       BoxDecoration(
           color: color,
-          borderRadius: BorderRadius.all(Radius.circular(radius)));
+          borderRadius: BorderRadius.all(Radius.circular(radius))
+      );
 
   static Decoration getColoredBackgroundRoundedBorder(
           {required double radius,

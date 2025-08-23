@@ -10,6 +10,7 @@ class AppColors{
 
   static const Color splashColor = white;
   static const Color primaryButtonColor = appMainColor;
+  static const Color secondaryButtonColor = Color(0xffffa629);
   static const Color appBarBackgroundColor = white;
   static const Color appBarForegroundColor= white;
   static const Color colorError= color_E75260;

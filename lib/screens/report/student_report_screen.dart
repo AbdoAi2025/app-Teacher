@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:teacher_app/enums/homework_enum.dart';
 import 'package:teacher_app/enums/student_behavior_enum.dart';
+import 'package:teacher_app/generated/assets.dart';
 import 'package:teacher_app/screens/report/args/student_report_args.dart';
 import 'package:teacher_app/screens/report/student_report_controller.dart';
 import 'package:teacher_app/themes/app_colors.dart';
@@ -38,7 +39,6 @@ class _StudentReportScreenState extends State<StudentReportScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     WidgetsBinding.instance.addPostFrameCallback(addPostFrameCallback);
 
     return Scaffold(
@@ -72,14 +72,23 @@ class _StudentReportScreenState extends State<StudentReportScreen> {
               child: RepaintBoundary(
                 key: _screenshotKey, // Assign a GlobalKey
                 child: Container(
-                  color: AppColors.scaffoldBackgroundColor,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      // image: DecorationImage(
+                      //     fit: BoxFit.fill,
+                      //     image: AssetImage(Assets.imagesReportBg)
+                      // )
+                  ),
+                  // color: AppColors.scaffoldBackgroundColor,
                   // decoration: AppBackgroundStyle.getColoredBackgroundRounded( 20,  AppColors.scaffoldBackgroundColor),
                   child: Container(
                     // decoration: AppBackgroundStyle.getColoredBackgroundRoundedBorder(radius: 20, borderColor:  AppColors.appMainColor, bgColor: AppColors.white),
                     margin: EdgeInsets.all(10),
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10.0, vertical: 10),
                     child: GestureDetector(
-                      onTapDown: (details) => KeyboardUtils.hideKeyboard(context),
+                      onTapDown: (details) =>
+                          KeyboardUtils.hideKeyboard(context),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -97,9 +106,7 @@ class _StudentReportScreenState extends State<StudentReportScreen> {
             ),
           ),
         ),
-
-        if(!notesEditable)
-        _viewButton(state)
+        if (!notesEditable) _viewButton(state)
       ],
     );
   }
@@ -110,7 +117,7 @@ class _StudentReportScreenState extends State<StudentReportScreen> {
       child: PrimaryButtonWidget(
           text: "View".tr,
           onClick: () {
-             onViewButtonClick(state);
+            onViewButtonClick(state);
           }),
     );
   }
@@ -132,33 +139,28 @@ class _StudentReportScreenState extends State<StudentReportScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-
-
         Row(
           children: [
-            if(_isShowNotes())...{
+            if (_isShowNotes()) ...{
               Expanded(
                 child: AppTextWidget(
                   "Notes".tr,
                   style: AppTextStyle.title,
                 ),
               ),
-            }else ...{
+            } else ...{
               Spacer()
             },
-
-            if(executeAction == null)...{
-              if(!notesEditable)...{
+            if (executeAction == null) ...{
+              if (!notesEditable) ...{
                 EditIconWidget(onClick: onEditNotes)
-              }else ...{
+              } else ...{
                 DoneIconWidget(onClick: onNotesEditDone)
               }
             }
           ],
         ),
-
-
-        if(notesEditable)...{
+        if (notesEditable) ...{
           AppTextFieldWidget(
             minLines: 3,
             maxLines: 3,
@@ -171,14 +173,15 @@ class _StudentReportScreenState extends State<StudentReportScreen> {
             border: InputBorder.none,
             disabledBorder: InputBorder.none,
           ),
-        }else ...{
-          if(_isShowNotes())
-          AppTextWidget(
-          noteEditTextController.text.isNotEmpty ? noteEditTextController.text : "No note".tr,
-            style: _getReportTextStyle(),
-          ),
+        } else ...{
+          if (_isShowNotes())
+            AppTextWidget(
+              noteEditTextController.text.isNotEmpty
+                  ? noteEditTextController.text
+                  : "No note".tr,
+              style: _getReportTextStyle(),
+            ),
         }
-
       ],
     );
   }
@@ -239,9 +242,9 @@ The student got (... / ...) marks on the quiz.
             // Day: Saturday — Date: 14/6/2025
             _text("${'infoText'.tr}: "),
             _value("${state.studentName} "),
-            if(state.attended == true)...{
+            if (state.attended == true) ...{
               _text("${'attended the class on'.tr}: "),
-            }else ...{
+            } else ...{
               _text("${"didn't attend the class on".tr}: "),
             },
             _value("${state.day.tr} - ${state.sessionStartDate}"),
@@ -250,9 +253,7 @@ The student got (... / ...) marks on the quiz.
           ],
         ),
       ),
-
-
-      if(state.attended == true)...{
+      if (state.attended == true) ...{
         /*Behavior*/
         //The student's behavior during the class was:
         // Good / Acceptable / Poor
@@ -262,7 +263,7 @@ The student got (... / ...) marks on the quiz.
             children: [
               _text("${"The student's behavior during the class was".tr}: "),
               _value("${state.behaviorStatus.getString().tr}."),
-              if(state.behaviorNotes.isNotEmpty)
+              if (state.behaviorNotes.isNotEmpty)
                 _text(" (${state.behaviorNotes})."),
             ],
           ),
@@ -279,7 +280,7 @@ The student got (... / ...) marks on the quiz.
             children: [
               _text("${'The status of the previous homework was'.tr}: "),
               _value("${state.homeworkStatus.getString().tr}."),
-              if(state.homeworkNotes.isNotEmpty)
+              if (state.homeworkNotes.isNotEmpty)
                 _text(" (${state.homeworkNotes})."),
             ],
           ),
@@ -332,8 +333,9 @@ The student got (... / ...) marks on the quiz.
             spacing: 20,
             children: [
               _closeIcon(),
-              Image.file(file,
-                            ),
+              Image.file(
+                file,
+              ),
               _sendButton(state, file)
             ],
           ),
@@ -394,9 +396,9 @@ The student got (... / ...) marks on the quiz.
   }
 
   onEditNotes() {
-      setState(() {
-        notesEditable = true;
-      });
+    setState(() {
+      notesEditable = true;
+    });
   }
 
   onNotesEditDone() {
@@ -412,11 +414,12 @@ The student got (... / ...) marks on the quiz.
 
   void onViewButtonClick(StudentReportArgs state) {
     setState(() {
-      executeAction = (){
+      executeAction = () {
         onViewReport(state);
       };
     });
   }
 
-  _isShowNotes() =>  executeAction == null ||  noteEditTextController.text.isNotEmpty;
+  _isShowNotes() =>
+      executeAction == null || noteEditTextController.text.isNotEmpty;
 }
