@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Theme applied to the Android Window while the process is starting when the OS's Dark Mode setting is off -->
-    <style name="LaunchTheme" parent="@android:style/Theme.Light.NoTitleBar">
+    <style name="Theme.App" parent="@android:style/Theme.Light.NoTitleBar">
         <!-- Show a splash screen on the activity. Automatically removed when
              the Flutter engine draws its first frame -->
-        <item name="android:windowBackground">@drawable/launch_background</item>
+        <item name="android:windowBackground">@android:color/white</item>
     </style>
     <!-- Theme applied to the Android Window as soon as the process has started.
          This theme determines the color of the Android Window while your
@@ -15,4 +15,32 @@
     <style name="NormalTheme" parent="@android:style/Theme.Light.NoTitleBar">
         <item name="android:windowBackground">?android:colorBackground</item>
     </style>
+
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+
+
+        <!-- Background placeholder color (required by Splash API) -->
+        <item name="windowSplashScreenBackground">@android:color/transparent</item>
+
+        <!-- Disable the animated icon -->
+        <item name="windowSplashScreenAnimatedIcon">@color/transparent</item>
+
+        <!-- Use full screen image -->
+        <item name="android:windowBackground">@drawable/splash_background</item>
+
+        <!-- Switch to normal theme after splash -->
+        <item name="postSplashScreenTheme">@style/Theme.App</item>
+
+
+<!--        -->
+<!--        &lt;!&ndash; Set the splash screen background to black &ndash;&gt;-->
+<!--        <item name="windowSplashScreenBackground">@drawable/splash_background</item>-->
+<!--&lt;!&ndash;        <item name="windowSplashScreenBackground">@color/primaryColor</item>&ndash;&gt;-->
+<!--        &lt;!&ndash; Use windowSplashScreenAnimatedIcon to add a drawable or an animated-->
+<!--             drawable. &ndash;&gt;-->
+<!--        <item name="windowSplashScreenAnimatedIcon">@color/splashBackground</item>-->
+<!--        &lt;!&ndash; Set the theme of the Activity that follows your splash screen. &ndash;&gt;-->
+<!--        <item name="postSplashScreenTheme">@style/Theme.App</item>-->
+    </style>
+
 </resources>
