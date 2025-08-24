@@ -145,8 +145,10 @@ final Map<String, String> ar = {
   "Student Info" : "معلومات الطالب",
   "User not active" : "المستخدم غير نشط، يرجى الاتصال بمالك الخدمة",
   "force_update_message" : "تتوفر نسخة أحدث من هذا التطبيق.\n لمواصلة استخدام التطبيق، يرجى التحديث إلى الإصدار الأحدث من المتجر.",
-
-
+  "Privacy Policy" : "سياسة الخصوصية",
+  "Delete Account" : "حذف الحساب",
+  "delete_account_confirm_message" : "هل أنت متأكد من حذف حسابك؟",
+  "Are you sure to logout" : "هل أنت متأكد من تسجيل خروج؟"
 };
 
 /*

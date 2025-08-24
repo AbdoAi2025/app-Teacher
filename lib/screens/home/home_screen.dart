@@ -6,6 +6,7 @@ import 'package:teacher_app/themes/app_colors.dart';
 import 'package:teacher_app/themes/txt_styles.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
 import 'package:teacher_app/utils/app_background_styles.dart';
+import 'package:teacher_app/utils/message_utils.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'package:teacher_app/widgets/empty_view_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
@@ -239,8 +240,13 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void onLogout() {
-    controller.logout();
-    AppNavigator.navigateToLogin();
+
+    showConfirmationMessage("Are you sure to logout".tr, (){
+      controller.logout();
+      AppNavigator.navigateToLogin();
+    });
+
+
   }
 
 

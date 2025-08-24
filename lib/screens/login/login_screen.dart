@@ -8,6 +8,8 @@ import 'package:teacher_app/widgets/app_text_field_widget.dart';
 import 'package:teacher_app/widgets/dialog_loading_widget.dart';
 import 'package:teacher_app/widgets/primary_button_widget.dart';
 
+import '../../generated/assets.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -30,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
             spacing: 20,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.lock, size: 100, color: Colors.blue),
+              Image(image: AssetImage(Assets.imagesLogo) , height: 200, width: 200,),
               _userNameField(),
               _passwordField(),
               _submitButton()

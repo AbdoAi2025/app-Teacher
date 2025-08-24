@@ -130,6 +130,9 @@ final Map<String, String> enUS = {
   "Student Info" : "Student Info",
   "User not active" : "User not active, please contact service owner",
   "force_update_message" : "A newer version of this app is available.\nTo continue using the app, please update to the latest version from the store.",
-
+  "Privacy Policy" : "Privacy Policy",
+  "Delete Account" : "Delete Account",
+  "delete_account_confirm_message" : "Are you sure you want to delete your account?",
+  "Are you sure to logout" : "Are you sure to logout?"
 
 };
