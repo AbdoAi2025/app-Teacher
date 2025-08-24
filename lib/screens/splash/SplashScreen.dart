@@ -33,7 +33,7 @@ class _SplashscreenState extends State<SplashScreen> {
         decoration: BoxDecoration(
           image: DecorationImage(
               fit: BoxFit.fill,
-              image: AssetImage(Assets.imagesImageSplashScreen))
+              image: AssetImage(Assets.imagesSplashScreen))
         ),
       ),
     );

@@ -8,7 +8,9 @@ class Assets {
   static const String fontsInterItalic = 'assets/fonts/inter_Italic.ttf';
   static const String fontsTeshrinARLTBold = 'assets/fonts/Teshrin_AR_LT_Bold.ttf';
   static const String fontsTeshrinARLTRegular = 'assets/fonts/Teshrin_AR_LT_Regular.ttf';
-  static const String imagesImageSplashScreen = 'assets/images/image_splash_screen.png';
+  static const String imagesLogo = 'assets/images/logo.png';
+  static const String imagesReportBg = 'assets/images/report_bg.png';
+  static const String imagesSplashScreen = 'assets/images/splash_screen.png';
   static const String svgArrowRight = 'assets/svg/arrow_right.svg';
 
 }

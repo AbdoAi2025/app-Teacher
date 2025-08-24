@@ -14,6 +14,7 @@ import 'package:teacher_app/themes/app_colors.dart';
 import 'package:teacher_app/themes/txt_styles.dart';
 import 'package:teacher_app/utils/Keyboard_utils.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
+import 'package:teacher_app/utils/app_background_styles.dart';
 import 'package:teacher_app/widgets/app_text_field_widget.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'package:teacher_app/widgets/done_icon_widget.dart';
@@ -22,6 +23,7 @@ import 'package:teacher_app/widgets/primary_button_widget.dart';
 import 'dart:ui' as ui;
 import '../../utils/whatsapp_utils.dart';
 import '../../widgets/app_toolbar_widget.dart';
+import '../session_details/states/session_details_ui_state.dart';
 
 class StudentReportScreen extends StatefulWidget {
   const StudentReportScreen({super.key});
@@ -74,11 +76,9 @@ class _StudentReportScreenState extends State<StudentReportScreen> {
                 child: Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(20)),
-                      // image: DecorationImage(
-                      //     fit: BoxFit.fill,
-                      //     image: AssetImage(Assets.imagesReportBg)
-                      // )
-                  ),
+                      image: DecorationImage(
+                          fit: BoxFit.fill,
+                          image: AssetImage(Assets.imagesReportBg))),
                   // color: AppColors.scaffoldBackgroundColor,
                   // decoration: AppBackgroundStyle.getColoredBackgroundRounded( 20,  AppColors.scaffoldBackgroundColor),
                   child: Container(
@@ -95,8 +95,22 @@ class _StudentReportScreenState extends State<StudentReportScreen> {
                         spacing: 15,
                         children: [
                           _title(state),
-                          ..._attendanceText(state),
-                          _notes(state),
+                          Container(
+                            padding: EdgeInsets.all(10),
+                            decoration: AppBackgroundStyle
+                                .getColoredBackgroundRoundedBorder(
+                                    radius: 20,
+                                    bgColor : Colors.transparent,
+                                    borderColor: AppColors.appMainColor,
+                                    borderWidth: 5),
+                            child: Column(
+                              spacing: 10,
+                              children: [
+                                ..._reportTexts(state),
+                                _notes(state),
+                              ],
+                            ),
+                          )
                         ],
                       ),
                     ),
@@ -211,42 +225,49 @@ The student got (... / ...) marks on the quiz.
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Column(
+          spacing: 10,
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             AppTextWidget(
               "report_parent_title".tr,
-              style: AppTextStyle.title,
+              style: AppTextStyle.title.copyWith(color: AppColors.appMainColor , fontSize: 24 , fontStyle: FontStyle.italic),
               textAlign: TextAlign.center,
             ),
-            if (sessionName.isNotEmpty)
+            if (sessionName.isNotEmpty)...{
               AppTextWidget(
-                "${"Session".tr}:$sessionName",
-                style: AppTextStyle.title,
+                // "${"Session".tr}:$sessionName",
+                sessionName,
+                style: AppTextStyle.title.copyWith(color: AppColors.color_3D3D3D80 , fontSize: 20, fontStyle: FontStyle.italic),
               ),
+            }
+
           ],
         ),
       ],
     );
   }
 
-  List<Widget> _attendanceText(StudentReportArgs state) {
+  List<Widget> _reportTexts(StudentReportArgs state) {
     return [
       /*Attendance*/
       RichText(
+        textAlign: TextAlign.center,
         text: TextSpan(
           style: TextStyle(fontSize: 16, color: Colors.black),
           children: [
             //We would like to inform you that the student /...... attended the class on
             // Day: Saturday — Date: 14/6/2025
-            _text("${'infoText'.tr}: "),
-            _value("${state.studentName} "),
+            _text("${'infoText'.tr}: \n"),
+            _value("${state.studentName} \n" , _getReportTextValueStyle().copyWith(fontWeight: FontWeight.bold)),
             if (state.attended == true) ...{
-              _text("${'attended the class on'.tr}: "),
+              _text("${'attended'.tr} " , _getReportTextStylePositive()),
             } else ...{
-              _text("${"didn't attend the class on".tr}: "),
+              _text("${"didn't attend".tr} ", _getReportTextStyleNegative()),
             },
+            _text("\n"),
+            _text("${'Session Day'.tr}: \n"),
             _value("${state.day.tr} - ${state.sessionStartDate}"),
             // _text("${'withDate'.tr} : "),
             // _value("${state.sessionStartDate}."),
@@ -262,7 +283,7 @@ The student got (... / ...) marks on the quiz.
             style: TextStyle(fontSize: 16, color: Colors.black),
             children: [
               _text("${"The student's behavior during the class was".tr}: "),
-              _value("${state.behaviorStatus.getString().tr}."),
+              _value("${state.behaviorStatus.getString().tr}." ,_getReportTextValueStyle().copyWith(color: state.behaviorStatus.getColor())),
               if (state.behaviorNotes.isNotEmpty)
                 _text(" (${state.behaviorNotes})."),
             ],
@@ -279,7 +300,7 @@ The student got (... / ...) marks on the quiz.
             style: TextStyle(fontSize: 16, color: Colors.black),
             children: [
               _text("${'The status of the previous homework was'.tr}: "),
-              _value("${state.homeworkStatus.getString().tr}."),
+              _value("${state.homeworkStatus.getString().tr}." , _getReportTextValueStyle().copyWith(color: state.homeworkStatus.getColor())),
               if (state.homeworkNotes.isNotEmpty)
                 _text(" (${state.homeworkNotes})."),
             ],
@@ -293,7 +314,7 @@ The student got (... / ...) marks on the quiz.
             style: TextStyle(fontSize: 16, color: Colors.black),
             children: [
               _text('The student got'.tr),
-              _value(" (${state.quizGrade}/${state.sessionQuizGrade}) "),
+              _value(" (${state.quizGrade}/${state.sessionQuizGrade}) " , _quizGradeStyle(state.uiState)),
               _text('marks on the quiz'.tr),
             ],
           ),
@@ -302,20 +323,19 @@ The student got (... / ...) marks on the quiz.
     ];
   }
 
-  TextSpan _text(String text) {
-    return TextSpan(text: text, style: _getReportTextStyle());
+  TextSpan _text(String text , [TextStyle? style ]) {
+    return TextSpan(text: text, style: style ?? _getReportTextStyle());
   }
 
-  TextSpan _value(String text) {
+  TextSpan _value(String text , [TextStyle? style ]) {
     return TextSpan(
       text: text,
-      style: AppTextStyle.teshrinArLtRegular
-          .copyWith(height: 2, fontWeight: FontWeight.bold, fontSize: 16),
+      style: style ?? _getReportTextValueStyle(),
     );
   }
 
   _getReportTextStyle() =>
-      AppTextStyle.teshrinArLtRegular.copyWith(height: 2, fontSize: 16);
+      AppTextStyle.teshrinArLtRegularBold.copyWith(fontStyle: FontStyle.italic, height: 2, fontSize: 16);
 
   Future<void> onViewReport(StudentReportArgs state) async {
     var file = await saveScreenshot();
@@ -422,4 +442,26 @@ The student got (... / ...) marks on the quiz.
 
   _isShowNotes() =>
       executeAction == null || noteEditTextController.text.isNotEmpty;
+
+  TextStyle? _getReportTextStylePositive() => _getReportTextStyle().copyWith(color: AppColors.color_008E73);
+
+  TextStyle? _getReportTextStyleNegative() => _getReportTextStyle().copyWith(color: AppColors.color_E75260);
+
+  TextStyle _getReportTextValueStyle() => AppTextStyle.teshrinArLtRegular
+      .copyWith(
+      height: 2,
+      fontWeight: FontWeight.bold,
+      fontSize: 16,
+     fontStyle: FontStyle.italic
+  );
+
+  TextStyle _quizGradeStyle(SessionActivityItemUiState uiState) {
+
+    var color = (uiState.quizGrade ?? 0) > ((uiState.sessionQuizGrade ?? 0 )/ 2)
+    ? AppColors.color_008E73 : AppColors.color_E75260;
+
+    return _getReportTextValueStyle().copyWith(
+      color: color
+    );
+  }
 }

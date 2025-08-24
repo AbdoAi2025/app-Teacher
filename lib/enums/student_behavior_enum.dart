@@ -32,7 +32,7 @@ extension StudentBehaviorEnumExtension on StudentBehaviorEnum? {
     return switch (this) {
       StudentBehaviorEnum.ACCEPTABLE => AppColors.colorBehaviorStatusAcceptable,
       StudentBehaviorEnum.BAD => AppColors.colorNo,
-      _ => AppColors.colorYes
+      _ => AppColors.color_008E73
     };
   }
 }

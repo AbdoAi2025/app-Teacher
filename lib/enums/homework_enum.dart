@@ -35,7 +35,7 @@ extension HomeworkEnumExtension on HomeworkEnum?{
 
     Color getColor() {
         return switch (this) {
-            HomeworkEnum.FULLY_DONE => AppColors.colorYes,
+            HomeworkEnum.FULLY_DONE => AppColors.color_008E73,
             HomeworkEnum.INCOMPLETE => AppColors.colorHomeworkStatusMissing,
             _ => AppColors.colorNo
         };
