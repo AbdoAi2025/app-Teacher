@@ -50,6 +50,9 @@ class GroupItemWidget extends StatelessWidget {
                         // _deleteIcon(),
                       ],
                     ),
+
+                    AppTextWidget("${"Students".tr}  ${uiState.studentsCount}"),
+
                     Row(
                       children: [
                         Expanded(
