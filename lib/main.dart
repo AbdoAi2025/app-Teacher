@@ -63,12 +63,14 @@ class MyApp extends StatelessWidget {
 }
 */
 
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:shake/shake.dart';
 import 'package:teacher_app/appSetting/appSetting.dart';
 import 'package:teacher_app/app_mode.dart';
@@ -91,6 +93,7 @@ void main() async {
 
 
   WidgetsFlutterBinding.ensureInitialized();
+  unawaited(MobileAds.instance.initialize());
 
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,

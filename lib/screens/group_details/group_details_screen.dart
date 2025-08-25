@@ -24,6 +24,7 @@ import '../../themes/txt_styles.dart';
 import '../../widgets/app_toolbar_widget.dart';
 import '../../widgets/groups/group_student_item_widget.dart';
 import '../../widgets/groups/states/group_student_item_ui_state.dart';
+import '../ads/AdsManager.dart';
 import '../group_edit/args/edit_group_args_model.dart';
 import '../sessions_list/args/session_list_args_model.dart';
 import 'group_details_controller.dart';
@@ -39,6 +40,13 @@ class GroupDetailsScreen extends StatefulWidget {
 
 class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
   final GroupDetailsController controller = Get.put(GroupDetailsController());
+
+
+  @override
+  void initState() {
+    super.initState();
+    AdsManager.loadInterstitialAds();
+  }
 
   @override
   Widget build(BuildContext context) {

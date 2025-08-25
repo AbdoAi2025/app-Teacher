@@ -15,6 +15,10 @@ import 'package:teacher_app/widgets/sessions/running_session_item_widget.dart';
 
 import '../../widgets/app_toolbar_widget.dart';
 import '../../widgets/groups/group_item_widget.dart';
+import '../ads/AdsManager.dart';
+import '../ads/add_dialog.dart';
+import '../ads/my_banner_ad_widget.dart';
+import '../ads/my_interstitial_ad_widget.dart';
 import '../groups/groups_state.dart';
 import 'states/home_state.dart';
 import 'states/running_session_item_ui_state.dart';
@@ -28,7 +32,14 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
   HomeController controller = Get.put(HomeController());
+
+  @override
+  void initState() {
+    super.initState();
+    AdsManager.loadInterstitialAds();
+  }
 
   @override
   Widget build(BuildContext context) {
