@@ -9,7 +9,7 @@ class GroupDetailsUiState {
   final String timeFrom;
   final String timeTo;
   final String grade;
-  final String gradeId;
+  final int gradeId;
   final ActiveSessionApiModel? activeSession;
   final List<GroupDetailsStudentItemUiState> students;
 

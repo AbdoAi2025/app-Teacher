@@ -32,7 +32,8 @@ class CreateGroupController extends GetxController {
   final TextEditingController gradeController = TextEditingController();
 
   /*Students selection*/
-  final Rx<List<StudentSelectionItemUiState>> selectedStudents = Rx([]);
+  List<StudentSelectionItemUiState> selectedStudents = [];
+  final Rx<List<StudentSelectionItemUiState>> selectedStudentsRx = Rx([]);
   final Rx<StudentsSelectionState> studentsSelectionState =
       Rx(StudentsSelectionStateLoading());
 
@@ -76,6 +77,7 @@ class CreateGroupController extends GetxController {
               ?.map((e) => StudentSelectionItemUiState(
                   studentId: e.studentId ?? "",
                   studentName: e.studentName ?? "",
+                  gradeId: e.gradeId ?? 0,
                   isSelected: isSelected(e)))
               .toList() ??
           List.empty();
@@ -114,11 +116,12 @@ class CreateGroupController extends GetxController {
   }
 
   List<StudentSelectionItemUiState> getSelectedStudents() {
-    return selectedStudents.value;
+    return selectedStudentsRx.value;
   }
 
   void onSelectedStudents(List<StudentSelectionItemUiState> students) {
-    selectedStudents.value = students;
+    selectedStudents = students;
+    selectedStudentsRx.value = students;
   }
 
   onRemoveStudentClick(StudentSelectionItemUiState item) {
@@ -126,7 +129,7 @@ class CreateGroupController extends GetxController {
     var studentItem = allStudents
         .firstWhereOrNull((element) => element.studentId == item.studentId);
     studentItem?.isSelected = false;
-    selectedStudents.value =
+    selectedStudentsRx.value =
         allStudents.where((element) => element.isSelected).toList();
   }
 
@@ -171,7 +174,7 @@ class CreateGroupController extends GetxController {
       day: selectedDayRx.value,
       timeFrom: getTimeFormat(selectedTimeFromRx.value),
       timeTo: getTimeFormat(selectedTimeToRx.value),
-      studentsIds: selectedStudents.value.map((e) => e.studentId).toList(),
+      studentsIds: selectedStudentsRx.value.map((e) => e.studentId).toList(),
       gradeId: selectedGrade.value?.id
     );
   }
@@ -186,7 +189,7 @@ class CreateGroupController extends GetxController {
     }
     selectedGrade.value = item;
     loadMyStudents();
-    selectedStudents.value = [];
+    selectedStudentsRx.value = selectedStudents.where((element) => element.gradeId.toString() == item?.id,).toList();
   }
 
   List<ItemSelectionUiState> getGradesList() {

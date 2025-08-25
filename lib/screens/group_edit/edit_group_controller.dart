@@ -35,18 +35,14 @@ class EditGroupController extends CreateGroupController {
 
       /*Set selected grade*/
       selectedGrade.value = ItemSelectionUiState(
-        id: args.gradeId,
+        id: args.gradeId.toString(),
         name: args.gradeName,
         isSelected: true
       );
 
       /*Set selected students*/
-      selectedStudents.value = args.students
-          .map((e) => StudentSelectionItemUiState(
-              studentId: e.studentId,
-              studentName: e.studentName,
-              isSelected: true
-      )).toList();
+      selectedStudents = _getSelectedStudentsFromParam();
+      selectedStudentsRx.value = selectedStudents ;
     }
 
     super.onInit();
@@ -58,7 +54,7 @@ class EditGroupController extends CreateGroupController {
     var stateValue = studentsSelectionState.value;
     if(stateValue is StudentsSelectionStateSuccess){
       var students = stateValue.students;
-      students.addAll(selectedStudents.value);
+      students.addAll(_getSelectedStudentsFromParam());
       studentsSelectionState.value = StudentsSelectionStateSuccess(students);
     }
   }
@@ -90,7 +86,7 @@ class EditGroupController extends CreateGroupController {
       day: selectedDayRx.value,
       timeFrom: getTimeFormat(selectedTimeFromRx.value),
       timeTo: getTimeFormat(selectedTimeToRx.value),
-      studentsIds: selectedStudents.value.map((e) => e.studentId).toList(),
+      studentsIds: selectedStudentsRx.value.map((e) => e.studentId).toList(),
       gradeId: selectedGrade.value?.id
     );
 
@@ -110,7 +106,18 @@ class EditGroupController extends CreateGroupController {
       day: selectedDayRx.value,
       timeFrom: getTimeFormat(selectedTimeFromRx.value),
       timeTo: getTimeFormat(selectedTimeToRx.value),
-      studentsIds: selectedStudents.value.map((e) => e.studentId).toList(),
+      studentsIds: selectedStudentsRx.value.map((e) => e.studentId).toList(),
     );
+  }
+
+  List<StudentSelectionItemUiState> _getSelectedStudentsFromParam() {
+    return args?.students
+        .map((e) => StudentSelectionItemUiState(
+        studentId: e.studentId,
+        studentName: e.studentName,
+        gradeId: e.gradeId,
+        isSelected: true
+    )).toList() ?? [];
+
   }
 }

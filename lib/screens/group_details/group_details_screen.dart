@@ -227,7 +227,7 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
         timeFrom: uiState?.timeFrom ?? "",
         timeTo: uiState?.timeTo ?? "",
         gradeName: uiState?.grade ?? "",
-        gradeId: uiState?.gradeId ?? "",
+        gradeId: uiState?.gradeId ?? 0,
         students: uiState?.students ?? List.empty());
 
     var result = await AppNavigator.navigateToEditGroup(args);

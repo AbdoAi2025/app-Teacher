@@ -18,7 +18,9 @@ class StudentListItemApiModel {
       this.gradeNameEn, 
       this.gradeNameAr, 
       this.groupId, 
-      this.groupName,});
+      this.groupName,
+      this.gradeId,
+  });
 
   StudentListItemApiModel.fromJson(dynamic json) {
     userId = json['userId'];
@@ -26,6 +28,7 @@ class StudentListItemApiModel {
     studentName = json['studentName'];
     studentPhone = json['studentPhone'];
     studentParentPhone = json['studentParentPhone'];
+    gradeId = json['gradeId'];
     gradeNameEn = json['gradeNameEn'];
     gradeNameAr = json['gradeNameAr'];
     groupId = json['groupId'];
@@ -40,6 +43,7 @@ class StudentListItemApiModel {
   String? gradeNameAr;
   String? groupId;
   String? groupName;
+  int? gradeId;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -52,6 +56,7 @@ class StudentListItemApiModel {
     map['gradeNameAr'] = gradeNameAr;
     map['groupId'] = groupId;
     map['groupName'] = groupName;
+    map['gradeId'] = gradeId;
     return map;
   }
 

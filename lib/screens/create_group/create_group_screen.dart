@@ -325,7 +325,6 @@ import 'package:get/get.dart';
 import 'package:teacher_app/screens/create_group/grades/grades_selection_state.dart';
 import 'package:teacher_app/screens/create_group/states/create_group_state.dart';
 import 'package:teacher_app/screens/create_group/students_selection/states/students_selection_state.dart';
-import 'package:teacher_app/screens/groups/groups_controller.dart';
 import 'package:teacher_app/utils/Keyboard_utils.dart';
 import 'package:teacher_app/utils/day_utils.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
@@ -535,27 +534,33 @@ class CreateGroupScreenState extends State<CreateGroupScreen> {
   }
 
   void _onSelectStudentsClick() {
-    _controller.onSelectStudentClick();
+    getController().onSelectStudentClick();
 
-    var bottomSheetWidget = Obx(() {
-      var value = getController().studentsSelectionState.value;
-      switch (value) {
-        case StudentsSelectionStateError():
-          return _errorMessage(value);
+    var bottomSheetWidget =  SizedBox(
+        height: Get.height * .9,
+        width: double.infinity,
+        child:  Obx(() {
+          var value = getController().studentsSelectionState.value;
+          switch (value) {
+            case StudentsSelectionStateError():
+              return _errorMessage(value);
+            case StudentsSelectionStateSelectGrade():
+              return _selectedGradeFirst();
+            case StudentsSelectionStateSuccess():
+              return SizedBox(
+                  height: double.infinity,
+                  width: double.infinity,
+                  child: _studentsSelectionList(value)
+              );
+          }
+          return Padding(padding: EdgeInsets.all(20), child: LoadingWidget());
+        })
+    );
 
-        case StudentsSelectionStateSelectGrade():
-          return _selectedGradeFirst();
-        case StudentsSelectionStateSuccess():
-          return SizedBox(
-              height: Get.height * .9,
-              width: double.infinity,
-              child: _studentsSelectionList(value)
-          );
-      }
-      return LoadingWidget();
-    });
 
-    Get.bottomSheet(bottomSheetWidget,
+
+    Get.bottomSheet(
+        bottomSheetWidget,
         backgroundColor: AppColors.white,
         isScrollControlled: true,
         useRootNavigator: true,
@@ -594,7 +599,7 @@ class CreateGroupScreenState extends State<CreateGroupScreen> {
 
   _selectedStudentsState() {
     return Obx(() {
-      var selectedStudents = getController().selectedStudents.value;
+      var selectedStudents = getController().selectedStudentsRx.value;
       return _selectedStudentList(selectedStudents);
     });
   }

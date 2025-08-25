@@ -8,7 +8,7 @@ class EditGroupArgsModel {
   final String timeFrom;
   final String timeTo;
   final String gradeName;
-  final String gradeId;
+  final int gradeId;
   final List<GroupDetailsStudentItemUiState> students;
 
   EditGroupArgsModel(

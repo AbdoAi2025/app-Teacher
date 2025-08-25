@@ -23,6 +23,7 @@ class GetGroupDetailsResponse {
       activeSession = ActiveSessionApiModel.fromJson(json["activeSession"]);
     }
     grade = json['grade'] != null ? Grade.fromJson(json['grade']) : null;
+    grade?.id = int.tryParse(json['gradeId']);
     if (json['students'] != null) {
       students = [];
       json['students'].forEach((v) {
@@ -109,7 +110,7 @@ class Grade {
     localizedName = LocalizedNameModel(nameEn: nameEn ?? "", nameAr: nameAr ?? "");
   }
 
-  String? id;
+  int? id;
   String? nameEn;
   String? nameAr;
   LocalizedNameModel? localizedName;
