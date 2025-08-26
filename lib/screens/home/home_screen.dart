@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
 import 'package:teacher_app/screens/home/home_controller.dart';
@@ -28,19 +29,48 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+  DateTime? _lastPressed;
+
   HomeController controller = Get.put(HomeController());
+
+  Future<bool> _onWillPop() async {
+    final now = DateTime.now();
+    if (_lastPressed == null ||
+        now.difference(_lastPressed!) > const Duration(seconds: 2)) {
+      _lastPressed = now;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Press back again to exit")),
+      );
+
+      return false; // 🚫 don’t exit yet
+    }
+    return true; // ✅ exit on second back
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // appBar: AppToolbarWidget.appBar("Home".tr, hasLeading: false),
-      body: SafeArea(
-          child: Column(
-        children: [
-          _nameAndLogout(),
-          Expanded(child: _content()),
-        ],
-      )),
+    return PopScope(
+      canPop: false, // disable default pop on root
+      onPopInvoked: (didPop) async {
+        if (didPop) return; // already popped, do nothing
+
+        final shouldExit = await _onWillPop();
+        if (shouldExit) {
+          SystemNavigator.pop();
+        }
+      },
+      child: Scaffold(
+        // appBar: AppToolbarWidget.appBar("Home".tr, hasLeading: false),
+        body: SafeArea(
+            child: Column(
+          children: [
+            _nameAndLogout(),
+            Expanded(child: _content()),
+          ],
+        )),
+      ),
     );
   }
 
@@ -173,7 +203,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: EmptyViewWidget(message: "No Running Sessions Found".tr));
   }
 
-  Widget _todayGroupsList(List<StudentItemUiState> uiStates) {
+  Widget _todayGroupsList(List<GroupItemUiState> uiStates) {
 
     if (uiStates.isEmpty) {
       return _noTodayGroups();
@@ -237,8 +267,6 @@ class _HomeScreenState extends State<HomeScreen> {
       controller.logout();
       AppNavigator.navigateToLogin();
     });
-
-
   }
 
 
