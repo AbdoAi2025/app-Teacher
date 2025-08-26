@@ -180,6 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     return Column(
+      spacing: 15,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
 
@@ -187,16 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
           child: AppTextWidget("Today Groups".tr , style: AppTextStyle.title,),
         ),
-
-        ListView.separated(
-            shrinkWrap: true,
-            itemBuilder: (context, index) => GroupItemWidget(
-                  uiState: uiStates[index],
-                ),
-            separatorBuilder: (context, index) => SizedBox(
-                  height: 15,
-                ),
-            itemCount: uiStates.length),
+        ...uiStates.map((e) => GroupItemWidget(uiState: e,))
       ],
     );
   }
