@@ -15,9 +15,9 @@ import '../time_with_icon_widget.dart';
 
 class GroupItemWidget extends StatelessWidget {
 
-  final StudentItemUiState uiState;
-  final Function(StudentItemUiState)? onClick;
-  final Function(StudentItemUiState)? onDeleteClick;
+  final GroupItemUiState uiState;
+  final Function(GroupItemUiState)? onClick;
+  final Function(GroupItemUiState)? onDeleteClick;
 
   const GroupItemWidget(
       {super.key,

@@ -3,7 +3,7 @@ sealed class GroupsState {}
 class GroupsStateLoading extends GroupsState {}
 
 class GroupsStateSuccess extends GroupsState {
-  final List<StudentItemUiState> uiStates;
+  final List<GroupItemUiState> uiStates;
 
   GroupsStateSuccess({required this.uiStates});
 }
@@ -16,7 +16,7 @@ class GroupsStateError extends GroupsState {
   get message => exception.toString();
 }
 
-class StudentItemUiState {
+class GroupItemUiState {
   final String groupId;
   final String groupName;
   final int studentsCount;
@@ -24,7 +24,7 @@ class StudentItemUiState {
   final String timeFrom;
   final String timeTo;
 
-  StudentItemUiState(
+  GroupItemUiState(
       {required this.groupId,
       required this.groupName,
       required this.studentsCount,
@@ -33,3 +33,15 @@ class StudentItemUiState {
       required this.timeTo,
       });
 }
+
+class GroupItemTitleUiState extends GroupItemUiState{
+
+  GroupItemTitleUiState({required super.date}) : super(
+    groupId: "",
+    groupName: "",
+    studentsCount: 0,
+    timeFrom: "",
+    timeTo: "",
+  );
+}
+

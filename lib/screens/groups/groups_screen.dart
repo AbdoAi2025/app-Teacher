@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
 import 'package:teacher_app/themes/app_colors.dart';
+import 'package:teacher_app/themes/txt_styles.dart';
 import 'package:teacher_app/widgets/app_toolbar_widget.dart';
+import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'package:teacher_app/widgets/empty_view_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
 import '../../utils/message_utils.dart';
@@ -34,9 +36,9 @@ class _GroupsScreenState extends State<GroupsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppToolbarWidget.appBar("Groups".tr , hasLeading: false),
+        appBar: AppToolbarWidget.appBar("Groups".tr, hasLeading: false),
         body: _content(),
-        floatingActionButton:  FloatingActionButton(
+        floatingActionButton: FloatingActionButton(
           onPressed: () {
             AppNavigator.navigateToCreateGroup();
           },
@@ -71,22 +73,42 @@ class _GroupsScreenState extends State<GroupsScreen> {
       return _emptyView();
     }
     return RefreshIndicator(
-      onRefresh: () async{
+      onRefresh: () async {
         controller.refreshGroups();
       },
-      child: ListView.separated(
-          itemBuilder: (context, index) => GroupItemWidget(
-            uiState: items[index],
+      child: ListView.separated(itemBuilder: (context, index) {
+
+        var uiState = items[index];
+
+        if (uiState is GroupItemTitleUiState) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                AppTextWidget(uiState.date.tr, style: AppTextStyle.title,),
+              ],
+            ),
+          );
+        }
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: GroupItemWidget(
+            uiState: uiState,
             onClick: onGroupItemClick,
             onDeleteClick: onDeleteClick,
           ),
+        );
+      },
           separatorBuilder: (context, index) => SizedBox(height: 15,),
           itemCount: items.length),
     );
   }
 
-  onGroupItemClick(StudentItemUiState p1) {
-      AppNavigator.navigateToGroupDetails(GroupDetailsArgModel(id: p1.groupId));
+  onGroupItemClick(GroupItemUiState p1) {
+    AppNavigator.navigateToGroupDetails(GroupDetailsArgModel(id: p1.groupId));
   }
 
   _emptyView() {
@@ -94,15 +116,16 @@ class _GroupsScreenState extends State<GroupsScreen> {
         child: EmptyViewWidget(message: "No Groups Found".tr));
   }
 
-  onDeleteClick(StudentItemUiState uiState) {
-    showConfirmationMessage("${"Are you sure to delete ?".tr} ${uiState.groupName}", (){
+  onDeleteClick(GroupItemUiState uiState) {
+    showConfirmationMessage(
+        "${"Are you sure to delete ?".tr} ${uiState.groupName}", () {
       showDialogLoading();
       controller.deleteGroup(uiState).listen((event) {
         hideDialogLoading();
-        if(event.isSuccess){
+        if (event.isSuccess) {
           return;
         }
-        if(event.isError){
+        if (event.isError) {
           showErrorMessage(event.error?.toString());
         }
       },);

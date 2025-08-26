@@ -10,7 +10,7 @@ import 'groups_state.dart';
 class GroupsController extends GetxController{
 
 
-  Rx<GroupsState> state = GroupsManagers.state;
+  Rx<GroupsState> state = GroupsManagers.groupCategorizedState;
 
   @override
   void onInit() {
@@ -31,7 +31,7 @@ class GroupsController extends GetxController{
   }
 
 
-  Stream<AppResult<dynamic>>  deleteGroup(StudentItemUiState uiState)  async*{
+  Stream<AppResult<dynamic>>  deleteGroup(GroupItemUiState uiState)  async*{
     var useCase = DeleteGroupUseCase();
     yield await useCase.execute(uiState.groupId);
   }

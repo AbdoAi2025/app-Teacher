@@ -11,8 +11,8 @@ class GroupsManagers {
   GroupsManagers._();
 
   static Rx<GroupsState> state = Rx(GroupsStateLoading());
-  static final GetGroupsListUseCase _getGroupsListUseCase =
-      GetGroupsListUseCase();
+  static Rx<GroupsState> groupCategorizedState = Rx(GroupsStateLoading());
+  static final GetGroupsListUseCase _getGroupsListUseCase = GetGroupsListUseCase();
 
   static Rx<GroupsState> todayGroupsState = Rx(GroupsStateLoading());
 
@@ -23,16 +23,16 @@ class GroupsManagers {
       var groups = groupsResult.data;
       groups = sortGroups(groups!);
 
-      var uiStates = groups.map((e) => StudentItemUiState(
+      var uiStates = groups.map((e) => GroupItemUiState(
                     groupId: e.id,
                     groupName: e.name,
                     studentsCount: e.studentCount,
-                    date: AppDateUtils.getDayName(e.day).tr,
+                    date: AppDateUtils.getDayName(e.day),
                     timeFrom: e.timeFrom,
                     timeTo: e.timeTo,
                   ))
-              .toList() ??
-          List.empty();
+              .toList();
+
       _updateState(GroupsStateSuccess(uiStates: uiStates));
       return;
     }
@@ -48,16 +48,27 @@ class GroupsManagers {
   }
 
   static void _updateState(GroupsState state) {
-    GroupsManagers.state.value = state;
+
+
+    /*update today groups*/
     if (state is GroupsStateSuccess) {
-      var todayGroups = state.uiStates
-          .where((element) =>
-              element.date == AppDateUtils.getDayName(DateTime.now().weekday).tr)
-          .toList();
+
+      /*update state*/
+      GroupsManagers.state.value = state;
+
+      /*update groups categorized*/
+      GroupsManagers.groupCategorizedState.value =  GroupsStateSuccess(uiStates: groupByDay(state.uiStates));
+
+      /*filter today groups*/
+      var todayGroups = state.uiStates.where((element) => element.date == AppDateUtils.getDayName(DateTime.now().weekday).tr).toList();
       GroupsManagers.todayGroupsState.value = GroupsStateSuccess(uiStates: todayGroups);
-    } else {
-      GroupsManagers.todayGroupsState.value = state;
+
+      return;
     }
+
+    GroupsManagers.state.value = state;
+    GroupsManagers.todayGroupsState.value = state;
+    GroupsManagers.groupCategorizedState.value = state;
   }
 
   static List<GroupItemModel> sortGroups(List<GroupItemModel> groups) {
@@ -81,4 +92,30 @@ class GroupsManagers {
     final minutes = int.parse(parts[1]);
     return hours * 60 + minutes;
   }
+
+
+  static List<GroupItemUiState> groupByDay(List<GroupItemUiState> groups) {
+
+    final Map<String, List<GroupItemUiState>> grouped = {};
+
+    for (final group in groups) {
+      grouped.putIfAbsent(group.date, () => []);
+      grouped[group.date]!.add(group);
+    }
+
+    // Optional: sort inside each day by timeFrom
+    for (final entry in grouped.entries) {
+      entry.value.sort((a, b) => _parseTime(a.timeFrom).compareTo(_parseTime(b.timeFrom)));
+    }
+
+    List<GroupItemUiState> sortedGroups = [];
+
+    grouped.forEach((key, value) {
+      sortedGroups.add(GroupItemTitleUiState(date: key));
+      sortedGroups.addAll(value);
+
+    });
+    return sortedGroups;
+  }
+
 }
