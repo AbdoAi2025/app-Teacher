@@ -27,17 +27,22 @@ class CheckUserSessionResponse {
 /// active : true
 
 class Data {
-  Data({
-      this.active,});
+
+  bool? active;
+  bool? isSubscribed;
+
+  Data({this.active,});
 
   Data.fromJson(dynamic json) {
     active = json['active'];
+    isSubscribed = json['isSubscribed'];
   }
-  bool? active;
+
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['active'] = active;
+    map['isSubscribed'] = isSubscribed;
     return map;
   }
 
