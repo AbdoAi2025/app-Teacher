@@ -54,6 +54,9 @@ class IdentityRepositoryImpl extends IdentityRepository {
   @override
   Future<CheckUserSessionModel> checkUserSession() async {
     var response = await remoteIdentityDataSource.checkUserSession();
-    return CheckUserSessionModel(isActive: response.data?.active ?? false);
+    return CheckUserSessionModel(
+        isActive: response.data?.active ?? false,
+      isSubscribed:  response.data?.isSubscribed ?? true
+    );
   }
 }

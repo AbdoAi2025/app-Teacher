@@ -5,6 +5,7 @@ import 'package:teacher_app/screens/session_details/args/session_details_args_mo
 import 'package:teacher_app/widgets/loading_widget.dart';
 import 'package:teacher_app/widgets/sessions/session_item/session_item_widget.dart';
 import '../../widgets/app_toolbar_widget.dart';
+import '../ads/AdsManager.dart';
 import 'session_lisit_controller.dart';
 import 'states/session_item_ui_state.dart';
 import 'states/session_lisit_state.dart';
@@ -20,6 +21,12 @@ class _SessionListScreenState extends State<SessionListScreen> {
   bool isEditable = false;
 
   final SessionListController controller = Get.put(SessionListController());
+
+  @override
+  void initState() {
+    super.initState();
+    AdsManager.showSessionListScreenAds();
+  }
 
   @override
   Widget build(BuildContext context) {

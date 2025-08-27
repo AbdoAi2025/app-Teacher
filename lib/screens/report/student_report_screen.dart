@@ -8,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:teacher_app/enums/homework_enum.dart';
 import 'package:teacher_app/enums/student_behavior_enum.dart';
 import 'package:teacher_app/generated/assets.dart';
+import 'package:teacher_app/screens/ads/AdsManager.dart';
 import 'package:teacher_app/screens/report/args/student_report_args.dart';
 import 'package:teacher_app/screens/report/student_report_controller.dart';
 import 'package:teacher_app/themes/app_colors.dart';
@@ -38,6 +39,12 @@ class _StudentReportScreenState extends State<StudentReportScreen> {
   final TextEditingController noteEditTextController = TextEditingController();
   bool notesEditable = false;
   Function()? executeAction;
+
+  @override
+  void initState() {
+    super.initState();
+    AdsManager.showOnSendReportAds();
+  }
 
   @override
   Widget build(BuildContext context) {

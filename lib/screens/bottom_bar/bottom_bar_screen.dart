@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
+import 'package:teacher_app/screens/ads/AdsManager.dart';
 import 'package:teacher_app/themes/app_colors.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
@@ -29,7 +30,12 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
         valueListenable: getAppSettingNotifier(),
       builder: (BuildContext context, value, Widget? child) {
         return Scaffold(
-          body: getBody(),
+          body: Column(
+            children: [
+              Expanded(child: getBody()),
+              AdsManager.homeBanner()
+            ],
+          ),
           bottomNavigationBar: BottomNavigationBar(
             currentIndex: _currentIndex,
             showSelectedLabels: true,
@@ -61,7 +67,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
 
   _studentsScreen() => StudentsScreen();
 
-  getBody() {
+  Widget getBody() {
     switch (_currentIndex) {
       case 1:
         return _groupsScreen();

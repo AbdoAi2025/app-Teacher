@@ -26,6 +26,7 @@ import 'states/running_session_item_ui_state.dart';
 import 'states/running_sessions_state.dart';
 
 class HomeScreen extends StatefulWidget {
+
   const HomeScreen({super.key});
 
   @override
@@ -38,11 +39,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   HomeController controller = Get.put(HomeController());
 
-  @override
-  void initState() {
-    super.initState();
-    AdsManager.loadInterstitialAds();
-  }
 
   Future<bool> _onWillPop() async {
     final now = DateTime.now();
@@ -65,7 +61,6 @@ class _HomeScreenState extends State<HomeScreen> {
       canPop: false, // disable default pop on root
       onPopInvoked: (didPop) async {
         if (didPop) return; // already popped, do nothing
-
         final shouldExit = await _onWillPop();
         if (shouldExit) {
           SystemNavigator.pop();

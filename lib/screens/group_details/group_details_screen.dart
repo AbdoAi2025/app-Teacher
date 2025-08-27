@@ -45,7 +45,7 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    AdsManager.loadInterstitialAds();
+    AdsManager.showGroupDetailsScreenAds();
   }
 
   @override

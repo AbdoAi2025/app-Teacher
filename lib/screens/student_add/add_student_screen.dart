@@ -337,6 +337,7 @@ import '../../widgets/app_text_field_widget.dart';
 import '../../widgets/app_toolbar_widget.dart';
 import '../../widgets/dialog_loading_widget.dart';
 import '../../widgets/item_selection_widget/student_list_selection_widget.dart';
+import '../ads/AdsManager.dart';
 import '../student_edit/states/update_student_state.dart';
 import '../students_list/students_controller.dart';
 
@@ -355,6 +356,7 @@ class AddStudentScreenState extends State<AddStudentScreen> {
   @override
   void initState() {
     super.initState();
+    AdsManager.showAddStudentScreenAds();
   }
 
   AddStudentController getController() => _controller;

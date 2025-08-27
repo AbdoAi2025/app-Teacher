@@ -338,6 +338,7 @@ import '../../widgets/app_text_field_widget.dart';
 import '../../widgets/app_toolbar_widget.dart';
 import '../../widgets/dialog_loading_widget.dart';
 import '../../widgets/item_selection_widget/student_list_selection_widget.dart';
+import '../ads/AdsManager.dart';
 import 'create_group_controller.dart';
 import 'students_selection/student_list_selection_widget.dart';
 import 'students_selection/states/student_selection_item_ui_state.dart';
@@ -360,6 +361,7 @@ class CreateGroupScreenState extends State<CreateGroupScreen> {
   @override
   void initState() {
     super.initState();
+    AdsManager.showCreateGroupScreenAds();
   }
 
   CreateGroupController getController() => _controller;

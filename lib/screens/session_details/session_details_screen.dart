@@ -20,6 +20,7 @@ import '../../widgets/edit_icon_widget.dart';
 import '../../widgets/sessions/end_session_button_widget.dart';
 import '../../widgets/sessions/session_info/session_info_widget.dart';
 import '../../widgets/sessions/timer_counter_widget.dart';
+import '../ads/AdsManager.dart';
 import 'session_details_controller.dart';
 import 'states/session_details_state.dart';
 import 'states/update_session_activities_state.dart';
@@ -37,6 +38,13 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
 
   final SessionDetailsController controller =
       Get.put(SessionDetailsController());
+
+
+  @override
+  void initState() {
+    super.initState();
+    AdsManager.showSessionDetailsScreenAds();
+  }
 
   @override
   Widget build(BuildContext context) {
