@@ -296,13 +296,14 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
         "No Active Sessions".tr,
         style: AppTextStyle.value,
       ),
-      _startSession(uiState.groupId)
+      _startSession(uiState)
     ]);
   }
 
-  _startSession(String groupId) => Center(
+  _startSession(GroupDetailsUiState uiState) => Center(
         child: StartSessionButtonWidget(
-          groupId: groupId,
+          groupId: uiState.groupId,
+          studentsCount: uiState.students.length,
           onSessionStarted: () {
             controller.reload();
           },

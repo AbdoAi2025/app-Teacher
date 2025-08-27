@@ -148,7 +148,9 @@ final Map<String, String> ar = {
   "Privacy Policy" : "سياسة الخصوصية",
   "Delete Account" : "حذف الحساب",
   "delete_account_confirm_message" : "هل أنت متأكد من حذف حسابك؟",
-  "Are you sure to logout" : "هل أنت متأكد من تسجيل خروج؟"
+  "Are you sure to logout" : "هل أنت متأكد من تسجيل خروج؟",
+  "Enter Grade" : "أدخل الدرجة",
+  "Group has no students" : "لا يوجد طلبة في المجموعة"
 };
 
 /*

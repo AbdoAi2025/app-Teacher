@@ -19,10 +19,14 @@ import 'start_session_form_widget.dart';
 
 class StartSessionButtonWidget extends StatelessWidget {
   final String groupId;
+  final int studentsCount;
   final Function() onSessionStarted;
 
   const StartSessionButtonWidget(
-      {super.key, required this.groupId, required this.onSessionStarted});
+      {super.key,
+        required this.groupId,
+        required this.studentsCount,
+        required this.onSessionStarted});
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +39,13 @@ class StartSessionButtonWidget extends StatelessWidget {
   }
 
   void onStartSessionClick() {
+
+    /*check if group has students*/
+    if(studentsCount == 0){
+      showErrorMessage("Group has no students".tr);
+      return;
+    }
+
     _showDialogToEnterData();
   }
 

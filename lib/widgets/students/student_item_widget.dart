@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:teacher_app/screens/students_list/states/student_item_ui_state.dart';
 import 'package:teacher_app/utils/app_background_styles.dart';
 import 'package:teacher_app/widgets/delete_icon_widget.dart';
@@ -93,7 +94,7 @@ class StudentItemWidget extends StatelessWidget {
   _deleteIcon() => DeleteIconWidget(onClick: (){onDeleteClick?.call(uiState);});
 
   _group() {
-    return AppTextWidget(uiState.groupName.isNotEmpty ? uiState.groupName : "No Group", style: AppTextStyle.value,);
+    return AppTextWidget(uiState.groupName.isNotEmpty ? uiState.groupName : "No Group".tr, style: AppTextStyle.value,);
   }
 
 

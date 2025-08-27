@@ -133,6 +133,8 @@ final Map<String, String> enUS = {
   "Privacy Policy" : "Privacy Policy",
   "Delete Account" : "Delete Account",
   "delete_account_confirm_message" : "Are you sure you want to delete your account?",
-  "Are you sure to logout" : "Are you sure to logout?"
+  "Are you sure to logout" : "Are you sure to logout?",
+  "Enter Grade" : "Enter Grade",
+  "Group has no students" : "Group has no students"
 
 };

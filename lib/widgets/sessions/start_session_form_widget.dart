@@ -67,7 +67,7 @@ class StartSessionFormWidget extends StatelessWidget {
         Expanded(
             child: Center(
                 child: AppTextWidget(
-          "Start Session".tr,
+          "Start session".tr,
           style: AppTextStyle.title,
         ))),
         _closeIcon()

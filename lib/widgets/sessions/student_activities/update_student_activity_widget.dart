@@ -223,7 +223,7 @@ class _UpdateStudentActivityWidgetState extends State<UpdateStudentActivityWidge
 
   _gradeNotes() {
     return AppTextFieldWidget(
-      hint: 0.toString(),
+      hint: "Enter Grade".tr,
       controller: TextEditingController(text: GradeUtils.getGradeFormat(quizGrade)),
       keyboardType: TextInputType.number,
       onChanged: (value) {
