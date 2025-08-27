@@ -115,7 +115,7 @@ final Map<String, String> ar = {
   "report_parent_title": "تقرير متابعة ولي الأمر",
   "infoText": "نحيط سيادتكم علما أن الطالب",
   "attended the class on": "قدر حضر حصة اليوم",
-  "attended": "قدر حضر",
+  "attended": "قد حضر",
   "Session Day": "حصة اليوم",
   "didn't attend the class on": "لم يحضر اليوم",
   "didn't attend": "لم يحضر",
