@@ -8,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:teacher_app/enums/homework_enum.dart';
 import 'package:teacher_app/enums/student_behavior_enum.dart';
 import 'package:teacher_app/generated/assets.dart';
+import 'package:teacher_app/screens/home/home_controller.dart';
 import 'package:teacher_app/screens/report/args/student_report_args.dart';
 import 'package:teacher_app/screens/report/student_report_controller.dart';
 import 'package:teacher_app/themes/app_colors.dart';
@@ -27,7 +28,6 @@ import '../session_details/states/session_details_ui_state.dart';
 
 class StudentReportScreen extends StatefulWidget {
   const StudentReportScreen({super.key});
-
   @override
   State<StudentReportScreen> createState() => _StudentReportScreenState();
 }
@@ -36,6 +36,8 @@ class _StudentReportScreenState extends State<StudentReportScreen> {
   final StudentReportController controller = Get.put(StudentReportController());
   final GlobalKey _screenshotKey = GlobalKey();
   final TextEditingController noteEditTextController = TextEditingController();
+  final HomeController homeController = Get.find();
+
   bool notesEditable = false;
   Function()? executeAction;
 
@@ -108,6 +110,9 @@ class _StudentReportScreenState extends State<StudentReportScreen> {
                               children: [
                                 ..._reportTexts(state),
                                 _notes(state),
+                                //Under the supervision of Mr. Hassan
+                                _underTheSupervision()
+
                               ],
                             ),
                           )
@@ -197,6 +202,18 @@ class _StudentReportScreenState extends State<StudentReportScreen> {
             ),
         }
       ],
+    );
+  }
+
+
+  _underTheSupervision(){
+
+
+    var teacherName = homeController.profileInfo.value?.name ?? "";
+
+    return SizedBox(
+      width: double.infinity,
+      child: AppTextWidget("${"Under the supervision of".tr} $teacherName" , style: _getReportTextValueStyle()),
     );
   }
 
@@ -464,4 +481,7 @@ The student got (... / ...) marks on the quiz.
       color: color
     );
   }
+
+
+
 }

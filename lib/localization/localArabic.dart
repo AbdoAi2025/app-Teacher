@@ -150,7 +150,9 @@ final Map<String, String> ar = {
   "delete_account_confirm_message" : "هل أنت متأكد من حذف حسابك؟",
   "Are you sure to logout" : "هل أنت متأكد من تسجيل خروج؟",
   "Enter Grade" : "أدخل الدرجة",
-  "Group has no students" : "لا يوجد طلبة في المجموعة"
+  "Group has no students" : "لا يوجد طلبة في المجموعة",
+  "Under the supervision of" : "تحت إشراف أ/",
+  "Hey, Mr." : "أهلاً أ/",
 };
 
 /*

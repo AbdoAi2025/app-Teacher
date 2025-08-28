@@ -247,7 +247,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Expanded(
                 child: AppTextWidget(
-              "Hey, ${state?.name ?? ""}" ,
+              "${"Hey, Mr.".tr} ${state?.name ?? ""}" ,
               style: AppTextStyle.title.copyWith(color: AppColors.appMainColor),
             )),
             InkWell(
