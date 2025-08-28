@@ -10,6 +10,8 @@ import '../themes/txt_styles.dart';
 
 class AppPhoneInputTextFieldWidget extends AppTextFieldWidget {
 
+  final Function(String phoneNumber , String name) onContactSelected;
+
   AppPhoneInputTextFieldWidget({
     super.key,
     required super.controller,
@@ -28,8 +30,8 @@ class AppPhoneInputTextFieldWidget extends AppTextFieldWidget {
     super.maxLength,
     super.onTap,
     super.validator,
-    TextInputType? keyboardType,
     super.onChanged,
+    required this.onContactSelected,
   }) : super(
       keyboardType: TextInputType.phone ,
       hint: "010xxxxxxxx",
@@ -48,8 +50,10 @@ class AppPhoneInputTextFieldWidget extends AppTextFieldWidget {
                 if (permission.isGranted) {
                   final picker = FlutterNativeContactPicker();
                   var contact = await picker.selectPhoneNumber();
-                  print("selectedPhoneNumber  ${contact?.selectedPhoneNumber}");
-                  controller.text = contact?.selectedPhoneNumber?.replaceFirst("+20", "") ?? "";
+                  var phoneNumber = contact?.selectedPhoneNumber?.replaceFirst("+20", "") ?? "";
+                  var name = contact?.fullName ?? "";
+                  print("selectedPhoneNumber  $phoneNumber, name : $name");
+                  onContactSelected(phoneNumber, name);
                 } else {
                   showErrorMessage("Contacts permission denied");
                 }
@@ -61,18 +65,4 @@ class AppPhoneInputTextFieldWidget extends AppTextFieldWidget {
       )
   );
 
-
-  @override
-  Widget build(BuildContext context) {
-    return super.build(context);
-  }
-
-
-  Future<void> _pickContact() async {
-    final picker = FlutterNativeContactPicker();
-    var contact = await picker.selectPhoneNumber();
-    print(contact?.fullName);
-    print(contact?.selectedPhoneNumber);
-    controller.text = contact?.selectedPhoneNumber ?? "";
-  }
 }

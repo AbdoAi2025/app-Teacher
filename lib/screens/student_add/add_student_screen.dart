@@ -341,7 +341,6 @@ import '../student_edit/states/update_student_state.dart';
 import '../students_list/students_controller.dart';
 
 class AddStudentScreen extends StatefulWidget {
-
   const AddStudentScreen({super.key});
 
   @override
@@ -349,7 +348,6 @@ class AddStudentScreen extends StatefulWidget {
 }
 
 class AddStudentScreenState extends State<AddStudentScreen> {
-
   final AddStudentController _controller = Get.put(AddStudentController());
 
   @override
@@ -407,6 +405,10 @@ class AddStudentScreenState extends State<AddStudentScreen> {
   _parentPhoneField() => AppPhoneInputTextFieldWidget(
         controller: getController().parentPhoneController,
         label: "Parent Phone".tr,
+        onContactSelected: (phoneNumber, name) {
+          _controller.parentPhoneController.text = phoneNumber;
+          _controller.nameController.text = name;
+        },
         validator: MultiValidator([
           RequiredValidator(errorText: "Parent Phone is required".tr),
           PhoneValidation(errorText: "Please enter valid phone number".tr),
@@ -416,6 +418,9 @@ class AddStudentScreenState extends State<AddStudentScreen> {
   _phoneField() => AppPhoneInputTextFieldWidget(
         controller: getController().phoneController,
         label: "Phone".tr,
+        onContactSelected: (phoneNumber, name) {
+          _controller.phoneController.text = phoneNumber;
+        },
         validator: MultiValidator([]).call,
       );
 
