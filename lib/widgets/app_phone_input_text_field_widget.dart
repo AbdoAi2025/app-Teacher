@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart';
+import 'package:flutter_native_contact_picker/model/contact.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:teacher_app/utils/message_utils.dart';
 import 'package:teacher_app/widgets/app_text_field_widget.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
 
@@ -32,11 +36,43 @@ class AppPhoneInputTextFieldWidget extends AppTextFieldWidget {
       textAlign: TextAlign.start,
       textDirection: TextDirection.ltr,
       suffixIcon: Row(
+        spacing: 5,
         mainAxisSize: MainAxisSize.min,
         children: [
           AppTextWidget("+20" ,style:  textStyle ?? AppTextStyle.textFieldStyle,),
+          InkWell(
+              onTap: () async {
+                // Ask for contacts permission first
+                var permission = await Permission.contacts.request();
+                print("permission : $permission");
+                if (permission.isGranted) {
+                  final picker = FlutterNativeContactPicker();
+                  var contact = await picker.selectPhoneNumber();
+                  print("selectedPhoneNumber  ${contact?.selectedPhoneNumber}");
+                  controller.text = contact?.selectedPhoneNumber?.replaceFirst("+20", "") ?? "";
+                } else {
+                  showErrorMessage("Contacts permission denied");
+                }
+              },
+              child: Icon(Icons.phone_android)
+          ),
+          SizedBox(width: 5,)
         ],
       )
   );
 
+
+  @override
+  Widget build(BuildContext context) {
+    return super.build(context);
+  }
+
+
+  Future<void> _pickContact() async {
+    final picker = FlutterNativeContactPicker();
+    var contact = await picker.selectPhoneNumber();
+    print(contact?.fullName);
+    print(contact?.selectedPhoneNumber);
+    controller.text = contact?.selectedPhoneNumber ?? "";
+  }
 }
