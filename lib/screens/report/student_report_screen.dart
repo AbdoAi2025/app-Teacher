@@ -474,7 +474,7 @@ The student got (... / ...) marks on the quiz.
 
   TextStyle _quizGradeStyle(SessionActivityItemUiState uiState) {
 
-    var color = (uiState.quizGrade ?? 0) > ((uiState.sessionQuizGrade ?? 0 )/ 2)
+    var color = (uiState.quizGrade ?? 0) >= ((uiState.sessionQuizGrade ?? 0 )/ 2)
     ? AppColors.color_008E73 : AppColors.color_E75260;
 
     return _getReportTextValueStyle().copyWith(
