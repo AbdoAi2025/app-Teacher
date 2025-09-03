@@ -26,6 +26,7 @@ class AppTextFieldWidget extends StatelessWidget {
   final TextDirection? textDirection;
   final  TextInputType? keyboardType;
   final  Function(String?)? onChanged;
+  final  TextInputAction? textInputAction;
 
 
   const AppTextFieldWidget(
@@ -53,6 +54,7 @@ class AppTextFieldWidget extends StatelessWidget {
         this.maxLines,
         this.maxLength,
         this.enabled = true,
+        this.textInputAction
       });
 
 
@@ -85,6 +87,7 @@ class AppTextFieldWidget extends StatelessWidget {
       ),
       validator: validator,
       onChanged: onChanged,
+      textInputAction: textInputAction,
 
     );
   }

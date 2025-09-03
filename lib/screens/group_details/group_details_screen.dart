@@ -5,9 +5,11 @@ import 'package:teacher_app/navigation/app_navigator.dart';
 import 'package:teacher_app/screens/group_details/states/group_details_ui_state.dart';
 import 'package:teacher_app/screens/home/states/running_session_item_ui_state.dart';
 import 'package:teacher_app/screens/student_details/args/student_details_arg_model.dart';
+import 'package:teacher_app/themes/app_colors.dart';
 import 'package:teacher_app/utils/app_background_styles.dart';
 import 'package:teacher_app/utils/day_utils.dart';
 import 'package:teacher_app/utils/message_utils.dart';
+import 'package:teacher_app/widgets/app_text_field_widget.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'package:teacher_app/widgets/day_with_icon_widget.dart';
 import 'package:teacher_app/widgets/delete_icon_widget.dart';
@@ -24,6 +26,8 @@ import '../../themes/txt_styles.dart';
 import '../../widgets/app_toolbar_widget.dart';
 import '../../widgets/groups/group_student_item_widget.dart';
 import '../../widgets/groups/states/group_student_item_ui_state.dart';
+import '../../widgets/students/students_group_list_search_widget.dart';
+import '../../widgets/students/students_group_list_widget.dart';
 import '../group_edit/args/edit_group_args_model.dart';
 import '../sessions_list/args/session_list_args_model.dart';
 import 'group_details_controller.dart';
@@ -43,8 +47,12 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppToolbarWidget.appBar("Group Details".tr,
-            actions: [_deleteIcon(),SizedBox(width: 10,),]),
+        appBar: AppToolbarWidget.appBar("Group Details".tr, actions: [
+          _deleteIcon(),
+          SizedBox(
+            width: 10,
+          ),
+        ]),
         body: Padding(
           padding: const EdgeInsets.all(20.0),
           child: RefreshIndicator(
@@ -114,7 +122,15 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
   }
 
   Widget _studentsSection(GroupDetailsUiState uiState) {
-    return _sectionLabelValue("Students".tr, _studentsList(uiState.students));
+    var students = uiState.students;
+    var count = 5;
+    final firstFive = students.take(count).toList();
+
+    return _sectionLabelValue(
+      "Students".tr,
+      _studentsList(firstFive),
+      students.length > count ? _showAllStudents(students) : null,
+    );
   }
 
   _groupName(String groupName) {
@@ -168,43 +184,13 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
     );
   }
 
-  _studentsList(List<GroupDetailsStudentItemUiState> student) {
-
-    if(student.isEmpty){
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          EmptyViewWidget(message: "No students found".tr),
-        ],
-      );
-    }
-
-    return ListView.separated(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        // disables ListView scroll
-        itemBuilder: (context, index) {
-          var item = student[index];
-          return GroupStudentItemWidget(
-            uiState: GroupStudentItemUiState(
-              id: item.studentId,
-              name: item.studentName,
-              parentPhone: item.studentParentPhone,
-            ),
-            onItemClick: (uiState) {
-              onStudentItemClick(uiState);
-            },
-          );
-        },
-        separatorBuilder: (context, index) => Divider(
-              height: 1,
-            ),
-        itemCount: student.length);
+  Widget _studentsList(List<GroupDetailsStudentItemUiState> student) {
+    return StudentsGroupListWidget(
+      students: student,
+      onStudentItemClick: onStudentItemClick,
+    );
   }
 
-  _editIcon() {
-    return EditIconWidget(onClick: onEditClick);
-  }
 
   _deleteIcon() {
     return Obx(() {
@@ -334,5 +320,35 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
   void onViewAllSessionClick(GroupDetailsUiState uiState) {
     AppNavigator.navigateToSessionsList(
         SessionListArgsModel(groupId: uiState.groupId));
+  }
+
+  Widget _showAllStudents(List<GroupDetailsStudentItemUiState> students) {
+    return InkWell(
+      onTap: () {
+        onViewAllStudentsClick(students);
+      },
+      child: AppTextWidget(
+        "All students".tr,
+        style: AppTextStyle.teshrinArLtRegular.copyWith(
+            decoration: TextDecoration.underline,
+            fontSize: 15,
+            color: AppColors.appMainColor),
+      ),
+    );
+  }
+
+  void onViewAllStudentsClick(List<GroupDetailsStudentItemUiState> students) {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        useSafeArea: true,
+        showDragHandle: true,
+        context: context,
+        builder: (context) => StudentsGroupListSearchWidget(
+              query: "",
+              students: students,
+              onStudentItemClick: (uiState) {
+                onStudentItemClick(uiState);
+              },
+            ));
   }
 }
