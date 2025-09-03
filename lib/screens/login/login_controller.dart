@@ -12,7 +12,7 @@ class LoginController extends GetxController{
 
   LoginUseCase loginUseCase = LoginUseCase();
 
-  TextEditingController usernameController = TextEditingController(text : AppMode.isDev || AppMode.isLocal ? "hamdyTeacher1" : "");
+  TextEditingController usernameController = TextEditingController(text : AppMode.isDev || AppMode.isLocal ? "hamdy" : "");
   TextEditingController passwordController = TextEditingController(text:  AppMode.isDev || AppMode.isLocal ? "123456" : "");
 
   Stream<LoginState> login() async* {

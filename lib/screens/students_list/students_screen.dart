@@ -230,6 +230,7 @@ import 'package:teacher_app/screens/students_list/students_controller.dart';
 import 'package:teacher_app/widgets/app_toolbar_widget.dart';
 import 'package:teacher_app/widgets/empty_view_widget.dart';
 import 'package:teacher_app/widgets/error_view_widget.dart';
+import 'package:teacher_app/widgets/students/students_list_pagination_widget.dart';
 import '../../navigation/app_navigator.dart';
 import '../../themes/app_colors.dart';
 import '../../utils/message_utils.dart';
@@ -274,7 +275,6 @@ class _StudentsScreenState extends State<StudentsScreen> {
   }
 
   Widget _content() {
-
     return Obx(() {
       var state = controller.state.value;
 
@@ -312,16 +312,7 @@ class _StudentsScreenState extends State<StudentsScreen> {
       onRefresh: () async {
         refresh();
       },
-      child: ListView.separated(
-          itemBuilder: (context, index) => StudentItemWidget(
-                uiState: items[index],
-                onItemClick: onStudentItemClick,
-                onDeleteClick: onDeleteStudentClick,
-              ),
-          separatorBuilder: (context, index) => SizedBox(
-                height: 15,
-              ),
-          itemCount: items.length),
+      child: _studentsListView(state),
     );
   }
 
@@ -337,17 +328,32 @@ class _StudentsScreenState extends State<StudentsScreen> {
   }
 
   onDeleteStudentClick(StudentItemUiState uiState) {
-    showConfirmationMessage("${"Are you sure to delete ?".tr} ${uiState.name}", (){
+    showConfirmationMessage("${"Are you sure to delete ?".tr} ${uiState.name}",
+        () {
       showDialogLoading();
-      controller.deleteStudent(uiState).listen((event) {
-        hideDialogLoading();
-        if(event.isSuccess){
-          return;
-        }
-        if(event.isError){
-          showErrorMessage(event.error?.toString());
-        }
-      },);
+      controller.deleteStudent(uiState).listen(
+        (event) {
+          hideDialogLoading();
+          if (event.isSuccess) {
+            return;
+          }
+          if (event.isError) {
+            showErrorMessage(event.error?.toString());
+          }
+        },
+      );
     });
+  }
+
+  _studentsListView(StudentsStateSuccess state) {
+    return StudentsListPaginationWidget(
+        items: state.uiStates,
+        onItemSelected: onStudentItemClick,
+        isLoading: state.isLoadingMore,
+        totalRecord: state.totalRecords,
+        separatorBuilder: (context, index) => SizedBox(height: 15),
+        getMoreItems: () {
+          controller.getMoreStudents();
+        });
   }
 }

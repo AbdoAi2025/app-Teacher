@@ -1,31 +1,33 @@
-/// hasGroups : true
-
 class GetMyStudentsRequest {
 
-
-  GetMyStudentsRequest({
-      this.hasGroups,
-      this.gradeId,
-    this.pageSize,
-    this.pageIndex,
-  });
-
-  GetMyStudentsRequest.fromJson(dynamic json) {
-    hasGroups = json['hasGroups'];
-    gradeId = json['gradeId'];
-  }
   bool? hasGroups;
   String? gradeId;
-  int? pageSize;
-  int? pageIndex;
+  int pageSize;
+  int pageIndex;
+
+  GetMyStudentsRequest({
+    this.hasGroups,
+    this.gradeId,
+    this.pageSize = 50,
+    this.pageIndex = 0,
+  });
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
-    map['hasGroups'] = hasGroups;
-    map['gradeId'] = gradeId;
-    map['pageSize'] = pageSize;
-    map['pageIndex'] = pageIndex;
+
+    if (hasGroups != null) {
+      map['hasGroups'] = hasGroups;
+    }
+    if (gradeId != null) {
+      map['gradeId'] = gradeId;
+    }
+    if (pageSize != null) {
+      map['pageSize'] = pageSize;
+    }
+
+    if (pageIndex != null) {
+      map['pageIndex'] = pageIndex;
+    }
     return map;
   }
-
 }
