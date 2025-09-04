@@ -37,7 +37,10 @@ class _GroupsScreenState extends State<GroupsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppToolbarWidget.appBar(title: "Groups".tr, hasLeading: false),
-        body: _content(),
+        body: Padding(
+          padding: const EdgeInsets.only(bottom: 20.0),
+          child: _content(),
+        ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             AppNavigator.navigateToCreateGroup();
@@ -48,7 +51,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
     );
   }
 
-  _content() {
+ Widget _content() {
     return Obx(() {
       var state = controller.state.value;
       switch (state) {
@@ -57,8 +60,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
         case GroupsStateSuccess():
           return _groupsList(state);
         case GroupsStateError():
-          return Center(
-              child: AppErrorWidget(message: state.message, onRetry: refresh,));
+          return Center(child: AppErrorWidget(message: state.message, onRetry: refresh,));
       }
     });
   }
@@ -73,9 +75,11 @@ class _GroupsScreenState extends State<GroupsScreen> {
       return _emptyView();
     }
     return RefreshIndicator(
+
       onRefresh: () async {
         controller.refreshGroups();
       },
+
       child: ListView.separated(itemBuilder: (context, index) {
 
         var uiState = items[index];
