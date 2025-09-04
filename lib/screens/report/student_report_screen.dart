@@ -46,7 +46,7 @@ class _StudentReportScreenState extends State<StudentReportScreen> {
     WidgetsBinding.instance.addPostFrameCallback(addPostFrameCallback);
 
     return Scaffold(
-        appBar: AppToolbarWidget.appBar("Student Report".tr),
+        appBar: AppToolbarWidget.appBar(title: "Student Report".tr),
         // resizeToAvoidBottomInset: false,
         body: Padding(
           padding: const EdgeInsets.all(20.0),

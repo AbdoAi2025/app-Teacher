@@ -38,7 +38,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppToolbarWidget.appBar("Student Details".tr,
+        appBar: AppToolbarWidget.appBar(title: "Student Details".tr,
             actions: [_editIcon(), _deleteIcon()]),
         body: Padding(
           padding: const EdgeInsets.all(20.0),

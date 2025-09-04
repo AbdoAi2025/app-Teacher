@@ -367,7 +367,7 @@ class CreateGroupScreenState extends State<CreateGroupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppToolbarWidget.appBar(getScreenTitle()),
+      appBar: AppToolbarWidget.appBar(title: getScreenTitle()),
       body: _content(),
       bottomNavigationBar: _saveButton(),
     );

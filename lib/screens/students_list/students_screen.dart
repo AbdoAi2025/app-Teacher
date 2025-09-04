@@ -260,7 +260,7 @@ class _StudentsScreenState extends State<StudentsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppToolbarWidget.appBar("Students".tr, hasLeading: false),
+        appBar: AppToolbarWidget.appBar(title: "Students".tr, hasLeading: false),
         body: Padding(
           padding: const EdgeInsets.all(20),
           child: _content(),

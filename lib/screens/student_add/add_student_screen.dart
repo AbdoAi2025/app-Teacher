@@ -360,7 +360,7 @@ class AddStudentScreenState extends State<AddStudentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppToolbarWidget.appBar(getScreenTitle()),
+      appBar: AppToolbarWidget.appBar(title: getScreenTitle()),
       body: _content(),
       bottomNavigationBar: _saveButton(),
     );

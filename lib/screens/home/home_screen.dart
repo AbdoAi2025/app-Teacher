@@ -62,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       },
       child: Scaffold(
-        // appBar: AppToolbarWidget.appBar("Home".tr, hasLeading: false),
+        // appBar: AppToolbarWidget.appBar(title: "Home".tr, hasLeading: false),
         body: SafeArea(
             child: Column(
           children: [

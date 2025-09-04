@@ -36,7 +36,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppToolbarWidget.appBar("Groups".tr, hasLeading: false),
+        appBar: AppToolbarWidget.appBar(title: "Groups".tr, hasLeading: false),
         body: _content(),
         floatingActionButton: FloatingActionButton(
           onPressed: () {

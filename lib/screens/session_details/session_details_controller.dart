@@ -14,10 +14,13 @@ import 'states/session_details_state.dart';
 import 'states/update_session_activities_state.dart';
 
 class SessionDetailsController extends GetxController {
+
+
   Rx<SessionDetailsState> state = Rx(SessionDetailsStateLoading());
   SessionDetailsArgsModel? args;
-
   Map<String, SessionActivityItemUiState> itemChangedMap = {};
+  List<SessionActivityItemUiState> activities = [];
+  String? query ;
 
   @override
   void onInit() {
@@ -30,6 +33,7 @@ class SessionDetailsController extends GetxController {
   }
 
   Future<void> _loadSessionDetails() async {
+
     var id = args?.id ?? "";
 
     if (id.isEmpty) {
@@ -51,7 +55,8 @@ class SessionDetailsController extends GetxController {
       if (data == null) {
         _updateState(SessionDetailsStateNotFound());
       } else {
-        var activities = data.activities
+
+        activities = data.activities
                 ?.map(
                   (e) => SessionActivityItemUiState(
                       studentId: e.studentId ?? "",
@@ -66,15 +71,15 @@ class SessionDetailsController extends GetxController {
                       homeworkStatus: e.homeworkStatus.toHomeworkEnum(),
                       homeworkNotes: e.homeworkNotes
                   ),
-                )
-                .toList() ??
-            List.empty();
+                ).toList() ?? List.empty();
+
+        var filteredActivities = searchItemByQuery(query , activities);
 
         _updateState(SessionDetailsStateSuccess(SessionDetailsUiState(
             id: id,
             sessionName: data.sessionName ?? "",
             sessionQuizGrade: sessionQuizGrade,
-            activities: activities,
+            activities: filteredActivities,
             sessionStatus: SessionStatus.fromValue(data.sessionStatus ?? 0),
             sessionCreatedAt:
                 AppDateUtils.parseStringToDateTime(data.sessionCreatedAt ?? ""),
@@ -128,38 +133,41 @@ class SessionDetailsController extends GetxController {
     }
   }
 
-  // Stream<UpdateSessionActivitiesState> onDoneAll() async* {
-  //   var itemsChanged = itemChangedMap.values;
-  //   for (var element in itemsChanged) {
-  //     appLog("onDoneAll item:${element.toString()}");
-  //   }
-  //
-  //   yield UpdateSessionActivitiesStateLoading();
-  //
-  //   var request = UpdateSessionActivitiesRequest(
-  //       sessionId: args?.id ?? "",
-  //       activities: itemsChanged.map(
-  //         (uiState) {
-  //           return StudentActivityItemRequest(
-  //               studentId: uiState.studentId,
-  //               attended: uiState.attended,
-  //               behaviorStatus: uiState.behaviorStatus,
-  //               quizGrade: uiState.quizGrade);
-  //         },
-  //       ).toList());
-  //
-  //   var result = await _updateSessionActivities(request);
-  //   if (result.isSuccess) {
-  //     itemChangedMap.clear();
-  //     onRefresh();
-  //     yield UpdateSessionActivitiesStateSuccess();
-  //   } else {
-  //     yield UpdateSessionActivitiesStateError(result.error);
-  //   }
-  // }
-
   _updateSessionActivities(UpdateSessionActivitiesRequest request) {
     UpdateSessionActivitiesUseCase useCase = UpdateSessionActivitiesUseCase();
     return useCase.execute(request);
+  }
+
+  void onSearchChanged(String query) {
+    this.query = query;
+
+     var stateValue =  state.value;
+     if(stateValue is SessionDetailsStateSuccess){
+      var uiState =  stateValue.uiState;
+       var filteredActivities = searchItemByQuery(query, activities);
+       appLog("onSearchChanged  activities:${activities.length} , filteredActivities:${filteredActivities.length}");
+       _updateState(SessionDetailsStateSuccess(uiState.copyWith(activities: filteredActivities)));
+       return;
+     }
+  }
+
+  List<SessionActivityItemUiState> searchItemByQuery(String? query, List<SessionActivityItemUiState> activities) {
+    if(query == null || query.isEmpty) return activities;
+    return  activities.where((element) =>
+        element.studentName.toLowerCase().contains(query.toLowerCase())||
+        element.studentParentPhone.toLowerCase().contains(query.toLowerCase())||
+        element.studentPhone.toLowerCase().contains(query.toLowerCase())
+    ).toList();
+  }
+
+  void onSearchClosed() {
+    query = null;
+    var stateValue =  state.value;
+    if(stateValue is SessionDetailsStateSuccess){
+      var uiState =  stateValue.uiState;
+      _updateState(SessionDetailsStateSuccess(uiState.copyWith(activities: activities)));
+      return;
+    }
+
   }
 }

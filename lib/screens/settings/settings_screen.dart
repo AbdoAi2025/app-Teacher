@@ -28,7 +28,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     appLog("SettingsScreen build");
     return Scaffold(
-      appBar: AppToolbarWidget.appBar("Settings".tr, hasLeading: false),
+      appBar: AppToolbarWidget.appBar(title: "Settings".tr, hasLeading: false),
       body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(20.0),

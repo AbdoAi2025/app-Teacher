@@ -15,8 +15,11 @@ import 'package:teacher_app/widgets/primary_button_widget.dart';
 
 import '../../themes/txt_styles.dart';
 import '../../widgets/app_toolbar_widget.dart';
+import '../../widgets/close_icon_widget.dart';
 import '../../widgets/done_icon_widget.dart';
 import '../../widgets/edit_icon_widget.dart';
+import '../../widgets/search_icon_widget.dart';
+import '../../widgets/search_text_field.dart';
 import '../../widgets/sessions/end_session_button_widget.dart';
 import '../../widgets/sessions/session_info/session_info_widget.dart';
 import '../../widgets/sessions/timer_counter_widget.dart';
@@ -33,6 +36,10 @@ class SessionDetailsScreen extends StatefulWidget {
 }
 
 class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
+
+
+  bool searchState = false;
+
   bool isEditable = false;
 
   final SessionDetailsController controller =
@@ -41,7 +48,7 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppToolbarWidget.appBar("Session Details".tr, actions: []),
+        appBar: _appBar(),
         resizeToAvoidBottomInset: false,
         body: RefreshIndicator(
           onRefresh: () async {
@@ -226,5 +233,43 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
         },
       ),
     );
+  }
+
+  _searchIcon() {
+    return InkWell(
+      onTap: (){
+        setState(() {
+          searchState = true;
+        });
+      },
+        child: SearchIconWidget());
+  }
+
+  _appBar() {
+    if(searchState){
+      return AppToolbarWidget.appBar(titleWidget: SearchTextField(
+        hint: 'Search',
+        controller: TextEditingController(),
+        onChanged: onSearchChanged,
+      ) ,
+          actions: [_closeIcon()]);
+    }
+    return AppToolbarWidget.appBar(title: "Session Details".tr, actions: [_searchIcon()]);
+  }
+
+  onSearchChanged(String? query) {
+    if (query == null) return;
+    controller.onSearchChanged(query);
+  }
+
+  _closeIcon() {
+    return InkWell(
+        onTap: (){
+          setState(() {
+            searchState = false;
+            controller.onSearchClosed();
+          });
+        },
+        child: CloseIconWidget());
   }
 }

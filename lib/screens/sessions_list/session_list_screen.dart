@@ -24,7 +24,7 @@ class _SessionListScreenState extends State<SessionListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppToolbarWidget.appBar("Sessions".tr),
+        appBar: AppToolbarWidget.appBar(title: "Sessions".tr),
         body: RefreshIndicator(
           onRefresh: () async {
             onRefresh();

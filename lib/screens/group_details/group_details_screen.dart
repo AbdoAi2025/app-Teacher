@@ -47,7 +47,7 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppToolbarWidget.appBar("Group Details".tr, actions: [
+        appBar: AppToolbarWidget.appBar(title: "Group Details".tr, actions: [
           _deleteIcon(),
           SizedBox(
             width: 10,

@@ -39,6 +39,8 @@ class SessionDetailsApiModel {
       json['activities'].forEach((v) {
         activities?.add(StudentActivityApiModel.fromJson(v));
       });
+
+      activities?.sort((a, b) => (a.studentName ?? "").compareTo(a.studentName!));
     }
   }
   String? sessionId;

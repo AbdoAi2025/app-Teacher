@@ -30,8 +30,7 @@ class StudentsGroupListSearchWidget extends StatefulWidget {
 class _StudentsGroupListSearchWidgetState
     extends State<StudentsGroupListSearchWidget> {
   late List<GroupDetailsStudentItemUiState> students = widget.students;
-  late final TextEditingController _controller =
-      TextEditingController(text: widget.query);
+  late final TextEditingController _controller = TextEditingController(text: widget.query);
   Timer? _debounce;
 
   late List<GroupDetailsStudentItemUiState> filteredItems = students;

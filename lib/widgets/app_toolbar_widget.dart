@@ -11,9 +11,11 @@ class AppToolbarWidget {
 
   AppToolbarWidget._();
 
-  static AppBar appBar(String title,
+  static AppBar appBar(
   {
+    String title = "",
     Widget? leading,
+    Widget? titleWidget,
     List<Widget>? actions,
     SystemUiOverlayStyle? systemOverlayStyle,
     Color? backgroundColor,
@@ -24,7 +26,7 @@ class AppToolbarWidget {
     return AppBar(
         systemOverlayStyle: systemOverlayStyle ?? SystemUiOverlayStyle.dark,
         surfaceTintColor: Colors.transparent,
-        title: AppTextWidget(
+        title: titleWidget ??AppTextWidget(
           title,
           style: AppTextStyle.appToolBarTitle,
         ),
