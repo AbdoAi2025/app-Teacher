@@ -4,12 +4,14 @@ class GetMyStudentsRequest {
   String? gradeId;
   int pageSize;
   int pageIndex;
+  String? search;
 
   GetMyStudentsRequest({
     this.hasGroups,
     this.gradeId,
-    this.pageSize = 50,
+    this.pageSize = 20,
     this.pageIndex = 0,
+    this.search,
   });
 
   Map<String, dynamic> toJson() {
@@ -21,13 +23,14 @@ class GetMyStudentsRequest {
     if (gradeId != null) {
       map['gradeId'] = gradeId;
     }
-    if (pageSize != null) {
-      map['pageSize'] = pageSize;
+
+    if (search != null && search!.isNotEmpty) {
+      map['searchText'] = search;
     }
 
-    if (pageIndex != null) {
-      map['pageIndex'] = pageIndex;
-    }
+    map['pageSize'] = pageSize;
+    map['pageIndex'] = pageIndex;
+
     return map;
   }
 }

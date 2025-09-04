@@ -228,8 +228,10 @@ import 'package:get/get.dart';
 import 'package:teacher_app/screens/students_list/states/student_item_ui_state.dart';
 import 'package:teacher_app/screens/students_list/students_controller.dart';
 import 'package:teacher_app/widgets/app_toolbar_widget.dart';
+import 'package:teacher_app/widgets/close_icon_widget.dart';
 import 'package:teacher_app/widgets/empty_view_widget.dart';
 import 'package:teacher_app/widgets/error_view_widget.dart';
+import 'package:teacher_app/widgets/search_icon_widget.dart';
 import 'package:teacher_app/widgets/students/students_list_pagination_widget.dart';
 import '../../navigation/app_navigator.dart';
 import '../../themes/app_colors.dart';
@@ -237,6 +239,7 @@ import '../../utils/message_utils.dart';
 import '../../widgets/app_error_widget.dart';
 import '../../widgets/dialog_loading_widget.dart';
 import '../../widgets/loading_widget.dart';
+import '../../widgets/search_text_field.dart';
 import '../student_details/args/student_details_arg_model.dart';
 import 'states/students_state.dart';
 import '../../widgets/students/student_item_widget.dart';
@@ -252,6 +255,8 @@ class StudentsScreen extends StatefulWidget {
 class _StudentsScreenState extends State<StudentsScreen> {
   StudentsController controller = Get.put(StudentsController());
 
+  bool searchState = false;
+
   @override
   void initState() {
     super.initState();
@@ -260,10 +265,16 @@ class _StudentsScreenState extends State<StudentsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppToolbarWidget.appBar(title: "Students".tr, hasLeading: false),
-        body: Padding(
+        appBar: _appBar(),
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
           padding: const EdgeInsets.all(20),
-          child: _content(),
+          child: RefreshIndicator(
+              onRefresh: () async {
+                refresh();
+              },
+              child: _content()),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
@@ -274,6 +285,40 @@ class _StudentsScreenState extends State<StudentsScreen> {
         ));
   }
 
+  _appBar() {
+    if (searchState) {
+      return AppToolbarWidget.appBar(
+          titleWidget: SearchTextField(
+            controller: TextEditingController(),
+            onChanged: controller.onSearchChanged,
+          ),
+          hasLeading: false,
+          actions: [
+            InkWell(
+                onTap: () {
+                  setState(() {
+                    searchState = false;
+                    controller.onCloseSearch();
+                  });
+                },
+                child: CloseIconWidget())
+          ]);
+    }
+
+    return AppToolbarWidget.appBar(
+        title: "Students".tr,
+        hasLeading: false,
+        actions: [
+          InkWell(
+              onTap: () {
+                setState(() {
+                  searchState = true;
+                });
+              },
+              child: SearchIconWidget())
+        ]);
+  }
+
   Widget _content() {
     return Obx(() {
       var state = controller.state.value;
@@ -281,16 +326,10 @@ class _StudentsScreenState extends State<StudentsScreen> {
       switch (state) {
         case StudentsStateLoading():
           return Center(child: LoadingWidget());
-
         case StudentsStateSuccess():
           return _studentsList(state);
-
         case StudentsStateError():
-          return Center(
-              child: ErrorViewWidget(
-            message: state.message?.toString() ?? "",
-            onRetry: refresh,
-          ));
+          return _error(state);
       }
 
       return _emptyView();
@@ -298,7 +337,7 @@ class _StudentsScreenState extends State<StudentsScreen> {
   }
 
   refresh() {
-    controller.refreshStudnets();
+    controller.refreshStudents();
   }
 
   Widget _studentsList(StudentsStateSuccess state) {
@@ -308,19 +347,26 @@ class _StudentsScreenState extends State<StudentsScreen> {
       return _emptyView();
     }
 
-    return RefreshIndicator(
-      onRefresh: () async {
-        refresh();
-      },
-      child: _studentsListView(state),
-    );
+    return _studentsListView(state);
   }
 
   Widget _emptyView() {
-    return Center(
+    return SingleChildScrollView(
+      physics: AlwaysScrollableScrollPhysics(),
+      child: Center(
         child: EmptyViewWidget(
-      message: "No students found".tr,
-    ));
+          message: "No students found".tr,
+        ),
+      ),
+    );
+  }
+
+  Widget _error(StudentsStateError state) {
+    return Center(
+        child: ErrorViewWidget(
+          message: state.message?.toString() ?? "",
+          onRetry: refresh,
+        ));
   }
 
   onStudentItemClick(StudentItemUiState p1) {
@@ -356,4 +402,6 @@ class _StudentsScreenState extends State<StudentsScreen> {
           controller.getMoreStudents();
         });
   }
+
+
 }

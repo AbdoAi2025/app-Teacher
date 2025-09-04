@@ -1,19 +1,20 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
 
 import '../utils/LogUtils.dart';
 import 'app_text_field_widget.dart';
 
 class SearchTextField extends StatefulWidget {
   
-  final String hint;
+  final String? hint;
   final TextEditingController controller;
   final Function(String?) onChanged;
 
   const SearchTextField(
       {super.key,
-      required this.hint,
+       this.hint,
       required this.controller,
       required this.onChanged});
 
@@ -29,7 +30,7 @@ class _SearchTextFieldState extends State<SearchTextField> {
   @override
   Widget build(BuildContext context) {
     return AppTextFieldWidget(
-      hint: widget.hint,
+      hint: widget.hint ?? 'Search'.tr,
       onChanged: _onSearchChanged,
       controller: widget.controller,
       textInputAction: TextInputAction.search,

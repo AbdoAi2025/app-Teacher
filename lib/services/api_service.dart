@@ -166,7 +166,7 @@ var baseUrl = switch (AppMode.mode) {
 };
 
 // Create Alice with the navigator key
-final alice = Alice(navigatorKey: navigatorKey);
+// final alice = Alice(navigatorKey: navigatorKey);
 
 class ApiService {
   static Dio? _dio;
@@ -187,9 +187,9 @@ class ApiService {
 
   static _init(Dio dio) async {
 
-    if (AppMode.mode != AppMode.prod) {
-      dio.interceptors.add(alice.getDioInterceptor());
-    }
+    // if (AppMode.mode != AppMode.prod) {
+    //   dio.interceptors.add(alice.getDioInterceptor());
+    // }
 
     dio.interceptors.add(
       TalkerDioLogger(
