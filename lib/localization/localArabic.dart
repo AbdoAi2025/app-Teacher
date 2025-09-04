@@ -153,6 +153,9 @@ final Map<String, String> ar = {
   "Group has no students" : "لا يوجد طلبة في المجموعة",
   "Under the supervision of" : "تحت إشراف أ/",
   "Hey, Mr." : "أهلاً أ/",
+  "Search" : "بحث",
+  "All Students" : "كل الطلبة",
+
 };
 
 /*

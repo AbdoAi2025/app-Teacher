@@ -138,5 +138,8 @@ final Map<String, String> enUS = {
   "Group has no students" : "Group has no students",
   "Under the supervision of" : "Supervision of Mr.",
   "Hey, Mr." : "Hey, Mr.",
+  "Search" : "Search",
+  "All Students" : "All Students",
+
 
 };

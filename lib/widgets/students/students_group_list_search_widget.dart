@@ -77,13 +77,13 @@ class _StudentsGroupListSearchWidgetState
   }
 
   _allStudentsTitle() => AppTextWidget(
-        "All students".tr,
+        "All Students".tr,
         style: AppTextStyle.title,
       );
 
   _searchField() {
     return AppTextFieldWidget(
-      hint: "Search students...".tr,
+      hint: "Search".tr,
       onChanged: _onSearchChanged,
       controller: _controller,
       textInputAction: TextInputAction.search,
