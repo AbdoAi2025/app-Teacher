@@ -26,7 +26,7 @@ class AppToolbarWidget {
     return AppBar(
         systemOverlayStyle: systemOverlayStyle ?? SystemUiOverlayStyle.dark,
         surfaceTintColor: Colors.transparent,
-        title: titleWidget ??AppTextWidget(
+        title: titleWidget ?? AppTextWidget(
           title,
           style: AppTextStyle.appToolBarTitle,
         ),
@@ -42,11 +42,17 @@ class AppToolbarWidget {
         ),
         actions: [
           if(actions != null)...{
-            ...actions,
-            SizedBox(width: 10,)
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              child: Row(
+                spacing: 20,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ...actions
+                ],
+              ),
+            )
           }
-
-
         ]
     );
   }

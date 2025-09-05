@@ -140,6 +140,13 @@ final Map<String, String> enUS = {
   "Hey, Mr." : "Hey, Mr.",
   "Search" : "Search",
   "All Students" : "All Students",
+  "Sort" : "Sort",
+  "By group" : "By group",
+  "By grade" : "By grade",
+  "Reset" : "Reset",
+  "Without group" : "Without group",
+
+
 
 
 };

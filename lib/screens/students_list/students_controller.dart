@@ -24,6 +24,10 @@ class StudentsController extends GetxController {
   List<StudentItemUiState> studentsUiStates = [];
   List<StudentItemUiState> searchStudentsUiStates = [];
 
+  static const  sortByGroupType = 0;
+  static const  sortByGradeType = 1;
+  int? sortType ;
+
   @override
   void onInit() {
     super.onInit();
@@ -45,7 +49,7 @@ class StudentsController extends GetxController {
       var totalRecords = isNextPage ? uiStates.length * 2 : uiStates.length;
 
       _updateState(StudentsStateSuccess(
-        uiStates: filterStudentBySearch(studentsUiStates, request.search),
+        uiStates: _getItemsFiltered(),
         isLoadingMore: isLoadingMore,
         totalRecords: totalRecords,
         isNextPage: isNextPage,
@@ -136,30 +140,119 @@ class StudentsController extends GetxController {
   onSearchChanged(String? query) {
     appLog("onSearchChanged query: $query");
     appLog("onSearchChanged studentsUiStates:${studentsUiStates.length}");
-
     request.search = query;
-    var stateValue = state.value;
-    if(stateValue is StudentsStateSuccess){
-      List<StudentItemUiState> filteredStudents = filterStudentBySearch(studentsUiStates, query);
-      appLog("onSearchChanged filteredStudents:${filteredStudents.length}");
-      _updateState(stateValue.copyWith(uiStates: filteredStudents));
-    }
+    updateList();
   }
 
   void onCloseSearch() {
     onSearchChanged(null);
   }
 
-  filterStudentBySearch(List<StudentItemUiState> studentsUiStates, String? search) {
+  List<StudentItemUiState> filterStudentBySearch(List<StudentItemUiState> studentsUiStates, String? search) {
     if (search == null || search.isEmpty) {
       return studentsUiStates;
     }
-
     return studentsUiStates.where((element) =>
        element.name.toLowerCase().contains(search.toLowerCase()) ||
        element.grade.toLowerCase().contains(search.toLowerCase()) ||
        element.groupName.toLowerCase().contains(search.toLowerCase()) ||
        element.parentPhone.toLowerCase().contains(search.toLowerCase())
     ).toList();
+  }
+
+  List<StudentItemUiState> _applySort(List<StudentItemUiState> studentsUiStates) {
+    if(sortType == sortByGroupType){
+      return groupByGroup(studentsUiStates);
+    }else if(sortType == sortByGradeType){
+      return groupByGrade(studentsUiStates);
+    }
+    return studentsUiStates;
+  }
+  
+  void sortByGroup() {
+    _sort(sortByGroupType);
+  }
+  
+  void sortByGrade() {
+    _sort(sortByGradeType);
+  }
+  void resetSort() {
+    _sort(null);
+  }
+
+  void _sort(int? type) {
+    sortType = type;
+    updateList();
+  }
+
+  List<StudentItemUiState> groupByGroup(List<StudentItemUiState> uiStates) {
+
+    final Map<String, List<StudentItemUiState>> grouped = {};
+
+    /*sort items by group name*/
+    uiStates.sort((a, b) => a.groupName.compareTo(b.groupName));
+
+
+    /*Group by group name*/
+    for (final uiState in uiStates) {
+      var groupName = uiState.groupName;
+      grouped.putIfAbsent(groupName, () => []);
+      grouped[groupName]!.add(uiState);
+    }
+
+    // Optional: sort inside each  by name
+    for (final entry in grouped.entries) {
+      entry.value.sort((a, b) =>  a.name.compareTo(b.name));
+    }
+
+    List<StudentItemUiState> sortedGroups = [];
+
+    grouped.forEach((key, value) {
+      sortedGroups.add(StudentItemTitleUiState(title: key));
+      sortedGroups.addAll(value);
+    });
+    return sortedGroups;
+  }
+
+  static List<StudentItemUiState> groupByGrade(List<StudentItemUiState> uiStates) {
+
+    final Map<String, List<StudentItemUiState>> grouped = {};
+
+    /*sort items by grade name*/
+    uiStates.sort((a, b) => a.grade.compareTo(b.grade));
+
+    /*Group by group name*/
+    for (final uiState in uiStates) {
+      var gradeName = uiState.grade;
+      grouped.putIfAbsent(gradeName, () => []);
+      grouped[gradeName]!.add(uiState);
+    }
+
+    // Optional: sort inside each  by name
+    for (final entry in grouped.entries) {
+      entry.value.sort((a, b) =>  a.name.compareTo(b.name));
+    }
+
+    List<StudentItemUiState> sortedGroups = [];
+
+    grouped.forEach((key, value) {
+      sortedGroups.add(StudentItemTitleUiState(title: key));
+      sortedGroups.addAll(value);
+    });
+    return sortedGroups;
+  }
+
+  /*apply sort if needed , and search if needed*/
+  List<StudentItemUiState> _getItemsFiltered() {
+    var sortedItem = _applySort(studentsUiStates.toList());
+    var searchItems  = filterStudentBySearch(sortedItem, request.search);
+    return searchItems;
+  }
+
+  void updateList() {
+    var stateValue = state.value;
+    if(stateValue is StudentsStateSuccess){
+      _updateState(stateValue.copyWith(uiStates: _getItemsFiltered()));
+    }
   }
 }

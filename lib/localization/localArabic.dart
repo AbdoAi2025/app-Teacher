@@ -155,6 +155,11 @@ final Map<String, String> ar = {
   "Hey, Mr." : "أهلاً أ/",
   "Search" : "بحث",
   "All Students" : "كل الطلبة",
+  "Sort" : "ترتيب",
+  "By group" : "حسب المجموعة",
+  "By grade" : "حسب الصف",
+  "Reset" : "إعادة تعيين",
+  "Without group" : "بدون مجموعة",
 
 };
 

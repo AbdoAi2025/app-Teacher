@@ -260,10 +260,7 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
             searchState = true;
           });
         },
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-          child: SearchIconWidget(),
-        ));
+        child: SearchIconWidget());
   }
 
   Widget _closeIcon() {

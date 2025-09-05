@@ -228,6 +228,7 @@ import 'package:get/get.dart';
 import 'package:teacher_app/screens/students_list/states/student_item_ui_state.dart';
 import 'package:teacher_app/screens/students_list/students_controller.dart';
 import 'package:teacher_app/widgets/app_toolbar_widget.dart';
+import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'package:teacher_app/widgets/close_icon_widget.dart';
 import 'package:teacher_app/widgets/empty_view_widget.dart';
 import 'package:teacher_app/widgets/error_view_widget.dart';
@@ -240,6 +241,7 @@ import '../../widgets/app_error_widget.dart';
 import '../../widgets/dialog_loading_widget.dart';
 import '../../widgets/loading_widget.dart';
 import '../../widgets/search_text_field.dart';
+import '../../widgets/sort_icon_widget.dart';
 import '../student_details/args/student_details_arg_model.dart';
 import 'states/students_state.dart';
 import '../../widgets/students/student_item_widget.dart';
@@ -287,43 +289,54 @@ class _StudentsScreenState extends State<StudentsScreen> {
 
   _appBar() {
     if (searchState) {
-      return AppToolbarWidget.appBar(
-          titleWidget: SearchTextField(
-            controller: TextEditingController(),
-            onChanged: controller.onSearchChanged,
-          ),
-          hasLeading: false,
-          actions: [
-            InkWell(
-                onTap: () {
-                  setState(() {
-                    searchState = false;
-                    controller.onCloseSearch();
-                  });
-                },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                  child: CloseIconWidget(),
-                ))
-          ]);
+      return _searchAppBar();
     }
-
-    return AppToolbarWidget.appBar(
-        title: "Students".tr,
-        hasLeading: false,
-        actions: [
-          InkWell(
-              onTap: () {
-                setState(() {
-                  searchState = true;
-                });
-              },
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                child: SearchIconWidget(),
-              ))
-        ]);
+    return _appBarWithActions();
   }
+
+  _appBarWithActions() =>AppToolbarWidget.appBar(
+      title: "Students".tr,
+      hasLeading: false,
+      actions: [
+        _searchIcon(),
+        _sortIcon(),
+      ]
+  );
+
+  _searchAppBar() => AppToolbarWidget.appBar(
+      titleWidget: SearchTextField(
+        controller: TextEditingController(),
+        onChanged: controller.onSearchChanged,
+      ),
+      hasLeading: false,
+      actions: [
+        InkWell(
+            onTap: () {
+              setState(() {
+                searchState = false;
+                controller.onCloseSearch();
+              });
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: CloseIconWidget(),
+            ))
+      ]
+  );
+
+  _searchIcon() =>  InkWell(
+      onTap: () {
+        setState(() {
+          searchState = true;
+        });
+      },
+      child: SearchIconWidget()
+  );
+
+  _sortIcon() =>  InkWell(
+      onTap: onSortClick,
+      child: SortIconWidget()
+  );
 
   Widget _content() {
     return Obx(() {
@@ -409,5 +422,49 @@ class _StudentsScreenState extends State<StudentsScreen> {
         });
   }
 
+  void onSortClick() {
+    showModalBottomSheet(
+      context: context,
+      useSafeArea: true,
+      builder: (context) {
+      return Container(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          spacing: 10,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AppTextWidget("Sort".tr),
+            Divider(),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 30.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                spacing: 20,
+                children: [
+                  InkWell(onTap: onSortByGroupClick , child: AppTextWidget("By group".tr)),
+                  InkWell(onTap: onSortByGradeClick ,  child: AppTextWidget("By grade".tr)),
+                  InkWell(onTap: onSortResetClick ,  child: AppTextWidget("Reset".tr)),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    },);
+  }
 
+  void onSortByGroupClick() {
+    Get.back();
+    controller.sortByGroup();
+  }
+
+  void onSortByGradeClick() {
+    Get.back();
+    controller.sortByGrade();
+  }
+
+  void onSortResetClick() {
+    Get.back();
+    controller.resetSort();
+  }
 }
