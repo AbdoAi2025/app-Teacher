@@ -21,27 +21,44 @@ class GroupItemUiState {
   final String groupName;
   final int studentsCount;
   final String date;
+  final String dayNameEn;
+  final String dayNameAr;
+  final String gradeName;
+  final String gradeNameEn;
+  final String gradeNameAr;
   final String timeFrom;
   final String timeTo;
 
-  GroupItemUiState(
-      {required this.groupId,
-      required this.groupName,
-      required this.studentsCount,
-      required this.date,
-      required this.timeFrom,
-      required this.timeTo,
-      });
+  GroupItemUiState({
+    required this.groupId,
+    required this.groupName,
+    required this.studentsCount,
+    required this.date,
+    required this.timeFrom,
+    required this.timeTo,
+    required this.gradeName,
+    required this.gradeNameEn,
+    required this.gradeNameAr,
+    required this.dayNameEn,
+    required this.dayNameAr,
+  });
 }
 
-class GroupItemTitleUiState extends GroupItemUiState{
+class GroupItemTitleUiState extends GroupItemUiState {
+  final String title;
 
-  GroupItemTitleUiState({required super.date}) : super(
-    groupId: "",
-    groupName: "",
-    studentsCount: 0,
-    timeFrom: "",
-    timeTo: "",
-  );
+  GroupItemTitleUiState({required this.title})
+      : super(
+          date: "",
+          dayNameEn: "",
+          dayNameAr: "",
+          groupId: "",
+          groupName: "",
+          studentsCount: 0,
+          timeFrom: "",
+          timeTo: "",
+          gradeName: "",
+          gradeNameEn: "",
+          gradeNameAr: "",
+        );
 }
-

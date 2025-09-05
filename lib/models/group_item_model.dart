@@ -73,6 +73,8 @@ class Group {
 
 import 'package:teacher_app/apimodels/student_list_item_api_model.dart';
 
+import 'grade_model.dart';
+
 class GroupItemModel {
 
   final String id;
@@ -81,6 +83,7 @@ class GroupItemModel {
   final int day;
   final String timeFrom;
   final String timeTo;
+  final GradeModel grade;
 
   GroupItemModel(
       {required this.id,
@@ -89,5 +92,6 @@ class GroupItemModel {
       required this.day,
       required this.timeFrom,
       required this.timeTo,
+      required this.grade,
         required List<StudentListItemApiModel> studentsIds});
 }

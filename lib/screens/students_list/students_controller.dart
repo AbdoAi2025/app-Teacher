@@ -244,9 +244,9 @@ class StudentsController extends GetxController {
 
   /*apply sort if needed , and search if needed*/
   List<StudentItemUiState> _getItemsFiltered() {
-    var sortedItem = _applySort(studentsUiStates.toList());
-    var searchItems  = filterStudentBySearch(sortedItem, request.search);
-    return searchItems;
+    var items  = filterStudentBySearch(studentsUiStates.toList(), request.search);
+    items = _applySort(items);
+    return items;
   }
 
   void updateList() {

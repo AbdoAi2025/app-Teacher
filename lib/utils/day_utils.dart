@@ -24,6 +24,34 @@ class AppDateUtils{
     return days[day % 7];
   }
 
+  static String getDayNameEn(int day) {
+    var days = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday"
+    ];
+    if (day < 0) return "";
+    return days[day % 7];
+  }
+
+  static String getDayNameAr(int day) {
+    var days = [
+      "الأحد",
+      "الاثنين",
+      "الثلاثاء",
+      "الأربعاء",
+      "الخميس",
+      "الجمعة",
+      "السبت"
+    ];
+    if (day < 0) return "";
+    return days[day % 7];
+  }
+
 
  static TimeOfDay? parseTimeOfDay(String timeString) {
 
@@ -76,6 +104,14 @@ class AppDateUtils{
 
   static sessionStartDateToString(DateTime? date){
     return parsDateToString(date, format: "yyy-MM-dd HH:mm");
+  }
+
+  /// Parse "HH:mm" into total minutes since midnight
+  static int parseTime(String time) {
+    final parts = time.split(':');
+    final hours = int.parse(parts[0]);
+    final minutes = int.parse(parts[1]);
+    return hours * 60 + minutes;
   }
 
 }

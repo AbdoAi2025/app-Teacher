@@ -7,38 +7,44 @@ import '../../utils/day_utils.dart';
 import '../usecases/get_groups_list_use_case.dart';
 
 class GroupsManagers {
-
   GroupsManagers._();
 
   static Rx<GroupsState> state = Rx(GroupsStateLoading());
   static Rx<GroupsState> groupCategorizedState = Rx(GroupsStateLoading());
-  static final GetGroupsListUseCase _getGroupsListUseCase = GetGroupsListUseCase();
+  static final GetGroupsListUseCase _getGroupsListUseCase =
+      GetGroupsListUseCase();
 
   static Rx<GroupsState> todayGroupsState = Rx(GroupsStateLoading());
 
   static Future<void> loadGroups() async {
     var groupsResult = await _getGroupsListUseCase.execute();
     if (groupsResult.isSuccess) {
-
       var groups = groupsResult.data;
       groups = sortGroups(groups!);
 
-      var uiStates = groups.map((e) => GroupItemUiState(
-                    groupId: e.id,
-                    groupName: e.name,
-                    studentsCount: e.studentCount,
-                    date: AppDateUtils.getDayName(e.day),
-                    timeFrom: e.timeFrom,
-                    timeTo: e.timeTo,
-                  ))
-              .toList();
+      var uiStates = groups
+          .map((e) => GroupItemUiState(
+                groupId: e.id,
+                groupName: e.name,
+                studentsCount: e.studentCount,
+                date: AppDateUtils.getDayName(e.day),
+                dayNameEn: AppDateUtils.getDayNameEn(e.day),
+                dayNameAr: AppDateUtils.getDayNameAr(e.day),
+                timeFrom: e.timeFrom,
+                timeTo: e.timeTo,
+                gradeName: e.grade.name,
+                gradeNameEn: e.grade.nameEn,
+                gradeNameAr: e.grade.nameAr,
+              ))
+          .toList();
 
       _updateState(GroupsStateSuccess(uiStates: uiStates));
       return;
     }
 
-    if(groupsResult.isError){
-      _updateState(GroupsStateError(AppHttpException(groupsResult.error?.toString())));
+    if (groupsResult.isError) {
+      _updateState(
+          GroupsStateError(AppHttpException(groupsResult.error?.toString())));
     }
   }
 
@@ -48,20 +54,23 @@ class GroupsManagers {
   }
 
   static void _updateState(GroupsState state) {
-
-
     /*update today groups*/
     if (state is GroupsStateSuccess) {
-
       /*update state*/
       GroupsManagers.state.value = state;
 
       /*update groups categorized*/
-      GroupsManagers.groupCategorizedState.value =  GroupsStateSuccess(uiStates: groupByDay(state.uiStates));
+      GroupsManagers.groupCategorizedState.value =
+          GroupsStateSuccess(uiStates: groupByDay(state.uiStates));
 
       /*filter today groups*/
-      var todayGroups = state.uiStates.where((element) => element.date == AppDateUtils.getDayName(DateTime.now().weekday).tr).toList();
-      GroupsManagers.todayGroupsState.value = GroupsStateSuccess(uiStates: todayGroups);
+      var todayGroups = state.uiStates
+          .where((element) =>
+              element.date ==
+              AppDateUtils.getDayName(DateTime.now().weekday).tr)
+          .toList();
+      GroupsManagers.todayGroupsState.value =
+          GroupsStateSuccess(uiStates: todayGroups);
 
       return;
     }
@@ -93,9 +102,7 @@ class GroupsManagers {
     return hours * 60 + minutes;
   }
 
-
   static List<GroupItemUiState> groupByDay(List<GroupItemUiState> groups) {
-
     final Map<String, List<GroupItemUiState>> grouped = {};
 
     for (final group in groups) {
@@ -105,17 +112,16 @@ class GroupsManagers {
 
     // Optional: sort inside each day by timeFrom
     for (final entry in grouped.entries) {
-      entry.value.sort((a, b) => _parseTime(a.timeFrom).compareTo(_parseTime(b.timeFrom)));
+      entry.value.sort(
+          (a, b) => _parseTime(a.timeFrom).compareTo(_parseTime(b.timeFrom)));
     }
 
     List<GroupItemUiState> sortedGroups = [];
 
     grouped.forEach((key, value) {
-      sortedGroups.add(GroupItemTitleUiState(date: key));
+      sortedGroups.add(GroupItemTitleUiState(title: key));
       sortedGroups.addAll(value);
-
     });
     return sortedGroups;
   }
-
 }
