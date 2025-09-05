@@ -160,6 +160,7 @@ final Map<String, String> ar = {
   "By grade" : "حسب الصف",
   "Reset" : "إعادة تعيين",
   "Without group" : "بدون مجموعة",
+  "By Day" : "حسب اليوم",
 
 };
 
