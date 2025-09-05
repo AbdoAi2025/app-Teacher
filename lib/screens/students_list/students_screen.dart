@@ -301,7 +301,10 @@ class _StudentsScreenState extends State<StudentsScreen> {
                     controller.onCloseSearch();
                   });
                 },
-                child: CloseIconWidget())
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  child: CloseIconWidget(),
+                ))
           ]);
     }
 
@@ -315,7 +318,10 @@ class _StudentsScreenState extends State<StudentsScreen> {
                   searchState = true;
                 });
               },
-              child: SearchIconWidget())
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                child: SearchIconWidget(),
+              ))
         ]);
   }
 

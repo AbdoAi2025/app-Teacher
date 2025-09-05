@@ -337,6 +337,7 @@ import '../../themes/app_colors.dart';
 import '../../widgets/app_text_field_widget.dart';
 import '../../widgets/app_toolbar_widget.dart';
 import '../../widgets/dialog_loading_widget.dart';
+import '../../widgets/dropdown_icon_widget.dart';
 import '../../widgets/item_selection_widget/student_list_selection_widget.dart';
 import 'create_group_controller.dart';
 import 'students_selection/student_list_selection_widget.dart';
@@ -369,7 +370,7 @@ class CreateGroupScreenState extends State<CreateGroupScreen> {
     return Scaffold(
       appBar: AppToolbarWidget.appBar(title: getScreenTitle()),
       body: _content(),
-      bottomNavigationBar: _saveButton(),
+      bottomNavigationBar: SafeArea(child: _saveButton()),
     );
   }
 
@@ -423,7 +424,7 @@ class CreateGroupScreenState extends State<CreateGroupScreen> {
         label: "Grade".tr,
         hint: "Grade".tr,
         readOnly: true,
-        suffixIcon: Icon(Icons.arrow_downward),
+        suffixIcon: DropdownIconWidget(),
         validator: MultiValidator([
           RequiredValidator(errorText: "Grade is required".tr),
         ]).call,
@@ -488,8 +489,8 @@ class CreateGroupScreenState extends State<CreateGroupScreen> {
             (pickedTime) => getController().onTimeToSelected(pickedTime));
       });
 
-  _saveButton() => Padding(
-        padding: const EdgeInsets.all(16.0),
+ Widget _saveButton() => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0 , vertical: 10),
         child: PrimaryButtonWidget(
           onClick: onSaveGroupClick,
           text: getSubmitButtonText(),
@@ -513,24 +514,35 @@ class CreateGroupScreenState extends State<CreateGroupScreen> {
   }
 
   _selectedStudentsList() {
-    return Column(
-      spacing: 20,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        /*Title selected students*/
-        InkWell(
-            onTap: _onSelectStudentsClick,
-            child: Row(
-              children: [
-                Expanded(child: AppTextWidget("Selected Students".tr)),
-                Icon(Icons.arrow_downward)
-              ],
-            )),
-        /*Show students list*/
-        _selectedStudentsState()
-      ],
-    );
+
+    return Obx((){
+      var value = getController().selectedStudentsRx.value;
+      var selectedStudentsCount = value.length;
+
+      return Column(
+        spacing: 0,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          /*Title selected students*/
+          InkWell(
+              onTap: _onSelectStudentsClick,
+              child: Row(
+                children: [
+                  Expanded(child: AppTextWidget("${"Selected Students".tr} ($selectedStudentsCount)")),
+                  DropdownIconWidget()
+                ],
+              )),
+          /*Show students list*/
+          _selectedStudentList(value)
+        ],
+      );
+
+    });
+
+
+
+
   }
 
   void _onSelectStudentsClick() {
@@ -597,13 +609,6 @@ class CreateGroupScreenState extends State<CreateGroupScreen> {
         enableDrag: true);
   }
 
-  _selectedStudentsState() {
-    return Obx(() {
-      var selectedStudents = getController().selectedStudentsRx.value;
-      return _selectedStudentList(selectedStudents);
-    });
-  }
-
   _selectedStudentList(List<StudentSelectionItemUiState> students) {
     var items = students;
 
@@ -611,16 +616,12 @@ class CreateGroupScreenState extends State<CreateGroupScreen> {
       return _emptyStudentsSelection();
     }
 
-    return ListView.separated(
-        shrinkWrap: true,
-        itemBuilder: (context, index) {
-          var item = items[index];
-          return _selectedStudentItem(item);
-        },
-        separatorBuilder: (context, index) => Container(
-              height: 10,
-            ),
-        itemCount: items.length);
+    return Wrap(
+      spacing: 10,
+      children: [
+        ...students.map((item) =>  _selectedStudentItem(item),)
+      ],
+    );
   }
 
   Widget _errorMessage(StudentsSelectionStateError value) {
@@ -628,21 +629,27 @@ class CreateGroupScreenState extends State<CreateGroupScreen> {
   }
 
   _selectedStudentItem(StudentSelectionItemUiState item) {
-    return Card(
-        margin: EdgeInsets.zero,
-        elevation: 2,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              AppTextWidget(item.studentName),
-              Spacer(),
-              InkWell(
-                  onTap: () => getController().onRemoveStudentClick(item),
-                  child: Icon(Icons.remove))
-            ],
-          ),
-        ));
+    return Padding(
+      padding: const EdgeInsets.only(top: 15.0),
+      child: Card(
+          margin: EdgeInsets.zero,
+          color: AppColors.appBarBackgroundColor,
+          elevation: 2,
+          child: Container(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              spacing: 10,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                AppTextWidget(item.studentName),
+                // Spacer(),
+                InkWell(
+                    onTap: () => getController().onRemoveStudentClick(item),
+                    child: Icon(Icons.delete_outline , color: AppColors.appMainColor,))
+              ],
+            ),
+          )),
+    );
   }
 
   void showError(CreateGroupStateError result) {
@@ -651,7 +658,10 @@ class CreateGroupScreenState extends State<CreateGroupScreen> {
 
   _emptyStudentsSelection() {
     return Center(
-      child: AppTextWidget("No Students Selected".tr),
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: AppTextWidget("No Students Selected".tr),
+      ),
     );
   }
 

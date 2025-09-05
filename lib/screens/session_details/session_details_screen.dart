@@ -36,8 +36,6 @@ class SessionDetailsScreen extends StatefulWidget {
 }
 
 class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
-
-
   bool searchState = false;
 
   bool isEditable = false;
@@ -106,25 +104,24 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
         spacing: 15,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-              child:
-                  _activities(uiState, uiState.isSessionActive())),
+          Expanded(child: _activities(uiState, uiState.isSessionActive())),
           _sessionInfoSection(uiState),
           if (uiState.isSessionActive()) _enSessionButton(uiState)
         ]);
   }
 
   _sessionInfoSection(SessionDetailsUiState uiState) {
-    return SessionInfoWidget(uiState: uiState,);
+    return SessionInfoWidget(
+      uiState: uiState,
+    );
   }
 
-  _activities(SessionDetailsUiState uiState , bool isActive) {
-
+  _activities(SessionDetailsUiState uiState, bool isActive) {
     List<SessionActivityItemUiState> activities = uiState.activities;
 
     return ListView.separated(
         itemBuilder: (context, index) {
-          return _activityItem(uiState , activities[index], isActive);
+          return _activityItem(uiState, activities[index], isActive);
         },
         separatorBuilder: (context, index) => SizedBox(
               height: 10,
@@ -132,7 +129,8 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
         itemCount: activities.length);
   }
 
-  _activityItem(SessionDetailsUiState sessionDetailsUiState ,SessionActivityItemUiState uiState, bool isActive) {
+  _activityItem(SessionDetailsUiState sessionDetailsUiState,
+      SessionActivityItemUiState uiState, bool isActive) {
     return StudentActivityItemWidget(
       key: UniqueKey(),
       uiState: uiState,
@@ -235,26 +233,19 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
     );
   }
 
-  _searchIcon() {
-    return InkWell(
-      onTap: (){
-        setState(() {
-          searchState = true;
-        });
-      },
-        child: SearchIconWidget());
-  }
+
 
   _appBar() {
-    if(searchState){
-      return AppToolbarWidget.appBar(titleWidget: SearchTextField(
-        hint: 'Search',
-        controller: TextEditingController(),
-        onChanged: onSearchChanged,
-      ) ,
+    if (searchState) {
+      return AppToolbarWidget.appBar(
+          titleWidget: SearchTextField(
+            controller: TextEditingController(),
+            onChanged: onSearchChanged,
+          ),
           actions: [_closeIcon()]);
     }
-    return AppToolbarWidget.appBar(title: "Session Details".tr, actions: [_searchIcon()]);
+    return AppToolbarWidget.appBar(
+        title: "Session Details".tr, actions: [_searchIcon()]);
   }
 
   onSearchChanged(String? query) {
@@ -262,14 +253,30 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
     controller.onSearchChanged(query);
   }
 
-  _closeIcon() {
+  Widget _searchIcon() {
     return InkWell(
-        onTap: (){
+        onTap: () {
+          setState(() {
+            searchState = true;
+          });
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+          child: SearchIconWidget(),
+        ));
+  }
+
+  Widget _closeIcon() {
+    return InkWell(
+        onTap: () {
           setState(() {
             searchState = false;
             controller.onSearchClosed();
           });
         },
-        child: CloseIconWidget());
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+          child: CloseIconWidget(),
+        ));
   }
 }

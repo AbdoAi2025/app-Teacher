@@ -336,6 +336,7 @@ import '../../widgets/app_phone_input_text_field_widget.dart';
 import '../../widgets/app_text_field_widget.dart';
 import '../../widgets/app_toolbar_widget.dart';
 import '../../widgets/dialog_loading_widget.dart';
+import '../../widgets/dropdown_icon_widget.dart';
 import '../../widgets/item_selection_widget/student_list_selection_widget.dart';
 import '../student_edit/states/update_student_state.dart';
 import '../students_list/students_controller.dart';
@@ -362,7 +363,7 @@ class AddStudentScreenState extends State<AddStudentScreen> {
     return Scaffold(
       appBar: AppToolbarWidget.appBar(title: getScreenTitle()),
       body: _content(),
-      bottomNavigationBar: _saveButton(),
+      bottomNavigationBar: SafeArea(child: _saveButton()),
     );
   }
 
@@ -432,7 +433,7 @@ class AddStudentScreenState extends State<AddStudentScreen> {
         label: "Grade".tr,
         hint: "Grade".tr,
         readOnly: true,
-        suffixIcon: Icon(Icons.arrow_downward),
+        suffixIcon: DropdownIconWidget(),
         validator: MultiValidator([
           RequiredValidator(errorText: "Grade is required".tr),
         ]).call,
@@ -441,7 +442,7 @@ class AddStudentScreenState extends State<AddStudentScreen> {
     });
   }
 
-  _saveButton() => Padding(
+  Widget _saveButton() => Padding(
         padding: const EdgeInsets.all(16.0),
         child: PrimaryButtonWidget(
           onClick: onSaveGroupClick,
