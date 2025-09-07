@@ -328,7 +328,7 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
         onViewAllStudentsClick(students);
       },
       child: AppTextWidget(
-        "All students".tr,
+        "All Students".tr,
         style: AppTextStyle.teshrinArLtRegular.copyWith(
             decoration: TextDecoration.underline,
             fontSize: 15,
