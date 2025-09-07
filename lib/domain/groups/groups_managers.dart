@@ -27,7 +27,8 @@ class GroupsManagers {
                 groupId: e.id,
                 groupName: e.name,
                 studentsCount: e.studentCount,
-                date: AppDateUtils.getDayName(e.day),
+                dayIndex: e.day,
+                dayName: AppDateUtils.getDayName(e.day),
                 dayNameEn: AppDateUtils.getDayNameEn(e.day),
                 dayNameAr: AppDateUtils.getDayNameAr(e.day),
                 timeFrom: e.timeFrom,
@@ -65,9 +66,7 @@ class GroupsManagers {
 
       /*filter today groups*/
       var todayGroups = state.uiStates
-          .where((element) =>
-              element.date ==
-              AppDateUtils.getDayName(DateTime.now().weekday).tr)
+          .where((element) => element.dayIndex == (DateTime.now().weekday) % 7)
           .toList();
       GroupsManagers.todayGroupsState.value =
           GroupsStateSuccess(uiStates: todayGroups);
@@ -106,8 +105,8 @@ class GroupsManagers {
     final Map<String, List<GroupItemUiState>> grouped = {};
 
     for (final group in groups) {
-      grouped.putIfAbsent(group.date, () => []);
-      grouped[group.date]!.add(group);
+      grouped.putIfAbsent(group.dayName, () => []);
+      grouped[group.dayName]!.add(group);
     }
 
     // Optional: sort inside each day by timeFrom
