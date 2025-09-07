@@ -29,7 +29,10 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
         valueListenable: getAppSettingNotifier(),
       builder: (BuildContext context, value, Widget? child) {
         return Scaffold(
-          body: getBody(),
+          body: Padding(
+            padding: const EdgeInsets.only(bottom: 0.0),
+            child: getBody(),
+          ),
           bottomNavigationBar: BottomNavigationBar(
             currentIndex: _currentIndex,
             showSelectedLabels: true,
@@ -61,7 +64,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
 
   _studentsScreen() => StudentsScreen();
 
-  getBody() {
+  Widget getBody() {
     switch (_currentIndex) {
       case 1:
         return _groupsScreen();

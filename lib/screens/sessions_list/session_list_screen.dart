@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:teacher_app/localization/localArabic.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
 import 'package:teacher_app/screens/session_details/args/session_details_args_model.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
@@ -90,6 +91,6 @@ class _SessionListScreenState extends State<SessionListScreen> {
   }
 
   onSessionClick(SessionItemUiState p1) {
-    AppNavigator.navigateToSessionDetails(SessionDetailsArgsModel(p1.id));
+    AppNavigator.navigateToSessionDetails(SessionDetailsArgsModel(p1.id , controller.getStudentId()));
   }
 }

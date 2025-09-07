@@ -81,12 +81,15 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(), // <-- key line
-        child: _contentState(),
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 20.0),
+          child: _contentState(),
+        ),
       ),
     );
   }
 
-  _contentState() {
+  Widget _contentState() {
     return  Obx((){
       var state = controller.homeState.value;
       if(state is HomeStateLoading){

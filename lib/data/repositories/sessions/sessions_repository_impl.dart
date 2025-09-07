@@ -27,8 +27,8 @@ class SessionsRepositoryImpl extends SessionsRepository {
   }
 
   @override
-  Future<SessionDetailsApiModel?> getSessionDetails(String id) async {
-    var response = await remoteIdentityDataSource.getSessionDetails(id);
+  Future<SessionDetailsApiModel?> getSessionDetails(String id , String studentId) async {
+    var response = await remoteIdentityDataSource.getSessionDetails(id , studentId);
     return response.data;
   }
 

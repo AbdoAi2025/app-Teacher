@@ -10,7 +10,7 @@ class GroupsSearchUseCase{
 
     return groups.where((element) =>
         element.groupName.toLowerCase().contains(query.toLowerCase()) ||
-            element.date.tr.toLowerCase().contains(query.toLowerCase()) ||
+            element.dayName.tr.toLowerCase().contains(query.toLowerCase()) ||
             element.timeFrom.toLowerCase().contains(query.toLowerCase()) ||
             element.timeTo.toLowerCase().contains(query.toLowerCase()) ||
             element.gradeNameEn.contains(query.toLowerCase()) ||

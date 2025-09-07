@@ -35,13 +35,14 @@ class SessionDetailsController extends GetxController {
   Future<void> _loadSessionDetails() async {
 
     var id = args?.id ?? "";
+    var studentId = args?.studentId ?? "";
 
     if (id.isEmpty) {
       _updateState(SessionDetailsStateInvalidArgs());
       return;
     }
 
-    var result = await GetSessionDetailsUseCase().execute(id);
+    var result = await GetSessionDetailsUseCase().execute(id , studentId);
 
     if (result == null) {
       _updateState(SessionDetailsStateNotFound());

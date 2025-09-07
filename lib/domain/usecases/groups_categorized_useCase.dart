@@ -14,7 +14,7 @@ class GroupsCategorizedUseCase{
     for (final group in groups) {
       var key = '';
       if(type == SortEnum.byDay){
-        key = group.date.tr;
+        key = group.dayName.tr;
       }else if(type == SortEnum.byGrade){
         key = group.gradeName;
       }

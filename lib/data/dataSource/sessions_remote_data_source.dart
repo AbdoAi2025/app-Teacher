@@ -26,8 +26,13 @@ class SessionsRemoteDataSource {
      return responseResult;
   }
 
-  Future<GetSessionDetailsResponse> getSessionDetails(String id) async {
-     var response = await  ApiService.getInstance().get("${EndPoints.getSessionDetails}/$id");
+  Future<GetSessionDetailsResponse> getSessionDetails(String id, String studentId) async {
+
+    var queryParameters = {
+      "studentId": studentId
+    };
+
+     var response = await  ApiService.getInstance().get("${EndPoints.getSessionDetails}/$id" , queryParameters : queryParameters);
      GetSessionDetailsResponse responseResult = GetSessionDetailsResponse.fromJson(response.data);
      return responseResult;
   }

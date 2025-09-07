@@ -62,4 +62,6 @@ class SessionListController extends GetxController {
   void onRefresh() {
     _loadSessions();
   }
+
+  String getStudentId() => request.studentId ?? "";
 }
