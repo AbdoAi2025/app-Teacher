@@ -28,6 +28,11 @@ class GetRunningSessionsResponse {
 /// startDate : "2025-06-01T22:31:07.017+00:00"
 
 class RunningSessionsItemApiModel {
+
+  String? id;
+  String? startDate;
+  String? groupName;
+
   RunningSessionsItemApiModel({
       this.id, 
       this.startDate,});
@@ -35,14 +40,15 @@ class RunningSessionsItemApiModel {
   RunningSessionsItemApiModel.fromJson(dynamic json) {
     id = json['id'];
     startDate = json['startDate'];
+    groupName = json['groupName'];
   }
-  String? id;
-  String? startDate;
+
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['id'] = id;
     map['startDate'] = startDate;
+    map['groupName'] = groupName;
     return map;
   }
 

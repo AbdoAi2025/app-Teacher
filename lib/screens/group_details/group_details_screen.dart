@@ -218,9 +218,9 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
 
     var result = await AppNavigator.navigateToEditGroup(args);
 
-    if (result == true) {
-      controller.reload();
-    }
+    // if (result == true) {
+    //   controller.reload();
+    // }
   }
 
   onDeleteClick(GroupDetailsUiState uiState) {
@@ -268,8 +268,8 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
     return RunningSessionItemWidget(
       item: RunningSessionItemUiState(
           id: activeSession.sessionId ?? "",
-          date: AppDateUtils.parseStringToDateTime(
-              activeSession.startDate ?? "")),
+          date: AppDateUtils.parseStringToDateTime(activeSession.startDate ?? ""),
+      ),
       onSessionEnded: () {
         controller.reload();
       },

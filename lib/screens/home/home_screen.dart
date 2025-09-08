@@ -106,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
   _runningSession() {
     return SizedBox(
       width: double.infinity,
-      height: 250,
+      height: 300,
       // padding: EdgeInsets.all(15),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

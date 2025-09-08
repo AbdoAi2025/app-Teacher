@@ -19,7 +19,11 @@ class RunningSessionManager {
     if (result.isSuccess) {
       var uiStates = result.data
           ?.map((e) => RunningSessionItemUiState(
-          id: e.id ?? "", date: AppDateUtils.parseStringToDateTime(e.startDate ?? "")))
+          id: e.id ?? "",
+          date: AppDateUtils.parseStringToDateTime(e.startDate ?? ""),
+          groupName: e.groupName
+      )
+      )
           .toList() ??
           List.empty();
       _updateRunningSessionState(RunningSessionsStateSuccess(uiStates));

@@ -3,6 +3,7 @@ import 'package:teacher_app/apimodels/grade_api_model.dart';
 /// data : [{"id":1073741824,"nameEn":"string","nameAr":"string"}]
 
 class GetGradesListResponse {
+
   GetGradesListResponse({
       this.data,});
 

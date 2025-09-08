@@ -56,10 +56,11 @@ class _RunningSessionItemWidgetState extends State<RunningSessionItemWidget> {
 
   @override
   Widget build(BuildContext context) {
+    var  groupName =  item.groupName ?? "";
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       spacing: 15,
-      children: [_timerView(), _endSession(item), _viewDetails(item)],
+      children: [_timerView(), _endSession(item), if(groupName.isNotEmpty)_groupName(groupName), _viewDetails(item)],
     );
   }
 
@@ -95,6 +96,13 @@ class _RunningSessionItemWidgetState extends State<RunningSessionItemWidget> {
   void dispose() {
     _timer.cancel();
     super.dispose();
+  }
+
+  _groupName(String groupName) {
+   return AppTextWidget(
+       groupName, style: AppTextStyle.value,
+     maxLines: 1,
+   );
   }
 
 }

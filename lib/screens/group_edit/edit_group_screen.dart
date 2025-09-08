@@ -32,7 +32,7 @@ class _EditGroupScreenState extends CreateGroupScreenState {
 
   @override
   String getSubmitButtonText() {
-    return "Update";
+    return "Update".tr;
   }
 
   @override

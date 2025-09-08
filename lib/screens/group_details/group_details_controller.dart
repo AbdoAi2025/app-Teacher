@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:teacher_app/domain/usecases/get_group_details_use_case.dart';
 import '../../base/AppResult.dart';
 import '../../domain/events/students_events.dart';
+import '../../domain/groups/groups_managers.dart';
 import '../../domain/usecases/delete_group_use_case.dart';
 import 'args/group_details_arg_model.dart';
 import 'states/group_details_state.dart';
@@ -24,6 +25,7 @@ class GroupDetailsController extends GetxController {
     }
     _loadGroupDetails();
     _initOnStudentEvents();
+    _initOnGroupUpdated();
   }
 
   void updateState(GroupDetailsState state) {
@@ -89,5 +91,13 @@ class GroupDetailsController extends GetxController {
   Stream<AppResult<dynamic>>  deleteGroup(GroupDetailsUiState uiState)  async*{
     var useCase = DeleteGroupUseCase();
     yield await useCase.execute(uiState.groupId);
+  }
+
+  void _initOnGroupUpdated() {
+    GroupsManagers.groupUpdated.listen((value) {
+      if(value == groupDetailsArgsModel?.id){
+        reload();
+      }
+    },);
   }
 }

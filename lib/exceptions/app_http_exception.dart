@@ -1,9 +1,10 @@
 
 class AppHttpException  implements Exception {
 
+  final int? statusCode;
   final String? message;
 
-  AppHttpException(this.message);
+  AppHttpException(this.message ,[ this.statusCode]);
 
   @override
   String toString() {

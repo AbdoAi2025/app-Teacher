@@ -7,10 +7,14 @@ import '../../utils/day_utils.dart';
 import '../usecases/get_groups_list_use_case.dart';
 
 class GroupsManagers {
+
   GroupsManagers._();
+
+  static Rx<String?> groupUpdated = Rx(null);
 
   static Rx<GroupsState> state = Rx(GroupsStateLoading());
   static Rx<GroupsState> groupCategorizedState = Rx(GroupsStateLoading());
+
   static final GetGroupsListUseCase _getGroupsListUseCase =
       GetGroupsListUseCase();
 
@@ -122,5 +126,9 @@ class GroupsManagers {
       sortedGroups.addAll(value);
     });
     return sortedGroups;
+  }
+
+  static void onGroupUpdated(String? groupId) {
+    groupUpdated.value = groupId;
   }
 }

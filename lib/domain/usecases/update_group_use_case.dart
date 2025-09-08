@@ -13,6 +13,7 @@ class UpdateGroupUseCase {
     try{
        var items =  await repository.updateGroup(request);
        GroupsManagers.onRefresh();
+       GroupsManagers.onGroupUpdated(request.groupId);
        return AppResult.success(items);
     }on Exception catch(ex){
       return AppResult.error(ex);

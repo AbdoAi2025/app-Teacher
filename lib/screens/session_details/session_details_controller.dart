@@ -8,6 +8,7 @@ import 'package:teacher_app/utils/LogUtils.dart';
 import 'package:teacher_app/utils/day_utils.dart';
 
 import '../../data/requests/update_session_activities_request.dart';
+import '../../domain/groups/groups_managers.dart';
 import '../../domain/usecases/update_session_activities_use_case.dart';
 import 'args/session_details_args_model.dart';
 import 'states/session_details_state.dart';
@@ -30,6 +31,21 @@ class SessionDetailsController extends GetxController {
       this.args = args;
     }
     _loadSessionDetails();
+
+    _initOnGroupUpdated();
+  }
+
+  void _initOnGroupUpdated() {
+    GroupsManagers.groupUpdated.listen((value) {
+      var stateValue = state.value;
+      if(stateValue is SessionDetailsStateSuccess){
+        var uiState = stateValue.uiState;
+        var groupId = uiState.groupId;
+        if(value == groupId){
+          _loadSessionDetails();
+        }
+      }
+    },);
   }
 
   Future<void> _loadSessionDetails() async {
