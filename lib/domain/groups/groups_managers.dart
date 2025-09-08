@@ -130,5 +130,6 @@ class GroupsManagers {
 
   static void onGroupUpdated(String? groupId) {
     groupUpdated.value = groupId;
+    groupUpdated.value = null;
   }
 }
