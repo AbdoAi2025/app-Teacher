@@ -39,7 +39,7 @@ class GroupsCategorizedUseCase{
 
     grouped.forEach((key, value) {
       sortedGroups.add(GroupItemTitleUiState(
-          title: "$key(${value.length})"));
+          title: key));
       sortedGroups.addAll(value);
 
     });
