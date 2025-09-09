@@ -22,6 +22,8 @@ class SessionDetailsController extends GetxController {
   Map<String, SessionActivityItemUiState> itemChangedMap = {};
   List<SessionActivityItemUiState> activities = [];
   String? query ;
+  Function()? _updatedGroup;
+
 
   @override
   void onInit() {
@@ -35,18 +37,6 @@ class SessionDetailsController extends GetxController {
     _initOnGroupUpdated();
   }
 
-  void _initOnGroupUpdated() {
-    GroupsManagers.groupUpdated.listen((value) {
-      var stateValue = state.value;
-      if(stateValue is SessionDetailsStateSuccess){
-        var uiState = stateValue.uiState;
-        var groupId = uiState.groupId;
-        if(value == groupId){
-          _loadSessionDetails();
-        }
-      }
-    },);
-  }
 
   Future<void> _loadSessionDetails() async {
 
@@ -185,6 +175,37 @@ class SessionDetailsController extends GetxController {
       _updateState(SessionDetailsStateSuccess(uiState.copyWith(activities: activities)));
       return;
     }
+  }
 
+
+  void _initOnGroupUpdated() {
+    GroupsManagers.addGroupUpdatedListener(_onGroupUpdated);
+  }
+
+  @override
+  void onClose() {
+    super.onClose();
+    GroupsManagers.removeGroupUpdatedListener(_onGroupUpdated);
+  }
+
+  _onGroupUpdated(String groupId) {
+    appLog("SessionDetailsController _onGroupUpdated groupId:$groupId");
+    _updatedGroup = (){
+      var stateValue = state.value;
+      if(stateValue is SessionDetailsStateSuccess){
+        var uiState = stateValue.uiState;
+        if(groupId == uiState.groupId){
+          _updateState(SessionDetailsStateLoading());
+          _loadSessionDetails();
+        }
+      }
+    };
+  }
+
+  onResume(){
+    if(_updatedGroup != null){
+      _updatedGroup?.call();
+      _updatedGroup = null;
+    }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:teacher_app/utils/LogUtils.dart';
 
 import '../../exceptions/app_http_exception.dart';
 import '../../models/group_item_model.dart';
@@ -10,7 +11,7 @@ class GroupsManagers {
 
   GroupsManagers._();
 
-  static Rx<String?> groupUpdated = Rx(null);
+  static List<Function(String)> groupUpdatedListeners = [];
 
   static Rx<GroupsState> state = Rx(GroupsStateLoading());
   static Rx<GroupsState> groupCategorizedState = Rx(GroupsStateLoading());
@@ -129,7 +130,22 @@ class GroupsManagers {
   }
 
   static void onGroupUpdated(String? groupId) {
-    groupUpdated.value = groupId;
-    groupUpdated.value = null;
+    for (var listener in groupUpdatedListeners) {
+      listener.call(groupId ?? "");
+      }
+  }
+
+  static void addGroupUpdatedListener(Function(String) listener) {
+    appLog("GroupsManagers addGroupUpdatedListener groupUpdatedListeners:${groupUpdatedListeners.length}");
+    groupUpdatedListeners.add(listener);
+    appLog("GroupsManagers addGroupUpdatedListener groupUpdatedListeners:${groupUpdatedListeners.length}");
+
+  }
+
+  static void removeGroupUpdatedListener(Function(String) listener) {
+    appLog("GroupsManagers addGroupUpdatedListener removeGroupUpdatedListener:${groupUpdatedListeners.length}");
+    groupUpdatedListeners.remove(listener);
+    appLog("GroupsManagers addGroupUpdatedListener removeGroupUpdatedListener:${groupUpdatedListeners.length}");
+
   }
 }

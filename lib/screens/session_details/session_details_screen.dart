@@ -8,6 +8,7 @@ import 'package:teacher_app/utils/app_background_styles.dart';
 import 'package:teacher_app/utils/day_utils.dart';
 import 'package:teacher_app/utils/message_utils.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
+import 'package:teacher_app/widgets/app_visibility_widget.dart';
 import 'package:teacher_app/widgets/cancel_icon_widget.dart';
 import 'package:teacher_app/widgets/dialog_loading_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
@@ -45,18 +46,22 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: _appBar(),
-        resizeToAvoidBottomInset: false,
-        body: RefreshIndicator(
-          onRefresh: () async {
-            onRefresh();
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: _content(),
-          ),
-        ));
+    return AppVisibilityWidget(
+      key: Key("SessionDetailsScreen"),
+      onVisible: _onVisible,
+      child: Scaffold(
+          appBar: _appBar(),
+          resizeToAvoidBottomInset: false,
+          body: RefreshIndicator(
+            onRefresh: () async {
+              onRefresh();
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: _content(),
+            ),
+          )),
+    );
   }
 
   _content() {
@@ -275,5 +280,9 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 15.0),
           child: CloseIconWidget(),
         ));
+  }
+
+  void _onVisible() {
+    controller.onResume();
   }
 }

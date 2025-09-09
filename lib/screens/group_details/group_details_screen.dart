@@ -9,22 +9,19 @@ import 'package:teacher_app/themes/app_colors.dart';
 import 'package:teacher_app/utils/app_background_styles.dart';
 import 'package:teacher_app/utils/day_utils.dart';
 import 'package:teacher_app/utils/message_utils.dart';
-import 'package:teacher_app/widgets/app_text_field_widget.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
+import 'package:teacher_app/widgets/app_visibility_widget.dart';
 import 'package:teacher_app/widgets/day_with_icon_widget.dart';
 import 'package:teacher_app/widgets/delete_icon_widget.dart';
 import 'package:teacher_app/widgets/dialog_loading_widget.dart';
 import 'package:teacher_app/widgets/edit_icon_widget.dart';
-import 'package:teacher_app/widgets/empty_view_widget.dart';
 import 'package:teacher_app/widgets/forward_arrow_widget.dart';
 import 'package:teacher_app/widgets/grade_with_icon_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
 import 'package:teacher_app/widgets/sessions/running_session_item_widget.dart';
 import 'package:teacher_app/widgets/sessions/start_session_button_widget.dart';
-
 import '../../themes/txt_styles.dart';
 import '../../widgets/app_toolbar_widget.dart';
-import '../../widgets/groups/group_student_item_widget.dart';
 import '../../widgets/groups/states/group_student_item_ui_state.dart';
 import '../../widgets/students/students_group_list_search_widget.dart';
 import '../../widgets/students/students_group_list_widget.dart';
@@ -46,23 +43,27 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppToolbarWidget.appBar(title: "Group Details".tr, actions: [
-          _deleteIcon(),
-          SizedBox(
-            width: 10,
-          ),
-        ]),
-        body: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: RefreshIndicator(
-              onRefresh: () async {
-                controller.reload();
-              },
-              child: SingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  child: _content())),
-        ));
+    return AppVisibilityWidget(
+      key: Key("GroupDetailsScreen"),
+      onVisible: _onVisible,
+      child: Scaffold(
+          appBar: AppToolbarWidget.appBar(title: "Group Details".tr, actions: [
+            _deleteIcon(),
+            SizedBox(
+              width: 10,
+            ),
+          ]),
+          body: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: RefreshIndicator(
+                onRefresh: () async {
+                  controller.reload();
+                },
+                child: SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    child: _content())),
+          )),
+    );
   }
 
   Widget _content() {
@@ -350,5 +351,9 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
                 onStudentItemClick(uiState);
               },
             ));
+  }
+
+  void _onVisible() {
+    controller.onResume();
   }
 }

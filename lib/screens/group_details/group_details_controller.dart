@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:teacher_app/domain/usecases/get_group_details_use_case.dart';
+import 'package:teacher_app/utils/LogUtils.dart';
 import '../../base/AppResult.dart';
 import '../../domain/events/students_events.dart';
 import '../../domain/groups/groups_managers.dart';
@@ -13,6 +14,7 @@ import '../../utils/extensions_utils.dart';
 class GroupDetailsController extends GetxController {
   Rx<GroupDetailsState> state = Rx(GroupDetailsStateLoading());
   GroupDetailsArgModel? groupDetailsArgsModel;
+  Function()? _updatedGroup;
 
   @override
   void onInit() {
@@ -94,10 +96,29 @@ class GroupDetailsController extends GetxController {
   }
 
   void _initOnGroupUpdated() {
-    GroupsManagers.groupUpdated.listen((value) {
-      if(value == groupDetailsArgsModel?.id){
+    GroupsManagers.addGroupUpdatedListener(_onGroupUpdated);
+  }
+
+  @override
+  void onClose() {
+    super.onClose();
+    GroupsManagers.removeGroupUpdatedListener(_onGroupUpdated);
+  }
+
+  _onGroupUpdated(String groupId) {
+    appLog("_onGroupUpdated groupId:$groupId");
+    _updatedGroup = (){
+      appLog("_onGroupUpdated _updatedGroup:$groupId , groupDetailsArgsModel?.id:${groupDetailsArgsModel?.id}");
+      if(groupId == groupDetailsArgsModel?.id){
         reload();
       }
-    },);
+    };
+  }
+
+  onResume(){
+    if(_updatedGroup != null){
+      _updatedGroup?.call();
+      _updatedGroup = null;
+    }
   }
 }

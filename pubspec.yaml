@@ -57,6 +57,8 @@ dependencies:
   flutter_native_contact_picker: ^0.0.10
   permission_handler: ^11.3.1
   synchronized: ^3.0.0
+  visibility_detector: ^0.4.0+2
+
 
 
 
