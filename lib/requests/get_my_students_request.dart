@@ -5,6 +5,7 @@ class GetMyStudentsRequest {
   int pageSize;
   int pageIndex;
   String? search;
+  String? noInGroupId;
 
   GetMyStudentsRequest({
     this.hasGroups,
@@ -12,6 +13,7 @@ class GetMyStudentsRequest {
     this.pageSize = 20,
     this.pageIndex = 0,
     this.search,
+    this.noInGroupId,
   });
 
   Map<String, dynamic> toJson() {
@@ -26,6 +28,10 @@ class GetMyStudentsRequest {
 
     if (search != null && search!.isNotEmpty) {
       map['searchText'] = search;
+    }
+
+    if (noInGroupId != null && noInGroupId!.isNotEmpty) {
+      map['noInGroupId'] = noInGroupId;
     }
 
     map['pageSize'] = pageSize;

@@ -33,6 +33,7 @@ class SessionDetailsApiModel {
     sessionQuizGrade = json['sessionQuizGrade'];
     sessionCreatedAt = json['sessionCreatedAt'];
     groupId = json['groupId'];
+    gradeId = json['gradeId'];
     groupName = json['groupName'];
     if (json['activities'] != null) {
       activities = [];
@@ -48,6 +49,7 @@ class SessionDetailsApiModel {
   int? sessionQuizGrade;
   String? sessionCreatedAt;
   String? groupId;
+  int? gradeId;
   String? groupName;
   List<StudentActivityApiModel>? activities;
 

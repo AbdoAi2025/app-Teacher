@@ -116,6 +116,7 @@ class EditGroupController extends CreateGroupController {
         .map((e) => StudentSelectionItemUiState(
         studentId: e.studentId,
         studentName: e.studentName,
+        groupName: "",
         gradeId: e.gradeId,
         isSelected: true
     )).toList() ?? [];

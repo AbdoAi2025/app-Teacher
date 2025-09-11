@@ -569,8 +569,6 @@ class CreateGroupScreenState extends State<CreateGroupScreen> {
         })
     );
 
-
-
     Get.bottomSheet(
         bottomSheetWidget,
         backgroundColor: AppColors.white,
@@ -727,8 +725,10 @@ class CreateGroupScreenState extends State<CreateGroupScreen> {
 
     return StudentListSelectionWidget(
       students: value.students,
-      onSaved: (students) =>
-          getController().onSelectedStudents(students),
+      onSaved: (students){
+        getController().onSelectedStudents(students);
+        Get.back();
+      }
     );
   }
 }

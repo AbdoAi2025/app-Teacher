@@ -20,7 +20,7 @@ final Map<String, String> enUS = {
   "Grade is required": "Grade is required",
   "Select Day": "Select Day",
   "Save": "Save",
-  "Select Student to group": "Select Student to group",
+  "Select Student": "Select Student",
   "Group Details": "Group Details",
   "Group Info": "Group Info",
   "No students found": "No students found",

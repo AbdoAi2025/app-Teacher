@@ -39,6 +39,12 @@ class SessionsRepositoryImpl extends SessionsRepository {
   }
 
   @override
+  Future<String?> addSessionActivities(UpdateSessionActivitiesRequest request) async {
+    var response = await remoteIdentityDataSource.addSessionActivities(request);
+    return response.sessionId;
+  }
+
+  @override
   Future<dynamic> endSession(String sessionId) async {
      return await remoteIdentityDataSource.endSession(sessionId);
   }
@@ -48,4 +54,11 @@ class SessionsRepositoryImpl extends SessionsRepository {
     var response = await remoteIdentityDataSource.getMySessions(request);
     return response.data ?? List.empty();
   }
+
+  @override
+  Future deleteSession(String sessionId) async {
+    return await remoteIdentityDataSource.deleteSession(sessionId);
+  }
+
+
 }

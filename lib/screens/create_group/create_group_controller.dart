@@ -34,8 +34,7 @@ class CreateGroupController extends GetxController {
   /*Students selection*/
   List<StudentSelectionItemUiState> selectedStudents = [];
   final Rx<List<StudentSelectionItemUiState>> selectedStudentsRx = Rx([]);
-  final Rx<StudentsSelectionState> studentsSelectionState =
-      Rx(StudentsSelectionStateLoading());
+  final Rx<StudentsSelectionState> studentsSelectionState = Rx(StudentsSelectionStateLoading());
 
   /*grades selection*/
   final Rx<ItemSelectionUiState?> selectedGrade = Rx(null);
@@ -75,6 +74,7 @@ class CreateGroupController extends GetxController {
               ?.map((e) => StudentSelectionItemUiState(
                   studentId: e.studentId ?? "",
                   studentName: e.studentName ?? "",
+                  groupName: e.groupName ?? "",
                   gradeId: e.gradeId ?? 0,
                   isSelected: isSelected(e)))
               .toList() ??

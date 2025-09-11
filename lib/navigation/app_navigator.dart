@@ -63,4 +63,8 @@ class AppNavigator {
     Get.toNamed(AppRoutes.studentReport , arguments: args);
   }
 
+  static void back() {
+    Get.back();
+  }
+
 }

@@ -10,6 +10,7 @@ class SessionDetailsUiState {
   final int sessionQuizGrade;
   final DateTime? sessionCreatedAt;
   final String groupId;
+  final int gradeId;
   final String groupName;
   final List<SessionActivityItemUiState> activities;
 
@@ -20,6 +21,7 @@ class SessionDetailsUiState {
       required this.sessionQuizGrade,
       required this.sessionCreatedAt,
       required this.groupId,
+      required this.gradeId,
       required this.groupName,
       required this.activities});
 
@@ -30,6 +32,7 @@ class SessionDetailsUiState {
     int? sessionQuizGrade,
     DateTime? sessionCreatedAt,
     String? groupId,
+    int? gradeId,
     String? groupName,
     List<SessionActivityItemUiState>? activities,
   }) {
@@ -40,6 +43,7 @@ class SessionDetailsUiState {
       sessionStatus: sessionStatus ?? this.sessionStatus,
       sessionCreatedAt: sessionCreatedAt ?? this.sessionCreatedAt,
       groupId: groupId ?? this.groupId,
+      gradeId: gradeId ?? this.gradeId,
       groupName: groupName ?? this.groupName,
       activities: activities ?? this.activities,
     );

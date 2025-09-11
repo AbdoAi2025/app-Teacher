@@ -43,15 +43,27 @@ class SessionsRemoteDataSource {
      return responseResult;
   }
 
+  Future<UpdateSessionActivitiesResponse> addSessionActivities(UpdateSessionActivitiesRequest request) async {
+     var response = await  ApiService.getInstance().post(EndPoints.addSessionActivities , data: request.toJson());
+     UpdateSessionActivitiesResponse responseResult = UpdateSessionActivitiesResponse.fromJson(response.data);
+     return responseResult;
+  }
+
   Future<dynamic> endSession(String sessionId) async{
     await  ApiService.getInstance().post(EndPoints.endSession , data: {
       "sessionId": sessionId
     });
   }
 
+
+
   Future<GetMySessionsResponse> getMySessions(GetMySessionsRequest request) async{
     var response  = await  ApiService.getInstance().get(EndPoints.getMySessions , queryParameters: request.toJson());
     return GetMySessionsResponse.fromJson(response.data);
+  }
+
+  Future<dynamic> deleteSession(String sessionId) async{
+    await  ApiService.getInstance().delete("${EndPoints.deleteSession}/$sessionId");
   }
 
 }

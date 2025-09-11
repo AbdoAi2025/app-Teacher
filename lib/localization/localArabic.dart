@@ -35,7 +35,7 @@ final Map<String, String> ar = {
   "Grade is required": "الصف مطلوب",
   "Select Day": "اختر اليوم",
   "Save": "حفظ",
-  "Select Student to group": "اختر طالبًا للمجموعة",
+  "Select Student to": "اختر طالبًا",
   "Group Details": "تفاصيل المجموعة",
   "Group Info": "معلومات المجموعة",
   "No students found": "لا يوجد طلاب",
