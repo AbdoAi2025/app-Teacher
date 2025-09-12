@@ -12,7 +12,7 @@ class UpdateStudentUseCase {
   Future<AppResult<AddStudentResponse?>> execute(UpdateStudentRequest request) async {
     try{
        var items =  await repository.updateStudent(request);
-       StudentsEvents.onStudentUpdated();
+       StudentsEvents.onStudentUpdated(request.studentId);
        return AppResult.success(items);
     }on Exception catch(ex){
       return AppResult.error(ex);

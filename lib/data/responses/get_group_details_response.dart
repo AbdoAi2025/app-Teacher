@@ -147,6 +147,12 @@ class ActiveSessionApiModel {
     map['startDate'] = startDate;
     return map;
   }
+
+  @override
+  String toString() {
+    return 'ActiveSessionApiModel{sessionId: $sessionId, startDate: $startDate}';
+  }
+
 }
 
 

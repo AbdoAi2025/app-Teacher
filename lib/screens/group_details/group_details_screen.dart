@@ -17,10 +17,12 @@ import 'package:teacher_app/widgets/dialog_loading_widget.dart';
 import 'package:teacher_app/widgets/edit_icon_widget.dart';
 import 'package:teacher_app/widgets/forward_arrow_widget.dart';
 import 'package:teacher_app/widgets/grade_with_icon_widget.dart';
+import 'package:teacher_app/widgets/lifecycle_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
 import 'package:teacher_app/widgets/sessions/running_session_item_widget.dart';
 import 'package:teacher_app/widgets/sessions/start_session_button_widget.dart';
 import '../../themes/txt_styles.dart';
+import '../../utils/LogUtils.dart';
 import '../../widgets/app_toolbar_widget.dart';
 import '../../widgets/groups/states/group_student_item_ui_state.dart';
 import '../../widgets/students/students_group_list_search_widget.dart';
@@ -38,32 +40,29 @@ class GroupDetailsScreen extends StatefulWidget {
   State<GroupDetailsScreen> createState() => _GroupDetailsScreenState();
 }
 
-class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
+class _GroupDetailsScreenState extends LifecycleWidgetState<GroupDetailsScreen> {
+
   final GroupDetailsController controller = Get.put(GroupDetailsController());
 
   @override
   Widget build(BuildContext context) {
-    return AppVisibilityWidget(
-      key: Key("GroupDetailsScreen"),
-      onVisible: _onVisible,
-      child: Scaffold(
-          appBar: AppToolbarWidget.appBar(title: "Group Details".tr, actions: [
-            _deleteIcon(),
-            SizedBox(
-              width: 10,
-            ),
-          ]),
-          body: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: RefreshIndicator(
-                onRefresh: () async {
-                  controller.reload();
-                },
-                child: SingleChildScrollView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    child: _content())),
-          )),
-    );
+    return Scaffold(
+        appBar: AppToolbarWidget.appBar(title: "Group Details".tr, actions: [
+          _deleteIcon(),
+          SizedBox(
+            width: 10,
+          ),
+        ]),
+        body: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: RefreshIndicator(
+              onRefresh: () async {
+                controller.reload();
+              },
+              child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: _content())),
+        ));
   }
 
   Widget _content() {
@@ -254,6 +253,7 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
 
   _sessionSection(GroupDetailsUiState uiState) {
     var activeSession = uiState.activeSession;
+    appLog("GroupDetailsScreen _sessionSection activeSession:$activeSession");
     return Container(
       width: double.infinity,
       decoration: AppBackgroundStyle.backgroundWithShadow(),
@@ -353,7 +353,8 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
             ));
   }
 
-  void _onVisible() {
+  @override
+  void onResumedNavigatedBack() {
     controller.onResume();
   }
 }

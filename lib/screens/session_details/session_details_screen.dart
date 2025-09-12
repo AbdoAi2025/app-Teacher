@@ -1,33 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:teacher_app/enums/session_status_enum.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
 import 'package:teacher_app/presentation/bottom_sheets/students_list_selections_bottom_sheet.dart';
 import 'package:teacher_app/screens/create_group/students_selection/states/student_selection_item_ui_state.dart';
 import 'package:teacher_app/screens/session_details/states/session_details_ui_state.dart';
-import 'package:teacher_app/themes/app_colors.dart';
-import 'package:teacher_app/utils/Keyboard_utils.dart';
-import 'package:teacher_app/utils/app_background_styles.dart';
-import 'package:teacher_app/utils/day_utils.dart';
 import 'package:teacher_app/utils/message_utils.dart';
-import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'package:teacher_app/widgets/app_visibility_widget.dart';
 import 'package:teacher_app/widgets/cancel_icon_widget.dart';
 import 'package:teacher_app/widgets/delete_icon_widget.dart';
 import 'package:teacher_app/widgets/dialog_loading_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
-import 'package:teacher_app/widgets/primary_button_widget.dart';
-
-import '../../themes/txt_styles.dart';
+import '../../domain/events/sessions_events.dart';
+import '../../utils/LogUtils.dart';
 import '../../widgets/app_toolbar_widget.dart';
 import '../../widgets/close_icon_widget.dart';
 import '../../widgets/done_icon_widget.dart';
 import '../../widgets/edit_icon_widget.dart';
+import '../../widgets/lifecycle_widget.dart';
 import '../../widgets/search_icon_widget.dart';
 import '../../widgets/search_text_field.dart';
 import '../../widgets/sessions/end_session_button_widget.dart';
 import '../../widgets/sessions/session_info/session_info_widget.dart';
-import '../../widgets/sessions/timer_counter_widget.dart';
 import 'session_details_controller.dart';
 import 'states/session_details_state.dart';
 import 'states/update_session_activities_state.dart';
@@ -40,32 +33,39 @@ class SessionDetailsScreen extends StatefulWidget {
   State<SessionDetailsScreen> createState() => _SessionDetailsScreenState();
 }
 
-class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
-  bool searchState = false;
+class _SessionDetailsScreenState extends LifecycleWidgetState<SessionDetailsScreen> {
 
+  bool searchState = false;
   bool isEditable = false;
 
-  final SessionDetailsController controller =
-      Get.put(SessionDetailsController());
+  final SessionDetailsController controller = Get.put(SessionDetailsController());
+
+  @override
+  void initState() {
+    super.initState();
+    controller.eventListeners.add(_onSessionEventUpdated);
+  }
+
+  void _onSessionEventUpdated(SessionsEventsState event) {
+    if(event is SessionsEventsStateDeleted){
+       onBack();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return AppVisibilityWidget(
-      key: Key("SessionDetailsScreen"),
-      onVisible: _onVisible,
-      child: Scaffold(
-          appBar: _appBar(),
-          resizeToAvoidBottomInset: false,
-          body: RefreshIndicator(
-            onRefresh: () async {
-              onRefresh();
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: _content(),
-            ),
-          )),
-    );
+    return Scaffold(
+        appBar: _appBar(),
+        resizeToAvoidBottomInset: false,
+        body: RefreshIndicator(
+          onRefresh: () async {
+            onRefresh();
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: _content(),
+          ),
+        ));
   }
 
   _content() {
@@ -289,8 +289,15 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
         ));
   }
 
-  void _onVisible() {
+  @override
+  void onResumedNavigatedBack() {
+    appLog("SessionDetailsScreen _onVisible");
     controller.onResume();
+  }
+
+  onBack(){
+    appLog("SessionDetailsScreen onBack");
+    AppNavigator.back();
   }
 
   onAddStudentToSessionClick(SessionDetailsUiState uiState) {
@@ -317,14 +324,24 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
      showConfirmationMessage("Are you sure you want to delete the session".tr, (){
        showDialogLoading();
        controller.deleteSession().listen((result){
+         appLog("_deleteIcon result : ${result.toString()}");
          hideDialogLoading();
-         if(result.isSuccess) {
+         if(result.isSuccess){
            AppNavigator.back();
-         } else if(result.isError) {
+         }else
+           if(result.isError) {
            showErrorMessage(result.error?.toString());
          }
        });
      });
   });
+
+  @override
+  void dispose() {
+    super.dispose();
+    appLog("dispose");
+    appLog("controller.eventListeners.length : ${controller.eventListeners.length}");
+    controller.eventListeners.remove(_onSessionEventUpdated);
+  }
 
 }

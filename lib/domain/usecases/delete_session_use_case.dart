@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:teacher_app/domain/events/sessions_events.dart';
 
 import '../../base/AppResult.dart';
 import '../../data/repositories/sessions/sessions_repository.dart';
@@ -17,6 +18,7 @@ class DeleteSessionUseCase {
     try{
       var items =  await _repository.deleteSession(sessionId);
       if(isRunning) RunningSessionManager.onRefresh();
+      SessionsEvents.onSessionDeleted(sessionId);
       return AppResult.success(items);
     }
     catch(ex){

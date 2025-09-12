@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:teacher_app/domain/events/sessions_events.dart';
 import 'package:teacher_app/domain/usecases/get_session_details_use_case.dart';
 import 'package:teacher_app/enums/homework_enum.dart';
 import 'package:teacher_app/enums/session_status_enum.dart';
@@ -9,6 +10,7 @@ import 'package:teacher_app/utils/day_utils.dart';
 
 import '../../base/AppResult.dart';
 import '../../data/requests/update_session_activities_request.dart';
+import '../../domain/events/students_events.dart';
 import '../../domain/groups/groups_managers.dart';
 import '../../domain/usecases/add_session_activities_use_case.dart';
 import '../../domain/usecases/delete_session_use_case.dart';
@@ -22,9 +24,9 @@ import 'states/session_details_state.dart';
 import 'states/update_session_activities_state.dart';
 
 class SessionDetailsController extends GetxController {
-  GetMyStudentsListUseCase getMyStudentsListUseCase =
-      GetMyStudentsListUseCase();
 
+  List<Function(SessionsEventsState)> eventListeners = [];
+  GetMyStudentsListUseCase getMyStudentsListUseCase = GetMyStudentsListUseCase();
   Rx<SessionDetailsState> state = Rx(SessionDetailsStateLoading());
   SessionDetailsArgsModel? args;
   Map<String, SessionActivityItemUiState> itemChangedMap = {};
@@ -197,56 +199,34 @@ class SessionDetailsController extends GetxController {
 
   void _initOnGroupUpdated() {
     GroupsManagers.addGroupUpdatedListener(_onGroupUpdated);
+    StudentsEvents.addListener(_studentsEventsUpdated);
+    SessionsEvents.addListener(_sessionsEventsUpdated);
   }
 
   @override
   void onClose() {
     super.onClose();
     GroupsManagers.removeGroupUpdatedListener(_onGroupUpdated);
-  }
-
-  _onGroupUpdated(String groupId) {
-    appLog("SessionDetailsController _onGroupUpdated groupId:$groupId");
-    _updatedGroup = () {
-      var stateValue = state.value;
-      if (stateValue is SessionDetailsStateSuccess) {
-        var uiState = stateValue.uiState;
-        if (groupId == uiState.groupId) {
-          _updateState(SessionDetailsStateLoading());
-          _loadSessionDetails();
-        }
-      }
-    };
-  }
-
-  onResume() {
-    if (_updatedGroup != null) {
-      _updatedGroup?.call();
-      _updatedGroup = null;
-    }
+    StudentsEvents.removeListener(_studentsEventsUpdated);
+    SessionsEvents.removeListener(_sessionsEventsUpdated);
   }
 
   Future<void> loadMyStudents(SessionDetailsUiState uiState) async {
-
     var stateValue = state.value;
-
     if (stateValue is SessionDetailsStateSuccess) {
       var gradeId = stateValue.uiState.gradeId;
       var groupId = stateValue.uiState.groupId;
       studentsSelectionState.value = StudentsSelectionStateLoading();
-      var request = GetMyStudentsRequest(
-          noInGroupId: groupId
-      );
-
+      var request = GetMyStudentsRequest(noInGroupId: groupId);
       var result = await getMyStudentsListUseCase.execute(request);
-
       if (result is AppResultSuccess) {
-
-        var existsStudents = uiState.activities.map((e) => e.studentId).toList();
-
+        var existsStudents =
+            uiState.activities.map((e) => e.studentId).toList();
         var students = result.value
-            ?.where((element) =>  !existsStudents.contains(element.studentId) ,)
-            .map((e) => StudentSelectionItemUiState(
+                ?.where(
+                  (element) => !existsStudents.contains(element.studentId),
+                )
+                .map((e) => StudentSelectionItemUiState(
                     studentId: e.studentId ?? "",
                     studentName: e.studentName ?? "",
                     groupName: e.groupName ?? "",
@@ -265,14 +245,11 @@ class SessionDetailsController extends GetxController {
         studentsState.students.isNotEmpty) {
       return;
     }
-
-
     loadMyStudents(uiState);
   }
 
   Stream<AppResult<dynamic>> addStudentToSession(SessionDetailsUiState uiState,
       List<StudentSelectionItemUiState> items) async* {
-
     var request = UpdateSessionActivitiesRequest(
         sessionId: uiState.id,
         activities: items
@@ -284,21 +261,82 @@ class SessionDetailsController extends GetxController {
                   behaviorNotes: '',
                   homeworkStatus: null,
                   homeworkNotes: '',
-                  quizGrade: null
-              ),
+                  quizGrade: null),
             )
             .toList());
-
     yield await AddSessionActivitiesUseCase().execute(request);
   }
 
-  Stream<AppResult<dynamic>> deleteSession() async*{
+  Stream<AppResult<dynamic>> deleteSession() async* {
     var stateValue = state.value;
-    if(stateValue is SessionDetailsStateSuccess){
+    if (stateValue is SessionDetailsStateSuccess) {
       var uiState = stateValue.uiState;
-      yield await DeleteSessionUseCase().execute(uiState.id , uiState.sessionStatus == SessionStatus.active);
-    }else{
+      yield await DeleteSessionUseCase()
+          .execute(uiState.id, uiState.sessionStatus == SessionStatus.active);
+    } else {
       yield AppResult.error(Exception("Invalid State"));
+    }
+  }
+
+  SessionDetailsUiState? getGroupDetailsUiState() {
+    var state = this.state.value;
+    if (state is SessionDetailsStateSuccess) {
+      return state.uiState;
+    }
+    return null;
+  }
+
+  _onGroupUpdated(String groupId) {
+    appLog("SessionDetailsController _onGroupUpdated groupId:$groupId");
+    _updatedGroup = () {
+      var stateValue = state.value;
+      if (stateValue is SessionDetailsStateSuccess) {
+        var uiState = stateValue.uiState;
+        if (groupId == uiState.groupId) {
+          _updateState(SessionDetailsStateLoading());
+          _loadSessionDetails();
+        }
+      }
+    };
+  }
+
+  _studentsEventsUpdated(StudentsEventsState event) {
+    if (event is StudentsEventsStateUpdated) {
+      var students = getGroupDetailsUiState()?.activities ?? List.empty();
+      if (students.any((element) => element.studentId == event.id)) {
+        _updatedGroup = () {
+          _updateState(SessionDetailsStateLoading());
+          _loadSessionDetails();
+        };
+      }
+    }
+  }
+
+  onResume() {
+    appLog("SessionDetailsController onResume");
+    if (_updatedGroup != null) {
+      _updatedGroup?.call();
+      _updatedGroup = null;
+    }
+  }
+
+  _sessionsEventsUpdated(SessionsEventsState event) {
+    if (event is SessionsEventsStateDeleted) {
+      if (getGroupDetailsUiState()?.id == event.id) {
+        _updatedGroup = () {
+          _updateEventState(event);
+        };
+      }
+    }
+  }
+
+  void _updateEventState(SessionsEventsStateDeleted event) {
+
+    appLog("SessionDetailsController _updateEventState event: ${event.toString()}");
+    appLog("SessionDetailsController eventListeners : ${eventListeners.length}");
+
+    for (var element in eventListeners) {
+      element(event);
     }
   }
 }

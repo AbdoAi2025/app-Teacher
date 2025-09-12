@@ -6,6 +6,7 @@ class SessionDetailsState {}
 class SessionDetailsStateLoading extends SessionDetailsState{}
 class SessionDetailsStateInvalidArgs extends SessionDetailsState{}
 class SessionDetailsStateNotFound extends SessionDetailsState{}
+class SessionDetailsStateDeleted extends SessionDetailsState{}
 class SessionDetailsStateSuccess extends SessionDetailsState{
   final SessionDetailsUiState uiState;
   SessionDetailsStateSuccess(this.uiState);

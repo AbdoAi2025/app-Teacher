@@ -28,6 +28,8 @@ class StudentsController extends GetxController {
   static const  sortByGradeType = 1;
   int? sortType ;
 
+  Function()? updateRefresh;
+
   @override
   void onInit() {
     super.onInit();
@@ -71,12 +73,8 @@ class StudentsController extends GetxController {
     this.state.value = state;
   }
 
-  void _initOnStudentEvents() {
-    StudentsEvents.studentsEvents.listen((event) {
-      if (event == null) return;
-      refreshStudents();
-    });
-  }
+
+
 
   Stream<AppResult<dynamic>> deleteStudent(StudentItemUiState uiState) async* {
     var useCase = DeleteStudentUseCase();
@@ -253,6 +251,27 @@ class StudentsController extends GetxController {
     var stateValue = state.value;
     if(stateValue is StudentsStateSuccess){
       _updateState(stateValue.copyWith(uiStates: _getItemsFiltered()));
+    }
+  }
+
+  void _initOnStudentEvents() {
+    StudentsEvents.addListener(_studentsEventsUpdated);
+  }
+
+  @override
+  void onClose() {
+    super.onClose();
+    StudentsEvents.removeListener(_studentsEventsUpdated);
+  }
+
+  _studentsEventsUpdated(StudentsEventsState event) {
+    updateRefresh = (){ _loadStudents();};
+  }
+
+  onResume(){
+    if(updateRefresh != null){
+      updateRefresh?.call();
+      updateRefresh = null;
     }
   }
 }

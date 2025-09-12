@@ -229,9 +229,11 @@ import 'package:teacher_app/screens/students_list/states/student_item_ui_state.d
 import 'package:teacher_app/screens/students_list/students_controller.dart';
 import 'package:teacher_app/widgets/app_toolbar_widget.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
+import 'package:teacher_app/widgets/app_visibility_widget.dart';
 import 'package:teacher_app/widgets/close_icon_widget.dart';
 import 'package:teacher_app/widgets/empty_view_widget.dart';
 import 'package:teacher_app/widgets/error_view_widget.dart';
+import 'package:teacher_app/widgets/lifecycle_widget.dart';
 import 'package:teacher_app/widgets/search_icon_widget.dart';
 import 'package:teacher_app/widgets/students/students_list_pagination_widget.dart';
 import '../../navigation/app_navigator.dart';
@@ -254,9 +256,9 @@ class StudentsScreen extends StatefulWidget {
   State<StudentsScreen> createState() => _StudentsScreenState();
 }
 
-class _StudentsScreenState extends State<StudentsScreen> {
-  StudentsController controller = Get.put(StudentsController());
+class _StudentsScreenState extends LifecycleWidgetState<StudentsScreen> {
 
+  StudentsController controller = Get.put(StudentsController());
   bool searchState = false;
 
   @override
@@ -466,5 +468,10 @@ class _StudentsScreenState extends State<StudentsScreen> {
   void onSortResetClick() {
     Get.back();
     controller.resetSort();
+  }
+
+  @override
+  void onResumedNavigatedBack() {
+    controller.onResume();
   }
 }

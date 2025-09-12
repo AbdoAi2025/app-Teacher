@@ -16,10 +16,15 @@ import 'domain/usecases/get_app_setting_use_case.dart';
 import 'localization/app_translation.dart';
 
 
+import 'navigation/my_route_observer.dart';
 import 'services/api_service.dart';
 
 Locale? appLocale;
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
+
+
 void main() async {
 
 
@@ -67,6 +72,7 @@ class _MyAppState extends State<MyApp> {
           var appLocaleModel = setting.appLocaleModel;
           var langCode =( appLocaleModel?.toLocale() ?? appLocale)?.languageCode;
           return GetMaterialApp(
+            navigatorObservers: [MyRouteObserver() , routeObserver], // attach observer 🚀
             navigatorKey: navigatorKey,
             textDirection: (rtlLanguages.contains(langCode)
                 ? TextDirection.rtl

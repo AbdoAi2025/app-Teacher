@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:get/get.dart';
+import 'package:teacher_app/domain/events/sessions_events.dart';
 import 'package:teacher_app/domain/usecases/get_group_details_use_case.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
 import '../../base/AppResult.dart';
@@ -19,15 +22,18 @@ class GroupDetailsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-
     var arg = Get.arguments;
-
     if (arg is GroupDetailsArgModel) {
       groupDetailsArgsModel = arg;
     }
     _loadGroupDetails();
-    _initOnStudentEvents();
-    _initOnGroupUpdated();
+    _initEvents();
+  }
+
+  void updateGroup(GroupDetailsArgModel model) {
+    if(groupDetailsArgsModel?.id == model.id) return;
+    groupDetailsArgsModel = model;
+    _loadGroupDetails();
   }
 
   void updateState(GroupDetailsState state) {
@@ -83,36 +89,43 @@ class GroupDetailsController extends GetxController {
     _loadGroupDetails();
   }
 
-  void _initOnStudentEvents() {
-    StudentsEvents.studentsEvents.listen((event) {
-      if(event == null) return;
-      reload();
-    });
-  }
 
   Stream<AppResult<dynamic>>  deleteGroup(GroupDetailsUiState uiState)  async*{
     var useCase = DeleteGroupUseCase();
     yield await useCase.execute(uiState.groupId);
   }
 
-  void _initOnGroupUpdated() {
+  void _initEvents() {
     GroupsManagers.addGroupUpdatedListener(_onGroupUpdated);
+    StudentsEvents.addListener(_studentsEventsUpdated);
+    SessionsEvents.addListener(_sessionsEventsUpdated);
   }
 
   @override
   void onClose() {
     super.onClose();
     GroupsManagers.removeGroupUpdatedListener(_onGroupUpdated);
+    StudentsEvents.removeListener(_studentsEventsUpdated);
+    SessionsEvents.removeListener(_sessionsEventsUpdated);
   }
 
   _onGroupUpdated(String groupId) {
-    appLog("_onGroupUpdated groupId:$groupId");
     _updatedGroup = (){
-      appLog("_onGroupUpdated _updatedGroup:$groupId , groupDetailsArgsModel?.id:${groupDetailsArgsModel?.id}");
       if(groupId == groupDetailsArgsModel?.id){
         reload();
       }
     };
+  }
+
+  _studentsEventsUpdated(StudentsEventsState event) {
+    if(event is StudentsEventsStateUpdated){
+      var students = getGroupDetailsUiState()?.students ?? List.empty();
+      if(students.any((element) => element.studentId == event.id)){
+        _updatedGroup =() {
+          reload();
+        };
+      }
+    }
   }
 
   onResume(){
@@ -121,4 +134,25 @@ class GroupDetailsController extends GetxController {
       _updatedGroup = null;
     }
   }
+
+  getGroupId() => groupDetailsArgsModel?.id;
+
+  _sessionsEventsUpdated(SessionsEventsState event) {
+    if(event is SessionsEventsStateDeleted){
+      var stateValue = state.value;
+      if(stateValue is GroupDetailsStateSuccess){
+        appLog("GroupDetailsController _sessionsEventsUpdated event:$event");
+        var uiState = stateValue.uiState;
+        var activeSession = uiState.activeSession;
+        appLog("GroupDetailsController _sessionsEventsUpdated activeSession.sessionId:${activeSession?.sessionId} , event.id:${event.id}");
+        if(activeSession?.sessionId == event.id){
+          var uiStateCopy = uiState.copyWith(activeSession: null);
+          appLog("GroupDetailsController _sessionsEventsUpdated uiStateCopy:$uiStateCopy");
+          updateState(GroupDetailsStateSuccess(uiState:uiStateCopy));
+        }
+      }
+    }
+  }
+
+
 }

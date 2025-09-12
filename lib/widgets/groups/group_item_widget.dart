@@ -29,7 +29,11 @@ class GroupItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        onClick?.call(uiState) ?? onGroupItemClick();
+        if (onClick != null) {
+          onClick?.call(uiState);
+          return;
+        }
+        onGroupItemClick();
       },
       child: Container(
         decoration: AppBackgroundStyle.backgroundWithShadow(),

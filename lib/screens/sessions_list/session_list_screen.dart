@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:teacher_app/localization/localArabic.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
 import 'package:teacher_app/screens/session_details/args/session_details_args_model.dart';
+import 'package:teacher_app/widgets/app_visibility_widget.dart';
+import 'package:teacher_app/widgets/lifecycle_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
 import 'package:teacher_app/widgets/sessions/session_item/session_item_widget.dart';
 import '../../widgets/app_toolbar_widget.dart';
@@ -17,7 +19,7 @@ class SessionListScreen extends StatefulWidget {
   State<SessionListScreen> createState() => _SessionListScreenState();
 }
 
-class _SessionListScreenState extends State<SessionListScreen> {
+class _SessionListScreenState extends LifecycleWidgetState<SessionListScreen> {
   bool isEditable = false;
 
   final SessionListController controller = Get.put(SessionListController());
@@ -92,5 +94,10 @@ class _SessionListScreenState extends State<SessionListScreen> {
 
   onSessionClick(SessionItemUiState p1) {
     AppNavigator.navigateToSessionDetails(SessionDetailsArgsModel(p1.id , controller.getStudentId()));
+  }
+
+  @override
+  void onResumedNavigatedBack() {
+    controller.onResume();
   }
 }
