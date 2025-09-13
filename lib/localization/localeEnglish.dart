@@ -123,7 +123,6 @@ final Map<String, String> enUS = {
   "Add Student" : "Add Student",
   "Homework Notes" : "Homework Notes",
   "Behavior Notes" : "Behavior Notes",
-
   "Group Time:" : "Group Time:",
   "Date:" : "Date:",
   "Update" : "Update",
@@ -146,6 +145,8 @@ final Map<String, String> enUS = {
   "Reset" : "Reset",
   "Without group" : "Without group",
   "By Day" : "By Day",
+  "Add student to session" : "Add student to session",
+  "Are you sure you want to delete the session" : "Are you sure you want to delete the session",
 
 
 
