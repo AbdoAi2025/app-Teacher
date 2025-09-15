@@ -1,4 +1,5 @@
 import 'package:teacher_app/data/repositories/sessions/sessions_repository.dart';
+import 'package:teacher_app/data/requests/delete_student_activity_request.dart';
 import 'package:teacher_app/data/requests/get_my_sessions_request.dart';
 import 'package:teacher_app/data/requests/start_session_request.dart';
 import 'package:teacher_app/data/requests/update_session_activities_request.dart';
@@ -58,6 +59,11 @@ class SessionsRepositoryImpl extends SessionsRepository {
   @override
   Future deleteSession(String sessionId) async {
     return await remoteIdentityDataSource.deleteSession(sessionId);
+  }
+
+  @override
+  Future deleteStudentActivity(List<String> ids) async {
+    return await remoteIdentityDataSource.deleteStudentActivity(DeleteStudentActivityRequest(ids: ids));
   }
 
 

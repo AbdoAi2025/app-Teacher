@@ -39,6 +39,7 @@ class SessionsEvents {
     _notifyListeners(SessionsEventsStateDeleted(id));
   }
 
+
   static void _notifyListeners(SessionsEventsState event) {
     for (var listener in listeners) {
       listener.call(event);

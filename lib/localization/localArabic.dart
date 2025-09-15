@@ -162,7 +162,10 @@ final Map<String, String> ar = {
   "Without group" : "بدون مجموعة",
   "By Day" : "حسب اليوم",
   "Add student to session" : "إضافة طالب إلى الجلسة",
-  "Are you sure you want to delete the session" : "هل أنت متأكد أنك تريد حذف الجلسة؟"
+  "Are you sure you want to delete the session" : "هل أنت متأكد أنك تريد حذف الجلسة؟",
+"Are you sure you want to add students to this session?" : "هل أنت متأكد أنك تريد إضافة الطالب إلى هذه الجلسة؟",
+  "Are you sure you want to delete this report?" : "هل أنت متأكد أنك تريد حذف هذا التقرير؟"
+
 
 
 };

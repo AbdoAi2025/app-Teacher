@@ -117,7 +117,6 @@ final Map<String, String> enUS = {
   "No Students Selected" : "No Students Selected",
   "Select Time From" : "Select Time From",
   "Select Time To" : "Select Time To",
-
   "Please select grade first" : "Please select grade first",
   "No students found without groups" : "No students found without groups",
   "Add Student" : "Add Student",
@@ -147,6 +146,8 @@ final Map<String, String> enUS = {
   "By Day" : "By Day",
   "Add student to session" : "Add student to session",
   "Are you sure you want to delete the session" : "Are you sure you want to delete the session",
+  "Are you sure you want to add students to this session?" : "Are you sure you want to add students to this session?",
+  "Are you sure you want to delete this report?" : "Are you sure you want to delete this report?"
 
 
 

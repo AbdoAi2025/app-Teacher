@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:teacher_app/domain/events/sessions_events.dart';
+import 'package:teacher_app/domain/usecases/delete_student_activity_use_case.dart';
 import 'package:teacher_app/domain/usecases/get_session_details_use_case.dart';
 import 'package:teacher_app/enums/homework_enum.dart';
 import 'package:teacher_app/enums/session_status_enum.dart';
@@ -7,7 +8,6 @@ import 'package:teacher_app/enums/student_behavior_enum.dart';
 import 'package:teacher_app/screens/session_details/states/session_details_ui_state.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
 import 'package:teacher_app/utils/day_utils.dart';
-
 import '../../base/AppResult.dart';
 import '../../data/requests/update_session_activities_request.dart';
 import '../../domain/events/students_events.dart';
@@ -77,6 +77,7 @@ class SessionDetailsController extends GetxController {
         activities = data.activities
                 ?.map(
                   (e) => SessionActivityItemUiState(
+                      activityId: e.activityId ?? "",
                       studentId: e.studentId ?? "",
                       quizGrade: e.quizGrade,
                       sessionQuizGrade: sessionQuizGrade,
@@ -338,5 +339,19 @@ class SessionDetailsController extends GetxController {
     for (var element in eventListeners) {
       element(event);
     }
+  }
+
+  Stream<AppResult> deleteStudentActivity(SessionActivityItemUiState uiState) async*{
+    DeleteStudentActivityUseCase useCase = DeleteStudentActivityUseCase();
+    var result  = await useCase.execute([uiState.activityId]);
+    if(result.isSuccess){
+      var stateValue = state.value;
+      if(stateValue is SessionDetailsStateSuccess){
+        var activities = stateValue.uiState.activities;
+        activities.removeWhere((element) => element.activityId == uiState.activityId);
+        _updateState(stateValue.copyWith(uiState: stateValue.uiState.copyWith(activities: activities)));
+      }
+    }
+    yield result;
   }
 }

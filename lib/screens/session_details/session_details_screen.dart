@@ -147,6 +147,7 @@ class _SessionDetailsScreenState extends LifecycleWidgetState<SessionDetailsScre
       sessionDetailsUiState: sessionDetailsUiState,
       isActive: isActive,
       isEditable: isEditable,
+      onDeleteClick: onDeleteReportClick,
       onDone: (uiState) {
         onDoneItem(uiState);
       },
@@ -309,7 +310,7 @@ class _SessionDetailsScreenState extends LifecycleWidgetState<SessionDetailsScre
   }
 
   void onSessionStudentsSelected(SessionDetailsUiState uiState , List<StudentSelectionItemUiState> items) {
-      showConfirmationMessage("Are you sure you want add students to this session?".tr, (){
+      showConfirmationMessage("Are you sure you want to add students to this session?".tr, (){
         showDialogLoading();
         controller.addStudentToSession(uiState ,  items )
         .listen((result){
@@ -344,4 +345,17 @@ class _SessionDetailsScreenState extends LifecycleWidgetState<SessionDetailsScre
     controller.eventListeners.remove(_onSessionEventUpdated);
   }
 
+
+  onDeleteReportClick(SessionActivityItemUiState uiState) {
+    showDialogLoading();
+    controller.deleteStudentActivity(uiState).listen((result){
+      hideDialogLoading();
+
+      if(result.isError) {
+        showErrorMessage(result.error?.toString());
+      }
+    });
+
+
+  }
 }

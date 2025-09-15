@@ -6,6 +6,7 @@ import 'package:teacher_app/data/responses/start_session_response.dart';
 import 'package:teacher_app/services/api_service.dart';
 import 'package:teacher_app/services/endpoints.dart';
 
+import '../requests/delete_student_activity_request.dart';
 import '../requests/get_my_sessions_request.dart';
 import '../requests/update_session_activities_request.dart';
 import '../responses/get_running_sessions_response.dart';
@@ -64,6 +65,10 @@ class SessionsRemoteDataSource {
 
   Future<dynamic> deleteSession(String sessionId) async{
     await  ApiService.getInstance().delete("${EndPoints.deleteSession}/$sessionId");
+  }
+
+  Future<dynamic> deleteStudentActivity(DeleteStudentActivityRequest request) async{
+    await  ApiService.getInstance().delete(EndPoints.deleteStudentActivity , queryParameters: request.toJson());
   }
 
 }

@@ -32,6 +32,7 @@ class EndPoints{
   static const String getRunningSession = "$apiV1/sessions/getRunningSession";
   static const String getSessionDetails = "$apiV1/sessions";
   static const String deleteSession = "$apiV1/sessions/delete";
+  static const String deleteStudentActivity = "$apiV1/activities/delete";
 
 
   static const String updateSessionActivities = "$apiV1/activities/updateStudentsActivities";

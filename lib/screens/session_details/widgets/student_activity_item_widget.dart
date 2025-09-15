@@ -10,8 +10,10 @@ import 'package:teacher_app/themes/app_colors.dart';
 import 'package:teacher_app/utils/Keyboard_utils.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
 import 'package:teacher_app/utils/app_background_styles.dart';
+import 'package:teacher_app/utils/message_utils.dart';
 import 'package:teacher_app/utils/whatsapp_utils.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
+import 'package:teacher_app/widgets/delete_icon_widget.dart';
 import 'package:teacher_app/widgets/edit_icon_widget.dart';
 import 'package:teacher_app/widgets/homework_status_widget.dart';
 import 'package:teacher_app/widgets/key_value_row_widget.dart';
@@ -22,6 +24,7 @@ import '../../../themes/txt_styles.dart';
 import '../../../widgets/app_text_field_widget.dart';
 import '../../../widgets/behavior_status_widget.dart';
 import '../../../widgets/cancel_icon_widget.dart';
+import '../../../widgets/close_icon_widget.dart';
 import '../../../widgets/done_icon_widget.dart';
 import '../../../widgets/sessions/student_activities/update_student_activity_widget.dart';
 import '../../../widgets/switch_button_widget.dart';
@@ -33,6 +36,7 @@ class StudentActivityItemWidget extends StatefulWidget {
   final bool isActive;
   final bool isEditable;
   final Function(SessionActivityItemUiState) onDone;
+  final Function(SessionActivityItemUiState) onDeleteClick;
 
   const StudentActivityItemWidget(
       {super.key,
@@ -40,7 +44,9 @@ class StudentActivityItemWidget extends StatefulWidget {
       required this.sessionDetailsUiState,
       required this.isActive,
       this.isEditable = false,
-      required this.onDone});
+      required this.onDone,
+      required this.onDeleteClick
+      });
 
   @override
   State<StudentActivityItemWidget> createState() =>
@@ -77,7 +83,8 @@ class _StudentActivityItemWidgetState extends State<StudentActivityItemWidget> {
                   child: _studentName(),
                 ),
                 // if (widget.isActive)
-                  _editIcon()
+                _editIcon(),
+                _deleteIcon(),
               ],
             ),
             if(uiState.studentParentPhone.isNotEmpty)
@@ -223,4 +230,13 @@ class _StudentActivityItemWidgetState extends State<StudentActivityItemWidget> {
     widget.onDone(uiState);
     Get.back();
   }
+
+  _deleteIcon() => InkWell(
+    onTap: () {
+      showConfirmationMessage("Are you sure you want to delete this report?".tr, (){
+        widget.onDeleteClick(uiState);
+      });
+    },
+    child: CloseIconWidget(),
+  );
 }

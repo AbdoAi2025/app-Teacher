@@ -24,4 +24,5 @@ abstract class SessionsRepository {
   Future<List<MySessionItemApiModel>> getMySessions(GetMySessionsRequest request);
 
   Future<dynamic> deleteSession(String sessionId);
+  Future<dynamic> deleteStudentActivity(List<String> ids);
 }

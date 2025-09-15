@@ -78,6 +78,7 @@ class StudentActivityApiModel {
   });
 
   StudentActivityApiModel.fromJson(dynamic json) {
+    activityId = json['activityId'];
     studentId = json['studentId'];
     studentName = json['studentName'];
     studentPhone = json['studentPhone'];
@@ -91,6 +92,7 @@ class StudentActivityApiModel {
   }
 
 
+  String? activityId;
   String? studentId;
   String? studentName;
   String? studentPhone;

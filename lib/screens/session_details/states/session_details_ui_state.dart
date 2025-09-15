@@ -53,6 +53,7 @@ class SessionDetailsUiState {
 }
 
 class SessionActivityItemUiState {
+  final String activityId;
   final String studentId;
   final String studentName;
   final String studentParentPhone;
@@ -66,7 +67,9 @@ class SessionActivityItemUiState {
   final String? homeworkNotes;
 
   SessionActivityItemUiState(
-      {required this.studentId,
+      {
+        required this.activityId,
+        required this.studentId,
       required this.studentName,
       required this.studentParentPhone,
       required this.studentPhone,
@@ -79,12 +82,14 @@ class SessionActivityItemUiState {
       required this.homeworkNotes});
 
 
+
   @override
   String toString() {
     return 'SessionActivityItemUiState{studentId: $studentId, quizGrade: $quizGrade, attended: $attended, behaviorGood: $behaviorStatus}';
   }
 
   SessionActivityItemUiState copyWith({
+    String? activityId,
     String? studentId,
     String? studentName,
     String? studentParentPhone,
@@ -98,6 +103,7 @@ class SessionActivityItemUiState {
     String? homeworkNotes,
   }) {
     return SessionActivityItemUiState(
+      activityId: activityId ?? this.activityId,
       studentId: studentId ?? this.studentId,
       studentName: studentName ?? this.studentName,
       studentParentPhone: studentParentPhone ?? this.studentParentPhone,
