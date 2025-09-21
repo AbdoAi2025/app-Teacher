@@ -15,7 +15,8 @@ extension HomeworkEnumStatusExtension on int? {
         return switch (this) {
             0 => HomeworkEnum.FULLY_DONE,
             1 => HomeworkEnum.INCOMPLETE,
-            _ => HomeworkEnum.NOT_DONE
+            2 => HomeworkEnum.NOT_DONE,
+            _ => null
         };
     }
 }
@@ -28,7 +29,8 @@ extension HomeworkEnumExtension on HomeworkEnum?{
         return switch(this){
             HomeworkEnum.FULLY_DONE => "Fully Done",
             HomeworkEnum.INCOMPLETE => "Incompleted",
-           _ => "Not Done",
+            HomeworkEnum.NOT_DONE => "Not Done",
+           _ => "Not Determined",
         };
     }
 
@@ -37,7 +39,8 @@ extension HomeworkEnumExtension on HomeworkEnum?{
         return switch (this) {
             HomeworkEnum.FULLY_DONE => AppColors.color_008E73,
             HomeworkEnum.INCOMPLETE => AppColors.colorHomeworkStatusMissing,
-            _ => AppColors.colorNo
+            HomeworkEnum.NOT_DONE => AppColors.colorNo,
+            _ => AppColors.inactiveColor
         };
     }
 }

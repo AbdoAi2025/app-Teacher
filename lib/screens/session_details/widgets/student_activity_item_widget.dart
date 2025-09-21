@@ -130,13 +130,13 @@ class _StudentActivityItemWidgetState extends State<StudentActivityItemWidget> {
   _attended() {
     return LabelValueRowWidget(
       label: "Attendance:".tr,
-      valueWidget: _yesNoText(uiState.attended ?? false),);
+      valueWidget: _yesNoText( uiState.attended),);
   }
 
   _behaviorGood() {
     return LabelValueRowWidget(
       label: "Behavior:".tr,
-      valueWidget: BehaviorStatusWidget(behaviorStatus),
+      valueWidget:  BehaviorStatusWidget( behaviorStatus),
     );
   }
 
@@ -149,9 +149,9 @@ class _StudentActivityItemWidgetState extends State<StudentActivityItemWidget> {
 
   _yesNoText(bool? bool) {
     return AppTextWidget(
-      bool == true ? "Yes" : "No",
+      bool == null ? "Not Determined".tr :   (bool == true ? "Yes" : "No"),
       style: AppTextStyle.label.copyWith(
-        color: bool == true ? AppColors.colorYes : AppColors.colorNo,
+        color:  bool == null ? AppColors.inactiveColor :  bool == true ? AppColors.colorYes : AppColors.colorNo,
       ),
     );
   }
@@ -161,7 +161,7 @@ class _StudentActivityItemWidgetState extends State<StudentActivityItemWidget> {
       spacing: 5,
       children: [
         AppTextWidget("Quiz Grade:".tr, style: AppTextStyle.label),
-        AppTextWidget("${_getGradeFormat()} / ${uiState.sessionQuizGrade}"),
+        AppTextWidget( quizGrade == null ? "Not Determined".tr : "${_getGradeFormat()} / ${uiState.sessionQuizGrade}" ,color: quizGrade == null ? AppColors.inactiveColor : null,),
       ],
     );
   }
