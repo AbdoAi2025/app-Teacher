@@ -147,7 +147,8 @@ final Map<String, String> enUS = {
   "Add student to session" : "Add student to session",
   "Are you sure you want to delete the session" : "Are you sure you want to delete the session",
   "Are you sure you want to add students to this session?" : "Are you sure you want to add students to this session?",
-  "Are you sure you want to delete this report?" : "Are you sure you want to delete this report?"
+  "Are you sure you want to delete this report?" : "Are you sure you want to delete this report?",
+  "Not Determined" : "Not Determined",
 
 
 

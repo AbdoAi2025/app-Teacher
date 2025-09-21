@@ -164,9 +164,8 @@ final Map<String, String> ar = {
   "Add student to session" : "إضافة طالب إلى الجلسة",
   "Are you sure you want to delete the session" : "هل أنت متأكد أنك تريد حذف الجلسة؟",
 "Are you sure you want to add students to this session?" : "هل أنت متأكد أنك تريد إضافة الطالب إلى هذه الجلسة؟",
-  "Are you sure you want to delete this report?" : "هل أنت متأكد أنك تريد حذف هذا التقرير؟"
-
-
+  "Are you sure you want to delete this report?" : "هل أنت متأكد أنك تريد حذف هذا التقرير؟",
+  "Not Determined" : "لم يُحدد",
 
 };
 
