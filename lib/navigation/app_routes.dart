@@ -26,6 +26,7 @@ class AppRoutes {
 
   /*Reports*/
   static const String studentReport = "/studentReport";
+  static const String studentReports = "/studentReports";
 
 
 

@@ -26,6 +26,7 @@ import '../../../widgets/behavior_status_widget.dart';
 import '../../../widgets/cancel_icon_widget.dart';
 import '../../../widgets/close_icon_widget.dart';
 import '../../../widgets/done_icon_widget.dart';
+import '../../../widgets/quiz_grade_widget.dart';
 import '../../../widgets/sessions/student_activities/update_student_activity_widget.dart';
 import '../../../widgets/switch_button_widget.dart';
 import '../states/session_details_ui_state.dart';
@@ -161,7 +162,7 @@ class _StudentActivityItemWidgetState extends State<StudentActivityItemWidget> {
       spacing: 5,
       children: [
         AppTextWidget("Quiz Grade:".tr, style: AppTextStyle.label),
-        AppTextWidget( quizGrade == null ? "Not Determined".tr : "${_getGradeFormat()} / ${uiState.sessionQuizGrade}" ,color: quizGrade == null ? AppColors.inactiveColor : null,),
+        QuizGradeWidget(total: uiState.sessionQuizGrade ?? 0 , score: quizGrade,),
       ],
     );
   }

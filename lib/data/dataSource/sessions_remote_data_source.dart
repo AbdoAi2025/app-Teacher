@@ -3,6 +3,7 @@ import 'package:teacher_app/data/requests/start_session_request.dart';
 import 'package:teacher_app/data/responses/get_my_sessions_response.dart';
 import 'package:teacher_app/data/responses/login_response.dart';
 import 'package:teacher_app/data/responses/start_session_response.dart';
+import 'package:teacher_app/domain/usecases/get_student_activities_use_case.dart';
 import 'package:teacher_app/services/api_service.dart';
 import 'package:teacher_app/services/endpoints.dart';
 
@@ -11,6 +12,7 @@ import '../requests/get_my_sessions_request.dart';
 import '../requests/update_session_activities_request.dart';
 import '../responses/get_running_sessions_response.dart';
 import '../responses/get_session_details_response.dart';
+import '../responses/get_student_activities_response.dart';
 import '../responses/update_session_activities_response.dart';
 
 class SessionsRemoteDataSource {
@@ -69,6 +71,14 @@ class SessionsRemoteDataSource {
 
   Future<dynamic> deleteStudentActivity(DeleteStudentActivityRequest request) async{
     await  ApiService.getInstance().delete(EndPoints.deleteStudentActivity , queryParameters: request.toJson());
+  }
+
+  Future<GetStudentActivitiesResponse>  getStudentActivities(String id) async {
+    var queryParameters = {
+      "studentId" : id
+    };
+    var response  = await  ApiService.getInstance().get(EndPoints.getStudentActivities , queryParameters: queryParameters);
+    return GetStudentActivitiesResponse.fromJson(response.data);
   }
 
 }

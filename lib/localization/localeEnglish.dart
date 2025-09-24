@@ -93,9 +93,11 @@ final Map<String, String> enUS = {
   "No Today Groups": "No Today Groups",
   "View Details": "View Details",
   "Attendance:": "Attendance",
+  "Attendance": "Attendance",
   "Behavior:": "Behavior:",
   "Homework:": "Homework:",
   "Quiz Grade:": "Quiz Grade:",
+  "Quiz Grade": "Quiz Grade",
   "report_parent_title": "Parent Follow-Up Report",
   "infoText": "We would like to inform you that the student",
   "attended the class on": "attended the class on",
@@ -149,7 +151,10 @@ final Map<String, String> enUS = {
   "Are you sure you want to add students to this session?" : "Are you sure you want to add students to this session?",
   "Are you sure you want to delete this report?" : "Are you sure you want to delete this report?",
   "Not Determined" : "Not Determined",
-
+  "Total Attendance" : "Total Attendance",
+  "Average Grade" : "Average Grade",
+  "Date" : "Date",
+  "No Reports Found" : "No Reports Found"
 
 
 

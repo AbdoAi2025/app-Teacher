@@ -22,6 +22,7 @@ import '../../themes/txt_styles.dart';
 import '../../widgets/app_toolbar_widget.dart';
 import '../../widgets/section_widget.dart';
 import '../student_edit/args/edit_student_args_model.dart';
+import '../student_reports/args/student_reports_args_model.dart';
 import 'states/student_details_state.dart';
 
 class StudentDetailsScreen extends StatefulWidget {
@@ -294,8 +295,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
   }
 
   void onViewAllSessionsClick(StudentDetailsUiState uiState) {
-    AppNavigator.navigateToSessionsList(
-        SessionListArgsModel(studentId: uiState.studentId));
+    AppNavigator.navigateToStudentReports(StudentReportsArgsModel(studentId: uiState.studentId));
   }
 
   _addToGroup(StudentDetailsUiState uiState) {

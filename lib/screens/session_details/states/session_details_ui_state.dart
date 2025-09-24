@@ -67,9 +67,8 @@ class SessionActivityItemUiState {
   final String? homeworkNotes;
 
   SessionActivityItemUiState(
-      {
-        required this.activityId,
-        required this.studentId,
+      {required this.activityId,
+      required this.studentId,
       required this.studentName,
       required this.studentParentPhone,
       required this.studentPhone,
@@ -80,8 +79,6 @@ class SessionActivityItemUiState {
       required this.behaviorNotes,
       required this.homeworkStatus,
       required this.homeworkNotes});
-
-
 
   @override
   String toString() {
@@ -117,4 +114,26 @@ class SessionActivityItemUiState {
       homeworkNotes: homeworkNotes ?? this.homeworkNotes,
     );
   }
+}
+
+class StudentReportItemUiState extends SessionActivityItemUiState {
+  final String sessionName;
+  final String sessionDate;
+
+  StudentReportItemUiState({
+    required super.activityId,
+    required super.studentId,
+    required super.studentName,
+    required super.studentParentPhone,
+    required super.studentPhone,
+    required super.sessionQuizGrade,
+    required super.quizGrade,
+    required super.attended,
+    required super.behaviorStatus,
+    required super.behaviorNotes,
+    required super.homeworkStatus,
+    required super.homeworkNotes,
+    required this.sessionName,
+    required this.sessionDate,
+  });
 }

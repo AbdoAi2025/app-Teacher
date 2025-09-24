@@ -91,9 +91,9 @@ class AppDateUtils{
     }
   }
 
-  static String parsStringToString(String? dateString, [String format = 'yyyy-MM-dd HH:mm']) {
+  static String parsStringToString(String? dateString, [String format = 'yyyy-MM-dd HH:mm' , String? locale]) {
     try{
-      String formatted = DateFormat(format).format(parseStringToDateTime(dateString!)!);
+      String formatted = DateFormat(format , locale).format(parseStringToDateTime(dateString!)!);
       return formatted;
     }catch(e){
       appLog("parsDateToString e:${e.toString()}");

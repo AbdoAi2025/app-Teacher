@@ -108,9 +108,11 @@ final Map<String, String> ar = {
   "No Today Groups": "لا توجد مجموعات اليوم",
   "View Details": "عرض التفاصيل",
   "Attendance:": "الحضور:",
+  "Attendance": "الحضور",
   "Behavior:": "السلوك:",
   "Homework:": "الواجب المنزلي:",
   "Quiz Grade:": "درجة الاختبار:",
+  "Quiz Grade": "درجة الاختبار",
 
   "report_parent_title": "تقرير متابعة ولي الأمر",
   "infoText": "نحيط سيادتكم علما أن الطالب",
@@ -166,6 +168,11 @@ final Map<String, String> ar = {
 "Are you sure you want to add students to this session?" : "هل أنت متأكد أنك تريد إضافة الطالب إلى هذه الجلسة؟",
   "Are you sure you want to delete this report?" : "هل أنت متأكد أنك تريد حذف هذا التقرير؟",
   "Not Determined" : "لم يُحدد",
+  "Total Attendance" : "إجمالي الحضور",
+  "Average Grade" : "متوسط الدرجات",
+  "Date" : "التاريخ",
+  "No Reports Found" : "لم يتم العثور على أي تقارير"
+
 
 };
 

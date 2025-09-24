@@ -13,6 +13,7 @@ import '../screens/group_details/group_details_screen.dart';
 import '../screens/group_edit/edit_group_screen.dart';
 import '../screens/student_details/student_details_screen.dart';
 import '../screens/student_edit/edit_student_screen.dart';
+import '../screens/student_reports/students_reports_screen.dart';
 
 
 const int transitionDuration = 600;
@@ -31,6 +32,7 @@ List<GetPage> appRoutes() => [
   _getPage(AppRoutes.sessionDetails, SessionDetailsScreen()),
   _getPage(AppRoutes.sessionsList, SessionListScreen()),
   _getPage(AppRoutes.studentReport, StudentReportScreen()),
+  _getPage(AppRoutes.studentReports, StudentsReportsScreen()),
 
 ];
 

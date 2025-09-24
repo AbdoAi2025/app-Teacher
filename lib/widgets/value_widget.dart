@@ -6,12 +6,13 @@ class ValueWidget extends StatelessWidget {
 
   final String text;
   final TextAlign? textAlign;
+  final TextStyle? style;
 
-  const ValueWidget(this.text , {super.key , this.textAlign});
+  const ValueWidget(this.text , {super.key , this.textAlign, this.style});
 
   @override
   Widget build(BuildContext context) {
-   return AppTextWidget(text, style: AppTextStyle.value, textAlign : textAlign);
+   return AppTextWidget(text, style: style?? AppTextStyle.value, textAlign : textAlign);
   }
 
 }

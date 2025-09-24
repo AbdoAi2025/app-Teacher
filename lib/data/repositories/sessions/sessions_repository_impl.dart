@@ -6,6 +6,7 @@ import 'package:teacher_app/data/requests/update_session_activities_request.dart
 import 'package:teacher_app/data/responses/get_my_sessions_response.dart';
 import 'package:teacher_app/data/responses/get_session_details_response.dart';
 
+import '../../../apimodels/student_activity_item_api_model.dart';
 import '../../dataSource/sessions_remote_data_source.dart';
 import '../../responses/get_running_sessions_response.dart';
 
@@ -64,6 +65,13 @@ class SessionsRepositoryImpl extends SessionsRepository {
   @override
   Future deleteStudentActivity(List<String> ids) async {
     return await remoteIdentityDataSource.deleteStudentActivity(DeleteStudentActivityRequest(ids: ids));
+  }
+
+  @override
+  Future<List<StudentActivityItemApiModel>> getStudentActivities(String id) async {
+    var response = await remoteIdentityDataSource.getStudentActivities(id);
+    return response.data ?? List.empty();
+
   }
 
 

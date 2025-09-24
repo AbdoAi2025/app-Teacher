@@ -2,6 +2,7 @@ import 'package:teacher_app/domain/models/login_model.dart';
 import 'package:teacher_app/domain/models/login_result.dart';
 import 'package:teacher_app/models/user_auth_model.dart';
 
+import '../../../apimodels/student_activity_item_api_model.dart';
 import '../../requests/get_my_sessions_request.dart';
 import '../../requests/start_session_request.dart';
 import '../../requests/update_session_activities_request.dart';
@@ -24,5 +25,8 @@ abstract class SessionsRepository {
   Future<List<MySessionItemApiModel>> getMySessions(GetMySessionsRequest request);
 
   Future<dynamic> deleteSession(String sessionId);
+
   Future<dynamic> deleteStudentActivity(List<String> ids);
+
+  Future<List<StudentActivityItemApiModel>> getStudentActivities(String id);
 }

@@ -7,7 +7,8 @@ class AppBackgroundStyle {
 
   AppBackgroundStyle._();
 
-  static Decoration bottomBorder(Color borderColor , { double borderWidth = 1.5, Color backgroundColor = Colors.transparent} ){
+  static Decoration bottomBorder(Color borderColor,
+      { double borderWidth = 1.5, Color backgroundColor = Colors.transparent}) {
     return BoxDecoration(
       color: backgroundColor,
       border: Border(
@@ -15,7 +16,6 @@ class AppBackgroundStyle {
       ),
     );
   }
-
 
 
   static Decoration getColorDBD5CCBackgroundRounded() =>
@@ -39,11 +39,10 @@ class AppBackgroundStyle {
           borderRadius: BorderRadius.all(Radius.circular(radius))
       );
 
-  static Decoration getColoredBackgroundRoundedBorder(
-          {required double radius,
-          required Color bgColor,
-          required Color borderColor,
-          double borderWidth = 1}) =>
+  static Decoration getColoredBackgroundRoundedBorder({required double radius,
+    required Color bgColor,
+    required Color borderColor,
+    double borderWidth = 1}) =>
       BoxDecoration(
           color: bgColor,
           borderRadius: BorderRadius.all(Radius.circular(radius)),
@@ -64,28 +63,30 @@ class AppBackgroundStyle {
       );
 
 
-  static getBlackGrediantBackground() => BoxDecoration(
-      gradient: LinearGradient(
-          colors: [
-             Color(0x0),
-             Color(0x99000000),
-          ],
-          tileMode: TileMode.mirror,
-          end: AlignmentDirectional.topCenter,
-          begin: AlignmentDirectional.bottomCenter
-      ));
+  static getBlackGrediantBackground() =>
+      BoxDecoration(
+          gradient: LinearGradient(
+              colors: [
+                Color(0x0),
+                Color(0x99000000),
+              ],
+              tileMode: TileMode.mirror,
+              end: AlignmentDirectional.topCenter,
+              begin: AlignmentDirectional.bottomCenter
+          ));
 
 
-  static getBlackFromTopToBottomGrediantBackground() => BoxDecoration(
-      gradient: LinearGradient(
-          colors: [
-             Color(0x0),
-             Color(0x99000000),
-          ],
-          tileMode: TileMode.mirror,
-        begin: AlignmentDirectional.topCenter,
-        end: AlignmentDirectional.bottomCenter,
-      ));
+  static getBlackFromTopToBottomGrediantBackground() =>
+      BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0x0),
+              Color(0x99000000),
+            ],
+            tileMode: TileMode.mirror,
+            begin: AlignmentDirectional.topCenter,
+            end: AlignmentDirectional.bottomCenter,
+          ));
 
 
   static backgroundWithShadow({
@@ -97,18 +98,20 @@ class AppBackgroundStyle {
     double? shadowRadius,
     double? blurRadius,
     Offset? offset,
-  }) => BoxDecoration(
-    color: backgroundColor ?? Colors.white,
-    borderRadius: BorderRadius.all(Radius.circular( borderRadius?? 15)),
-    border: Border.all(color:  borderColor?? AppColors.color_F0F0F0, width: borderWidth ?? 1),
-    boxShadow: [
-      BoxShadow(
-        color: shadowColor ??  AppColors.color_000714,
-        blurRadius: blurRadius ?? .5,
-        offset: offset ?? const Offset(0, 0), // changes position of shadow
-      ),
-    ],
-  );
+  }) =>
+      BoxDecoration(
+        color: backgroundColor ?? Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(borderRadius ?? 15)),
+        border: Border.all(color: borderColor ?? AppColors.color_F0F0F0,
+            width: borderWidth ?? 1),
+        boxShadow: [
+          BoxShadow(
+            color: shadowColor ?? AppColors.color_000714,
+            blurRadius: blurRadius ?? .5,
+            offset: offset ?? const Offset(0, 0), // changes position of shadow
+          ),
+        ],
+      );
 
   static backgroundWithShadowOnly({
     Color? backgroundColor,
@@ -123,22 +126,82 @@ class AppBackgroundStyle {
     Radius? topRightRadius,
     Radius? bottomLeftRadius,
     Radius? bottomRightRadius,
-  }) => BoxDecoration(
-    color: backgroundColor ?? Colors.white,
-    borderRadius: BorderRadius.only(
-        topLeft: topLeftRadius ?? Radius.zero,
-        topRight: topRightRadius ?? Radius.zero,
-      bottomLeft: bottomLeftRadius ?? Radius.zero,
-      bottomRight: bottomRightRadius ?? Radius.zero
-    ),
-    border: Border.all(color:  borderColor?? AppColors.color_F0F0F0, width: borderWidth ?? 1),
-    boxShadow: [
-      BoxShadow(
-        color: shadowColor ??  AppColors.color_000714,
-        blurRadius: blurRadius ?? .5,
-        offset: offset ?? const Offset(0, 0), // changes position of shadow
+  }) =>
+      BoxDecoration(
+        color: backgroundColor ?? Colors.white,
+        borderRadius: BorderRadius.only(
+            topLeft: topLeftRadius ?? Radius.zero,
+            topRight: topRightRadius ?? Radius.zero,
+            bottomLeft: bottomLeftRadius ?? Radius.zero,
+            bottomRight: bottomRightRadius ?? Radius.zero
+        ),
+        border: Border.all(color: borderColor ?? AppColors.color_F0F0F0,
+            width: borderWidth ?? 1),
+        boxShadow: [
+          BoxShadow(
+            color: shadowColor ?? AppColors.color_000714,
+            blurRadius: blurRadius ?? .5,
+            offset: offset ?? const Offset(0, 0), // changes position of shadow
+          ),
+        ],
+      );
+
+  static getColoredBackgroundRoundedBorderOnly({
+    required bgColor,
+    required borderColor,
+    double borderWidth = 1,
+    double? topLeft,
+    double? topRight,
+    double? bottomLeft,
+    double? bottomRight,
+  }) {
+    return BoxDecoration(
+      color: bgColor, // keep background transparent
+      border: Border.all(
+        color: borderColor, // border color
+        width: borderWidth,
       ),
-    ],
-  );
+      borderRadius:  BorderRadius.only(
+        topLeft: topLeft != null ? Radius.circular(topLeft) : Radius.zero,
+        topRight: topRight != null ? Radius.circular(topRight) : Radius.zero,
+        bottomLeft: bottomLeft != null ? Radius.circular(bottomLeft) : Radius.zero,
+        bottomRight: bottomRight != null ? Radius.circular(bottomRight) : Radius.zero,
+      ),
+    );
+  }
+
+  static getColoredBackgroundBorderOnly({
+    required radius,
+    required bgColor,
+    required borderColor,
+    double borderWidth = 1,
+    bool? bottom,
+    bool? top,
+    bool? left,
+    bool? right,
+  }) {
+    return BoxDecoration(
+      color: bgColor, // keep background transparent
+      border: Border(
+        bottom: bottom == true ? BorderSide(
+          color: borderColor, // your border color
+          width: borderWidth, // thickness
+        ) : BorderSide.none,
+
+        top: top == true ? BorderSide(
+          color: borderColor, // your border color
+          width: borderWidth, // thickness
+        ) : BorderSide.none,
+        left: left == true ? BorderSide(
+          color: borderColor, // your border color
+          width: borderWidth, // thickness
+        ) : BorderSide.none,
+        right: right == true ? BorderSide(
+          color: borderColor, // your border color
+          width: borderWidth, // thickness
+        ) : BorderSide.none,
+      ),
+    );
+  }
 
 }

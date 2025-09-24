@@ -10,6 +10,7 @@ import 'package:teacher_app/utils/LogUtils.dart';
 import '../screens/group_details/args/group_details_arg_model.dart';
 import '../screens/group_details/group_details_controller.dart';
 import '../screens/group_edit/args/edit_group_args_model.dart';
+import '../screens/student_reports/args/student_reports_args_model.dart';
 import 'my_route_observer.dart';
 
 class AppNavigator {
@@ -63,6 +64,10 @@ class AppNavigator {
 
   static void navigateToSessionsList(SessionListArgsModel args) {
     Get.toNamed(AppRoutes.sessionsList , arguments: args);
+  }
+
+  static void navigateToStudentReports(StudentReportsArgsModel args) {
+    Get.toNamed(AppRoutes.studentReports , arguments: args);
   }
 
   static void navigateToStudentReport(StudentReportArgs args) {
