@@ -9,7 +9,8 @@ class StudentReportsStateInvalidStudentId extends StudentReportsState {}
 
 class StudentReportsStateSuccess extends StudentReportsState {
   final String studentName;
-  final String totalAttendance;
+  final String phoneNumber;
+  final int totalAttendance;
   final int totalSessionGrades;
   final double? totalGrades;
   final int gradesPercentage;
@@ -18,6 +19,7 @@ class StudentReportsStateSuccess extends StudentReportsState {
   StudentReportsStateSuccess(
       {required this.uiStates,
       required this.studentName,
+      required this.phoneNumber,
       required this.totalAttendance,
       required this.totalSessionGrades,
       required this.totalGrades,

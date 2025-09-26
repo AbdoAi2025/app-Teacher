@@ -117,6 +117,7 @@ class SessionActivityItemUiState {
 }
 
 class StudentReportItemUiState extends SessionActivityItemUiState {
+  final String sessionId;
   final String sessionName;
   final String sessionDate;
 
@@ -133,6 +134,7 @@ class StudentReportItemUiState extends SessionActivityItemUiState {
     required super.behaviorNotes,
     required super.homeworkStatus,
     required super.homeworkNotes,
+    required this.sessionId,
     required this.sessionName,
     required this.sessionDate,
   });

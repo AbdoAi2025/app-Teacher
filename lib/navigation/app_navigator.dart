@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/navigation/app_routes.dart';
 import 'package:teacher_app/screens/report/args/student_report_args.dart';
+import 'package:teacher_app/screens/report_full_report/args/student_full_report_args.dart';
 import 'package:teacher_app/screens/session_details/args/session_details_args_model.dart';
 import 'package:teacher_app/screens/sessions_list/args/session_list_args_model.dart';
 import 'package:teacher_app/screens/student_details/args/student_details_arg_model.dart';
@@ -73,6 +74,9 @@ class AppNavigator {
   static void navigateToStudentReport(StudentReportArgs args) {
     Get.toNamed(AppRoutes.studentReport , arguments: args);
   }
+  static void navigateToStudentFullReportScreen(StudentFullReportArgs args) {
+    Get.toNamed(AppRoutes.studentFullReport , arguments: args);
+  }
 
   static void back() {
     Get.back();
@@ -84,8 +88,6 @@ class AppNavigator {
   }
 
   static bool routeExistsInBackstack(String routeName) {
-
-
     bool exists = MyRouteObserver.history.any((r) => r.settings.name == routeName);
     return exists;
 

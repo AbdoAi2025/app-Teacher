@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
+import 'package:teacher_app/presentation/app_message_dialogs.dart';
 import 'package:teacher_app/screens/login/login_controller.dart';
 import 'package:teacher_app/screens/login/login_state.dart';
 import 'package:teacher_app/utils/message_utils.dart';
@@ -32,7 +33,11 @@ class _LoginScreenState extends State<LoginScreen> {
             spacing: 20,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image(image: AssetImage(Assets.imagesLogo) , height: 200, width: 200,),
+              Image(
+                image: AssetImage(Assets.imagesLogo),
+                height: 200,
+                width: 200,
+              ),
               _userNameField(),
               _passwordField(),
               _submitButton()
@@ -83,11 +88,19 @@ class _LoginScreenState extends State<LoginScreen> {
             AppNavigator.navigateToHome();
             break;
           case LoginStateError():
-            showErrorMessage(result.exception.toString());
+            showErrorMessageEx(result.exception);
+            break;
+          case LoginStateInvalidSession():
+            AppMessageDialogs.showUserNotActive();
+            break;
+          case LoginStateNotSubscribed():
+            AppMessageDialogs.showUserNotSubscribedDialog();
+            break;
+          case LoginStateNotActive():
+            AppMessageDialogs.showUserNotActive();
+            break;
         }
       },
     );
   }
-
-
 }

@@ -39,7 +39,7 @@ class EndPoints{
   static const String updateSessionActivities = "$apiV1/activities/updateStudentsActivities";
   static const String addSessionActivities = "$apiV1/activities/AddStudentsActivities";
   static const String getMySessions = "$apiV1/sessions/getMySessions";
-  static const String checkAppVersion = "$apiV1/appConfig/checkAppVersion";
+  static const String checkAppVersion = "$apiV1/appVersions/check";
 
 
 

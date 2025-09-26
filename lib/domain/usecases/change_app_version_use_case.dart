@@ -19,8 +19,7 @@ class ChangeAppVersionUseCase extends BaseUseCase<CheckAppVersionModel>{
       var appVersion = await _getAppVersion();
 
       var request = CheckAppVersionRequest(
-        androidVersion: Platform.isAndroid ? appVersion : null,
-        iosVersion:  Platform.isIOS ? appVersion : null,
+        version:  appVersion,
         platform: Platform.isAndroid ? 0 : 1 ,
       );
 

@@ -46,46 +46,39 @@ class StudentReportsController extends GetxController {
 
     if (result.isSuccess) {
       List<StudentReportItemUiState> items = [];
-      var uiStates = result.data
-              ?.where(
-            (element) => element.updated == true,
-          )
-              .map((apiModel) {
-            return StudentReportItemUiState(
-                sessionName: apiModel.sessionName ?? "",
-                sessionDate: AppDateUtils.parsStringToString(
-                    apiModel.sessionDate,
-                    "EEE\ndd-MM-yy",
-                    Get.locale?.languageCode),
-                activityId: apiModel.activityId ?? "",
-                studentId: apiModel.studentId ?? "",
-                studentName: apiModel.studentName ?? "",
-                studentParentPhone: apiModel.studentParentPhone ?? "",
-                studentPhone: apiModel.studentPhone ?? "",
-                sessionQuizGrade: apiModel.sessionQuizGrade,
-                quizGrade: apiModel.quizGrade,
-                attended: apiModel.attended,
-                behaviorStatus: apiModel.behaviorStatus?.toBehaviorEnum(),
-                behaviorNotes: apiModel.behaviorNotes,
-                homeworkStatus: apiModel.homeworkStatus?.toHomeworkEnum(),
-                homeworkNotes: apiModel.homeworkNotes);
-          }) ??
-          List.empty();
+
+      var resultItems = result.data ?? List.empty();
+      var updatedFiltered = resultItems.where(
+        (element) => element.updated == true,
+      );
+      var uiStates = resultItems.map((apiModel) {
+        return StudentReportItemUiState(
+            sessionId: apiModel.sessionId ?? "",
+            sessionName: apiModel.sessionName ?? "",
+            sessionDate: AppDateUtils.parsStringToString(apiModel.sessionDate,
+                "EEE\ndd-MM-yy", Get.locale?.languageCode),
+            activityId: apiModel.activityId ?? "",
+            studentId: apiModel.studentId ?? "",
+            studentName: apiModel.studentName ?? "",
+            studentParentPhone: apiModel.studentParentPhone ?? "",
+            studentPhone: apiModel.studentPhone ?? "",
+            sessionQuizGrade: apiModel.sessionQuizGrade,
+            quizGrade: apiModel.quizGrade,
+            attended: apiModel.attended,
+            behaviorStatus: apiModel.behaviorStatus?.toBehaviorEnum(),
+            behaviorNotes: apiModel.behaviorNotes,
+            homeworkStatus: apiModel.homeworkStatus?.toHomeworkEnum(),
+            homeworkNotes: apiModel.homeworkNotes);
+      });
 
       items.addAll(uiStates);
-      // items.addAll(uiStates);
-      // items.addAll(uiStates);
-      // items.addAll(uiStates);
-      // items.addAll(uiStates);
-      // items.addAll(uiStates);
-      // items.addAll(uiStates);
-      // items.addAll(uiStates);
 
       var firstItem = items.firstOrNull;
 
       var studentName = firstItem?.studentName ?? "";
+      var phoneNumber = firstItem?.studentParentPhone ?? "";
       var totalAttendance =
-          items.where((element) => element.attended == true).length.toString();
+          items.where((element) => element.attended == true).length;
 
       var sessionsGradesFiltered = items.where(
         (element) => element.sessionQuizGrade != null,
@@ -113,7 +106,8 @@ class StudentReportsController extends GetxController {
       _updateState(StudentReportsStateSuccess(
           uiStates: items,
           studentName: studentName,
-          totalAttendance: totalAttendance.toString(),
+          phoneNumber: phoneNumber,
+          totalAttendance: totalAttendance,
           totalSessionGrades: sessionsGrades,
           totalGrades: grades,
           gradesPercentage: gradesPercentage));

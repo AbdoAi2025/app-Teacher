@@ -20,7 +20,7 @@ class QuizGradeWidget extends StatelessWidget {
     var color = (score ?? 0) < total/2 ? AppColors.colorNo : AppColors.colorYes;
 
     return AppTextWidget(
-      score == null ? "Not Determined".tr : "${_getGradeFormat()} / $total" ,
+      score == null ? "Not Determined".tr : "${getGradeFormat(score)} / $total" ,
       color: score == null ? AppColors.inactiveColor : color,
       overflow: TextOverflow.ellipsis,
       fontSize: fontSize,
@@ -28,7 +28,7 @@ class QuizGradeWidget extends StatelessWidget {
   }
 
 
-  _getGradeFormat() {
+  static String getGradeFormat(double? score) {
     return NumberFormat.compact().format(score ?? 0);
   }
 

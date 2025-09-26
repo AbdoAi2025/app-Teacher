@@ -100,6 +100,7 @@ final Map<String, String> enUS = {
   "Quiz Grade": "Quiz Grade",
   "report_parent_title": "Parent Follow-Up Report",
   "infoText": "We would like to inform you that the student",
+  "fulReportInfoText": "We would like to inform you full report for the student",
   "attended the class on": "attended the class on",
   "attended": "attended",
   "Session Day": "Day",
@@ -154,7 +155,13 @@ final Map<String, String> enUS = {
   "Total Attendance" : "Total Attendance",
   "Average Grade" : "Average Grade",
   "Date" : "Date",
-  "No Reports Found" : "No Reports Found"
+  "No Reports Found" : "No Reports Found",
+  "View Full Report" : "View Full Report",
+  "Full Report" : "Full Report",
+  "subscription_message" : "Your subscription not active, please contact the service owner.\n Do you want to contact now?",
+  "No": "No",
+  "Yes" : "Yes",
+  "no_internet_connection" : "No internet connection",
 
 
 

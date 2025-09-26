@@ -29,20 +29,20 @@ class CheckUserSessionResponse {
 class Data {
 
   bool? active;
-  bool? isSubscribed;
+  bool? subscribed;
 
   Data({this.active,});
 
   Data.fromJson(dynamic json) {
     active = json['active'];
-    isSubscribed = json['isSubscribed'];
+    subscribed = json['subscribed'];
   }
 
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['active'] = active;
-    map['isSubscribed'] = isSubscribed;
+    map['isSubscribed'] = subscribed;
     return map;
   }
 

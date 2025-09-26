@@ -1,6 +1,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:teacher_app/exceptions/app_exception.dart';
+import '../exceptions/app_http_exception.dart';
+import '../exceptions/app_no_internet_exception.dart';
 import '../widgets/confirm_dailog_widget.dart';
 import 'Keyboard_utils.dart';
 
@@ -16,12 +19,28 @@ void showSuccessMessage(message) {
   ));
 }
 
-void showErrorMessage(message) {
-  showErrorMessagePopup(message);
+void showErrorMessage(message , {String? buttonText, Function()? onClose}) {
+  showErrorMessagePopup(message , buttonText: buttonText, onClose: onClose);
   // ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(SnackBar(
   //   content: Text(message),
   //   backgroundColor: Colors.red,
   // ));
+}
+
+void showErrorMessageEx(Exception? ex  ,  {String? buttonText, Function()? onClose}) {
+  String message = ex?.toString() ?? "";
+  switch(ex){
+    case AppHttpException():
+      message = ex.message ?? "";
+      break;
+    case AppNoInternetException():
+      message = "no_internet_connection".tr;
+      break;
+    case AppException():
+      message = ex.message ?? "";
+      break;
+  }
+  showErrorMessagePopup(message , buttonText: buttonText, onClose: onClose);
 }
 
 Future<void> showDailog(context, widget , {bool barrierDismissible = true}) async {
@@ -33,7 +52,7 @@ Future<void> showDailog(context, widget , {bool barrierDismissible = true}) asyn
   KeyboardUtils.hideKeyboard(Get.context!);
 }
 
-void showErrorMessagePopup(String message) {
+void showErrorMessagePopup(String message ,  {String? buttonText, Function()? onClose}) {
   showDailog(
       Get.context,
       Dialog(
@@ -42,9 +61,9 @@ void showErrorMessagePopup(String message) {
           children: [
             ConfirmDailogWidget(
                 title: message,
-                positive_button_text: "Ok".tr,
+                positive_button_text: buttonText ?? "Ok".tr,
                 showCancelBtn: false,
-                onSuccess: () {},
+                onSuccess: () {onClose?.call();},
               ),
           ],
         ),
@@ -73,7 +92,8 @@ void showSuccessMessagePopup(String message, [Function()? onClose]) {
 
 void showConfirmationMessage(String message, Function() action, {
   bool barrierDismissible = true,
-  String? positiveButtonText,String? negativeButtonText,
+  String? positiveButtonText,
+  String? negativeButtonText,
   Function()? onCancel
 }) {
 
@@ -89,7 +109,7 @@ void showConfirmationMessage(String message, Function() action, {
               autoDismiss : barrierDismissible,
               positive_button_text: positiveButtonText ?? "yes".tr,
               negative_button_text: negativeButtonText ?? "Cancel".tr,
-              showCancelBtn: barrierDismissible,
+              showCancelBtn : negativeButtonText != null && negativeButtonText.isNotEmpty,
               onSuccess: () {
                 action();
               },

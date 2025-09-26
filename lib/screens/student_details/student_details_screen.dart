@@ -142,7 +142,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
           children: [
             Expanded(
               child: AppTextWidget(
-                "View all sessions".tr,
+                "View Full Report".tr,
                 style: AppTextStyle.value,
               ),
             ),

@@ -19,7 +19,18 @@ class SplashController extends GetxController{
   @override
   Future<void> onInit() async {
     super.onInit();
+    _init();
+  }
 
+  void updateEvent(SplashEvent event) {
+    splashEvent.value = event;
+  }
+
+  void retry() {
+    _init();
+  }
+
+  Future<void> _init() async {
     /*Check app force update*/
     var checkAppVersionResult =  await _changeAppVersionUseCase.execute();
     if(checkAppVersionResult.isSuccess){
@@ -28,8 +39,13 @@ class SplashController extends GetxController{
         updateEvent(SplashEventForceUpdate(model: checkAppVersionModel!));
         return;
       }
+    }else if(checkAppVersionResult.isError){
+      updateEvent(SplashError(checkAppVersionResult.error));
+      return;
     }
 
+
+    /*Check is not logged in*/
     var userAuth = await _getUserAuthUseCase.execute();
     appLog("onInit getUserAuthUseCase.execute : ${userAuth?.accessToken}" , "SplashController");
     AppSetting.setUserAuthModel(userAuth);
@@ -49,21 +65,25 @@ class SplashController extends GetxController{
           updateEvent(SplashEventGoToLogin());
           return;
         }
+      }else {
+        updateEvent(SplashError(checkUserSessionResult.error));
+        return;
       }
     }
 
     var checkUserSession = checkUserSessionResult.data;
     var isValidSession = checkUserSessionResult.isSuccess &&  checkUserSession != null && checkUserSession.isActive == true;
     if(!isValidSession && checkUserSession != null){
-      updateEvent(SplashEventInvalidSession(checkUserSessionModel: checkUserSession));
+      updateEvent(SplashEventUserNotActive(checkUserSessionModel: checkUserSession));
+      return;
+    }
+
+    if(checkUserSession != null && !checkUserSession.isSubscribed){
+      updateEvent(SplashEventNotSubscribed());
       return;
     }
 
     updateEvent(SplashEventGoToHome());
-  }
-
-  void updateEvent(SplashEvent event) {
-    splashEvent.value = event;
   }
 
 }

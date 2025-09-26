@@ -10,6 +10,7 @@ import 'package:url_launcher/url_launcher.dart';
 final MethodChannel _whatsappChannel = MethodChannel('whatsapp_share');
 
 class WhatsappUtils {
+
   static void sendToWhatsApp(String message, String phoneNumber) async {
     try {
       final url = Uri.parse(

@@ -116,6 +116,8 @@ final Map<String, String> ar = {
 
   "report_parent_title": "تقرير متابعة ولي الأمر",
   "infoText": "نحيط سيادتكم علما أن الطالب",
+  "fulReportInfoText": "نحيط سيادتكم تقرير شامل للطالب",
+
   "attended the class on": "قدر حضر حصة اليوم",
   "attended": "قد حضر",
   "Session Day": "حصة اليوم",
@@ -171,7 +173,16 @@ final Map<String, String> ar = {
   "Total Attendance" : "إجمالي الحضور",
   "Average Grade" : "متوسط الدرجات",
   "Date" : "التاريخ",
-  "No Reports Found" : "لم يتم العثور على أي تقارير"
+  "No Reports Found" : "لم يتم العثور على أي تقارير",
+"View Full Report" : "عرض تقرير شامل",
+  "Full Report" : "تقرير شامل",
+  "subscription_message" : "اشتراكك غير فعال، يرجى التواصل مع مالك الخدمة.\nهل تريد التواصل الآن؟",
+  "No": "لا",
+  "Yes": "نعم",
+  "no_internet_connection" : "لا يوجد اتصال بالإنترنت"
+
+
+
 
 
 };

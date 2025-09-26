@@ -9,9 +9,9 @@ import 'package:teacher_app/models/profile_info_model.dart';
 import 'package:teacher_app/models/user_auth_model.dart';
 
 class IdentityRepositoryImpl extends IdentityRepository {
-
   LocalIdentityDataSource localIdentityDataSource = LocalIdentityDataSource();
-  IdentityRemoteDataSource remoteIdentityDataSource = IdentityRemoteDataSource();
+  IdentityRemoteDataSource remoteIdentityDataSource =
+      IdentityRemoteDataSource();
 
   @override
   Future<UserAuthModel?> getUserAuth() {
@@ -54,6 +54,9 @@ class IdentityRepositoryImpl extends IdentityRepository {
   @override
   Future<CheckUserSessionModel> checkUserSession() async {
     var response = await remoteIdentityDataSource.checkUserSession();
-    return CheckUserSessionModel(isActive: response.data?.active ?? false);
+    return CheckUserSessionModel(
+      isActive: response.data?.active ?? false,
+      isSubscribed: response.data?.subscribed ?? false,
+    );
   }
 }

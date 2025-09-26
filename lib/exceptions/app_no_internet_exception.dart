@@ -1,0 +1,2 @@
+
+class AppNoInternetException  implements Exception {}

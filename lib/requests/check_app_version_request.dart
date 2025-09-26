@@ -2,27 +2,20 @@
 class CheckAppVersionRequest {
   CheckAppVersionRequest({
       this.platform, 
-      this.androidVersion, 
-      this.iosVersion,});
+      this.version,});
 
   CheckAppVersionRequest.fromJson(dynamic json) {
     platform = json['platform'];
-    androidVersion = json['androidVersion'];
-    iosVersion = json['IOSVersion'];
+    version = json['version'];
   }
   int? platform;
-  double? androidVersion;
-  double? iosVersion;
+  double? version;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['platform'] = platform;
-    if(androidVersion != null){
-      map['androidVersion'] = androidVersion;
-    }
-    if(iosVersion != null){
-      map['iosVersion'] = iosVersion;
-    }
+    map['version'] = version;
+
     return map;
   }
 

@@ -16,7 +16,9 @@ import 'package:teacher_app/widgets/yes_no_value_widget.dart';
 import '../../themes/txt_styles.dart';
 import '../../widgets/app_toolbar_widget.dart';
 import '../../widgets/homework_status_widget.dart';
+import '../../widgets/primary_button_widget.dart';
 import '../../widgets/quiz_grade_widget.dart';
+import '../report_full_report/args/student_full_report_args.dart';
 import '../session_details/states/session_details_ui_state.dart';
 import 'states/session_item_ui_state.dart';
 import 'student_reports_controller.dart';
@@ -39,7 +41,7 @@ class _StudentsReportsScreenState
   final Color cellColor = AppColors.white;
 
   final StudentReportsController controller =
-      Get.put(StudentReportsController());
+  Get.put(StudentReportsController());
 
   @override
   Widget build(BuildContext context) {
@@ -89,8 +91,7 @@ class _StudentsReportsScreenState
   }
 
   _showDetails(StudentReportsStateSuccess state) {
-
-    if(state.uiStates.isEmpty){
+    if (state.uiStates.isEmpty) {
       return _emptyTable();
     }
 
@@ -101,12 +102,12 @@ class _StudentsReportsScreenState
         Expanded(
           child: _table(state.uiStates),
         ),
+        _creteReport(state)
       ],
     );
   }
 
   _table(List<StudentReportItemUiState> uiStates) {
-
     return Column(
       children: [
         _tableTitles(),
@@ -143,21 +144,26 @@ class _StudentsReportsScreenState
 
   _reportItem(bool isLastItem, StudentReportItemUiState uiState,
       Function(SessionItemUiState p1) onClick) {
-    return Container(
-      decoration: isLastItem
-          ? _tableFooterCellBackground()
-          : AppBackgroundStyle.getColoredBackgroundBorderOnly(
-              radius: radius,
-              bgColor: cellColor,
-              borderColor: borderColor,
-              left: true,
-              right: true),
-      child: _row([
-        _nameAndDate(uiState),
-        _attendance(uiState),
-        _homework(uiState),
-        _quiz(uiState),
-      ]),
+    return InkWell(
+      onTap: () =>
+          AppNavigator.navigateToSessionDetails(SessionDetailsArgsModel(
+              uiState.sessionId, controller.getStudentId())),
+      child: Container(
+        decoration: isLastItem
+            ? _tableFooterCellBackground()
+            : AppBackgroundStyle.getColoredBackgroundBorderOnly(
+            radius: radius,
+            bgColor: cellColor,
+            borderColor: borderColor,
+            left: true,
+            right: true),
+        child: _row([
+          _nameAndDate(uiState),
+          _attendance(uiState),
+          _homework(uiState),
+          _quiz(uiState),
+        ]),
+      ),
     );
   }
 
@@ -177,7 +183,8 @@ class _StudentsReportsScreenState
     );
   }
 
-  _nameAndDate(StudentReportItemUiState uiState) => AppTextWidget(
+  _nameAndDate(StudentReportItemUiState uiState) =>
+      AppTextWidget(
         uiState.sessionDate,
         overflow: TextOverflow.ellipsis,
         textAlign: TextAlign.center,
@@ -185,30 +192,37 @@ class _StudentsReportsScreenState
       );
 
   _attendance(StudentReportItemUiState uiState) =>
-      YesNoValueWidget(uiState.attended , fontSize: 11);
+      YesNoValueWidget(uiState.attended, fontSize: 11);
 
   _homework(StudentReportItemUiState uiState) =>
-      HomeworkStatusWidget(uiState.homeworkStatus , fontSize: 11);
+      HomeworkStatusWidget(uiState.homeworkStatus, fontSize: 11);
 
   _behavior(StudentReportItemUiState uiState) =>
       BehaviorStatusWidget(uiState.behaviorStatus);
 
-  _quiz(StudentReportItemUiState uiState) => QuizGradeWidget(
-      total: uiState.sessionQuizGrade ?? 0, score: uiState.quizGrade , fontSize: 11);
+  _quiz(StudentReportItemUiState uiState) =>
+      QuizGradeWidget(
+          total: uiState.sessionQuizGrade ?? 0,
+          score: uiState.quizGrade,
+          fontSize: 11);
 
-  _cell(Widget child) => Expanded(
+  _cell(Widget child) =>
+      Expanded(
           child: Center(
               child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 7.0 , horizontal: 3),
-        child: child,
-      )));
+                padding: const EdgeInsets.symmetric(
+                    vertical: 7.0, horizontal: 3),
+                child: child,
+              )));
 
-  _verticalDivider() => Container(
+  _verticalDivider() =>
+      Container(
         width: 1,
         color: borderColor,
       );
 
-  Widget _tableTitles() => Container(
+  Widget _tableTitles() =>
+      Container(
         decoration: AppBackgroundStyle.getColoredBackgroundRoundedBorderOnly(
             bgColor: tableTitleColor,
             borderColor: borderColor,
@@ -224,7 +238,8 @@ class _StudentsReportsScreenState
 
   _tableTitleStyle() => AppTextStyle.label.copyWith(fontSize: 11);
 
-  Widget _horizontalDivider() => Divider(
+  Widget _horizontalDivider() =>
+      Divider(
         thickness: 1,
         height: 1,
         color: borderColor,
@@ -232,7 +247,8 @@ class _StudentsReportsScreenState
 
   _footer() => AppTextWidget("footer", textAlign: TextAlign.center);
 
-  _titleCell(String text) => Padding(
+  _titleCell(String text) =>
+      Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: AppTextWidget(
           text,
@@ -273,16 +289,17 @@ class _StudentsReportsScreenState
         // ValueWidget(averageGrade),
 
         if(state.totalGrades != null)
-        ValueWidget(  "($gradesPercentage%)",
-            style: AppTextStyle.value.copyWith(
-                color: gradesPercentage > 50
-                    ? AppColors.colorYes
-                    : AppColors.colorNo)),
+          ValueWidget("($gradesPercentage%)",
+              style: AppTextStyle.value.copyWith(
+                  color: gradesPercentage > 50
+                      ? AppColors.colorYes
+                      : AppColors.colorNo)),
       ]),
     );
   }
 
-  _tableFooterCellBackground() => BoxDecoration(
+  _tableFooterCellBackground() =>
+      BoxDecoration(
         color: cellColor, // keep background transparent
         border: Border(
           bottom: BorderSide(
@@ -303,5 +320,15 @@ class _StudentsReportsScreenState
 
   _emptyTable() {
     return Center(child: EmptyViewWidget(message: "No Reports Found".tr));
+  }
+
+
+  _creteReport(StudentReportsStateSuccess state) {
+    return PrimaryButtonWidget(text: "Send Report".tr, onClick: () {
+      AppNavigator.navigateToStudentFullReportScreen(
+          StudentFullReportArgs(
+              state: state
+          ));
+    });
   }
 }
