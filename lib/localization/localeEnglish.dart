@@ -23,6 +23,11 @@ final Map<String, String> enUS = {
   "For Contact": "For Contact",
   "Got It": "Got It",
   "Do you want to contact now?": "Do you want to contact now?",
+  "Share via": "Share via",
+  "WhatsApp": "WhatsApp",
+  "WhatsApp Business": "WhatsApp Business",
+  "Other": "Other",
+  "Don't ask me again": "Don't ask me again",
   "Select Student": "Select Student",
   "Group Details": "Group Details",
   "Group Info": "Group Info",
@@ -168,6 +173,8 @@ final Map<String, String> enUS = {
   "Yes" : "Yes",
   "Renew": "Renew",
   "Close": "Close",
+  "Share": "Share",
+  "Could not share file": "Could not share file",
   "no_internet_connection" : "No internet connection",
 
 
