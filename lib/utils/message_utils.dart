@@ -94,28 +94,33 @@ void showConfirmationMessage(String message, Function() action, {
   bool barrierDismissible = true,
   String? positiveButtonText,
   String? negativeButtonText,
-  Function()? onCancel
+  Function()? onCancel,
+  Widget? subTitleWidget
 }) {
 
   showDailog(
       Get.context,
     barrierDismissible: barrierDismissible,
-      Dialog(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ConfirmDailogWidget(
-              title: message,
-              autoDismiss : barrierDismissible,
-              positive_button_text: positiveButtonText ?? "yes".tr,
-              negative_button_text: negativeButtonText ?? "Cancel".tr,
-              showCancelBtn : negativeButtonText != null && negativeButtonText.isNotEmpty,
-              onSuccess: () {
-                action();
-              },
-              onCancel: onCancel,
-            ),
-          ],
+      WillPopScope(
+        onWillPop: () async => barrierDismissible,
+        child: Dialog(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ConfirmDailogWidget(
+                title: message,
+                subTitleWidget: subTitleWidget,
+                autoDismiss : barrierDismissible,
+                positive_button_text: positiveButtonText ?? "yes".tr,
+                negative_button_text: negativeButtonText ?? "Cancel".tr,
+                showCancelBtn : negativeButtonText != null && negativeButtonText.isNotEmpty,
+                onSuccess: () {
+                  action();
+                },
+                onCancel: onCancel,
+              ),
+            ],
+          ),
         ),
       ));
 }

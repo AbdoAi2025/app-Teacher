@@ -20,6 +20,11 @@ class SplashEventUserNotActive extends SplashEvent {
 
 
 }
+
+class SplashEventShowRemainingDays extends SplashEvent {
+  final int remainingDays;
+  SplashEventShowRemainingDays({required this.remainingDays});
+}
 class SplashError extends SplashEvent {
   final Exception? ex;
   SplashError(this.ex);

@@ -8,23 +8,25 @@ import 'package:teacher_app/widgets/primary_button_widget.dart';
 class ConfirmDailogWidget extends StatelessWidget {
 
 
-  String? title;
-  String? sub_title;
-  String? positive_button_text;
-  String? negative_button_text;
-  Function()? onSuccess;
-  Function()? onCancel;
-  bool showCancelBtn;
-  Widget? leading;
-  EdgeInsets? margin;
-  bool autoDismiss;
-  Color? buttonColor;
-  Color? borderColor;
+  final String? title;
+  final String? sub_title;
+  final Widget? subTitleWidget;
+  final String? positive_button_text;
+  final String? negative_button_text;
+  final Function()? onSuccess;
+  final Function()? onCancel;
+  final bool showCancelBtn;
+  final Widget? leading;
+  final EdgeInsets? margin;
+  final bool autoDismiss;
+  final Color? buttonColor;
+  final Color? borderColor;
 
-  ConfirmDailogWidget(
+  const ConfirmDailogWidget(
       {super.key,
       this.title,
       this.sub_title,
+      this.subTitleWidget,
       this.onSuccess,
       this.onCancel,
       this.leading,
@@ -59,7 +61,12 @@ class ConfirmDailogWidget extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
 
-              if (sub_title != null) ...{
+              if (subTitleWidget != null) ...{
+                const SizedBox(
+                  height: 10,
+                ),
+                subTitleWidget!,
+              } else if (sub_title != null) ...{
                 const SizedBox(
                   height: 10,
                 ),

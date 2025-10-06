@@ -68,6 +68,9 @@ class _SplashscreenState extends State<SplashScreen> {
             break;
           case SplashEventNotSubscribed():
             AppMessageDialogs.showUserNotSubscribedDialog();
+            break;
+          case SplashEventShowRemainingDays():
+            AppMessageDialogs.showSubscriptionExpiringDialog(remainingDays: callback.remainingDays , onGotItClick: () => AppNavigator.navigateToHome());
         }
       },
     );

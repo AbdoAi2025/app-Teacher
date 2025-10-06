@@ -35,6 +35,9 @@ final Map<String, String> ar = {
   "Grade is required": "الصف مطلوب",
   "Select Day": "اختر اليوم",
   "Save": "حفظ",
+  "For Contact": "للتواصل",
+  "Got It": "حسناً",
+  "Do you want to contact now?": "هل تريد التواصل الآن؟",
   "Select Student to": "اختر طالبًا",
   "Group Details": "تفاصيل المجموعة",
   "Group Info": "معلومات المجموعة",
@@ -176,10 +179,14 @@ final Map<String, String> ar = {
   "No Reports Found" : "لم يتم العثور على أي تقارير",
 "View Full Report" : "عرض تقرير شامل",
   "Full Report" : "تقرير شامل",
-  "subscription_message" : "اشتراكك غير فعال، يرجى التواصل مع مالك الخدمة.\nهل تريد التواصل الآن؟",
+  "subscription_message" : "اشتراكك غير فعال، يرجى التواصل مع مالك الخدمة.",
   "No": "لا",
   "Yes": "نعم",
-  "no_internet_connection" : "لا يوجد اتصال بالإنترنت"
+  "Renew": "تجديد",
+  "Close": "إغلاق",
+  "no_internet_connection" : "لا يوجد اتصال بالإنترنت",
+  "subscription_expiring_today_message": "اشتراكك ينتهي اليوم! جدد الآن لتجنب انقطاع الخدمة",
+  "subscription_expiring_message": "اشتراكك ينتهي خلال {days} أيام. جدد الآن لتجنب انقطاع الخدمة"
 
 
 

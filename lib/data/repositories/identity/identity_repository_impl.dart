@@ -57,6 +57,7 @@ class IdentityRepositoryImpl extends IdentityRepository {
     return CheckUserSessionModel(
       isActive: response.data?.active ?? false,
       isSubscribed: response.data?.subscribed ?? false,
+      subscriptionExpireDate: response.data?.subscriptionExpireDate,
     );
   }
 }

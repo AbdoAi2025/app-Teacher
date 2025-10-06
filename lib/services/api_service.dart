@@ -157,9 +157,11 @@ const String devBaseUrl = "https://assistant-app-2136afb92d95.herokuapp.com";
 const String localBaseUrlOrange = "http://192.168.2.117:8080";
 const String localBaseUrlTpLink = "http://192.168.1.105:8080";
 const String localBaseUrlOnePlusLink = "http://10.19.38.129:8080";
+const String localBaseUrlVodafone = "http://192.168.8.176:8080";
 // const String localBaseUrlOnPlus = "http://192.168.212.129:8080";
 // const String localBaseUrl = "http://192.168.100.70:8080";
 
+// const String localBaseUrl = localBaseUrlVodafone;
 const String localBaseUrl = localBaseUrlOrange;
 // const String localBaseUrl = localBaseUrlTpLink;
 // const String localBaseUrl = localBaseUrlOnePlusLink;
