@@ -13,6 +13,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../domain/usecases/change_app_locale_use_case.dart';
 import '../../navigation/app_navigator.dart';
+import '../../navigation/app_routes.dart';
 import '../../widgets/app_toolbar_widget.dart';
 
 class SettingsScreen extends StatefulWidget{
@@ -36,6 +37,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               spacing: 20,
               children: [
                 _language(),
+                _mySubscription(),
                 _privacyPolicy(),
                 _deleteAccount()
               ],
@@ -83,6 +85,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
     hideDialogLoading();
   }
 
+  _mySubscription() {
+    return _cell("My Subscription".tr, Icons.payment, onMySubscriptionClick);
+  }
+
   _privacyPolicy() {
     return  _cell("Privacy Policy".tr , Icons.privacy_tip_outlined ,onPrivacyPolicyClick );
   }
@@ -104,6 +110,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     } else {
       debugPrint("❌ Could not launch $url");
     }
+  }
+
+  void onMySubscriptionClick() {
+    appLog("Navigate to subscription screen");
+    AppNavigator.navigateToSubscription();
   }
 
   void onDeleteAccount() {
