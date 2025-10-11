@@ -13,13 +13,13 @@ class InAppPurchaseService {
   InAppPurchaseService._internal();
 
   final InAppPurchase _inAppPurchase = InAppPurchase.instance;
-  late StreamSubscription<List<PurchaseDetails>> _subscription;
+  StreamSubscription<List<PurchaseDetails>>? _subscription;
 
   List<ProductDetails> _products = [];
-  List<PurchaseDetails> _purchases = [];
+  final List<PurchaseDetails> _purchases = [];
 
-  static const String _monthlySubscriptionId = 'monthly_subscription';
-  static const String _yearlySubscriptionId = 'yearly_subscription';
+  static const String _monthlySubscriptionId = 'assistantapp_plan_basic_month_200';
+  static const String _yearlySubscriptionId = 'assistantapp_plan_basic_year_1800';
 
   static const Set<String> _kIds = <String>{
     _monthlySubscriptionId,
@@ -49,7 +49,7 @@ class InAppPurchaseService {
 
     _subscription = _inAppPurchase.purchaseStream.listen(
       _onPurchaseUpdate,
-      onDone: () => _subscription.cancel(),
+      onDone: () => _subscription?.cancel(),
       onError: (error) => appLog('Purchase stream error: $error'),
     );
 
@@ -58,24 +58,24 @@ class InAppPurchaseService {
   }
 
   Future<void> _loadProducts() async {
-    appLog('Loading products');
+    appLog('InAppPurchaseService Loading products');
 
     final ProductDetailsResponse response = await _inAppPurchase.queryProductDetails(_kIds);
 
     if (response.notFoundIDs.isNotEmpty) {
-      appLog('Products not found: ${response.notFoundIDs}');
+      appLog('InAppPurchaseService Products not found: ${response.notFoundIDs}');
     }
 
     if (response.error != null) {
-      appLog('Error loading products: ${response.error}');
+      appLog('InAppPurchaseService Error loading products: ${response.error}');
       return;
     }
 
     _products = response.productDetails;
-    appLog('Loaded ${_products.length} products');
+    appLog('InAppPurchaseService Loaded ${_products.length} products');
 
     for (final product in _products) {
-      appLog('Product: ${product.id}, Price: ${product.price}, Title: ${product.title}');
+      appLog('InAppPurchaseService Product: ${product.id}, Price: ${product.price}, Title: ${product.title}');
     }
   }
 
@@ -152,6 +152,7 @@ class InAppPurchaseService {
 
       bool success;
       if (productDetails.id == _monthlySubscriptionId || productDetails.id == _yearlySubscriptionId) {
+        // For subscriptions, use buyNonConsumable (this is correct for both Android and iOS subscriptions)
         success = await _inAppPurchase.buyNonConsumable(purchaseParam: purchaseParam);
       } else {
         success = await _inAppPurchase.buyConsumable(purchaseParam: purchaseParam);
@@ -203,7 +204,7 @@ class InAppPurchaseService {
 
   void dispose() {
     appLog('Disposing In-App Purchase Service');
-    _subscription.cancel();
+    _subscription?.cancel();
   }
 }
 

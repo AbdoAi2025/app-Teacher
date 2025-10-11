@@ -41,6 +41,8 @@ class EndPoints{
   static const String getMySessions = "$apiV1/sessions/getMySessions";
   static const String checkAppVersion = "$apiV1/appVersions/check";
 
-
+  /*Subscription*/
+  static const String getCurrentSubscriptionPlan = "$apiV1/teachers/current-subscription-plan";
+  static const String getAllSubscriptionPlans = "$apiV1/subscription/plans";
 
 }

@@ -17,8 +17,8 @@ class SubscriptionProductModel {
     this.productDetails,
   });
 
-  static const String monthlySubscriptionId = 'monthly_subscription';
-  static const String yearlySubscriptionId = 'yearly_subscription';
+  static const String monthlySubscriptionId = 'assistantapp_plan_basic_month_200';
+  static const String yearlySubscriptionId = 'assistantapp_plan_basic_year_1800';
 
   static SubscriptionProductModel monthly({ProductDetails? productDetails}) {
     return SubscriptionProductModel(

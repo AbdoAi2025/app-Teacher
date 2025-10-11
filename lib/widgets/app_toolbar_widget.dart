@@ -36,7 +36,7 @@ class AppToolbarWidget {
           child: leading ??
               BackIconWidget(
                 onClick: (){
-                  onLeadingClick?.call ?? Get.back();
+                  onLeadingClick?.call() ?? Get.back();
                 },
               ),
         ),
