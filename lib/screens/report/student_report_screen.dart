@@ -370,8 +370,11 @@ The student got (... / ...) marks on the quiz.
             spacing: 20,
             children: [
               _closeIcon(),
-              Image.file(
-                file,
+              Flexible(
+                child: Image.file(
+                  file,
+                  fit: BoxFit.contain,
+                ),
               ),
               _sendButton(parentPhone, file)
             ],
