@@ -83,7 +83,7 @@ class AppTextFieldWidget extends StatelessWidget {
         border: border ?? OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
         ),
-        suffixIcon: suffixIcon,
+        suffixIcon: suffixIconWidget(),
       ),
       validator: validator,
       onChanged: onChanged,
@@ -91,6 +91,8 @@ class AppTextFieldWidget extends StatelessWidget {
 
     );
   }
+
+  Widget? suffixIconWidget() => suffixIcon;
 
 
 }

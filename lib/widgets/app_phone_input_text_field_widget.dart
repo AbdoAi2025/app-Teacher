@@ -37,32 +37,46 @@ class AppPhoneInputTextFieldWidget extends AppTextFieldWidget {
       hint: "010xxxxxxxx",
       textAlign: TextAlign.start,
       textDirection: TextDirection.ltr,
-      suffixIcon: Row(
-        spacing: 5,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          AppTextWidget("+20" ,style:  textStyle ?? AppTextStyle.textFieldStyle,),
-          InkWell(
-              onTap: () async {
-                // Ask for contacts permission first
-                var permission = await Permission.contacts.request();
-                print("permission : $permission");
-                if (permission.isGranted) {
-                  final picker = FlutterNativeContactPicker();
-                  var contact = await picker.selectPhoneNumber();
-                  var phoneNumber = contact?.selectedPhoneNumber?.replaceFirst("+20", "") ?? "";
-                  var name = contact?.fullName ?? "";
-                  print("selectedPhoneNumber  $phoneNumber, name : $name");
-                  onContactSelected(phoneNumber, name);
-                } else {
-                  showErrorMessage("Contacts permission denied");
-                }
-              },
-              child: Icon(Icons.phone_android)
-          ),
-          SizedBox(width: 5,)
-        ],
-      )
   );
+
+  @override
+  Widget? suffixIconWidget() => Row(
+    spacing: 5,
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      AppTextWidget("+20" ,style:  textStyle ?? AppTextStyle.textFieldStyle,),
+      InkWell(
+          onTap: _onContactIconTapped,
+          child: Icon(Icons.phone_android)
+      ),
+      SizedBox(width: 5,)
+    ],
+  );
+
+  void _onContactIconTapped() async {
+    try {
+      // Use flutter_native_contact_picker - no permissions needed
+      final picker = FlutterNativeContactPicker();
+      final contact = await picker.selectPhoneNumber();
+
+      if (contact != null) {
+        // Extract phone number and name
+        String phoneNumber = contact.selectedPhoneNumber ?? "";
+        String name = contact.fullName ?? "";
+
+        // Remove +20 prefix if present
+        phoneNumber = phoneNumber.replaceFirst("+20", "");
+        // Clean phone number (remove spaces, dashes, etc.)
+        phoneNumber = phoneNumber.replaceAll(RegExp(r'[^0-9+]'), '');
+
+        print("selectedPhoneNumber: $phoneNumber, name: $name");
+        onContactSelected(phoneNumber, name);
+      }
+    } catch (e) {
+      print("Error with contact picker: $e");
+      showErrorMessage("Error accessing contacts: $e");
+    }
+  }
+
 
 }
