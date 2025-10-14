@@ -193,7 +193,9 @@ final Map<String, String> ar = {
   "Could not share file": "لا يمكن مشاركة الملف",
   "no_internet_connection" : "لا يوجد اتصال بالإنترنت",
   "subscription_expiring_today_message": "اشتراكك ينتهي اليوم! جدد الآن لتجنب انقطاع الخدمة",
-  "subscription_expiring_message": "اشتراكك ينتهي خلال {days} أيام. جدد الآن لتجنب انقطاع الخدمة"
+  "subscription_expiring_message": "اشتراكك ينتهي خلال {days} أيام. جدد الآن لتجنب انقطاع الخدمة",
+  "Copied": "تم النسخ",
+  "Parent phone number copied to clipboard": "تم نسخ رقم هاتف ولي الأمر إلى الحافظة"
 
 
 

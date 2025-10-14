@@ -63,6 +63,17 @@ class WhatsappUtils {
       // Copy phone number to clipboard
       await Clipboard.setData(ClipboardData(text: phoneNumber));
 
+        // Show toast that phone number has been copied
+        Get.snackbar(
+          'Copied'.tr,
+          'Parent phone number copied to clipboard'.tr,
+          duration: Duration(seconds: 3),
+          backgroundColor: Colors.grey[800],
+          colorText: Colors.white,
+          snackPosition: SnackPosition.TOP,
+          margin: EdgeInsets.all(16),
+        );
+
       // Check if user has selected "don't ask me again"
       final dontAskAgain = await WhatsAppSharePreferences.getDontAskAgain();
 

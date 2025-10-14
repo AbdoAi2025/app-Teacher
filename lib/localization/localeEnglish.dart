@@ -176,6 +176,8 @@ final Map<String, String> enUS = {
   "Share": "Share",
   "Could not share file": "Could not share file",
   "no_internet_connection" : "No internet connection",
+  "Copied": "Copied",
+  "Parent phone number copied to clipboard": "Parent phone number copied to clipboard",
 
 
 
