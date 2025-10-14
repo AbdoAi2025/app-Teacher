@@ -59,20 +59,29 @@ class WhatsappUtils {
 
   /// Shares file via WhatsApp using platform-specific approaches
   static void sendToWhatsAppFile(File file, String phoneNumber) async {
-    // Check if user has selected "don't ask me again"
-    final dontAskAgain = await WhatsAppSharePreferences.getDontAskAgain();
+    try {
+      // Copy phone number to clipboard
+      await Clipboard.setData(ClipboardData(text: phoneNumber));
 
-    if (dontAskAgain) {
-      // Use the previously selected option
-      final selectedOption = await WhatsAppSharePreferences.getSelectedOption();
-      if (selectedOption != null) {
-        await _shareFileWithOption(file, phoneNumber, selectedOption);
-        return;
+      // Check if user has selected "don't ask me again"
+      final dontAskAgain = await WhatsAppSharePreferences.getDontAskAgain();
+
+      if (dontAskAgain) {
+        // Use the previously selected option
+        final selectedOption = await WhatsAppSharePreferences.getSelectedOption();
+        if (selectedOption != null) {
+          await _shareFileWithOption(file, phoneNumber, selectedOption);
+          return;
+        }
       }
-    }
 
-    // Show dialog to select sharing option
-    _showShareOptionsDialog(file, phoneNumber);
+      // Show dialog to select sharing option
+      _showShareOptionsDialog(file, phoneNumber);
+    } catch (e) {
+      appLog("Error in sendToWhatsAppFile: $e");
+      // Continue with sharing even if clipboard copy fails
+      _showShareOptionsDialog(file, phoneNumber);
+    }
   }
 
   /// Opens WhatsApp directly to a specific contact chat (text only)
