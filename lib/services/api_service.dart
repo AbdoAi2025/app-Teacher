@@ -143,14 +143,10 @@ class ApiService {
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_alice/alice.dart';
 import 'package:talker_dio_logger/talker_dio_logger.dart';
 import 'package:teacher_app/appSetting/appSetting.dart';
 import 'package:teacher_app/app_mode.dart';
-import 'package:teacher_app/main.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
-import '../models/group_item_model.dart';
-import '../models/student.dart';
 
 const String prodBaseUrl = "https://assistant-app-2136afb92d95.herokuapp.com";
 const String devBaseUrl = "https://assistant-app-2136afb92d95.herokuapp.com";

@@ -51,8 +51,6 @@ dependencies:
   path_provider: ^2.1.4  # For saving files
   share_plus: ^11.0.0  # For file sharing
   sprintf: "^7.0.0"
-  flutter_alice: ^2.0.1
-  shake: ^3.0.0
   package_info_plus: ^8.0.0
   flutter_native_contact_picker: ^0.0.11
   permission_handler: ^11.3.1
