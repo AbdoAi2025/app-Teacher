@@ -36,7 +36,7 @@ class _EditStudentScreenState extends AddStudentScreenState {
   }
 
   @override
-  void onSaveGroupResult(AddStudentState event) {
+  void onSaveStudentResult(AddStudentState event) {
     var result = event;
     hideDialogLoading();
     switch (result) {
@@ -58,7 +58,7 @@ class _EditStudentScreenState extends AddStudentScreenState {
 
   @override
   void onSaveSuccess(SaveStateSuccess result) {
-    showSuccessMessage("Group edited successfully".tr);
+    showSuccessMessage("Student edited successfully".tr);
     super.onSaveSuccess(result);
   }
 }

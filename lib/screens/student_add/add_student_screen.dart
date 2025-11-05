@@ -492,7 +492,7 @@ class AddStudentScreenState extends State<AddStudentScreen> {
     return "Add Student".tr;
   }
 
-  void onSaveGroupResult(AddStudentState event) {
+  void onSaveStudentResult(AddStudentState event) {
     var result = event;
     hideDialogLoading();
     switch (result) {
@@ -516,7 +516,7 @@ class AddStudentScreenState extends State<AddStudentScreen> {
   void onSaveGroupClick() {
     getController().onSave().listen(
       (event) {
-        onSaveGroupResult(event);
+        onSaveStudentResult(event);
       },
     );
   }

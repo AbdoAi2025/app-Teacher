@@ -6,7 +6,9 @@ import 'package:teacher_app/data/repositories/grades_repository.dart';
 import 'package:teacher_app/domain/models/app_locale_model.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
 
-class GetAppSettingUseCase {
+import '../base_use_case.dart';
+
+class GetAppSettingUseCase extends BaseUseCase<AppLocaleModel?>{
 
   AppSettingRepository repository = AppSettingRepositoryImpl();
 

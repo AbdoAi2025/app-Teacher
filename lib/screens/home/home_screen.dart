@@ -203,7 +203,23 @@ class _HomeScreenState extends State<HomeScreen> {
         margin: EdgeInsets.symmetric(horizontal: 20),
         padding: EdgeInsets.all(15),
         decoration: AppBackgroundStyle.backgroundWithShadow(),
-        child: EmptyViewWidget(message: "No Running Sessions Found".tr));
+        child: Column(
+          spacing: 20,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.do_not_disturb_alt,
+              size: 60,
+              color: AppColors.appMainColor,
+            ),
+            AppTextWidget(
+              "No Running Sessions Found".tr,
+              style: AppTextStyle.title,
+              color: AppColors.appMainColor,
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ));
   }
 
   Widget _todayGroupsList(List<GroupItemUiState> uiStates) {

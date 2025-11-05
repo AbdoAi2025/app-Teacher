@@ -15,13 +15,5 @@ class GetGroupsListUseCase extends BaseUseCase<List<GroupItemModel>>{
       var items =  await repository.fetchGroups();
       return AppResult.success(items);
     });
-
-
-    // try{
-    //    var items =  await repository.fetchGroups();
-    //    return AppResult.success(items);
-    // }on Exception catch(ex){
-    //   return AppResult.error(ex);
-    // }
   }
 }

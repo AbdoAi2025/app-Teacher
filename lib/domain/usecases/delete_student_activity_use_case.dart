@@ -7,24 +7,18 @@ import '../../data/repositories/sessions/sessions_repository_impl.dart';
 import '../../data/responses/error_response.dart';
 import '../../exceptions/app_http_exception.dart';
 import '../../utils/LogUtils.dart';
+import '../base_use_case.dart';
 import '../running_sessions/running_session_manager.dart';
 
-class DeleteStudentActivityUseCase {
+class DeleteStudentActivityUseCase extends BaseUseCase<List<String>?>{
 
 
   final SessionsRepository _repository = SessionsRepositoryImpl();
 
   Future<AppResult<List<String>?>> execute(List<String> ids) async {
-    try{
+    return call(() async {
       var items =  await _repository.deleteStudentActivity(ids);
       return AppResult.success(items);
-    }
-    catch(ex){
-      if(ex is DioException){
-        var errorResponse = ErrorResponse.fromJson(ex.response?.data);
-        return AppResult.error(AppHttpException(errorResponse.message));
-      }
-      return AppResult.error(Exception(ex));
-    }
+    });
   }
 }
