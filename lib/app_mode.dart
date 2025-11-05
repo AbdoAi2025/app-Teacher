@@ -9,8 +9,8 @@ class AppMode{
   static const int prod = 1;
   static const int local = 2;
 
-  // static const int mode = local;
-  static const int mode = prod;
+  static const int mode = local;
+  // static const int mode = prod;
 
 
   static bool isDev = mode == AppMode.dev;
