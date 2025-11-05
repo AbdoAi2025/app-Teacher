@@ -29,3 +29,4 @@ Thumbs.db
 app.*.symbols
 app.*.map.json
 migrate_working_dir/
+/android/app/.cxx/
