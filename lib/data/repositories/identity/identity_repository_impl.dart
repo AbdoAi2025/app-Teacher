@@ -2,8 +2,10 @@ import 'package:teacher_app/data/dataSource/identity_remote_data_source.dart';
 import 'package:teacher_app/data/dataSource/local_identity_data_source.dart';
 import 'package:teacher_app/data/repositories/identity/identity_repository.dart';
 import 'package:teacher_app/data/requests/login_request.dart';
+import 'package:teacher_app/data/requests/register_request.dart';
 import 'package:teacher_app/domain/models/login_model.dart';
 import 'package:teacher_app/domain/models/login_result.dart';
+import 'package:teacher_app/domain/models/register_model.dart';
 import 'package:teacher_app/models/check_user_session_model.dart';
 import 'package:teacher_app/models/profile_info_model.dart';
 import 'package:teacher_app/models/user_auth_model.dart';
@@ -22,6 +24,22 @@ class IdentityRepositoryImpl extends IdentityRepository {
   Future<LoginResult> login(LoginModel model) async {
     var response = await remoteIdentityDataSource.login(
         LoginRequest(username: model.userName, password: model.password));
+    return LoginResult(
+      accessToken: response.accessToken ?? "",
+      id: response.id ?? "",
+      name: response.name ?? "",
+      refreshToken: "",
+    );
+  }
+
+  @override
+  Future<LoginResult> register(RegisterModel model) async {
+    var response = await remoteIdentityDataSource.register(
+        RegisterRequest(
+            name: model.name,
+            username: model.userName,
+            password: model.password
+        ));
     return LoginResult(
       accessToken: response.accessToken ?? "",
       id: response.id ?? "",

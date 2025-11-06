@@ -27,6 +27,10 @@ class AppNavigator {
     Get.offAllNamed(AppRoutes.login);
   }
 
+  static navigateToRegister() {
+    Get.toNamed(AppRoutes.register);
+  }
+
   static Future<dynamic>? navigateToAddStudent() {
     return Get.toNamed(AppRoutes.addStudent);
   }

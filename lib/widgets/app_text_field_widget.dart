@@ -68,7 +68,8 @@ class AppTextFieldWidget extends StatelessWidget {
       textAlign: textAlign?? TextAlign.start,
       onTap: onTap,
       minLines: minLines,
-      maxLines: maxLines,
+      obscureText: obscureText,
+      maxLines: obscureText ? 1 : maxLines,
       maxLength: maxLength,
       keyboardType: keyboardType,
       decoration: InputDecoration(

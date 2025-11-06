@@ -16,6 +16,7 @@ class EndPoints{
 
   ///api/v1/users/signin
   static const String login = "$apiV1/users/signin";
+  static const String register = "$apiV1/teachers/add";
   static const String logout = "$apiV1/users/signout";
   static const String checkSession = "$apiV1/users/checkSession";
 

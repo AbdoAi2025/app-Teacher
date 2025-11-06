@@ -30,7 +30,7 @@ class LoginController extends GetxController{
       return;
     }
 
-    GetCheckUserSessionStateUseCase getCheckUserSessionStateUseCase = await GetCheckUserSessionStateUseCase();
+    GetCheckUserSessionStateUseCase getCheckUserSessionStateUseCase =  GetCheckUserSessionStateUseCase();
 
 
     var getCheckUserSessionResult  =  await getCheckUserSessionStateUseCase.execute();
