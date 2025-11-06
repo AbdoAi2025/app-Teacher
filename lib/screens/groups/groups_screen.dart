@@ -12,6 +12,7 @@ import '../../utils/message_utils.dart';
 import '../../widgets/app_error_widget.dart';
 import '../../widgets/close_icon_widget.dart';
 import '../../widgets/dialog_loading_widget.dart';
+import '../../widgets/error_view_widget.dart';
 import '../../widgets/groups/group_item_widget.dart';
 import '../../widgets/search_icon_widget.dart';
 import '../../widgets/search_text_field.dart';
@@ -21,8 +22,6 @@ import 'groups_controller.dart';
 import 'groups_state.dart';
 
 class GroupsScreen extends StatefulWidget {
-
-
   const GroupsScreen({super.key});
 
   @override
@@ -30,7 +29,6 @@ class GroupsScreen extends StatefulWidget {
 }
 
 class _GroupsScreenState extends State<GroupsScreen> {
-
   GroupsController controller = Get.put(GroupsController());
   bool searchState = false;
 
@@ -42,11 +40,14 @@ class _GroupsScreenState extends State<GroupsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: _appBar(),//AppToolbarWidget.appBar(title: "Groups".tr, hasLeading: false),
+        appBar: _appBar(),
+        //AppToolbarWidget.appBar(title: "Groups".tr, hasLeading: false),
         body: Padding(
           padding: const EdgeInsets.symmetric(vertical: 20.0),
           child: GestureDetector(
-              onTapDown: (v){KeyboardUtils.hideKeyboard(context);},
+              onTapDown: (v) {
+                KeyboardUtils.hideKeyboard(context);
+              },
               child: _content()),
         ),
         floatingActionButton: FloatingActionButton(
@@ -55,8 +56,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
           },
           backgroundColor: AppColors.appMainColor,
           child: Icon(Icons.add, color: Colors.white),
-        )
-    );
+        ));
   }
 
   _appBar() {
@@ -66,51 +66,43 @@ class _GroupsScreenState extends State<GroupsScreen> {
     return _appBarWithActions();
   }
 
-  _appBarWithActions() =>AppToolbarWidget.appBar(
-      title: "Groups".tr,
-      hasLeading: false,
-      actions: [
+  _appBarWithActions() =>
+      AppToolbarWidget.appBar(title: "Groups".tr, hasLeading: false, actions: [
         _searchIcon(),
         _sortIcon(),
-      ]
-  );
+      ]);
 
   _searchAppBar() => AppToolbarWidget.appBar(
-      titleWidget: SearchTextField(
-        controller: TextEditingController(),
-        onChanged: controller.onSearchChanged,
-      ),
-      hasLeading: false,
-      actions: [
-        InkWell(
-            onTap: () {
-              setState(() {
-                searchState = false;
-                controller.onCloseSearch();
-              });
-            },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15.0),
-              child: CloseIconWidget(),
-            ))
-      ]
-  );
+          titleWidget: SearchTextField(
+            controller: TextEditingController(),
+            onChanged: controller.onSearchChanged,
+          ),
+          hasLeading: false,
+          actions: [
+            InkWell(
+                onTap: () {
+                  setState(() {
+                    searchState = false;
+                    controller.onCloseSearch();
+                  });
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  child: CloseIconWidget(),
+                ))
+          ]);
 
-  _searchIcon() =>  InkWell(
+  _searchIcon() => InkWell(
       onTap: () {
         setState(() {
           searchState = true;
         });
       },
-      child: SearchIconWidget()
-  );
+      child: SearchIconWidget());
 
-  _sortIcon() =>  InkWell(
-      onTap: onSortClick,
-      child: SortIconWidget()
-  );
+  _sortIcon() => InkWell(onTap: onSortClick, child: SortIconWidget());
 
- Widget _content() {
+  Widget _content() {
     return Obx(() {
       var state = controller.state.value;
       switch (state) {
@@ -119,7 +111,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
         case GroupsStateSuccess():
           return _groupsList(state);
         case GroupsStateError():
-          return Center(child: AppErrorWidget(message: state.message, onRetry: refresh,));
+          return _errorView(state);
       }
     });
   }
@@ -134,38 +126,41 @@ class _GroupsScreenState extends State<GroupsScreen> {
       return _emptyView();
     }
     return RefreshIndicator(
-
       onRefresh: () async {
         controller.refreshGroups();
       },
+      child: ListView.separated(
+          itemBuilder: (context, index) {
+            var uiState = items[index];
 
-      child: ListView.separated(itemBuilder: (context, index) {
+            if (uiState is GroupItemTitleUiState) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    AppTextWidget(
+                      uiState.title,
+                      style: AppTextStyle.title,
+                    ),
+                  ],
+                ),
+              );
+            }
 
-        var uiState = items[index];
-
-        if (uiState is GroupItemTitleUiState) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                AppTextWidget(uiState.title, style: AppTextStyle.title,),
-              ],
-            ),
-          );
-        }
-
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: GroupItemWidget(
-            uiState: uiState,
-            onClick: onGroupItemClick,
-            onDeleteClick: onDeleteClick,
-          ),
-        );
-      },
-          separatorBuilder: (context, index) => SizedBox(height: 15,),
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: GroupItemWidget(
+                uiState: uiState,
+                onClick: onGroupItemClick,
+                onDeleteClick: onDeleteClick,
+              ),
+            );
+          },
+          separatorBuilder: (context, index) => SizedBox(
+                height: 15,
+              ),
           itemCount: items.length),
     );
   }
@@ -176,22 +171,28 @@ class _GroupsScreenState extends State<GroupsScreen> {
 
   _emptyView() {
     return Center(
-        child: EmptyViewWidget(message: "No Groups Found".tr));
+        child: EmptyViewWidget(
+      message: "No Groups Found".tr,
+      onRetry: refresh,
+      retryText: "Refresh".tr,
+    ));
   }
 
   onDeleteClick(GroupItemUiState uiState) {
     showConfirmationMessage(
         "${"Are you sure to delete ?".tr} ${uiState.groupName}", () {
       showDialogLoading();
-      controller.deleteGroup(uiState).listen((event) {
-        hideDialogLoading();
-        if (event.isSuccess) {
-          return;
-        }
-        if (event.isError) {
-          showErrorMessage(event.error?.toString());
-        }
-      },);
+      controller.deleteGroup(uiState).listen(
+        (event) {
+          hideDialogLoading();
+          if (event.isSuccess) {
+            return;
+          }
+          if (event.isError) {
+            showErrorMessage(event.error?.toString());
+          }
+        },
+      );
     });
   }
 
@@ -214,16 +215,23 @@ class _GroupsScreenState extends State<GroupsScreen> {
                   mainAxisSize: MainAxisSize.min,
                   spacing: 20,
                   children: [
-                    InkWell(onTap: onSortByDayClick , child: AppTextWidget("By Day".tr)),
-                    InkWell(onTap: onSortByGradeClick ,  child: AppTextWidget("By grade".tr)),
-                    InkWell(onTap: onSortResetClick ,  child: AppTextWidget("Reset".tr)),
+                    InkWell(
+                        onTap: onSortByDayClick,
+                        child: AppTextWidget("By Day".tr)),
+                    InkWell(
+                        onTap: onSortByGradeClick,
+                        child: AppTextWidget("By grade".tr)),
+                    InkWell(
+                        onTap: onSortResetClick,
+                        child: AppTextWidget("Reset".tr)),
                   ],
                 ),
               ),
             ],
           ),
         );
-      },);
+      },
+    );
   }
 
   void onSortByDayClick() {
@@ -239,5 +247,13 @@ class _GroupsScreenState extends State<GroupsScreen> {
   void onSortResetClick() {
     Get.back();
     controller.resetSort();
+  }
+
+  Widget _errorView(GroupsStateError state) {
+    return Center(
+        child: ErrorViewWidget(
+      message: state.message,
+      onRetry: refresh,
+    ));
   }
 }
