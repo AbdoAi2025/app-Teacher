@@ -154,6 +154,7 @@ final Map<String, String> enUS = {
   "By group" : "By group",
   "By grade" : "By grade",
   "Reset" : "Reset",
+  "Refresh": "Refresh",
   "Without group" : "Without group",
   "By Day" : "By Day",
   "Add student to session" : "Add student to session",

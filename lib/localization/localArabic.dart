@@ -172,6 +172,7 @@ final Map<String, String> ar = {
   "By group" : "حسب المجموعة",
   "By grade" : "حسب الصف",
   "Reset" : "إعادة تعيين",
+  "Refresh": "تحديث",
   "Without group" : "بدون مجموعة",
   "By Day" : "حسب اليوم",
   "Add student to session" : "إضافة طالب إلى الجلسة",
