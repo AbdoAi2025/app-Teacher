@@ -143,6 +143,7 @@ class ApiService {
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
 import 'package:talker_dio_logger/talker_dio_logger.dart';
 import 'package:teacher_app/appSetting/appSetting.dart';
 import 'package:teacher_app/app_mode.dart';
@@ -203,7 +204,6 @@ class ApiService {
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) {
-          // you can add headers (e.g., token) here if needed
           return handler.next(options);
         },
         onResponse: (response, handler) {
@@ -220,7 +220,6 @@ class ApiService {
       ),
     );
 
-    var token = AppSetting.getAppSetting().accessToken;
 
     dio.options = BaseOptions(
       baseUrl: baseUrl,
@@ -229,11 +228,17 @@ class ApiService {
       headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token",
+        "Accept-Language" : currentLanguage,
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET, POST,OPTIONS',
         "Access-Control-Allow-Headers": "Content-Type, Authorization"
       },
     );
   }
+
+
+  static String get token => AppSetting.getAppSetting().accessToken;
+  static String get currentLanguage =>  Get.locale?.languageCode ?? "en";
+
 
 }

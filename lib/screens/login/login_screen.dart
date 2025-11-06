@@ -10,6 +10,8 @@ import 'package:teacher_app/widgets/dialog_loading_widget.dart';
 import 'package:teacher_app/widgets/primary_button_widget.dart';
 
 import '../../generated/assets.dart';
+import '../../widgets/app_password_field_widget.dart';
+import '../../widgets/app_toolbar_widget.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -26,9 +28,13 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      appBar: AppToolbarWidget.appBar(title: "Login".tr, leading: Container()),
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0 ,vertical: 30),
           child: Column(
             spacing: 20,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -40,7 +46,8 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               _userNameField(),
               _passwordField(),
-              _submitButton()
+              _submitButton(),
+              _registerRedirect(),
             ],
           ),
         ),
@@ -55,12 +62,11 @@ class _LoginScreenState extends State<LoginScreen> {
         prefixIcon: Icon(Icons.person),
       );
 
-  _passwordField() => AppTextFieldWidget(
+  _passwordField() => AppPasswordFieldWidget(
         controller: passwordController,
-        obscureText: true,
         label: "Password".tr,
         hint: "Password".tr,
-        prefixIcon: Icon(Icons.lock),
+        prefixIcon: Icon(Icons.lock_outline),
       );
 
   _submitButton() {
@@ -72,6 +78,19 @@ class _LoginScreenState extends State<LoginScreen> {
           onLoginClick();
         },
       ),
+    );
+  }
+
+  _registerRedirect() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text("Don't have an account?".tr),
+        TextButton(
+          onPressed: () => AppNavigator.navigateToRegister(),
+          child: Text("Register".tr),
+        ),
+      ],
     );
   }
 

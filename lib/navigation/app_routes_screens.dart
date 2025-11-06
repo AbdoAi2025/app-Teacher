@@ -10,6 +10,7 @@ import 'package:teacher_app/screens/sessions_list/session_list_screen.dart';
 import 'package:teacher_app/screens/student_add/add_student_screen.dart';
 import 'package:teacher_app/screens/splash/SplashScreen.dart';
 import 'package:teacher_app/screens/login/login_screen.dart';
+import 'package:teacher_app/screens/register/register_screen.dart';
 import '../screens/group_details/group_details_screen.dart';
 import '../screens/group_edit/edit_group_screen.dart';
 import '../screens/student_details/student_details_screen.dart';
@@ -23,6 +24,7 @@ const int transitionDuration = 600;
 List<GetPage> appRoutes() => [
   _getPage(AppRoutes.root, SplashScreen() , duration: Duration()),
   _getPage(AppRoutes.login, LoginScreen()),
+  _getPage(AppRoutes.register, RegisterScreen()),
   _getPage(AppRoutes.bottomBar, BottomBarScreen()),
   _getPage(AppRoutes.createGroup, CreateGroupScreen()),
   _getPage(AppRoutes.groupDetails, GroupDetailsScreen()),

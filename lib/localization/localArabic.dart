@@ -172,6 +172,7 @@ final Map<String, String> ar = {
   "By group" : "حسب المجموعة",
   "By grade" : "حسب الصف",
   "Reset" : "إعادة تعيين",
+  "Refresh": "تحديث",
   "Without group" : "بدون مجموعة",
   "By Day" : "حسب اليوم",
   "Add student to session" : "إضافة طالب إلى الجلسة",
@@ -196,7 +197,25 @@ final Map<String, String> ar = {
   "subscription_expiring_today_message": "اشتراكك ينتهي اليوم! جدد الآن لتجنب انقطاع الخدمة",
   "subscription_expiring_message": "اشتراكك ينتهي خلال {days} أيام. جدد الآن لتجنب انقطاع الخدمة",
   "Copied": "تم النسخ",
-  "Parent phone number copied to clipboard": "تم نسخ رقم هاتف ولي الأمر إلى الحافظة"
+  "Parent phone number copied to clipboard": "تم نسخ رقم هاتف ولي الأمر إلى الحافظة",
+  "Register": "تسجيل",
+  "Create Account": "إنشاء حساب",
+  "Full Name": "الاسم الكامل",
+  "Enter your full name": "أدخل اسمك الكامل",
+  "Choose a username": "اختر اسم مستخدم",
+  "Enter password": "أدخل كلمة المرور",
+  "Confirm Password": "تأكيد كلمة المرور",
+  "Confirm your password": "أكد كلمة المرور",
+  "Already have an account?": "لديك حساب بالفعل؟",
+  "Full name is required": "الاسم الكامل مطلوب",
+  "Name must be at least 3 characters": "الاسم يجب أن يحتوي على 3 أحرف على الأقل",
+  "Username is required": "اسم المستخدم مطلوب",
+  "Username must be at least 3 characters": "اسم المستخدم يجب أن يحتوي على 3 أحرف على الأقل",
+  "Password is required": "كلمة المرور مطلوبة",
+  "Password must be at least 6 characters": "كلمة المرور يجب أن تحتوي على 6 أحرف على الأقل",
+  "Please confirm your password": "يرجى تأكيد كلمة المرور",
+  "Passwords do not match": "كلمة المرور غير متطابقة",
+  "Don't have an account?": "ليس لديك حساب؟"
 
 
 

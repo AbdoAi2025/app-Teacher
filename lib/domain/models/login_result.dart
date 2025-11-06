@@ -9,4 +9,13 @@ class LoginResult {
       required this.name,
       required this.accessToken,
       required this.refreshToken});
+
+  toJson() {
+    return {
+      "id": id,
+      "name": name,
+      "accessToken": accessToken,
+      "refreshToken": refreshToken
+    };
+  }
 }

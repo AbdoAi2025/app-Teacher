@@ -372,12 +372,11 @@ class _StudentsScreenState extends LifecycleWidgetState<StudentsScreen> {
   }
 
   Widget _emptyView() {
-    return SingleChildScrollView(
-      physics: AlwaysScrollableScrollPhysics(),
-      child: Center(
-        child: EmptyViewWidget(
-          message: "No students found".tr,
-        ),
+    return Center(
+      child: EmptyViewWidget(
+        message: "No students found".tr,
+        onRetry: refresh,
+        retryText: "Refresh".tr,
       ),
     );
   }
