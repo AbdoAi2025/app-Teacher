@@ -29,22 +29,27 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppToolbarWidget.appBar(title: "Login".tr, leading: Container()),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0 ,vertical: 30),
-        child: Column(
-          spacing: 20,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image(
-              image: AssetImage(Assets.imagesLogo),
-              height: 200,
-              width: 200,
-            ),
-            _userNameField(),
-            _passwordField(),
-            _submitButton(),
-            _registerRedirect(),
-          ],
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0 ,vertical: 30),
+          child: Column(
+            spacing: 20,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image(
+                image: AssetImage(Assets.imagesLogo),
+                height: 200,
+                width: 200,
+              ),
+              _userNameField(),
+              _passwordField(),
+              _submitButton(),
+              _registerRedirect(),
+            ],
+          ),
         ),
       ),
     );

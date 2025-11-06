@@ -33,27 +33,32 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppToolbarWidget.appBar(title: "Create Account".tr,),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            spacing: 20,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image(
-                image: AssetImage(Assets.imagesLogo),
-                height: 150,
-                width: 150,
-              ),
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              spacing: 20,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image(
+                  image: AssetImage(Assets.imagesLogo),
+                  height: 150,
+                  width: 150,
+                ),
 
-              _nameField(),
-              _userNameField(),
-              _passwordField(),
-              _confirmPasswordField(),
-              _submitButton(),
-              _loginRedirect(),
-            ],
+                _nameField(),
+                _userNameField(),
+                _passwordField(),
+                _confirmPasswordField(),
+                _submitButton(),
+                _loginRedirect(),
+              ],
+            ),
           ),
         ),
       ),
