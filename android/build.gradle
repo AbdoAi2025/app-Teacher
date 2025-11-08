@@ -57,13 +57,6 @@ subprojects {
                             arguments "ANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON"
                         }
                     }
-
-                    // Add 16KB page size manifest placeholders (only for subprojects without main app)
-                    if (project.name != "app") {
-                        manifestPlaceholders = [
-                                supportsFlexiblePageSizes: "true"
-                        ]
-                    }
                 }
 
                 // Configure packaging options for 16KB alignment
