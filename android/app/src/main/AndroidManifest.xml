@@ -35,6 +35,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:usesCleartextTraffic="true">
 
+        <!-- 16KB page size support -->
+        <property android:name="android.app.property.SUPPORTS_16KB_PAGE_SIZE" android:value="true" />
+
+
 
         <provider
             android:name="androidx.core.content.FileProvider"
