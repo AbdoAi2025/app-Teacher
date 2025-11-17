@@ -11,6 +11,7 @@ abstract class PaginationListWidget<T> extends StatefulWidget {
   final List<T> items;
   final bool isLoading;
   final Function()? getMoreItems;
+  final IndexedWidgetBuilder? separatorBuilder;
 
   const PaginationListWidget(
       {super.key,
@@ -18,7 +19,8 @@ abstract class PaginationListWidget<T> extends StatefulWidget {
       this.isLoading = false,
       this.totalRecord = 0,
       this.getMoreItems,
-        this.reversed = false
+        this.reversed = false,
+        this.separatorBuilder,
       });
 
   @override
@@ -27,6 +29,18 @@ abstract class PaginationListWidget<T> extends StatefulWidget {
   Widget getItemWidget(T item, int index);
 
   Widget getListView(List<dynamic> items, ScrollController controller, int itemsCount ,bool isPageLoading) {
+
+    if(separatorBuilder != null){
+      return ListView.separated(
+          controller: controller,
+          reverse: reversed,
+          physics: const AlwaysScrollableScrollPhysics(),
+          itemBuilder: (context, index) => itemBuilder(context, index , itemsCount , isPageLoading),
+          separatorBuilder: separatorBuilder!,
+          itemCount: itemsCount
+      ) ;
+    }
+
     return ListView.builder(
         itemCount: itemsCount,
         controller: controller,

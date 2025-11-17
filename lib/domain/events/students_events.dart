@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 
+import '../../utils/LogUtils.dart';
+
 
 class StudentsEventsState{
 
@@ -11,26 +13,47 @@ class StudentsEventsState{
 
 class StudentsEventsStateAdded extends StudentsEventsState{}
 
-class StudentsEventsStateUpdated extends StudentsEventsState{}
+class StudentsEventsStateUpdated extends StudentsEventsState{
+  final String? id;
+  StudentsEventsStateUpdated(this.id);
+}
 
 class StudentsEventsStateDeleted extends StudentsEventsState{}
 
 class StudentsEvents {
 
+  StudentsEvents._();
 
-  static Rx<StudentsEventsState?> studentsEvents = Rx(null);
+  static List<Function(StudentsEventsState)> listeners = [];
 
-
-  static void onStudentAdded() {
-    studentsEvents.value = StudentsEventsStateAdded();
+  static void addListener(Function(StudentsEventsState) listener) {
+    appLog("StudentsEvents removeListener listeners:${listeners.length}");
+    listeners.add(listener);
+    appLog("GroupsManagers removeListener listeners:${listeners.length}");
   }
 
-  static void onStudentUpdated() {
-    studentsEvents.value = StudentsEventsStateUpdated();
+  static void removeListener(Function(StudentsEventsState) listener) {
+    appLog("StudentsEvents removeListener listeners:${listeners.length}");
+    listeners.remove(listener);
+    appLog("StudentsEvents removeListener listeners:${listeners.length}");
+  }
+
+  static void onStudentAdded() {
+    _notifyListeners(StudentsEventsStateAdded());
   }
 
   static void onStudentDeleted() {
-    studentsEvents.value = StudentsEventsStateDeleted();
+    _notifyListeners(StudentsEventsStateDeleted());
+  }
+
+  static void _notifyListeners(StudentsEventsState event) {
+    for (var listener in listeners) {
+      listener.call(event);
+    }
+  }
+
+  static void onStudentUpdated(String? id) {
+    _notifyListeners(StudentsEventsStateUpdated(id));
   }
 
 }

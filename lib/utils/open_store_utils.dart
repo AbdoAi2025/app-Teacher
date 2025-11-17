@@ -9,7 +9,7 @@ class OpenStoreUtils {
   static Future<void> openStore() async {
 
     const String androidAppId = "com.assistant.teacher"; // replace with your package name
-    const String iosAppId = "1234567890"; // replace with your App Store ID
+    const String iosAppId = "6753913579"; // replace with your App Store ID //https://apps.apple.com/eg/app/assistant/id6753913579
 
     final Uri url = Uri.parse(
       Theme.of(navigatorKey.currentContext!).platform == TargetPlatform.iOS

@@ -33,6 +33,11 @@ public class MainActivity extends FlutterActivity {
                                 String phone = call.argument("phone");
                                 sendToWhatsApp(filePath, phone);
                                 result.success(true);
+                            } else if (call.method.equals("sendFileToWhatsAppBusiness")) {
+                                String filePath = call.argument("filePath");
+                                String phone = call.argument("phone");
+                                sendToWhatsAppBusiness(filePath, phone);
+                                result.success(true);
                             }
                         } catch (java.lang.Exception e) {
                             result.success(false);
@@ -53,6 +58,24 @@ public class MainActivity extends FlutterActivity {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("*/*");
         intent.setPackage("com.whatsapp");
+        intent.putExtra(Intent.EXTRA_STREAM, uri);
+        intent.putExtra("jid", phone + "@s.whatsapp.net"); // Key for phone number
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+        startActivity(intent);
+    }
+
+    private void sendToWhatsAppBusiness(String filePath, String phone) {
+        File file = new File(filePath);
+        Uri uri = FileProvider.getUriForFile(
+                this,
+                getApplicationContext().getPackageName() + ".provider",
+                file
+        );
+
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("*/*");
+        intent.setPackage("com.whatsapp.w4b"); // WhatsApp Business package name
         intent.putExtra(Intent.EXTRA_STREAM, uri);
         intent.putExtra("jid", phone + "@s.whatsapp.net"); // Key for phone number
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);

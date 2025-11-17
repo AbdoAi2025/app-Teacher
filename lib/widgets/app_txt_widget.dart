@@ -51,9 +51,9 @@ class AppTextWidget extends StatelessWidget {
   }
 
   String _getText() {
-    _log("_getText text:$text");
+    // _log("_getText text:$text");
     var formatted = NumbersFormatUtils.replaceArabicNumbersToEnglish(text);
-    _log("_getText formatted:$formatted");
+    // _log("_getText formatted:$formatted");
     return formatted;
   }
 

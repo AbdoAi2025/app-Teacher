@@ -1,21 +1,20 @@
 import 'package:teacher_app/base/AppResult.dart';
 import 'package:teacher_app/data/repositories/students_repository.dart';
+import 'package:teacher_app/domain/base_use_case.dart';
 import 'package:teacher_app/requests/update_student_request.dart';
 
 import '../../data/responses/add_student_response.dart';
 import '../events/students_events.dart';
 
-class UpdateStudentUseCase {
+class UpdateStudentUseCase extends BaseUseCase<AddStudentResponse?>{
 
   StudentsRepository repository = StudentsRepository();
 
   Future<AppResult<AddStudentResponse?>> execute(UpdateStudentRequest request) async {
-    try{
-       var items =  await repository.updateStudent(request);
-       StudentsEvents.onStudentUpdated();
-       return AppResult.success(items);
-    }on Exception catch(ex){
-      return AppResult.error(ex);
-    }
+    return call(() async {
+      var items =  await repository.updateStudent(request);
+      StudentsEvents.onStudentUpdated(request.studentId);
+      return AppResult.success(items);
+    });
   }
 }

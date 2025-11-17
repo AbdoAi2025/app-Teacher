@@ -5,6 +5,7 @@ import 'package:teacher_app/requests/update_group_request.dart';
 import 'package:teacher_app/services/api_service.dart';
 import 'package:teacher_app/services/endpoints.dart';
 
+import '../../models/grade_model.dart';
 import '../responses/add_group_response.dart';
 import '../responses/get_group_details_response.dart';
 import '../responses/get_my_groups_response.dart';
@@ -51,6 +52,11 @@ class GroupsRepository {
                 studentCount: e.studentCount ?? 0,
                 timeFrom: e.timeFrom ?? "",
                 timeTo: e.timeTo ?? "",
+                grade: GradeModel(
+                  id: e.gradeId,
+                  nameEn: e.gradeNameEn ?? "",
+                  nameAr: e.gradeNameAr ?? "",
+                ),
                 studentsIds: []))
             .toList() ??
         List.empty();

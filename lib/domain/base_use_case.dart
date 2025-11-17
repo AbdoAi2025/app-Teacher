@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:teacher_app/exceptions/app_no_internet_exception.dart';
 
 import '../base/AppResult.dart';
 import '../data/responses/error_response.dart';
@@ -18,9 +19,14 @@ class BaseUseCase<T> {
   }
 
   AppResult<T> onException(Object ex) {
+    appLog("BaseUseCase onException:${ex.toString()}");
+
     if(ex is DioException){
+      if(ex.type == DioExceptionType.connectionError){
+        return AppResult.error(AppNoInternetException());
+      }
       var errorResponse = ErrorResponse.fromJson(ex.response?.data);
-      return AppResult.error(AppHttpException(errorResponse.message ?? ex.message));
+      return AppResult.error(AppHttpException(errorResponse.message ?? ex.message , ex.response?.statusCode));
     }
     appLog("BaseUseCase execute ex:${ex.toString()}");
     return AppResult.error(AppHttpException(ex.toString()));

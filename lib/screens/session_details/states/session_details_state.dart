@@ -6,9 +6,18 @@ class SessionDetailsState {}
 class SessionDetailsStateLoading extends SessionDetailsState{}
 class SessionDetailsStateInvalidArgs extends SessionDetailsState{}
 class SessionDetailsStateNotFound extends SessionDetailsState{}
+class SessionDetailsStateDeleted extends SessionDetailsState{}
 class SessionDetailsStateSuccess extends SessionDetailsState{
   final SessionDetailsUiState uiState;
   SessionDetailsStateSuccess(this.uiState);
+
+  SessionDetailsStateSuccess copyWith({
+    SessionDetailsUiState? uiState,
+  }) {
+    return SessionDetailsStateSuccess(
+      uiState ?? this.uiState,
+    );
+  }
 }
 class SessionDetailsStateError extends SessionDetailsState{
   final Exception? exception;

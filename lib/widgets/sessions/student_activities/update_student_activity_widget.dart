@@ -41,10 +41,10 @@ class _UpdateStudentActivityWidgetState extends State<UpdateStudentActivityWidge
   late final TextEditingController _behaviorNotesEditTextController = TextEditingController(text: uiState.behaviorNotes);
   late final TextEditingController _homeworkNotesEditTextController = TextEditingController(text: uiState.homeworkNotes);
 
-  late bool? attended = widget.uiState.attended;
+  late bool? attended = widget.uiState.attended ?? true;
   late double? quizGrade = widget.uiState.quizGrade;
-  late StudentBehaviorEnum? behaviorStatus = widget.uiState.behaviorStatus;
-  late HomeworkEnum? homeworkStatus = widget.uiState.homeworkStatus;
+  late StudentBehaviorEnum? behaviorStatus = widget.uiState.behaviorStatus ?? StudentBehaviorEnum.GOOD;
+  late HomeworkEnum? homeworkStatus = widget.uiState.homeworkStatus ?? HomeworkEnum.FULLY_DONE;
 
   @override
   Widget build(BuildContext context) {

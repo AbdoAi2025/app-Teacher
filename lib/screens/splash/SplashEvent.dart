@@ -8,18 +8,24 @@ sealed class SplashEvent {}
 class SplashEventLoading extends SplashEvent {}
 class SplashEventGoToLogin extends SplashEvent {}
 class SplashEventGoToHome extends SplashEvent {}
+class SplashEventNotSubscribed extends SplashEvent {}
 
 class SplashEventForceUpdate extends SplashEvent {
   final CheckAppVersionModel model;
   SplashEventForceUpdate({required this.model});
 }
-class SplashEventInvalidSession extends SplashEvent {
+class SplashEventUserNotActive extends SplashEvent {
   final CheckUserSessionModel checkUserSessionModel;
-  SplashEventInvalidSession({required this.checkUserSessionModel});
+  SplashEventUserNotActive({required this.checkUserSessionModel});
 
 
 }
+
+class SplashEventShowRemainingDays extends SplashEvent {
+  final int remainingDays;
+  SplashEventShowRemainingDays({required this.remainingDays});
+}
 class SplashError extends SplashEvent {
-  final String message;
-  SplashError(this.message);
+  final Exception? ex;
+  SplashError(this.ex);
 }

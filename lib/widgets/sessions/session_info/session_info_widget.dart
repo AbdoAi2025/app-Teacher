@@ -16,8 +16,9 @@ import '../timer_counter_widget.dart';
 class SessionInfoWidget extends StatelessWidget{
 
   final SessionDetailsUiState uiState;
+  final Function() onAddStudentToSession;
 
-  const SessionInfoWidget({super.key, required this.uiState});
+  const SessionInfoWidget({super.key, required this.uiState, required this.onAddStudentToSession});
 
   @override
   Widget build(BuildContext context) {
@@ -136,7 +137,19 @@ class SessionInfoWidget extends StatelessWidget{
         AppTextWidget(
           uiState.sessionStatus.label.tr,
           style: AppTextStyle.label.copyWith(color: statusColor),
+        ),
+
+        Spacer(),
+
+        InkWell(
+          onTap: onAddStudentToSession,
+          child: AppTextWidget(
+            "Add student to session".tr,
+            style: AppTextStyle.label.copyWith(color: AppColors.appMainColor , decoration: TextDecoration.underline),
+          ),
         )
+
+
       ],
     );
   }

@@ -23,6 +23,7 @@ import '../../widgets/app_toolbar_widget.dart';
 import '../../widgets/section_widget.dart';
 import '../ads/AdsManager.dart';
 import '../student_edit/args/edit_student_args_model.dart';
+import '../student_reports/args/student_reports_args_model.dart';
 import 'states/student_details_state.dart';
 
 class StudentDetailsScreen extends StatefulWidget {
@@ -45,7 +46,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppToolbarWidget.appBar("Student Details".tr,
+        appBar: AppToolbarWidget.appBar(title: "Student Details".tr,
             actions: [_editIcon(), _deleteIcon()]),
         body: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -148,7 +149,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
           children: [
             Expanded(
               child: AppTextWidget(
-                "View all sessions".tr,
+                "View Full Report".tr,
                 style: AppTextStyle.value,
               ),
             ),
@@ -301,8 +302,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
   }
 
   void onViewAllSessionsClick(StudentDetailsUiState uiState) {
-    AppNavigator.navigateToSessionsList(
-        SessionListArgsModel(studentId: uiState.studentId));
+    AppNavigator.navigateToStudentReports(StudentReportsArgsModel(studentId: uiState.studentId));
   }
 
   _addToGroup(StudentDetailsUiState uiState) {

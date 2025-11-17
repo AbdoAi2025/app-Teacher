@@ -26,6 +26,7 @@ class AppTextFieldWidget extends StatelessWidget {
   final TextDirection? textDirection;
   final  TextInputType? keyboardType;
   final  Function(String?)? onChanged;
+  final  TextInputAction? textInputAction;
 
 
   const AppTextFieldWidget(
@@ -53,6 +54,7 @@ class AppTextFieldWidget extends StatelessWidget {
         this.maxLines,
         this.maxLength,
         this.enabled = true,
+        this.textInputAction
       });
 
 
@@ -66,7 +68,8 @@ class AppTextFieldWidget extends StatelessWidget {
       textAlign: textAlign?? TextAlign.start,
       onTap: onTap,
       minLines: minLines,
-      maxLines: maxLines,
+      obscureText: obscureText,
+      maxLines: obscureText ? 1 : maxLines,
       maxLength: maxLength,
       keyboardType: keyboardType,
       decoration: InputDecoration(
@@ -81,13 +84,16 @@ class AppTextFieldWidget extends StatelessWidget {
         border: border ?? OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
         ),
-        suffixIcon: suffixIcon,
+        suffixIcon: suffixIconWidget(),
       ),
       validator: validator,
       onChanged: onChanged,
+      textInputAction: textInputAction,
 
     );
   }
+
+  Widget? suffixIconWidget() => suffixIcon;
 
 
 }

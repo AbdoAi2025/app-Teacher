@@ -10,6 +10,7 @@ class SessionDetailsUiState {
   final int sessionQuizGrade;
   final DateTime? sessionCreatedAt;
   final String groupId;
+  final int gradeId;
   final String groupName;
   final List<SessionActivityItemUiState> activities;
 
@@ -20,6 +21,7 @@ class SessionDetailsUiState {
       required this.sessionQuizGrade,
       required this.sessionCreatedAt,
       required this.groupId,
+      required this.gradeId,
       required this.groupName,
       required this.activities});
 
@@ -30,6 +32,7 @@ class SessionDetailsUiState {
     int? sessionQuizGrade,
     DateTime? sessionCreatedAt,
     String? groupId,
+    int? gradeId,
     String? groupName,
     List<SessionActivityItemUiState>? activities,
   }) {
@@ -40,6 +43,7 @@ class SessionDetailsUiState {
       sessionStatus: sessionStatus ?? this.sessionStatus,
       sessionCreatedAt: sessionCreatedAt ?? this.sessionCreatedAt,
       groupId: groupId ?? this.groupId,
+      gradeId: gradeId ?? this.gradeId,
       groupName: groupName ?? this.groupName,
       activities: activities ?? this.activities,
     );
@@ -49,6 +53,7 @@ class SessionDetailsUiState {
 }
 
 class SessionActivityItemUiState {
+  final String activityId;
   final String studentId;
   final String studentName;
   final String studentParentPhone;
@@ -62,7 +67,8 @@ class SessionActivityItemUiState {
   final String? homeworkNotes;
 
   SessionActivityItemUiState(
-      {required this.studentId,
+      {required this.activityId,
+      required this.studentId,
       required this.studentName,
       required this.studentParentPhone,
       required this.studentPhone,
@@ -74,13 +80,13 @@ class SessionActivityItemUiState {
       required this.homeworkStatus,
       required this.homeworkNotes});
 
-
   @override
   String toString() {
     return 'SessionActivityItemUiState{studentId: $studentId, quizGrade: $quizGrade, attended: $attended, behaviorGood: $behaviorStatus}';
   }
 
   SessionActivityItemUiState copyWith({
+    String? activityId,
     String? studentId,
     String? studentName,
     String? studentParentPhone,
@@ -94,6 +100,7 @@ class SessionActivityItemUiState {
     String? homeworkNotes,
   }) {
     return SessionActivityItemUiState(
+      activityId: activityId ?? this.activityId,
       studentId: studentId ?? this.studentId,
       studentName: studentName ?? this.studentName,
       studentParentPhone: studentParentPhone ?? this.studentParentPhone,
@@ -107,4 +114,28 @@ class SessionActivityItemUiState {
       homeworkNotes: homeworkNotes ?? this.homeworkNotes,
     );
   }
+}
+
+class StudentReportItemUiState extends SessionActivityItemUiState {
+  final String sessionId;
+  final String sessionName;
+  final String sessionDate;
+
+  StudentReportItemUiState({
+    required super.activityId,
+    required super.studentId,
+    required super.studentName,
+    required super.studentParentPhone,
+    required super.studentPhone,
+    required super.sessionQuizGrade,
+    required super.quizGrade,
+    required super.attended,
+    required super.behaviorStatus,
+    required super.behaviorNotes,
+    required super.homeworkStatus,
+    required super.homeworkNotes,
+    required this.sessionId,
+    required this.sessionName,
+    required this.sessionDate,
+  });
 }

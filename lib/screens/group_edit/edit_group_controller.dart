@@ -39,7 +39,6 @@ class EditGroupController extends CreateGroupController {
         name: args.gradeName,
         isSelected: true
       );
-
       /*Set selected students*/
       selectedStudents = _getSelectedStudentsFromParam();
       selectedStudentsRx.value = selectedStudents ;
@@ -55,6 +54,8 @@ class EditGroupController extends CreateGroupController {
     if(stateValue is StudentsSelectionStateSuccess){
       var students = stateValue.students;
       students.addAll(_getSelectedStudentsFromParam());
+
+      students.sort((a, b) => a.studentName.compareTo(b.studentName),);
       studentsSelectionState.value = StudentsSelectionStateSuccess(students);
     }
   }
@@ -115,6 +116,7 @@ class EditGroupController extends CreateGroupController {
         .map((e) => StudentSelectionItemUiState(
         studentId: e.studentId,
         studentName: e.studentName,
+        groupName: "",
         gradeId: e.gradeId,
         isSelected: true
     )).toList() ?? [];

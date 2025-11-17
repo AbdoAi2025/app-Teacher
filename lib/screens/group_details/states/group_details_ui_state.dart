@@ -26,4 +26,33 @@ class GroupDetailsUiState {
       });
 
   bool get hasActiveSession => activeSession != null;
+
+  GroupDetailsUiState copyWith({
+    String? groupId,
+    String? groupName,
+    int? groupDay,
+    String? timeFrom,
+    String? timeTo,
+    String? grade,
+    int? gradeId,
+    ActiveSessionApiModel? activeSession,
+    List<GroupDetailsStudentItemUiState>? students,
+  }) {
+    return GroupDetailsUiState(
+      groupId: groupId ?? this.groupId,
+      groupName: groupName ?? this.groupName,
+      groupDay: groupDay ?? this.groupDay,
+      timeFrom: timeFrom ?? this.timeFrom,
+      timeTo: timeTo ?? this.timeTo,
+      grade: grade ?? this.grade,
+      gradeId: gradeId ?? this.gradeId,
+      activeSession: activeSession,
+      students: students ?? this.students,
+    );
+  }
+
+  @override
+  String toString() {
+    return 'GroupDetailsUiState{groupId: $groupId, groupName: $groupName, groupDay: $groupDay, timeFrom: $timeFrom, timeTo: $timeTo, grade: $grade, gradeId: $gradeId, activeSession: $activeSession, students: $students}';
+  }
 }

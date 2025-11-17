@@ -12,3 +12,9 @@ class StudentItemUiState {
       required this.groupName,
       required this.parentPhone});
 }
+
+class StudentItemTitleUiState extends StudentItemUiState {
+  final String title;
+  StudentItemTitleUiState({required this.title})
+      : super(id: "", name: "", grade: "", groupName: "", parentPhone: "");
+}

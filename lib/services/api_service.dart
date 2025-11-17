@@ -143,21 +143,25 @@ class ApiService {
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_alice/alice.dart';
+import 'package:get/get.dart';
 import 'package:talker_dio_logger/talker_dio_logger.dart';
 import 'package:teacher_app/appSetting/appSetting.dart';
 import 'package:teacher_app/app_mode.dart';
-import 'package:teacher_app/main.dart';
-import '../models/group_item_model.dart';
-import '../models/student.dart';
+import 'package:teacher_app/navigation/app_navigator.dart';
 
 const String prodBaseUrl = "https://assistant-app-2136afb92d95.herokuapp.com";
 const String devBaseUrl = "https://assistant-app-2136afb92d95.herokuapp.com";
 const String localBaseUrlOrange = "http://192.168.2.117:8080";
 const String localBaseUrlTpLink = "http://192.168.1.105:8080";
+const String localBaseUrlOnePlusLink = "http://10.19.38.129:8080";
+const String localBaseUrlVodafone = "http://192.168.8.176:8080";
 // const String localBaseUrlOnPlus = "http://192.168.212.129:8080";
 // const String localBaseUrl = "http://192.168.100.70:8080";
+
+// const String localBaseUrl = localBaseUrlVodafone;
 const String localBaseUrl = localBaseUrlOrange;
+// const String localBaseUrl = localBaseUrlTpLink;
+// const String localBaseUrl = localBaseUrlOnePlusLink;
 
 var baseUrl = switch (AppMode.mode) {
   AppMode.dev => devBaseUrl,
@@ -166,7 +170,7 @@ var baseUrl = switch (AppMode.mode) {
 };
 
 // Create Alice with the navigator key
-final alice = Alice(navigatorKey: navigatorKey);
+// final alice = Alice(navigatorKey: navigatorKey);
 
 class ApiService {
   static Dio? _dio;
@@ -187,10 +191,6 @@ class ApiService {
 
   static _init(Dio dio) async {
 
-    if (AppMode.mode != AppMode.prod) {
-      dio.interceptors.add(alice.getDioInterceptor());
-    }
-
     dio.interceptors.add(
       TalkerDioLogger(
         settings: const TalkerDioLoggerSettings(
@@ -201,7 +201,25 @@ class ApiService {
       ),
     );
 
-    var token = AppSetting.getAppSetting().accessToken;
+    dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          return handler.next(options);
+        },
+        onResponse: (response, handler) {
+          return handler.next(response);
+        },
+        onError: (DioException e, handler) async {
+          if (e.response?.statusCode == 401) {
+            // 🔑 Handle 401 Unauthorized here
+            // Clear auth token or redirect to login page
+            AppNavigator.navigateToLogin();
+          }
+          return handler.next(e);
+        },
+      ),
+    );
+
 
     dio.options = BaseOptions(
       baseUrl: baseUrl,
@@ -210,6 +228,7 @@ class ApiService {
       headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token",
+        "Accept-Language" : currentLanguage,
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET, POST,OPTIONS',
         "Access-Control-Allow-Headers": "Content-Type, Authorization"
@@ -217,147 +236,9 @@ class ApiService {
     );
   }
 
-  // static Future<void> _loadToken() async {
-  //   authBox = await Hive.openBox('authBox');
-  //   String? token = authBox?.get('token') ?? "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZWFjaGVyMSIsImlhdCI6MTczOTU3NzI2MywiZXhwIjozNTEwNjkwNTI3fQ.rDBPiBxoBn-yjnrTEow_ZhImL70MQ9z0VRDYl3Zm3hc";
-  //   if (token != null) {
-  //     dio.options.headers["Authorization"] = "Bearer $token";
-  //   }
-  // }
 
-  // ✅ تحديث التوكن بعد تسجيل الدخول
-  // Future<void> updateAuthToken(String token) async {
-  //   dio.options.headers["Authorization"] = "Bearer $token";
-  //   await authBox?.put('token', token); // حفظ التوكن محليًا
-  // }
+  static String get token => AppSetting.getAppSetting().accessToken;
+  static String get currentLanguage =>  Get.locale?.languageCode ?? "en";
 
-  // ✅ تسجيل الدخول وجلب التوكن
-  Future<String?> login(String username, String password) async {
-    // try {
-    //   Response response = await dio.post(
-    //     '/api/v1/users/signin',
-    //     data: {
-    //       "username": username,
-    //       "password": password,
-    //     },
-    //   );
-    //
-    //   print("statusCode:${response.statusCode}");
-    //   print("📢 استجابة API عند تسجيل الدخول: ${response.data}");
-    //
-    //   if(response.statusCode == 200){
-    //     LoginResponse responseResult = LoginResponse.fromJson(response.data);
-    //     print("responseResult.username :${responseResult.username}");
-    //     print("responseResult.accessToken :${responseResult.accessToken}");
-    //
-    //     return responseResult.accessToken;
-    //
-    //   }
-    //
-    //   // if (response.statusCode == 200 && response.data.containsKey('token')) {
-    //   //   final token = response.data['token'];
-    //   //   if (token != null && token is String && token.isNotEmpty) {
-    //   //     await updateAuthToken(token);
-    //   //     print("✅ تم استخراج وحفظ التوكن بنجاح: $token");
-    //   //     return token;
-    //   //   } else {
-    //   //     throw Exception("❌ التوكن غير صالح!");
-    //   //   }
-    //   // } else {
-    //   //   throw Exception("❌ فشل تسجيل الدخول: ${response.data}");
-    //   // }
-    // } catch (e) {
-    //   throw Exception("❌ فشل تسجيل الدخول: $e");
-    // }
-  }
 
-  // ✅ تسجيل الخروج
-  void logout() {
-    // AuthStorage.clearToken();
-    // dio.options.headers.remove("Authorization");
-  }
-
-  // ✅ جلب جميع الطلاب
-  Future<List<Student>> fetchStudents() async {
-    return [];
-
-    // try {
-    //   Response response = await dio.get('/api/v1/students/myStudents');
-    //   return (response.data as List).map((s) => Student.fromJson(s)).toList();
-    // } catch (e) {
-    //   throw Exception("فشل في جلب بيانات الطلاب");
-    // }
-  }
-
-  // ✅ إضافة طالب جديد
-  Future<void> createStudent(Student student) async {
-    // try {
-    //   await dio.post('/api/v1/students/add', data: student.toJson());
-    // } catch (e) {
-    //   throw Exception("فشل في إضافة الطالب");
-    // }
-  }
-
-  // ✅ تحديث بيانات طالب
-  Future<void> updateStudent(Student student) async {
-    // try {
-    //   await dio.put('/api/v1/students/update/${student.id}', data: student.toJson());
-    // } catch (e) {
-    //   throw Exception("فشل في تحديث بيانات الطالب");
-    // }
-  }
-
-  // ✅ حذف طالب
-  Future<void> deleteStudent(String studentId) async {
-    // try {
-    //   await dio.delete('/students/$studentId');
-    // } catch (e) {
-    //   throw Exception("فشل في حذف الطالب");
-    // }
-  }
-
-  // ✅ حذف جميع الطلاب
-  Future<void> deleteAllStudents() async {
-    // try {
-    //   await dio.delete('/students');
-    // } catch (e) {
-    //   throw Exception("فشل في حذف جميع الطلاب");
-    // }
-  }
-
-  // ✅ إضافة مجموعة جديدة
-  Future<void> createGroup(GroupItemModel group) async {
-    // try {
-    //   await dio.post('/api/v1/groups/add', data: group.toJson());
-    // } catch (e) {
-    //   throw Exception("فشل في إضافة المجموعة");
-    // }
-  }
-
-  // ✅ تحديث بيانات مجموعة
-  Future<void> updateGroup(GroupItemModel group) async {
-    // try {
-    //   await dio.put('/api/v1/groups/update/${group.id}', data: group.toJson());
-    // } catch (e) {
-    //   throw Exception("فشل في تحديث بيانات المجموعة");
-    // }
-  }
-
-  // ✅ حذف مجموعة
-  Future<void> deleteGroup(String groupId) async {
-    // try {
-    //   await dio.delete('/groups/$groupId');
-    // } catch (e) {
-    //   throw Exception("فشل في حذف المجموعة");
-    // }
-  }
-
-  // ✅ حذف جميع المجموعات
-  Future<void> deleteAllGroups() async {
-    // try {
-    //   await dio.delete('/groups');
-    // } catch (e) {
-    //   throw Exception("فشل في حذف جميع المجموعات");
-    // }
-  }
 }

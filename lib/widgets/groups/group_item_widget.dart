@@ -29,7 +29,11 @@ class GroupItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        onClick?.call(uiState) ?? onGroupItemClick();
+        if (onClick != null) {
+          onClick?.call(uiState);
+          return;
+        }
+        onGroupItemClick();
       },
       child: Container(
         decoration: AppBackgroundStyle.backgroundWithShadow(),
@@ -76,7 +80,7 @@ class GroupItemWidget extends StatelessWidget {
 
   _arrowIcon() => Icon(Icons.arrow_forward_ios, color: Colors.grey);
 
-  _date() => DayWithIconWidget(uiState.date.tr);
+  _date() => DayWithIconWidget(uiState.dayName.tr);
 
   _time() => TimeWithIconWidget(uiState.timeFrom, uiState.timeTo);
 

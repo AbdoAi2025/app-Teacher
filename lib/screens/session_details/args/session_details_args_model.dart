@@ -1,6 +1,7 @@
 class SessionDetailsArgsModel {
 
   final String id;
-  SessionDetailsArgsModel(this.id);
+  final String? studentId;
+  SessionDetailsArgsModel(this.id , [this.studentId]);
 
 }

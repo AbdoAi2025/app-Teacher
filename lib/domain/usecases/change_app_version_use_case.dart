@@ -19,8 +19,7 @@ class ChangeAppVersionUseCase extends BaseUseCase<CheckAppVersionModel>{
       var appVersion = await _getAppVersion();
 
       var request = CheckAppVersionRequest(
-        androidVersion: Platform.isAndroid ? appVersion : null,
-        iosVersion:  Platform.isIOS ? appVersion : null,
+        version:  appVersion,
         platform: Platform.isAndroid ? 0 : 1 ,
       );
 
@@ -34,6 +33,11 @@ class ChangeAppVersionUseCase extends BaseUseCase<CheckAppVersionModel>{
     String versionName = info.version;      // e.g. "1.2.3"
     String buildNumber = info.buildNumber;  // e.g. "42"
     print("App Version: $versionName ($buildNumber)");
+
+    if(Platform.isIOS){
+      String majorMinor = versionName.split(".").take(2).join(".");
+      return double.tryParse(majorMinor);
+    }
     return double.tryParse(versionName);
   }
 

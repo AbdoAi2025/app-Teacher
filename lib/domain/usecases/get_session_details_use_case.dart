@@ -13,9 +13,9 @@ class GetSessionDetailsUseCase {
 
   final SessionsRepository _repository = SessionsRepositoryImpl();
 
-  Future<AppResult<SessionDetailsApiModel?>?> execute(String id) async {
+  Future<AppResult<SessionDetailsApiModel?>?> execute(String id, String studentId) async {
     try{
-       var apiModel =  await _repository.getSessionDetails(id);
+       var apiModel =  await _repository.getSessionDetails(id , studentId);
        return AppResult.success(apiModel);
     }
     catch(ex){

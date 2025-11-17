@@ -8,7 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:teacher_app/enums/homework_enum.dart';
 import 'package:teacher_app/enums/student_behavior_enum.dart';
 import 'package:teacher_app/generated/assets.dart';
-import 'package:teacher_app/screens/ads/AdsManager.dart';
+import 'package:teacher_app/screens/home/home_controller.dart';
 import 'package:teacher_app/screens/report/args/student_report_args.dart';
 import 'package:teacher_app/screens/report/student_report_controller.dart';
 import 'package:teacher_app/themes/app_colors.dart';
@@ -28,49 +28,44 @@ import '../session_details/states/session_details_ui_state.dart';
 
 class StudentReportScreen extends StatefulWidget {
   const StudentReportScreen({super.key});
-
   @override
-  State<StudentReportScreen> createState() => _StudentReportScreenState();
+  State<StudentReportScreen> createState() => StudentReportScreenState();
 }
 
-class _StudentReportScreenState extends State<StudentReportScreen> {
-  final StudentReportController controller = Get.put(StudentReportController());
+class StudentReportScreenState extends State<StudentReportScreen> {
+  final StudentReportController _studentReportController = Get.put(StudentReportController());
   final GlobalKey _screenshotKey = GlobalKey();
   final TextEditingController noteEditTextController = TextEditingController();
+  final HomeController homeController = Get.find();
+  
+  StudentReportController get controller => _studentReportController;
   bool notesEditable = false;
   Function()? executeAction;
-
-  @override
-  void initState() {
-    super.initState();
-    AdsManager.showOnSendReportAds();
-  }
 
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback(addPostFrameCallback);
 
     return Scaffold(
-        appBar: AppToolbarWidget.appBar("Student Report".tr),
+        appBar: AppToolbarWidget.appBar(title: "Student Report".tr),
         // resizeToAvoidBottomInset: false,
         body: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: _content(),
+          child: content(),
         ));
   }
 
-  _content() {
+  content() {
     return Obx(() {
       var state = controller.state.value;
       if (state != null) {
-        return _reportData(state);
+        return reportData(state.sessionName,  state.parentPhone, _reportContent(state));
       }
-
       return ErrorWidget("Invalid data");
     });
   }
 
-  _reportData(StudentReportArgs state) {
+  reportData(String reportTitleText, String parentPhone, Widget reportContentWidget) {
     return Column(
       spacing: 20,
       children: [
@@ -101,7 +96,7 @@ class _StudentReportScreenState extends State<StudentReportScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         spacing: 15,
                         children: [
-                          _title(state),
+                          reportTitle(reportTitleText),
                           Container(
                             padding: EdgeInsets.all(10),
                             decoration: AppBackgroundStyle
@@ -110,13 +105,7 @@ class _StudentReportScreenState extends State<StudentReportScreen> {
                                     bgColor : Colors.transparent,
                                     borderColor: AppColors.appMainColor,
                                     borderWidth: 5),
-                            child: Column(
-                              spacing: 10,
-                              children: [
-                                ..._reportTexts(state),
-                                _notes(state),
-                              ],
-                            ),
+                            child: reportContentWidget,
                           )
                         ],
                       ),
@@ -127,34 +116,45 @@ class _StudentReportScreenState extends State<StudentReportScreen> {
             ),
           ),
         ),
-        if (!notesEditable) _viewButton(state)
+        if (!notesEditable) _viewButton(parentPhone)
       ],
     );
   }
+  
+  _reportContent(StudentReportArgs state) => Column(
+    spacing: 10,
+    children: [
+      ..._reportTexts(state),
+      notes(),
+      //Under the supervision of Mr. Hassan
+      underTheSupervision()
 
-  _viewButton(StudentReportArgs state) {
+    ],
+  );
+
+  _viewButton(String parentPhone) {
     return SizedBox(
       width: double.infinity,
       child: PrimaryButtonWidget(
           text: "View".tr,
           onClick: () {
-            onViewButtonClick(state);
+            onViewButtonClick(parentPhone);
           }),
     );
   }
 
-  _sendButton(StudentReportArgs state, File file) {
+  _sendButton(String parentPhone,File file) {
     return SizedBox(
       width: double.infinity,
       child: PrimaryButtonWidget(
           text: "Send".tr,
           onClick: () {
-            onSendReport(state, file);
+            onSendReport(parentPhone, file);
           }),
     );
   }
 
-  _notes(StudentReportArgs state) {
+  notes() {
     return Column(
       spacing: 5,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -207,6 +207,18 @@ class _StudentReportScreenState extends State<StudentReportScreen> {
     );
   }
 
+
+  underTheSupervision(){
+
+
+    var teacherName = homeController.profileInfo.value?.name ?? "";
+
+    return SizedBox(
+      width: double.infinity,
+      child: AppTextWidget("${"Under the supervision of".tr} $teacherName" , style: getReportTextValueStyle()),
+    );
+  }
+
   /*
   ده شكل التقرير الانجليزي اللي أنا عايزه
 
@@ -226,8 +238,7 @@ Not done
 The student got (... / ...) marks on the quiz.
   * */
 
-  _title(StudentReportArgs state) {
-    var sessionName = state.sessionName;
+  reportTitle(String sessionName) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -266,16 +277,16 @@ The student got (... / ...) marks on the quiz.
           children: [
             //We would like to inform you that the student /...... attended the class on
             // Day: Saturday — Date: 14/6/2025
-            _text("${'infoText'.tr}: \n"),
-            _value("${state.studentName} \n" , _getReportTextValueStyle().copyWith(fontWeight: FontWeight.bold)),
+            reportText("${'infoText'.tr}: \n"),
+            reportValue("${state.studentName} \n" , getReportTextValueStyle().copyWith(fontWeight: FontWeight.bold)),
             if (state.attended == true) ...{
-              _text("${'attended'.tr} " , _getReportTextStylePositive()),
+              reportText("${'attended'.tr} " , _getReportTextStylePositive()),
             } else ...{
-              _text("${"didn't attend".tr} ", _getReportTextStyleNegative()),
+              reportText("${"didn't attend".tr} ", _getReportTextStyleNegative()),
             },
-            _text("\n"),
-            _text("${'Session Day'.tr}: \n"),
-            _value("${state.day.tr} - ${state.sessionStartDate}"),
+            reportText("\n"),
+            reportText("${'Session Day'.tr}: \n"),
+            reportValue("${state.day.tr} - ${state.sessionStartDate}"),
             // _text("${'withDate'.tr} : "),
             // _value("${state.sessionStartDate}."),
           ],
@@ -289,10 +300,10 @@ The student got (... / ...) marks on the quiz.
           text: TextSpan(
             style: TextStyle(fontSize: 16, color: Colors.black),
             children: [
-              _text("${"The student's behavior during the class was".tr}: "),
-              _value("${state.behaviorStatus.getString().tr}." ,_getReportTextValueStyle().copyWith(color: state.behaviorStatus.getColor())),
+              reportText("${"The student's behavior during the class was".tr}: "),
+              reportValue("${state.behaviorStatus.getString().tr}." , getReportTextValueStyle().copyWith(color: state.behaviorStatus.getColor())),
               if (state.behaviorNotes.isNotEmpty)
-                _text(" (${state.behaviorNotes})."),
+                reportText(" (${state.behaviorNotes})."),
             ],
           ),
         ),
@@ -306,23 +317,22 @@ The student got (... / ...) marks on the quiz.
           text: TextSpan(
             style: TextStyle(fontSize: 16, color: Colors.black),
             children: [
-              _text("${'The status of the previous homework was'.tr}: "),
-              _value("${state.homeworkStatus.getString().tr}." , _getReportTextValueStyle().copyWith(color: state.homeworkStatus.getColor())),
+              reportText("${'The status of the previous homework was'.tr}: "),
+              reportValue("${state.homeworkStatus.getString().tr}." , getReportTextValueStyle().copyWith(color: state.homeworkStatus.getColor())),
               if (state.homeworkNotes.isNotEmpty)
-                _text(" (${state.homeworkNotes})."),
+                reportText(" (${state.homeworkNotes})."),
             ],
           ),
         ),
 
         /*quiz*/
-        //The student got (... / ...) marks on the quiz.
         RichText(
           text: TextSpan(
             style: TextStyle(fontSize: 16, color: Colors.black),
             children: [
-              _text('The student got'.tr),
-              _value(" (${state.quizGrade}/${state.sessionQuizGrade}) " , _quizGradeStyle(state.uiState)),
-              _text('marks on the quiz'.tr),
+              reportText('The student got'.tr),
+              reportValue(" (${state.quizGrade}/${state.sessionQuizGrade}) " , quizGradeStyle(state.uiState.quizGrade, state.uiState.sessionQuizGrade)),
+              reportText('marks on the quiz'.tr),
             ],
           ),
         ),
@@ -330,21 +340,21 @@ The student got (... / ...) marks on the quiz.
     ];
   }
 
-  TextSpan _text(String text , [TextStyle? style ]) {
+  TextSpan reportText(String text , [TextStyle? style ]) {
     return TextSpan(text: text, style: style ?? _getReportTextStyle());
   }
 
-  TextSpan _value(String text , [TextStyle? style ]) {
+  TextSpan reportValue(String text , [TextStyle? style ]) {
     return TextSpan(
       text: text,
-      style: style ?? _getReportTextValueStyle(),
+      style: style ?? getReportTextValueStyle(),
     );
   }
 
   _getReportTextStyle() =>
       AppTextStyle.teshrinArLtRegularBold.copyWith(fontStyle: FontStyle.italic, height: 2, fontSize: 16);
 
-  Future<void> onViewReport(StudentReportArgs state) async {
+  Future<void> onViewReport(String parentPhone) async {
     var file = await saveScreenshot();
     if (file == null) {
       return;
@@ -360,10 +370,13 @@ The student got (... / ...) marks on the quiz.
             spacing: 20,
             children: [
               _closeIcon(),
-              Image.file(
-                file,
+              Flexible(
+                child: Image.file(
+                  file,
+                  fit: BoxFit.contain,
+                ),
               ),
-              _sendButton(state, file)
+              _sendButton(parentPhone, file)
             ],
           ),
         ),
@@ -405,8 +418,8 @@ The student got (... / ...) marks on the quiz.
     return null;
   }
 
-  void onSendReport(StudentReportArgs state, File file) {
-    WhatsappUtils.sendToWhatsAppFile(file, state.parentPhone);
+  void onSendReport(String parentPhone, File file) {
+    WhatsappUtils.sendToWhatsAppFile(file, parentPhone);
   }
 
   _closeIcon() {
@@ -439,10 +452,10 @@ The student got (... / ...) marks on the quiz.
     executeAction = null;
   }
 
-  void onViewButtonClick(StudentReportArgs state) {
+  void onViewButtonClick(String parentPhone) {
     setState(() {
       executeAction = () {
-        onViewReport(state);
+        onViewReport(parentPhone);
       };
     });
   }
@@ -454,7 +467,7 @@ The student got (... / ...) marks on the quiz.
 
   TextStyle? _getReportTextStyleNegative() => _getReportTextStyle().copyWith(color: AppColors.color_E75260);
 
-  TextStyle _getReportTextValueStyle() => AppTextStyle.teshrinArLtRegular
+  TextStyle getReportTextValueStyle() => AppTextStyle.teshrinArLtRegular
       .copyWith(
       height: 2,
       fontWeight: FontWeight.bold,
@@ -462,13 +475,15 @@ The student got (... / ...) marks on the quiz.
      fontStyle: FontStyle.italic
   );
 
-  TextStyle _quizGradeStyle(SessionActivityItemUiState uiState) {
-
-    var color = (uiState.quizGrade ?? 0) > ((uiState.sessionQuizGrade ?? 0 )/ 2)
+  TextStyle quizGradeStyle(double? quizGrade, int? total) {
+    var color = (quizGrade ?? 0) >= ((total ?? 0 )/ 2)
     ? AppColors.color_008E73 : AppColors.color_E75260;
 
-    return _getReportTextValueStyle().copyWith(
+    return getReportTextValueStyle().copyWith(
       color: color
     );
   }
+
+
+
 }

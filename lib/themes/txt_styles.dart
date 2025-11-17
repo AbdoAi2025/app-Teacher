@@ -18,6 +18,13 @@ class AppTextStyle {
         color: AppColors.textValueColor
       );
 
+  static TextStyle get small =>
+      teshrinArLtRegular.copyWith(
+          fontSize: 12,
+          fontWeight: FontWeight.w400,
+        color: AppColors.textValueColor
+      );
+
   static TextStyle get appToolBarTitle =>
       teshrinArLtRegular.copyWith(fontSize: 18, fontWeight: FontWeight.w600);
 

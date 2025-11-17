@@ -19,11 +19,13 @@ class AppColors{
   static const Color textValueColor = color_6F6A6F;
   static const Color activeColor = color_3FCBA6;
   static const Color inactiveColor = color_6F6A6F;
+  static const Color dividerColor = color_6F6A6F;
   static const Color scaffoldBackgroundColor = colorOffWhite;
-  static const Color colorYes = color_3FCBA6;
+  static const Color colorYes = color_008E73;
   static const Color colorNo = Colors.red;
   static const Color colorBehaviorStatusAcceptable = color_F5E571;
   static const Color colorHomeworkStatusMissing = color_F5E571;
+  static const Color lightGrey = color_E8E5E0;
 
 
   static const Color appMainColor = Color(0xff122953);

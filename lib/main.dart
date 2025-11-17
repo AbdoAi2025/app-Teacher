@@ -1,79 +1,10 @@
-/*import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:dio/dio.dart';
-
-import 'screens/home_screen.dart';
-import 'screens/login_screen.dart';
-
-import 'bloc/auth/auth_bloc.dart';
-import 'bloc/groups/groups_bloc.dart';
-import 'bloc/groups/groups_event.dart';
-import 'bloc/students/students_bloc.dart';
-import 'bloc/students/students_event.dart';
-
-import 'models/group.dart';
-import 'models/student.dart';
-import 'services/api_service.dart';
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  // ✅ تهيئة Hive (لا يزال مستخدمًا لبعض البيانات المحلية)
-  await Hive.initFlutter();
-  Hive.registerAdapter(GroupAdapter());
-  Hive.registerAdapter(StudentAdapter());
-  await Hive.openBox('authBox'); // ✅ فتح صندوق المستخدم
-  await Hive.openBox('groupsBox'); // ✅ فتح صندوق المجموعات
-  await Hive.openBox('studentsBox'); // ✅ فتح صندوق الطلاب
-
-  // ✅ تهيئة Dio وإنشاء ApiService
-  final Dio dio = Dio();
-  final ApiService apiService = ApiService(dio); // ✅ تمرير `dio` إلى `ApiService`
-
-  runApp(MyApp(apiService: apiService)); // ✅ تمرير `apiService` عند إنشاء التطبيق
-}
-
-class MyApp extends StatelessWidget {
-  final ApiService apiService;
-  const MyApp({Key? key, required this.apiService}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => AuthBloc(apiService)),
-
-        // ✅ تمرير `apiService` إلى `StudentsBloc` لاستخدام API
-        BlocProvider(
-          create: (context) => StudentsBloc(apiService: apiService)..add(LoadStudentsEvent()),
-        ),
-
-        // ✅ تمرير `apiService` إلى `GroupsBloc` لاستخدام API
-        BlocProvider(
-          create: (context) => GroupsBloc(apiService: apiService)..add(LoadGroupsEvent()),
-        ),
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: LoginScreen(apiService: apiService), // ✅ إصلاح الخطأ هنا!
-      ),
-    );
-  }
-}
-*/
-
-import 'dart:async';
 import 'dart:ui';
 
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:shake/shake.dart';
 import 'package:teacher_app/appSetting/appSetting.dart';
-import 'package:teacher_app/app_mode.dart';
 import 'package:teacher_app/navigation/app_routes.dart';
 import 'package:teacher_app/navigation/app_routes_screens.dart';
 import 'package:teacher_app/themes/app_colors.dart';
@@ -85,15 +16,19 @@ import 'domain/usecases/get_app_setting_use_case.dart';
 import 'localization/app_translation.dart';
 
 
+import 'navigation/my_route_observer.dart';
 import 'services/api_service.dart';
 
 Locale? appLocale;
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
+
+
 void main() async {
 
 
   WidgetsFlutterBinding.ensureInitialized();
-  unawaited(MobileAds.instance.initialize());
 
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -127,7 +62,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    _startApiLoggerIfNeeded();
   }
 
   @override
@@ -138,6 +72,7 @@ class _MyAppState extends State<MyApp> {
           var appLocaleModel = setting.appLocaleModel;
           var langCode =( appLocaleModel?.toLocale() ?? appLocale)?.languageCode;
           return GetMaterialApp(
+            navigatorObservers: [MyRouteObserver() , routeObserver], // attach observer 🚀
             navigatorKey: navigatorKey,
             textDirection: (rtlLanguages.contains(langCode)
                 ? TextDirection.rtl
@@ -217,15 +152,6 @@ class _MyAppState extends State<MyApp> {
             ),
           );
         });
-  }
-
-  _startApiLoggerIfNeeded() {
-    if (AppMode.isProd) { return; }
-    ShakeDetector.autoStart(
-        onPhoneShake: (ShakeEvent event) {
-          alice.showInspector();
-        }
-    );
   }
 }
 

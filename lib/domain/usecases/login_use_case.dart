@@ -33,32 +33,5 @@ class LoginUseCase extends BaseUseCase<LoginResult>{
 
       return AppResult.success(loginResult);
     },);
-
-
-    try {
-      var loginResult = await repository.login(model);
-      await repository.saveUserAuth(UserAuthModel(
-          accessToken: loginResult.accessToken,
-          refreshToken: loginResult.refreshToken
-      ));
-
-       await repository.saveProfileInfo(ProfileInfoModel(
-          id: loginResult.id,
-          name: loginResult.name
-      ));
-      return AppResult.success(loginResult);
-    }  catch (ex) {
-      appLog("StartSessionUseCase execute ex:${ex}");
-      if(ex is DioException){
-        try{
-          var errorResponse = ErrorResponse.fromJson(ex.response?.data);
-          return AppResult.error(AppHttpException(errorResponse.message ?? ex.message));
-        }catch(ex){
-          appLog("StartSessionUseCase execute ex:${ex.toString()}");
-        }
-      }
-      appLog("StartSessionUseCase execute ex:${ex.toString()}");
-      return AppResult.error(Exception(ex));
-    }
   }
 }

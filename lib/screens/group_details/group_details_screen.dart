@@ -5,26 +5,28 @@ import 'package:teacher_app/navigation/app_navigator.dart';
 import 'package:teacher_app/screens/group_details/states/group_details_ui_state.dart';
 import 'package:teacher_app/screens/home/states/running_session_item_ui_state.dart';
 import 'package:teacher_app/screens/student_details/args/student_details_arg_model.dart';
+import 'package:teacher_app/themes/app_colors.dart';
 import 'package:teacher_app/utils/app_background_styles.dart';
 import 'package:teacher_app/utils/day_utils.dart';
 import 'package:teacher_app/utils/message_utils.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
+import 'package:teacher_app/widgets/app_visibility_widget.dart';
 import 'package:teacher_app/widgets/day_with_icon_widget.dart';
 import 'package:teacher_app/widgets/delete_icon_widget.dart';
 import 'package:teacher_app/widgets/dialog_loading_widget.dart';
 import 'package:teacher_app/widgets/edit_icon_widget.dart';
-import 'package:teacher_app/widgets/empty_view_widget.dart';
 import 'package:teacher_app/widgets/forward_arrow_widget.dart';
 import 'package:teacher_app/widgets/grade_with_icon_widget.dart';
+import 'package:teacher_app/widgets/lifecycle_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
 import 'package:teacher_app/widgets/sessions/running_session_item_widget.dart';
 import 'package:teacher_app/widgets/sessions/start_session_button_widget.dart';
-
 import '../../themes/txt_styles.dart';
+import '../../utils/LogUtils.dart';
 import '../../widgets/app_toolbar_widget.dart';
-import '../../widgets/groups/group_student_item_widget.dart';
 import '../../widgets/groups/states/group_student_item_ui_state.dart';
-import '../ads/AdsManager.dart';
+import '../../widgets/students/students_group_list_search_widget.dart';
+import '../../widgets/students/students_group_list_widget.dart';
 import '../group_edit/args/edit_group_args_model.dart';
 import '../sessions_list/args/session_list_args_model.dart';
 import 'group_details_controller.dart';
@@ -38,21 +40,19 @@ class GroupDetailsScreen extends StatefulWidget {
   State<GroupDetailsScreen> createState() => _GroupDetailsScreenState();
 }
 
-class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
+class _GroupDetailsScreenState extends LifecycleWidgetState<GroupDetailsScreen> {
+
   final GroupDetailsController controller = Get.put(GroupDetailsController());
-
-
-  @override
-  void initState() {
-    super.initState();
-    AdsManager.showGroupDetailsScreenAds();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppToolbarWidget.appBar("Group Details".tr,
-            actions: [_deleteIcon(),SizedBox(width: 10,),]),
+        appBar: AppToolbarWidget.appBar(title: "Group Details".tr, actions: [
+          _deleteIcon(),
+          SizedBox(
+            width: 10,
+          ),
+        ]),
         body: Padding(
           padding: const EdgeInsets.all(20.0),
           child: RefreshIndicator(
@@ -122,7 +122,15 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
   }
 
   Widget _studentsSection(GroupDetailsUiState uiState) {
-    return _sectionLabelValue("Students".tr, _studentsList(uiState.students));
+    var students = uiState.students;
+    var count = 5;
+    final firstFive = students.take(count).toList();
+
+    return _sectionLabelValue(
+      "Students".tr,
+      _studentsList(firstFive),
+      students.length > count ? _showAllStudents(students) : null,
+    );
   }
 
   _groupName(String groupName) {
@@ -176,43 +184,13 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
     );
   }
 
-  _studentsList(List<GroupDetailsStudentItemUiState> student) {
-
-    if(student.isEmpty){
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          EmptyViewWidget(message: "No students found".tr),
-        ],
-      );
-    }
-
-    return ListView.separated(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        // disables ListView scroll
-        itemBuilder: (context, index) {
-          var item = student[index];
-          return GroupStudentItemWidget(
-            uiState: GroupStudentItemUiState(
-              id: item.studentId,
-              name: item.studentName,
-              parentPhone: item.studentParentPhone,
-            ),
-            onItemClick: (uiState) {
-              onStudentItemClick(uiState);
-            },
-          );
-        },
-        separatorBuilder: (context, index) => Divider(
-              height: 1,
-            ),
-        itemCount: student.length);
+  Widget _studentsList(List<GroupDetailsStudentItemUiState> student) {
+    return StudentsGroupListWidget(
+      students: student,
+      onStudentItemClick: onStudentItemClick,
+    );
   }
 
-  _editIcon() {
-    return EditIconWidget(onClick: onEditClick);
-  }
 
   _deleteIcon() {
     return Obx(() {
@@ -240,9 +218,9 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
 
     var result = await AppNavigator.navigateToEditGroup(args);
 
-    if (result == true) {
-      controller.reload();
-    }
+    // if (result == true) {
+    //   controller.reload();
+    // }
   }
 
   onDeleteClick(GroupDetailsUiState uiState) {
@@ -275,6 +253,7 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
 
   _sessionSection(GroupDetailsUiState uiState) {
     var activeSession = uiState.activeSession;
+    appLog("GroupDetailsScreen _sessionSection activeSession:$activeSession");
     return Container(
       width: double.infinity,
       decoration: AppBackgroundStyle.backgroundWithShadow(),
@@ -290,8 +269,8 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
     return RunningSessionItemWidget(
       item: RunningSessionItemUiState(
           id: activeSession.sessionId ?? "",
-          date: AppDateUtils.parseStringToDateTime(
-              activeSession.startDate ?? "")),
+          date: AppDateUtils.parseStringToDateTime(activeSession.startDate ?? ""),
+      ),
       onSessionEnded: () {
         controller.reload();
       },
@@ -342,5 +321,40 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
   void onViewAllSessionClick(GroupDetailsUiState uiState) {
     AppNavigator.navigateToSessionsList(
         SessionListArgsModel(groupId: uiState.groupId));
+  }
+
+  Widget _showAllStudents(List<GroupDetailsStudentItemUiState> students) {
+    return InkWell(
+      onTap: () {
+        onViewAllStudentsClick(students);
+      },
+      child: AppTextWidget(
+        "All Students".tr,
+        style: AppTextStyle.teshrinArLtRegular.copyWith(
+            decoration: TextDecoration.underline,
+            fontSize: 15,
+            color: AppColors.appMainColor),
+      ),
+    );
+  }
+
+  void onViewAllStudentsClick(List<GroupDetailsStudentItemUiState> students) {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        useSafeArea: true,
+        showDragHandle: true,
+        context: context,
+        builder: (context) => StudentsGroupListSearchWidget(
+              query: "",
+              students: students,
+              onStudentItemClick: (uiState) {
+                onStudentItemClick(uiState);
+              },
+            ));
+  }
+
+  @override
+  void onResumedNavigatedBack() {
+    controller.onResume();
   }
 }

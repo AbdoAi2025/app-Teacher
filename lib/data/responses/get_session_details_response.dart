@@ -33,12 +33,14 @@ class SessionDetailsApiModel {
     sessionQuizGrade = json['sessionQuizGrade'];
     sessionCreatedAt = json['sessionCreatedAt'];
     groupId = json['groupId'];
+    gradeId = json['gradeId'];
     groupName = json['groupName'];
     if (json['activities'] != null) {
       activities = [];
       json['activities'].forEach((v) {
         activities?.add(StudentActivityApiModel.fromJson(v));
       });
+      // activities?.sort((a, b) => (a.studentName ?? "").compareTo(a.studentName!));
     }
   }
   String? sessionId;
@@ -47,6 +49,7 @@ class SessionDetailsApiModel {
   int? sessionQuizGrade;
   String? sessionCreatedAt;
   String? groupId;
+  int? gradeId;
   String? groupName;
   List<StudentActivityApiModel>? activities;
 
@@ -75,6 +78,7 @@ class StudentActivityApiModel {
   });
 
   StudentActivityApiModel.fromJson(dynamic json) {
+    activityId = json['activityId'];
     studentId = json['studentId'];
     studentName = json['studentName'];
     studentPhone = json['studentPhone'];
@@ -88,6 +92,7 @@ class StudentActivityApiModel {
   }
 
 
+  String? activityId;
   String? studentId;
   String? studentName;
   String? studentPhone;

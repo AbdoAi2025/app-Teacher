@@ -67,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       },
       child: Scaffold(
-        // appBar: AppToolbarWidget.appBar("Home".tr, hasLeading: false),
+        // appBar: AppToolbarWidget.appBar(title: "Home".tr, hasLeading: false),
         body: SafeArea(
             child: Column(
           children: [
@@ -86,12 +86,15 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(), // <-- key line
-        child: _contentState(),
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 20.0),
+          child: _contentState(),
+        ),
       ),
     );
   }
 
-  _contentState() {
+  Widget _contentState() {
     return  Obx((){
       var state = controller.homeState.value;
       if(state is HomeStateLoading){
@@ -108,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
   _runningSession() {
     return SizedBox(
       width: double.infinity,
-      height: 250,
+      height: 300,
       // padding: EdgeInsets.all(15),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -205,7 +208,23 @@ class _HomeScreenState extends State<HomeScreen> {
         margin: EdgeInsets.symmetric(horizontal: 20),
         padding: EdgeInsets.all(15),
         decoration: AppBackgroundStyle.backgroundWithShadow(),
-        child: EmptyViewWidget(message: "No Running Sessions Found".tr));
+        child: Column(
+          spacing: 20,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.do_not_disturb_alt,
+              size: 60,
+              color: AppColors.appMainColor,
+            ),
+            AppTextWidget(
+              "No Running Sessions Found".tr,
+              style: AppTextStyle.title,
+              color: AppColors.appMainColor,
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ));
   }
 
   Widget _todayGroupsList(List<GroupItemUiState> uiStates) {
@@ -252,7 +271,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Expanded(
                 child: AppTextWidget(
-              "Hey, ${state?.name ?? ""}" ,
+              "${"Hey, Mr.".tr} ${state?.name ?? ""}" ,
               style: AppTextStyle.title.copyWith(color: AppColors.appMainColor),
             )),
             InkWell(

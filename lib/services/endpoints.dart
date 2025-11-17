@@ -16,6 +16,7 @@ class EndPoints{
 
   ///api/v1/users/signin
   static const String login = "$apiV1/users/signin";
+  static const String register = "$apiV1/teachers/add";
   static const String logout = "$apiV1/users/signout";
   static const String checkSession = "$apiV1/users/checkSession";
 
@@ -31,9 +32,15 @@ class EndPoints{
   static const String endSession = "$apiV1/sessions/endSession";
   static const String getRunningSession = "$apiV1/sessions/getRunningSession";
   static const String getSessionDetails = "$apiV1/sessions";
+  static const String deleteSession = "$apiV1/sessions/delete";
+  static const String deleteStudentActivity = "$apiV1/activities/delete";
+  static const String getStudentActivities = "$apiV1/activities/students";
+
+
   static const String updateSessionActivities = "$apiV1/activities/updateStudentsActivities";
+  static const String addSessionActivities = "$apiV1/activities/AddStudentsActivities";
   static const String getMySessions = "$apiV1/sessions/getMySessions";
-  static const String checkAppVersion = "$apiV1/appConfig/checkAppVersion";
+  static const String checkAppVersion = "$apiV1/appVersions/check";
 
 
 

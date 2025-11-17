@@ -5,8 +5,12 @@ import 'package:teacher_app/navigation/app_navigator.dart';
 import 'package:teacher_app/screens/splash/SplashController.dart';
 import 'package:teacher_app/screens/splash/SplashEvent.dart';
 import 'package:teacher_app/themes/app_colors.dart';
+import 'package:teacher_app/utils/LogUtils.dart';
 import 'package:teacher_app/utils/message_utils.dart';
 import 'package:teacher_app/utils/open_store_utils.dart';
+
+import '../../presentation/app_message_dialogs.dart';
+import '../../utils/whatsapp_utils.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -31,10 +35,9 @@ class _SplashscreenState extends State<SplashScreen> {
         width: double.infinity,
         height: double.infinity,
         decoration: BoxDecoration(
-          image: DecorationImage(
-              fit: BoxFit.fill,
-              image: AssetImage(Assets.imagesSplashScreen))
-        ),
+            image: DecorationImage(
+                fit: BoxFit.fill,
+                image: AssetImage(Assets.imagesSplashScreen))),
       ),
     );
   }
@@ -43,7 +46,13 @@ class _SplashscreenState extends State<SplashScreen> {
     ever(
       splashController.splashEvent,
       (callback) {
+
+        appLog("initSplashEvents callback:$callback");
+
         switch (callback) {
+          case SplashError():
+            showErrorMessageEx(callback.ex , buttonText: "Retry".tr, onClose:  (){splashController.retry();});
+            break;
           case SplashEventGoToLogin():
             AppNavigator.navigateToLogin();
             break;
@@ -51,19 +60,17 @@ class _SplashscreenState extends State<SplashScreen> {
             AppNavigator.navigateToHome();
           case SplashEventLoading():
             break;
-          case SplashError():
-            showErrorMessagePopup(callback.message);
-          case SplashEventInvalidSession():
-            showErrorMessagePopup("User not active".tr);
+          case SplashEventUserNotActive():
+            AppMessageDialogs.showUserNotActive();
+            break;
           case SplashEventForceUpdate():
-            showConfirmationMessage(
-              "force_update_message".tr,
-              () async {
-                await OpenStoreUtils.openStore();
-              },
-              barrierDismissible : false,
-              positiveButtonText: "Update".tr,
-            );
+            AppMessageDialogs.showForceUpdate();
+            break;
+          case SplashEventNotSubscribed():
+            AppMessageDialogs.showUserNotSubscribedDialog();
+            break;
+          case SplashEventShowRemainingDays():
+            AppMessageDialogs.showSubscriptionExpiringDialog(remainingDays: callback.remainingDays , onGotItClick: () => AppNavigator.navigateToHome());
         }
       },
     );

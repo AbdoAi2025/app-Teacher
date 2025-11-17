@@ -7,8 +7,9 @@ import 'package:teacher_app/domain/models/app_locale_model.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
 
 import '../../utils/app_localization_utils.dart';
+import '../base_use_case.dart';
 
-class ChangeAppLocaleUseCase {
+class ChangeAppLocaleUseCase extends BaseUseCase<AppLocaleModel?>{
 
   final AppSettingRepository _repository = AppSettingRepositoryImpl();
 

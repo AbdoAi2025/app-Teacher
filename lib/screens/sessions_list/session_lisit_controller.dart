@@ -6,7 +6,9 @@ import 'package:teacher_app/localization/localArabic.dart';
 import 'package:teacher_app/screens/session_details/states/session_details_ui_state.dart';
 import 'package:teacher_app/screens/sessions_list/args/session_list_args_model.dart';
 import 'package:teacher_app/screens/sessions_list/states/session_item_ui_state.dart';
+import 'package:teacher_app/utils/LogUtils.dart';
 
+import '../../domain/events/sessions_events.dart';
 import 'states/session_lisit_state.dart';
 
 class SessionListController extends GetxController {
@@ -16,6 +18,8 @@ class SessionListController extends GetxController {
   GetMySessionsRequest request = GetMySessionsRequest();
 
   Map<String, SessionActivityItemUiState> itemChangedMap = {};
+
+  Function()? _updatedGroup;
 
   @override
   void onInit() {
@@ -29,6 +33,7 @@ class SessionListController extends GetxController {
     }
 
     _loadSessions();
+    _initEvents();
   }
 
   Future<void> _loadSessions() async {
@@ -62,4 +67,34 @@ class SessionListController extends GetxController {
   void onRefresh() {
     _loadSessions();
   }
+
+  String getStudentId() => request.studentId ?? "";
+
+
+  void _initEvents() {
+    SessionsEvents.addListener(_sessionsEventsUpdated);
+  }
+
+  @override
+  void onClose() {
+    super.onClose();
+    SessionsEvents.removeListener(_sessionsEventsUpdated);
+  }
+
+  onResume() {
+    if (_updatedGroup != null) {
+      _updatedGroup?.call();
+      _updatedGroup = null;
+    }
+  }
+
+  _sessionsEventsUpdated(SessionsEventsState event) {
+    if(event is SessionsEventsStateDeleted){
+      _updatedGroup = (){
+        _updateState(SessionListStateLoading());
+        _loadSessions();
+      };
+    }
+  }
+
 }

@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:teacher_app/appSetting/appSetting.dart';
 import 'package:teacher_app/domain/usecases/get_user_auth_use_case.dart';
+import 'package:teacher_app/exceptions/app_http_exception.dart';
 import 'package:teacher_app/screens/splash/SplashEvent.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
 
@@ -18,7 +19,18 @@ class SplashController extends GetxController{
   @override
   Future<void> onInit() async {
     super.onInit();
+    _init();
+  }
 
+  void updateEvent(SplashEvent event) {
+    splashEvent.value = event;
+  }
+
+  void retry() {
+    _init();
+  }
+
+  Future<void> _init() async {
     /*Check app force update*/
     var checkAppVersionResult =  await _changeAppVersionUseCase.execute();
     if(checkAppVersionResult.isSuccess){
@@ -27,8 +39,13 @@ class SplashController extends GetxController{
         updateEvent(SplashEventForceUpdate(model: checkAppVersionModel!));
         return;
       }
+    }else if(checkAppVersionResult.isError){
+      updateEvent(SplashError(checkAppVersionResult.error));
+      return;
     }
 
+
+    /*Check is not logged in*/
     var userAuth = await _getUserAuthUseCase.execute();
     appLog("onInit getUserAuthUseCase.execute : ${userAuth?.accessToken}" , "SplashController");
     AppSetting.setUserAuthModel(userAuth);
@@ -39,18 +56,43 @@ class SplashController extends GetxController{
 
     /*Check User session*/
     var checkUserSessionResult = await _checkUserSessionUseCase.execute();
+
+    if(checkUserSessionResult.isError){
+      var error = checkUserSessionResult.error;
+      if(error is AppHttpException){
+        var statusCode = error.statusCode;
+        if(statusCode == 401){
+          updateEvent(SplashEventGoToLogin());
+          return;
+        }
+      }else {
+        updateEvent(SplashError(checkUserSessionResult.error));
+        return;
+      }
+    }
+
     var checkUserSession = checkUserSessionResult.data;
     var isValidSession = checkUserSessionResult.isSuccess &&  checkUserSession != null && checkUserSession.isActive == true;
     if(!isValidSession && checkUserSession != null){
-      updateEvent(SplashEventInvalidSession(checkUserSessionModel: checkUserSession));
+      updateEvent(SplashEventUserNotActive(checkUserSessionModel: checkUserSession));
       return;
     }
 
-    updateEvent(SplashEventGoToHome());
-  }
+    if(checkUserSession != null && !checkUserSession.isSubscribed){
+      updateEvent(SplashEventNotSubscribed());
+      return;
+    }
 
-  void updateEvent(SplashEvent event) {
-    splashEvent.value = event;
+    // Check if subscription is about to expire (5 or fewer days remaining)
+    if(checkUserSession != null && checkUserSession.isSubscribed == true){
+      final remainingDays = checkUserSession.getRemainingDays();
+      if(remainingDays != null && remainingDays <= 5 && remainingDays >= 0){
+        updateEvent(SplashEventShowRemainingDays(remainingDays: remainingDays));
+        return;
+      }
+    }
+
+    updateEvent(SplashEventGoToHome());
   }
 
 }

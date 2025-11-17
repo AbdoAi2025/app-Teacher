@@ -16,11 +16,78 @@ buildscript {
 }
 
 
+def versionPropertiesFile = rootProject.file("version.properties")
+def versionProperties = new Properties()
+versionProperties.load(new FileInputStream(versionPropertiesFile))
+
+ext{
+    flutterMinSdkVersion = versionProperties.getProperty("minSdk").toInteger()
+    flutterTargetSdkVersion =  versionProperties.getProperty("targetSdkVersion").toInteger()
+    flutterCompileSdkVersion = versionProperties.getProperty("compileSdkVersion").toInteger()
+    flutterVersionCode =  versionProperties.getProperty("versionCode").toInteger()
+    flutterVersionName =  versionProperties.getProperty("versionName")
+}
+
+
+
 
 allprojects {
     repositories {
         google()
         mavenCentral()
+    }
+}
+
+subprojects {
+    afterEvaluate { project ->
+        if (project.hasProperty('android')) {
+            project.android {
+
+                compileSdkVersion rootProject.ext.flutterCompileSdkVersion
+                defaultConfig {
+                    minSdkVersion rootProject.ext.flutterMinSdkVersion
+                    targetSdkVersion rootProject.ext.flutterTargetSdkVersion
+
+                    // Enable 16KB page size support for all subprojects
+                    externalNativeBuild {
+                        cmake {
+                            arguments "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON"
+                        }
+                        ndkBuild {
+                            arguments "ANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON"
+                        }
+                    }
+                }
+
+                // Configure packaging options for 16KB alignment
+                packagingOptions {
+                    jniLibs {
+                        useLegacyPackaging = false
+                    }
+                }
+
+                print("project.android namespace:$namespace")
+                if (namespace == null) {
+                    print("project.android namespace:${project.group.toString()}")
+                    namespace = project.group.toString()  // Set namespace as fallback
+                }
+                project.tasks.whenTaskAdded { task ->
+                    if (task.name.contains('processDebugManifest') || task.name.contains('processReleaseManifest')) {
+                        task.doFirst {
+                            File manifestFile = file("${projectDir}/src/main/AndroidManifest.xml")
+                            if (manifestFile.exists()) {
+                                String manifestContent = manifestFile.text
+                                if (manifestContent.contains('package=')) {
+                                    manifestContent = manifestContent.replaceAll(/package="[^"]*"/, "")
+                                    manifestFile.write(manifestContent)
+                                    println "Removed 'package' attribute from ${manifestFile}"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 

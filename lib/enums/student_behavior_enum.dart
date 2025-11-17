@@ -24,7 +24,8 @@ extension StudentBehaviorEnumExtension on StudentBehaviorEnum? {
     return switch (this) {
       StudentBehaviorEnum.ACCEPTABLE => "Acceptable",
       StudentBehaviorEnum.BAD => "Poor",
-      _ =>"Good"
+      StudentBehaviorEnum.GOOD => "Good",
+      _ => "Not Determined"
     };
   }
 
@@ -32,7 +33,8 @@ extension StudentBehaviorEnumExtension on StudentBehaviorEnum? {
     return switch (this) {
       StudentBehaviorEnum.ACCEPTABLE => AppColors.colorBehaviorStatusAcceptable,
       StudentBehaviorEnum.BAD => AppColors.colorNo,
-      _ => AppColors.color_008E73
+      StudentBehaviorEnum.GOOD => AppColors.color_008E73,
+      _ => AppColors.inactiveColor
     };
   }
 }

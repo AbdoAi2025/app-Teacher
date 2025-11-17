@@ -34,8 +34,7 @@ class CreateGroupController extends GetxController {
   /*Students selection*/
   List<StudentSelectionItemUiState> selectedStudents = [];
   final Rx<List<StudentSelectionItemUiState>> selectedStudentsRx = Rx([]);
-  final Rx<StudentsSelectionState> studentsSelectionState =
-      Rx(StudentsSelectionStateLoading());
+  final Rx<StudentsSelectionState> studentsSelectionState = Rx(StudentsSelectionStateLoading());
 
   /*grades selection*/
   final Rx<ItemSelectionUiState?> selectedGrade = Rx(null);
@@ -61,9 +60,7 @@ class CreateGroupController extends GetxController {
   }
 
   Future<void> loadMyStudents() async {
-
     var selectedGradeId = selectedGrade.value?.id ?? "";
-
     if(selectedGradeId.isEmpty){
       studentsSelectionState.value = StudentsSelectionStateSelectGrade();
       return;
@@ -77,10 +74,14 @@ class CreateGroupController extends GetxController {
               ?.map((e) => StudentSelectionItemUiState(
                   studentId: e.studentId ?? "",
                   studentName: e.studentName ?? "",
+                  groupName: e.groupName ?? "",
                   gradeId: e.gradeId ?? 0,
                   isSelected: isSelected(e)))
               .toList() ??
           List.empty();
+
+      students.sort((a, b) => a.studentName.compareTo(b.studentName),);
+
       studentsSelectionState.value = StudentsSelectionStateSuccess(students);
     }
   }
@@ -126,11 +127,9 @@ class CreateGroupController extends GetxController {
 
   onRemoveStudentClick(StudentSelectionItemUiState item) {
     var allStudents = getAllStudents();
-    var studentItem = allStudents
-        .firstWhereOrNull((element) => element.studentId == item.studentId);
+    var studentItem = allStudents.firstWhereOrNull((element) => element.studentId == item.studentId);
     studentItem?.isSelected = false;
-    selectedStudentsRx.value =
-        allStudents.where((element) => element.isSelected).toList();
+    selectedStudentsRx.value = allStudents.where((element) => element.isSelected).toList();
   }
 
   List<StudentSelectionItemUiState> getAllStudents() {
@@ -138,7 +137,7 @@ class CreateGroupController extends GetxController {
     if (students is StudentsSelectionStateSuccess) {
       return students.students;
     }
-    return List.empty();
+    return  selectedStudentsRx.value;
   }
 
   Stream<CreateGroupState> saveGroup() async* {

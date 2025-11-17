@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/themes/app_colors.dart';
 import 'package:teacher_app/themes/txt_styles.dart';
+import 'package:teacher_app/utils/LogUtils.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
+import 'package:teacher_app/widgets/search_text_field.dart';
 
 import '../../../widgets/primary_button_widget.dart';
 import 'states/student_selection_item_ui_state.dart';
@@ -23,10 +25,11 @@ class StudentListSelectionWidget extends StatefulWidget {
       _StudentListSelectionWidgetState();
 }
 
-class _StudentListSelectionWidgetState
-    extends State<StudentListSelectionWidget> {
+class _StudentListSelectionWidgetState extends State<StudentListSelectionWidget> {
+
   late List<StudentSelectionItemUiState> students = widget.students.map((e) => e.copyWith()).toList();
 
+  TextEditingController searchTextController = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -40,6 +43,7 @@ class _StudentListSelectionWidgetState
         spacing: 20,
         children: [
           _title(),
+          _search(),
           Expanded(
             child: _showStudentList(),
           ),
@@ -50,7 +54,7 @@ class _StudentListSelectionWidgetState
   }
 
   Widget _showStudentList() {
-    var items = widget.students;
+    var items = students;
     // return AppTextWidget("items : ${items.length}");
     return ListView.separated(
       shrinkWrap: true,
@@ -68,7 +72,15 @@ class _StudentListSelectionWidgetState
         spacing: 20,
         children: [
           _checkbox(item),
-          Expanded(child: AppTextWidget(item.studentName)),
+          Expanded(child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              AppTextWidget(item.studentName),
+              if(item.groupName.isNotEmpty)
+              AppTextWidget(item.groupName, style: AppTextStyle.small,),
+            ],
+          )),
         ],
       ),
     );
@@ -110,23 +122,21 @@ class _StudentListSelectionWidgetState
   void onSaveClick() {
     var selectedStudents = students.where((element) => element.isSelected).toList();
     widget.onSaved(selectedStudents);
-    Get.back();
   }
 
   _title() {
-    return AppTextWidget("Select Student to group".tr , style: AppTextStyle.appToolBarTitle,);
+    return AppTextWidget("Select Student".tr , style: AppTextStyle.appToolBarTitle,);
   }
 
-// Widget _studentLoaded(StudentsLoaded state) {
-//   return Column(
-//     children: [
-//       Expanded(
-//         child: _showStudentList(state),
-//       ),
-//       _saveButton()
-//     ],
-//   );
-// }
-
+  _search() => SearchTextField(
+    onChanged: (value) {
+      appLog("_search onChanged: $value");
+      if(value == null || value.isEmpty) return;
+      setState(() {
+        students = students.where((element) => element.studentName.toLowerCase().contains(value.toLowerCase())).toList();
+      });
+    },
+    controller: searchTextController,
+  );
 
 }

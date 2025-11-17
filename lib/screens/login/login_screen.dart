@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
+import 'package:teacher_app/presentation/app_message_dialogs.dart';
 import 'package:teacher_app/screens/login/login_controller.dart';
 import 'package:teacher_app/screens/login/login_state.dart';
 import 'package:teacher_app/utils/message_utils.dart';
@@ -9,6 +10,8 @@ import 'package:teacher_app/widgets/dialog_loading_widget.dart';
 import 'package:teacher_app/widgets/primary_button_widget.dart';
 
 import '../../generated/assets.dart';
+import '../../widgets/app_password_field_widget.dart';
+import '../../widgets/app_toolbar_widget.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -25,17 +28,26 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      appBar: AppToolbarWidget.appBar(title: "Login".tr, leading: Container()),
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0 ,vertical: 30),
           child: Column(
             spacing: 20,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image(image: AssetImage(Assets.imagesLogo) , height: 200, width: 200,),
+              Image(
+                image: AssetImage(Assets.imagesLogo),
+                height: 200,
+                width: 200,
+              ),
               _userNameField(),
               _passwordField(),
-              _submitButton()
+              _submitButton(),
+              _registerRedirect(),
             ],
           ),
         ),
@@ -50,12 +62,11 @@ class _LoginScreenState extends State<LoginScreen> {
         prefixIcon: Icon(Icons.person),
       );
 
-  _passwordField() => AppTextFieldWidget(
+  _passwordField() => AppPasswordFieldWidget(
         controller: passwordController,
-        obscureText: true,
         label: "Password".tr,
         hint: "Password".tr,
-        prefixIcon: Icon(Icons.lock),
+        prefixIcon: Icon(Icons.lock_outline),
       );
 
   _submitButton() {
@@ -67,6 +78,19 @@ class _LoginScreenState extends State<LoginScreen> {
           onLoginClick();
         },
       ),
+    );
+  }
+
+  _registerRedirect() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text("Don't have an account?".tr),
+        TextButton(
+          onPressed: () => AppNavigator.navigateToRegister(),
+          child: Text("Register".tr),
+        ),
+      ],
     );
   }
 
@@ -83,11 +107,19 @@ class _LoginScreenState extends State<LoginScreen> {
             AppNavigator.navigateToHome();
             break;
           case LoginStateError():
-            showErrorMessage(result.exception.toString());
+            showErrorMessageEx(result.exception);
+            break;
+          case LoginStateInvalidSession():
+            AppMessageDialogs.showUserNotActive();
+            break;
+          case LoginStateNotSubscribed():
+            AppMessageDialogs.showUserNotSubscribedDialog();
+            break;
+          case LoginStateNotActive():
+            AppMessageDialogs.showUserNotActive();
+            break;
         }
       },
     );
   }
-
-
 }

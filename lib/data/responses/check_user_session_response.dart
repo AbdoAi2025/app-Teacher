@@ -1,9 +1,9 @@
-/// data : {"active":true}
+/// data : {"active":true, "subscriptionExpireDate": "2025-10-18T13:00:00.000+00:00"}
 /// status : "success"
 
 class CheckUserSessionResponse {
   CheckUserSessionResponse({
-      this.data, 
+      this.data,
       this.status,});
 
   CheckUserSessionResponse.fromJson(dynamic json) {
@@ -29,20 +29,23 @@ class CheckUserSessionResponse {
 class Data {
 
   bool? active;
-  bool? isSubscribed;
+  bool? subscribed;
+  String? subscriptionExpireDate;
 
-  Data({this.active,});
+  Data({this.active, this.subscriptionExpireDate});
 
   Data.fromJson(dynamic json) {
     active = json['active'];
-    isSubscribed = json['isSubscribed'];
+    subscribed = json['subscribed'];
+    subscriptionExpireDate = json['subscriptionExpireDate'];
   }
 
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['active'] = active;
-    map['isSubscribed'] = isSubscribed;
+    map['isSubscribed'] = subscribed;
+    map['subscriptionExpireDate'] = subscriptionExpireDate;
     return map;
   }
 

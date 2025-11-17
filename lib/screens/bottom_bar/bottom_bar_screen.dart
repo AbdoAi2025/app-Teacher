@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
-import 'package:teacher_app/screens/ads/AdsManager.dart';
 import 'package:teacher_app/themes/app_colors.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
@@ -30,11 +29,9 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
         valueListenable: getAppSettingNotifier(),
       builder: (BuildContext context, value, Widget? child) {
         return Scaffold(
-          body: Column(
-            children: [
-              Expanded(child: getBody()),
-              AdsManager.homeBanner()
-            ],
+          body: Padding(
+            padding: const EdgeInsets.only(bottom: 0.0),
+            child: getBody(),
           ),
           bottomNavigationBar: BottomNavigationBar(
             currentIndex: _currentIndex,
