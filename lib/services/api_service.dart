@@ -141,6 +141,8 @@ class ApiService {
 }
 */
 
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
@@ -148,6 +150,7 @@ import 'package:talker_dio_logger/talker_dio_logger.dart';
 import 'package:teacher_app/appSetting/appSetting.dart';
 import 'package:teacher_app/app_mode.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
+import 'package:teacher_app/utils/LogUtils.dart';
 
 const String prodBaseUrl = "https://assistant-app-2136afb92d95.herokuapp.com";
 const String devBaseUrl = "https://assistant-app-2136afb92d95.herokuapp.com";
@@ -221,6 +224,8 @@ class ApiService {
     );
 
 
+    appLog("setting header");
+
     dio.options = BaseOptions(
       baseUrl: baseUrl,
       connectTimeout: Duration(seconds: 30),
@@ -228,6 +233,8 @@ class ApiService {
       headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token",
+        "platform": Platform.isAndroid ? "Android" : "IOS",
+        "appVersion" : appVersion,
         "Accept-Language" : currentLanguage,
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET, POST,OPTIONS',
@@ -239,6 +246,7 @@ class ApiService {
 
   static String get token => AppSetting.getAppSetting().accessToken;
   static String get currentLanguage =>  Get.locale?.languageCode ?? "en";
+  static double? get appVersion =>  AppSetting.getAppSetting().appVersion;
 
 
 }

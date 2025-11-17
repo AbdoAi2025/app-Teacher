@@ -24,6 +24,8 @@ class SettingsScreen extends StatefulWidget{
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  get appVersion => AppSetting.getAppSetting().appVersion;
+
   @override
   Widget build(BuildContext context) {
     appLog("SettingsScreen build");
@@ -33,12 +35,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
           child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Column(
-              spacing: 20,
               children: [
-                _language(),
-                _privacyPolicy(),
-                _contactUs(),
-                _deleteAccount()
+                Column(
+                  spacing: 20,
+                  children: [
+                    _language(),
+                    _privacyPolicy(),
+                    _contactUs(),
+                    _deleteAccount()
+                  ],
+                ),
+
+                if(appVersion != null)...{
+                  Spacer(),
+                  _versionInfo(appVersion!.toString()),
+                }
+
               ],
             ),
           )),
@@ -132,6 +144,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
       AppNavigator.navigateToLogin();
     });
 
+  }
+
+  Widget _versionInfo(String version) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20.0),
+      child: Text(
+        "Version $version",
+        style: TextStyle(
+          color: Colors.grey[600],
+          fontSize: 14,
+        ),
+        textAlign: TextAlign.center,
+      ),
+    );
   }
 
   Widget _cell(String text , IconData icon , Function() onClick) {

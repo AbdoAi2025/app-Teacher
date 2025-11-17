@@ -43,8 +43,11 @@ void main() async {
 
   initAppLocale();
 
+  await AppSetting.initAppVersion();
+
   runApp(MyApp());
 }
+
 
 
 
