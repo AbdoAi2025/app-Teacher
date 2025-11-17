@@ -198,6 +198,7 @@ final Map<String, String> enUS = {
   "Please confirm your password": "Please confirm your password",
   "Passwords do not match": "Passwords do not match",
   "Don't have an account?": "Don't have an account?",
+  "Contact Us": "Contact Us",
 
 
 

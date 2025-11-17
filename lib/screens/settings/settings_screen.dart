@@ -37,6 +37,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               children: [
                 _language(),
                 _privacyPolicy(),
+                _contactUs(),
                 _deleteAccount()
               ],
             ),
@@ -53,7 +54,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
       },
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 15 , vertical: 10),
+        padding: EdgeInsets.symmetric(horizontal: 15 , vertical: 15),
         decoration: AppBackgroundStyle.backgroundWithShadow(),
         child: Row(
           spacing: 5,
@@ -87,6 +88,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return  _cell("Privacy Policy".tr , Icons.privacy_tip_outlined ,onPrivacyPolicyClick );
   }
 
+  _contactUs() {
+    return  _cell("Contact Us".tr , Icons.support_agent ,onContactUsClick );
+  }
+
   _deleteAccount() {
     return  _cell("Delete Account".tr , Icons.person_off ,onDeleteAccount );
   }
@@ -103,6 +108,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
       );
     } else {
       debugPrint("❌ Could not launch $url");
+    }
+  }
+
+  Future<void> onContactUsClick() async {
+    final String phoneNumber = "+201063271529";
+    final String whatsappUrl = "https://wa.me/$phoneNumber";
+    final Uri uri = Uri.parse(whatsappUrl);
+
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(
+        uri,
+        mode: LaunchMode.externalApplication,
+      );
+    } else {
+      debugPrint("❌ Could not launch WhatsApp with $phoneNumber");
     }
   }
 
