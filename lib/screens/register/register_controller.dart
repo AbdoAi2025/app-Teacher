@@ -11,6 +11,7 @@ class RegisterController extends GetxController {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
 
   // Validation methods
   String? validateName(String? value) {
@@ -56,6 +57,21 @@ class RegisterController extends GetxController {
     return null;
   }
 
+  String? validatePhone(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return "Phone number is required".tr;
+    }
+    // Remove all non-digit characters for validation
+    String cleanedPhone = value.trim().replaceAll(RegExp(r'[^\d]'), '');
+    if (cleanedPhone.length < 10) {
+      return "Phone number must be at least 10 digits".tr;
+    }
+    if (cleanedPhone.length > 15) {
+      return "Phone number must not exceed 15 digits".tr;
+    }
+    return null;
+  }
+
   Stream<RegisterState> register() async* {
     // Validation
     if (nameController.text.trim().isEmpty) {
@@ -83,12 +99,18 @@ class RegisterController extends GetxController {
       return;
     }
 
+    if (phoneController.text.trim().isEmpty) {
+      yield RegisterStateValidationError("Phone number is required".tr);
+      return;
+    }
+
     yield RegisterStateLoading();
 
     var result = await registerUseCase.execute(RegisterModel(
       name: nameController.text.trim(),
       userName: usernameController.text.trim(),
       password: passwordController.text.trim(),
+      phone: phoneController.text.trim(),
     ));
 
     if (result.isError) {
@@ -105,6 +127,7 @@ class RegisterController extends GetxController {
     usernameController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
+    phoneController.dispose();
     super.onClose();
   }
 }

@@ -26,6 +26,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   late TextEditingController usernameController = controller.usernameController;
   late TextEditingController passwordController = controller.passwordController;
   late TextEditingController confirmPasswordController = controller.confirmPasswordController;
+  late TextEditingController phoneController = controller.phoneController;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -53,6 +54,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                 _nameField(),
                 _userNameField(),
+                _phoneField(),
                 _passwordField(),
                 _confirmPasswordField(),
                 _submitButton(),
@@ -79,6 +81,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
         hint: "Choose a username".tr,
         prefixIcon: Icon(Icons.account_circle_outlined),
         validator: controller.validateUsername,
+      );
+
+  _phoneField() => AppTextFieldWidget(
+        controller: phoneController,
+        label: "Phone Number".tr,
+        hint: "Enter your phone number".tr,
+        prefixIcon: Icon(Icons.phone_outlined),
+        keyboardType: TextInputType.phone,
+        validator: controller.validatePhone,
       );
 
   _passwordField() => AppPasswordFieldWidget(

@@ -197,6 +197,11 @@ final Map<String, String> enUS = {
   "Password must be at least 6 characters": "Password must be at least 6 characters",
   "Please confirm your password": "Please confirm your password",
   "Passwords do not match": "Passwords do not match",
+  "Phone Number": "Phone Number",
+  "Enter your phone number": "Enter your phone number",
+  "Phone number is required": "Phone number is required",
+  "Phone number must be at least 10 digits": "Phone number must be at least 10 digits",
+  "Phone number must not exceed 15 digits": "Phone number must not exceed 15 digits",
   "Don't have an account?": "Don't have an account?",
   "Contact Us": "Contact Us",
 

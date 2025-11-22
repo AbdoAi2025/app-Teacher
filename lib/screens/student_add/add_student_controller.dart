@@ -5,6 +5,7 @@ import 'package:teacher_app/requests/add_student_request.dart';
 import 'package:teacher_app/utils/extensions_utils.dart';
 
 import '../../base/AppResult.dart';
+import '../../domain/states/add_student_result.dart';
 import '../../domain/usecases/get_grades_list_use_case.dart';
 import '../../widgets/item_selection_widget/item_selection_ui_state.dart';
 import '../create_group/grades/grades_selection_state.dart';
@@ -99,6 +100,12 @@ class AddStudentController extends GetxController{
     if (result is AppResultSuccess) {
       yield SaveStateSuccess();
     } else {
+
+      if(result.data is AddStudentResultStudentLimitExceeded){
+        yield AddStudentStateStudentLimitExceeded();
+        return;
+      }
+
       yield AddStudentStateError(result.error);
     }
   }

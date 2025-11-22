@@ -38,7 +38,8 @@ class IdentityRepositoryImpl extends IdentityRepository {
         RegisterRequest(
             name: model.name,
             username: model.userName,
-            password: model.password
+            password: model.password,
+            phoneNumber: model.phone
         ));
     return LoginResult(
       accessToken: response.accessToken ?? "",

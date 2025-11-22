@@ -215,6 +215,11 @@ final Map<String, String> ar = {
   "Password must be at least 6 characters": "كلمة المرور يجب أن تحتوي على 6 أحرف على الأقل",
   "Please confirm your password": "يرجى تأكيد كلمة المرور",
   "Passwords do not match": "كلمة المرور غير متطابقة",
+  "Phone Number": "رقم الهاتف",
+  "Enter your phone number": "أدخل رقم هاتفك",
+  "Phone number is required": "رقم الهاتف مطلوب",
+  "Phone number must be at least 10 digits": "رقم الهاتف يجب أن يحتوي على 10 أرقام على الأقل",
+  "Phone number must not exceed 15 digits": "رقم الهاتف يجب ألا يتجاوز 15 رقماً",
   "Don't have an account?": "ليس لديك حساب؟",
   "Contact Us": "تواصل معنا"
 

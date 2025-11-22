@@ -6,7 +6,9 @@ import 'package:teacher_app/utils/LogUtils.dart';
 class ErrorResponse {
   ErrorResponse({
       this.status, 
-      this.message,});
+      this.message,
+      this.errorType,
+  });
 
   ErrorResponse.fromJson(dynamic json) {
 
@@ -21,6 +23,10 @@ class ErrorResponse {
       if (json['message'] != null) {
         message = json['message'];
       }
+
+      if (json['errorType'] != null) {
+        errorType = json['errorType'];
+      }
     }catch(ex){
       appLog("ErrorResponse ex:${ex.toString()}");
     }
@@ -28,11 +34,13 @@ class ErrorResponse {
   }
   String? status;
   String? message;
+  int? errorType;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['status'] = status;
     map['message'] = message;
+    map['errorType'] = errorType;
     return map;
   }
 
