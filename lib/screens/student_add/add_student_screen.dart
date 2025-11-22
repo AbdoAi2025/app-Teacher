@@ -519,7 +519,8 @@ class AddStudentScreenState extends State<AddStudentScreen> {
       (event) {
 
         if(event is AddStudentStateStudentLimitExceeded){
-          AppMessageDialogs.showUserNotSubscribedDialog();
+          hideDialogLoading();
+          AppMessageDialogs.showUserNotSubscribedDialog(true);
         }else {
           onSaveStudentResult(event);
         }

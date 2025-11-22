@@ -14,11 +14,11 @@ class AppMessageDialogs {
 
 
 
-  static void showUserNotSubscribedDialog() {
+  static void showUserNotSubscribedDialog([bool barrierDismissible = false]) {
     showConfirmationMessage(
         "subscription_message".tr,
         _openPaymentUrl,
-        barrierDismissible: false,
+        barrierDismissible: barrierDismissible,
         positiveButtonText: "Renew".tr,
         negativeButtonText: null,
         subTitleWidget: _buildContactWidget(),
