@@ -221,11 +221,39 @@ final Map<String, String> ar = {
   "Phone number must be at least 10 digits": "رقم الهاتف يجب أن يحتوي على 10 أرقام على الأقل",
   "Phone number must not exceed 15 digits": "رقم الهاتف يجب ألا يتجاوز 15 رقماً",
   "Don't have an account?": "ليس لديك حساب؟",
-  "Contact Us": "تواصل معنا"
+  "Contact Us": "تواصل معنا",
 
-
-
-
+  // Subscription Plans Screen
+  "My Subscription": "اشتراكي",
+  "Subscription Plans": "خطط الاشتراك",
+  "My Current Subscription": "اشتراكي الحالي",
+  "No active subscription currently": "لا يوجد اشتراك نشط حالياً",
+  "Choose a subscription plan below to start": "اختر خطة اشتراك من الأسفل للبدء",
+  "Renew Subscription": "تجديد الاشتراك",
+  "Available Plans": "الخطط المتاحة",
+  "No subscription plans available": "لا توجد خطط اشتراك متاحة",
+  "Retry": "إعادة المحاولة",
+  "Error loading subscription plans": "حدث خطأ في تحميل خطط الاشتراك",
+  "Unknown error": "خطأ غير معروف",
+  "Plan Selected": "تم اختيار الخطة",
+  "Current Plan": "الخطة الحالية",
+  "Most Popular": "الأكثر شعبية",
+  "Currently Active": "مفعلة حالياً",
+  "Choose Plan": "اختر الخطة",
+  "Expires on": "تنتهي في",
+  "Monthly": "شهرياً",
+  "Annual": "سنوياً",
+  "Remaining Days": "الأيام المتبقية",
+  "Expired": "منتهية",
+  "day ago": "يوم مضى",
+  "days ago": "أيام مضت",
+  "Expires today": "تنتهي اليوم",
+  "day": "يوم",
+  "days": "أيام",
+  "Up to": "حتى",
+  "students": "طالب",
+  "month": "شهر",
+  "year": "سنة",
 
 };
 
