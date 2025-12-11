@@ -16,6 +16,7 @@ class SubscriptionPlanItemUiState {
   final DateTime? expirationDate;
   final String? descriptionAr;
   final String? descriptionEn;
+  final String? purchaseCode;
 
   SubscriptionPlanItemUiState({
     required this.planCode,
@@ -31,6 +32,7 @@ class SubscriptionPlanItemUiState {
     this.expirationDate,
     this.descriptionAr,
     this.descriptionEn,
+    this.purchaseCode,
   });
 
   factory SubscriptionPlanItemUiState.fromModel(SubscriptionPlanModel model) {
@@ -46,6 +48,7 @@ class SubscriptionPlanItemUiState {
       isActive: model.isActive ?? false,
       descriptionAr: model.descriptionAr,
       descriptionEn: model.descriptionEn,
+      purchaseCode: model.purchaseCode,
     );
   }
 

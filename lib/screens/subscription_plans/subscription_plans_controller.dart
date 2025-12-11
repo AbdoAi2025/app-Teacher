@@ -39,9 +39,10 @@ class SubscriptionPlansController extends GetxController {
       if (plansResult.isSuccess) {
         appLog("SubscriptionPlansController loadAllData plansResult.data: ${plansResult.data}");
 
-        var allPlans = plansResult.data
-            ?.map((model) => SubscriptionPlanItemUiState.fromModel(model))
-            .toList() ?? List.empty();
+        var planModels = plansResult.data ?? <SubscriptionPlanModel>[];
+        var allPlans = planModels
+            .map((model) => SubscriptionPlanItemUiState.fromModel(model))
+            .toList();
 
         appLog("SubscriptionPlansController all mapped plans: $allPlans");
         appLog("SubscriptionPlansController all mapped plans length: ${allPlans.length}");
@@ -92,6 +93,7 @@ class SubscriptionPlansController extends GetxController {
 
         _updateState(SubscriptionPlansStateSuccess(
           plans: plans,
+          planModels: planModels,
           currentSubscription: currentSubscription,
         ));
       } else {

@@ -255,6 +255,32 @@ final Map<String, String> ar = {
   "month": "شهر",
   "year": "سنة",
 
+  // In-App Purchase
+  "Error": "خطأ",
+  "In-app purchase not available": "المشتريات داخل التطبيق غير متاحة",
+  "Product not found": "المنتج غير موجود",
+  "Failed to initiate purchase": "فشل في بدء عملية الشراء",
+  "Processing": "جاري المعالجة",
+  "Purchase is being processed": "جاري معالجة عملية الشراء",
+  "Purchase failed": "فشل في الشراء",
+  "Cancelled": "ملغي",
+  "Purchase was cancelled": "تم إلغاء عملية الشراء",
+  "Success": "نجح",
+  "Purchase completed successfully": "تم الشراء بنجاح",
+  "Failed to verify purchase": "فشل في التحقق من الشراء",
+  "Failed to complete purchase": "فشل في إتمام عملية الشراء",
+  "Info": "معلومات",
+  "Restore completed": "تم الاستعادة",
+  "Failed to restore purchases": "فشل في استعادة المشتريات",
+  "Monthly Plan": "خطة شهرية",
+  "Annual Plan": "خطة سنوية",
+  "Confirm Purchase": "تأكيد الشراء",
+  "Plan": "الخطة",
+  "Type": "النوع",
+  "Price": "السعر",
+  "Are you sure you want to purchase this subscription?": "هل أنت متأكد من شراء هذا الاشتراك؟",
+  "Purchase": "شراء",
+
 };
 
 /*

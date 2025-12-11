@@ -12,6 +12,7 @@ import 'package:teacher_app/widgets/primary_button_widget.dart';
 import '../../generated/assets.dart';
 import '../../widgets/app_password_field_widget.dart';
 import '../../widgets/app_toolbar_widget.dart';
+import '../../widgets/environment_display_widget.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -39,6 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
             spacing: 20,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const EnvironmentDisplayWidget(),
               Image(
                 image: AssetImage(Assets.imagesLogo),
                 height: 200,
@@ -93,6 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
       ],
     );
   }
+
 
   void onLoginClick() {
     controller.login().listen(

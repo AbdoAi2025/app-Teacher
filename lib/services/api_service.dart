@@ -150,27 +150,11 @@ import 'package:talker_dio_logger/talker_dio_logger.dart';
 import 'package:teacher_app/appSetting/appSetting.dart';
 import 'package:teacher_app/app_mode.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
+import 'package:teacher_app/services/environment_service.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
 
-const String prodBaseUrl = "https://assistant-app-2136afb92d95.herokuapp.com";
-const String devBaseUrl = "https://assistant-app-2136afb92d95.herokuapp.com";
-const String localBaseUrlOrange = "http://192.168.2.179:8080";
-const String localBaseUrlTpLink = "http://192.168.1.105:8080";
-const String localBaseUrlOnePlusLink = "http://10.168.113.129:8080";
-const String localBaseUrlVodafone = "http://192.168.8.176:8080";
-// const String localBaseUrlOnPlus = "http://192.168.212.129:8080";
-// const String localBaseUrl = "http://192.168.100.70:8080";
 
-// const String localBaseUrl = localBaseUrlVodafone;
-const String localBaseUrl = localBaseUrlOrange;
-// const String localBaseUrl = localBaseUrlTpLink;
-// const String localBaseUrl = localBaseUrlOnePlusLink;
 
-var baseUrl = switch (AppMode.mode) {
-  AppMode.dev => devBaseUrl,
-  AppMode.local => localBaseUrl,
-  _ => prodBaseUrl
-};
 
 // Create Alice with the navigator key
 // final alice = Alice(navigatorKey: navigatorKey);
@@ -227,7 +211,7 @@ class ApiService {
     appLog("setting header");
 
     dio.options = BaseOptions(
-      baseUrl: baseUrl,
+      baseUrl: EnvironmentService.baseUrl,
       connectTimeout: Duration(seconds: 30),
       receiveTimeout: Duration(seconds: 30),
       headers: {

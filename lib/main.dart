@@ -18,6 +18,9 @@ import 'localization/app_translation.dart';
 
 import 'navigation/my_route_observer.dart';
 import 'services/api_service.dart';
+import 'services/in_app_purchase_service.dart';
+import 'services/environment_service.dart';
+import 'app_mode.dart';
 
 Locale? appLocale;
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -42,8 +45,12 @@ void main() async {
   );
 
   initAppLocale();
+  await initAppEnvironment();
 
   await AppSetting.initAppVersion();
+
+  // Initialize in-app purchase service
+  Get.put(InAppPurchaseService());
 
   runApp(MyApp());
 }
@@ -169,6 +176,19 @@ Future<void> initAppLocale() async {
   appLocale = Locale(lang , country);
   AppLocalizationUtils.setLocale(AppLocaleModel(language: lang, country: country));
   Get.locale = appLocale;
+}
+
+Future<void> initAppEnvironment() async {
+  try {
+    final savedEnvironment = await EnvironmentService.getEnvironment();
+    AppMode.mode = savedEnvironment;
+    await EnvironmentService.loadCustomLocalUrl();
+    appLog("App environment initialized: ${EnvironmentService.getEnvironmentName(savedEnvironment)}");
+    appLog("Custom local URL: ${EnvironmentService.currentCustomLocalUrl}");
+  } catch (e) {
+    appLog("Error initializing app environment: $e");
+    AppMode.mode = AppMode.defaultMode; // Default fallback
+  }
 }
 
 

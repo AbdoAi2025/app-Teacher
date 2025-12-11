@@ -12,6 +12,7 @@ class SubscriptionPlanModel {
   final DateTime? updatedAt;
   final String? descriptionAr;
   final String? descriptionEn;
+  final String? purchaseCode;
 
   SubscriptionPlanModel({
     this.planCode,
@@ -27,6 +28,7 @@ class SubscriptionPlanModel {
     this.updatedAt,
     this.descriptionAr,
     this.descriptionEn,
+    this.purchaseCode,
   });
 
   factory SubscriptionPlanModel.fromJson(Map<String, dynamic> json) {
@@ -48,6 +50,7 @@ class SubscriptionPlanModel {
           : null,
       descriptionAr: json['descriptionAr'] as String?,
       descriptionEn: json['descriptionEn'] as String?,
+      purchaseCode: json['purchaseCode'] as String?,
     );
   }
 
@@ -66,6 +69,7 @@ class SubscriptionPlanModel {
       'updatedAt': updatedAt?.toIso8601String(),
       'descriptionAr': descriptionAr,
       'descriptionEn': descriptionEn,
+      'purchaseCode': purchaseCode,
     };
   }
 }

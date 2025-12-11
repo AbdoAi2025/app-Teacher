@@ -138,9 +138,11 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
           );
         }
         final plan = state.plans[index - 1];
+        final planModel = state.planModels[index - 1];
         final isCurrentPlan = controller.isCurrentPlan(plan);
         return SubscriptionPlanItem(
           plan: plan,
+          planModel: planModel,
           isCurrentPlan: isCurrentPlan,
           planIndex: index - 1,
           onTap: () => controller.onPlanSelected(plan),

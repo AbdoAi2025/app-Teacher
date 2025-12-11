@@ -11,6 +11,7 @@ import 'package:teacher_app/utils/open_store_utils.dart';
 
 import '../../presentation/app_message_dialogs.dart';
 import '../../utils/whatsapp_utils.dart';
+import '../../widgets/environment_display_widget.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -31,13 +32,29 @@ class _SplashscreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                fit: BoxFit.fill,
-                image: AssetImage(Assets.imagesSplashScreen))),
+      body: Stack(
+        children: [
+          Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    fit: BoxFit.fill,
+                    image: AssetImage(Assets.imagesSplashScreen))),
+          ),
+          Positioned(
+            top: 60,
+            left: 20,
+            right: 20,
+            child: Row(
+              children: [
+                const EnvironmentDisplayWidget(),
+                IconButton(onPressed: onRefresh, icon: Icon(Icons.refresh))
+
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -74,5 +91,9 @@ class _SplashscreenState extends State<SplashScreen> {
         }
       },
     );
+  }
+
+  void onRefresh() {
+    splashController.retry();
   }
 }

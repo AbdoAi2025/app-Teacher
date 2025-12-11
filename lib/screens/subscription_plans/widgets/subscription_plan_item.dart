@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/screens/subscription_plans/states/subscription_plan_item_ui_state.dart';
+import 'package:teacher_app/services/in_app_purchase_service.dart';
+import 'package:teacher_app/domain/models/subscription_plan_model.dart';
 
 class SubscriptionPlanItem extends StatelessWidget {
   final SubscriptionPlanItemUiState plan;
+  final SubscriptionPlanModel planModel;
   final VoidCallback onTap;
   final bool isCurrentPlan;
   final int planIndex;
@@ -11,6 +14,7 @@ class SubscriptionPlanItem extends StatelessWidget {
   const SubscriptionPlanItem({
     super.key,
     required this.plan,
+    required this.planModel,
     required this.onTap,
     this.isCurrentPlan = false,
     this.planIndex = 0,
@@ -268,9 +272,7 @@ class SubscriptionPlanItem extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () {
-          // Handle monthly selection
-        },
+        onTap: () => _handleMonthlyPurchase(),
         borderRadius: BorderRadius.circular(12),
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
@@ -321,9 +323,7 @@ class SubscriptionPlanItem extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () {
-          // Handle annual selection
-        },
+        onTap: () => _handleAnnualPurchase(),
         borderRadius: BorderRadius.circular(12),
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
@@ -500,6 +500,75 @@ class SubscriptionPlanItem extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  void _handleMonthlyPurchase() async {
+    if (isCurrentPlan) return; // Don't allow purchase if already current plan
+
+    final purchaseService = Get.find<InAppPurchaseService>();
+
+    // Show confirmation dialog
+    bool? confirmed = await _showPurchaseConfirmationDialog(
+      title: 'Monthly Plan'.tr,
+      price: plan.formattedMonthlyPrice,
+    );
+
+    if (confirmed == true) {
+      await purchaseService.purchaseSubscription(planModel, isMonthly: true);
+    }
+  }
+
+  void _handleAnnualPurchase() async {
+    if (isCurrentPlan) return; // Don't allow purchase if already current plan
+
+    final purchaseService = Get.find<InAppPurchaseService>();
+
+    // Show confirmation dialog
+    bool? confirmed = await _showPurchaseConfirmationDialog(
+      title: 'Annual Plan'.tr,
+      price: plan.formattedAnnualPrice,
+    );
+
+    if (confirmed == true) {
+      await purchaseService.purchaseSubscription(planModel, isMonthly: false);
+    }
+  }
+
+  Future<bool?> _showPurchaseConfirmationDialog({
+    required String title,
+    required String price,
+  }) async {
+    return await Get.dialog<bool>(
+      AlertDialog(
+        title: Text('Confirm Purchase'.tr),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Plan'.tr + ': ${plan.planName}'),
+            SizedBox(height: 8),
+            Text('Type'.tr + ': $title'),
+            SizedBox(height: 8),
+            Text('Price'.tr + ': $price'),
+            SizedBox(height: 16),
+            Text(
+              'Are you sure you want to purchase this subscription?'.tr,
+              style: TextStyle(fontWeight: FontWeight.w500),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(result: false),
+            child: Text('Cancel'.tr),
+          ),
+          ElevatedButton(
+            onPressed: () => Get.back(result: true),
+            child: Text('Purchase'.tr),
+          ),
+        ],
+      ),
     );
   }
 }
