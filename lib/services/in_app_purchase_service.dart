@@ -1,21 +1,17 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
-import 'package:teacher_app/services/environment_service.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
 import 'package:teacher_app/widgets/dialog_loading_widget.dart';
-
 import '../screens/subscription_plans/states/subscription_plan_item_ui_state.dart';
 import '../models/verify_purchase_request.dart';
-import '../models/verify_purchase_response.dart';
 import '../enums/billing_period.dart';
 import '../domain/usecases/verify_google_play_purchase_use_case.dart';
-import '../base/AppResult.dart';
 
 class InAppPurchaseService extends GetxService {
+
   final InAppPurchase _inAppPurchase = InAppPurchase.instance;
   late StreamSubscription<List<PurchaseDetails>> _subscription;
   RxBool isAvailable = false.obs;
@@ -30,17 +26,6 @@ class InAppPurchaseService extends GetxService {
   // Use case for subscription verification
   final VerifyGooglePlayPurchaseUseCase _verifyPurchaseUseCase = VerifyGooglePlayPurchaseUseCase();
 
-  // Testing mode flag - active when debug, dev, or local
-  bool get isTestMode => false;//kDebugMode || AppMode.isDev || AppMode.isLocal;
-
-  // Test product IDs for different platforms
-  final Map<String, String> _testProductIds = {
-    'android_test_purchased': 'android.test.purchased',
-    'android_test_canceled': 'android.test.canceled',
-    'android_test_refunded': 'android.test.refunded',
-    'android_test_unavailable': 'android.test.item_unavailable',
-    'ios_test_subscription': 'your_ios_test_subscription_id',
-  };
 
   @override
   Future<void> onInit() async {
@@ -60,25 +45,12 @@ class InAppPurchaseService extends GetxService {
     _log("initializePurchases");
     try {
       isAvailable.value = await _inAppPurchase.isAvailable();
-
-      if (isTestMode) {
-        _log("=== IN-APP PURCHASE TESTING MODE ACTIVE ===");
-        _log("Environment: ${AppMode.isDev ? 'DEV' : AppMode.isLocal ? 'LOCAL' : 'DEBUG'}");
-        _log("Debug mode: $kDebugMode");
-        _log("==========================================");
-      }
-
       if (isAvailable.value) {
         _subscription = _inAppPurchase.purchaseStream.listen(
           _onPurchaseUpdated,
           onDone: () => _log("Purchase stream done"),
           onError: (error) => _log("Purchase stream error: $error"),
         );
-
-        // Load test products if in test mode
-        if (isTestMode) {
-          await _loadTestProducts();
-        }
 
         // await getCurrentSubscriptions();
       }
@@ -88,23 +60,8 @@ class InAppPurchaseService extends GetxService {
     }
   }
 
-  Future<void> _loadTestProducts() async {
-    List<String> testProducts = [];
-
-    if (Platform.isAndroid) {
-      testProducts.addAll(_testProductIds.values.where((id) => id.startsWith('android')));
-    } else if (Platform.isIOS) {
-      // Add your actual iOS test product IDs here
-      testProducts.add(_testProductIds['ios_test_subscription']!);
-    }
-
-    if (testProducts.isNotEmpty) {
-      _log("Loading test products: $testProducts");
-      await loadMultipleProducts(testProducts);
-    }
-  }
-
   Future<ProductDetails?> loadProducts(String productId) async {
+
     if (!isAvailable.value) {
       _log("loadProducts In-app purchase not available");
       return null;
@@ -192,7 +149,6 @@ class InAppPurchaseService extends GetxService {
 
       _log("purchaseSubscription products count:${products.length}");
       _log("purchaseSubscription plan purchaseCode:${plan.purchaseCode}");
-      _log("purchaseSubscription isTestMode:$isTestMode");
 
       // Determine product ID based on environment
       String productId = _getProductId(plan, isMonthly);
@@ -204,13 +160,6 @@ class InAppPurchaseService extends GetxService {
         'isMonthly': isMonthly,
         'subscriptionPlanCode': plan.purchaseCode ?? '',
       };
-
-      // Special handling for Android test products
-      if (isTestMode && Platform.isAndroid && productId.startsWith('android.test.')) {
-        _log("Handling Android test product directly: $productId");
-        // Show test product selector dialog
-        return await _showTestProductSelector(plan, isMonthly);
-      }
 
       // Find the product for real products
       ProductDetails? product = products.firstWhereOrNull(
@@ -531,12 +480,6 @@ class InAppPurchaseService extends GetxService {
     try {
       _log("Loading current subscriptions...");
 
-      if (isTestMode) {
-        // In test mode, simulate having an active subscription
-        await _loadTestSubscription();
-        return;
-      }
-
       // Query past purchases
       await _inAppPurchase.restorePurchases();
 
@@ -632,115 +575,6 @@ class InAppPurchaseService extends GetxService {
     }
   }
 
-  // Verify subscription with Google Play (requires backend)
-  Future<bool> verifyGooglePlaySubscription(PurchaseDetails purchaseDetails) async {
-    try {
-      _log("Verifying Google Play subscription...");
-
-      if (!Platform.isAndroid) {
-        _log("Not Android platform, skipping Google Play verification");
-        return false;
-      }
-
-      final receiptData = purchaseDetails.verificationData.serverVerificationData;
-      final productId = purchaseDetails.productID;
-
-      _log("Product ID: $productId");
-      _log("Receipt data length: ${receiptData.length}");
-
-      // Parse local receipt info
-      final receiptInfo = _parseGooglePlayReceipt(receiptData);
-      if (receiptInfo == null) {
-        _log("Failed to parse receipt data");
-        return false;
-      }
-
-      // TODO: Send to your backend to verify with Google Play API
-      // Your backend should call:
-      // https://androidpublisher.googleapis.com/androidpublisher/v3/applications/{packageName}/purchases/subscriptions/{subscriptionId}/tokens/{token}
-
-      final verificationResult = await _verifyWithBackendGooglePlay(
-        productId: productId,
-        purchaseToken: receiptInfo['purchaseToken'],
-        packageName: 'your.package.name', // Replace with your package name
-      );
-
-      if (verificationResult != null && verificationResult['isValid'] == true) {
-        // Extract expiry date from verification result
-        final expiryTimeMillis = verificationResult['expiryTimeMillis'];
-        if (expiryTimeMillis != null) {
-          subscriptionExpiryDate.value = DateTime.fromMillisecondsSinceEpoch(
-            int.parse(expiryTimeMillis.toString())
-          );
-        }
-
-        // Extract auto-renew status
-        isAutoRenewing.value = verificationResult['autoRenewing'] ?? false;
-
-        _log("Subscription verified. Expires: ${subscriptionExpiryDate.value}");
-        _log("Auto-renewing: ${isAutoRenewing.value}");
-
-        return true;
-      }
-
-      return false;
-
-    } catch (e) {
-      _log("Error verifying Google Play subscription: $e");
-      return false;
-    }
-  }
-
-  // Call your backend to verify with Google Play API
-  Future<Map<String, dynamic>?> _verifyWithBackendGooglePlay({
-    required String productId,
-    required String purchaseToken,
-    required String packageName,
-  }) async {
-    try {
-      _log("Calling backend for Google Play verification...");
-
-      // TODO: Replace with actual API call to your backend
-      // Your backend should make this call to Google Play:
-      /*
-      final response = await http.get(
-        Uri.parse('https://androidpublisher.googleapis.com/androidpublisher/v3/applications/$packageName/purchases/subscriptions/$productId/tokens/$purchaseToken'),
-        headers: {
-          'Authorization': 'Bearer $accessToken', // Google Play API access token
-        },
-      );
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        return {
-          'isValid': true,
-          'expiryTimeMillis': data['expiryTimeMillis'],
-          'autoRenewing': data['autoRenewing'] == true,
-          'orderId': data['orderId'],
-          'purchaseState': data['purchaseState'], // 0 = purchased, 1 = cancelled
-          'paymentState': data['paymentState'], // 0 = pending, 1 = received, 2 = free trial, 3 = pending deferred upgrade/downgrade
-        };
-      }
-      */
-
-      // For now, simulate the response
-      await Future.delayed(Duration(seconds: 1));
-
-      return {
-        'isValid': true,
-        'expiryTimeMillis': DateTime.now().add(Duration(days: 30)).millisecondsSinceEpoch,
-        'autoRenewing': true,
-        'orderId': 'test_order_${DateTime.now().millisecondsSinceEpoch}',
-        'purchaseState': 0, // purchased
-        'paymentState': 1, // received
-      };
-
-    } catch (e) {
-      _log("Backend verification failed: $e");
-      return null;
-    }
-  }
-
   // Load test subscription for test mode
   Future<void> _loadTestSubscription() async {
     _log("Loading test subscription data");
@@ -766,293 +600,12 @@ class InAppPurchaseService extends GetxService {
 
   // Get appropriate product ID based on environment
   String _getProductId(SubscriptionPlanItemUiState plan, bool isMonthly) {
-
-    if (isTestMode) {
-      // Use test products in testing mode
-      if (Platform.isAndroid) {
-        return _testProductIds['android_test_purchased']!;
-      } else if (Platform.isIOS) {
-        return _testProductIds['ios_test_subscription']!;
-      }
-    }
-
     var purchaseCode = plan.purchaseCode ?? "";
     purchaseCode += isMonthly ? (plan.planCode.endsWith('_200') ? '_month_200' : '_month') : (plan.planCode.endsWith('_200') ? '_yearly_200' : '_yearly');
     _log("_getProductId purchaseCode:$purchaseCode, plan:${plan.toJson()}");
     return purchaseCode;
   }
 
-  // Show test product selector dialog
-  Future<bool> _showTestProductSelector(SubscriptionPlanItemUiState plan, bool isMonthly) async {
-    final Completer<bool> completer = Completer<bool>();
-
-    Get.dialog(
-      AlertDialog(
-        title: Row(
-          children: [
-            Icon(Icons.bug_report, color: Colors.orange),
-            SizedBox(width: 8),
-            Text("Test Purchase Simulator".tr),
-          ],
-        ),
-        content: SizedBox(
-          width: double.maxFinite,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Select test scenario:".tr,
-                style: TextStyle(fontWeight: FontWeight.w600),
-              ),
-              SizedBox(height: 16),
-              ..._buildTestOptions().map((option) {
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton.icon(
-                      onPressed: () async {
-                        Get.back();
-                        final result = await _simulateTestPurchase(option, plan, isMonthly);
-                        completer.complete(result);
-                      },
-                      icon: Icon(option['icon'] as IconData, size: 20),
-                      label: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            option['title'] as String,
-                            style: TextStyle(fontWeight: FontWeight.w600),
-                          ),
-                          Text(
-                            option['description'] as String,
-                            style: TextStyle(fontSize: 12),
-                          ),
-                        ],
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: option['color'] as Color,
-                        foregroundColor: Colors.white,
-                        alignment: Alignment.centerLeft,
-                        padding: EdgeInsets.all(12),
-                      ),
-                    ),
-                  ),
-                );
-              }),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Get.back();
-              completer.complete(false);
-            },
-            child: Text("Cancel".tr),
-          ),
-        ],
-      ),
-      barrierDismissible: false,
-    );
-
-    return completer.future;
-  }
-
-  List<Map<String, dynamic>> _buildTestOptions() {
-    return [
-      {
-        'id': 'android.test.purchased',
-        'title': 'Successful Purchase',
-        'description': 'Simulate successful payment',
-        'icon': Icons.check_circle,
-        'color': Colors.green,
-      },
-      {
-        'id': 'android.test.canceled',
-        'title': 'Cancelled Purchase',
-        'description': 'User cancels payment dialog',
-        'icon': Icons.cancel,
-        'color': Colors.orange,
-      },
-      {
-        'id': 'android.test.refunded',
-        'title': 'Refunded Purchase',
-        'description': 'Payment refunded by store',
-        'icon': Icons.replay,
-        'color': Colors.blue,
-      },
-      {
-        'id': 'android.test.item_unavailable',
-        'title': 'Product Unavailable',
-        'description': 'Product not available for purchase',
-        'icon': Icons.error,
-        'color': Colors.red,
-      },
-    ];
-  }
-
-  Future<bool> _simulateTestPurchase(Map<String, dynamic> testOption, SubscriptionPlanItemUiState plan, bool isMonthly) async {
-    final String testProductId = testOption['id'];
-    final String title = testOption['title'];
-
-    _log("=== SIMULATING TEST PURCHASE ===");
-    _log("Test Product: $testProductId");
-    _log("Scenario: $title");
-    _log("Plan: ${plan.planName}");
-    _log("Monthly: $isMonthly");
-    _log("===============================");
-
-    // Show processing indicator
-    Get.snackbar(
-      'Test Mode'.tr,
-      'Simulating: $title',
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: testOption['color'] as Color,
-      colorText: Colors.white,
-      duration: Duration(seconds: 2),
-    );
-
-    // Simulate processing time
-    await Future.delayed(Duration(milliseconds: 1500));
-
-    // Simulate different outcomes based on test product
-    switch (testProductId) {
-      case 'android.test.purchased':
-        await _simulateSuccessfulPurchase(plan);
-        return true;
-
-      case 'android.test.canceled':
-        await _simulateCancelledPurchase();
-        return false;
-
-      case 'android.test.refunded':
-        await _simulateRefundedPurchase(plan);
-        return true;
-
-      case 'android.test.item_unavailable':
-        await _simulateUnavailableProduct();
-        return false;
-
-      default:
-        return false;
-    }
-  }
-
-  Future<void> _simulateSuccessfulPurchase(SubscriptionPlanItemUiState plan) async {
-    _log("Simulating successful purchase completion");
-
-    // Simulate verification
-    Get.snackbar(
-      'Processing'.tr,
-      'Verifying purchase...'.tr,
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.orange,
-      colorText: Colors.white,
-      duration: Duration(seconds: 2),
-    );
-
-    await Future.delayed(Duration(seconds: 2));
-
-    // Show success
-    Get.snackbar(
-      'Success'.tr,
-      'Test purchase completed successfully!\nSubscription: ${plan.planName}'.tr,
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.green,
-      colorText: Colors.white,
-      duration: Duration(seconds: 4),
-    );
-  }
-
-  Future<void> _simulateCancelledPurchase() async {
-    _log("Simulating cancelled purchase");
-
-    Get.snackbar(
-      'Cancelled'.tr,
-      'Test purchase was cancelled by user',
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.grey,
-      colorText: Colors.white,
-      duration: Duration(seconds: 3),
-    );
-  }
-
-  Future<void> _simulateRefundedPurchase(SubscriptionPlanItemUiState plan) async {
-    _log("Simulating refunded purchase");
-
-    // First show success
-    Get.snackbar(
-      'Purchased'.tr,
-      'Test purchase completed',
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.green,
-      colorText: Colors.white,
-      duration: Duration(seconds: 2),
-    );
-
-    await Future.delayed(Duration(seconds: 2));
-
-    // Then show refund
-    Get.snackbar(
-      'Refunded'.tr,
-      'Test purchase was refunded',
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.blue,
-      colorText: Colors.white,
-      duration: Duration(seconds: 3),
-    );
-  }
-
-  Future<void> _simulateUnavailableProduct() async {
-    _log("Simulating unavailable product");
-
-    Get.snackbar(
-      'Error'.tr,
-      'Test product is currently unavailable',
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.red,
-      colorText: Colors.white,
-      duration: Duration(seconds: 3),
-    );
-  }
-
-  // Debug method to test purchase flow
-  Future<void> testPurchaseFlow() async {
-    if (!isTestMode) {
-      _log("testPurchaseFlow only available in test mode");
-      return;
-    }
-
-    _log("=== TESTING PURCHASE FLOW ===");
-
-    // Test product loading
-    await _loadTestProducts();
-
-    // Log available products
-    for (var product in products) {
-      _log("Available product: ${product.id} - ${product.title} - ${product.price}");
-    }
-
-    _log("============================");
-  }
-
-  // Quick test method to open test selector directly
-  Future<void> showTestSelector(SubscriptionPlanItemUiState plan, {bool isMonthly = true}) async {
-    if (!isTestMode) {
-      Get.snackbar(
-        'Error'.tr,
-        'Test mode not available in production',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
-      return;
-    }
-
-    await _showTestProductSelector(plan, isMonthly);
-  }
 
   void _log(String s) {
     appLog("InAppPurchaseService $s");
