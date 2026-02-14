@@ -3,22 +3,25 @@ import 'package:get/get.dart';
 import 'package:teacher_app/screens/subscription_plans/states/subscription_plan_item_ui_state.dart';
 import 'package:teacher_app/services/in_app_purchase_service.dart';
 import 'package:teacher_app/domain/models/subscription_plan_model.dart';
+import 'package:teacher_app/widgets/app_txt_widget.dart';
 
 class SubscriptionPlanItem extends StatelessWidget {
-  final SubscriptionPlanItemUiState plan;
-  final SubscriptionPlanModel planModel;
-  final VoidCallback onTap;
-  final bool isCurrentPlan;
+  final SubscriptionPlanItemUiState planUiModel;
+  final VoidCallback onMonthlyTap;
+  final VoidCallback onYearlyTap;
   final int planIndex;
 
   const SubscriptionPlanItem({
     super.key,
-    required this.plan,
-    required this.planModel,
-    required this.onTap,
-    this.isCurrentPlan = false,
+    required this.planUiModel,
+    required this.onMonthlyTap,
+    required this.onYearlyTap,
     this.planIndex = 0,
   });
+
+
+  bool get isCurrentPlan => planUiModel.isCurrentPlan;
+
 
   @override
   Widget build(BuildContext context) {
@@ -30,32 +33,29 @@ class SubscriptionPlanItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         side: _getBorderSide(context),
       ),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildHeader(context),
-              SizedBox(height: 8),
-              _buildDescription(context),
-              SizedBox(height: 16),
-              _buildFeatures(context),
-              SizedBox(height: 16),
-              if(isCurrentPlan && plan.formattedExpirationDate != null)
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildHeader(context),
+            SizedBox(height: 8),
+            _buildDescription(context),
+            SizedBox(height: 16),
+            _buildFeatures(context),
+            SizedBox(height: 16),
+            if(isCurrentPlan && planUiModel.formattedExpirationDate != null)...{
               _buildExpirationSection(context),
-              if(isCurrentPlan)
               SizedBox(height: 16),
-              if(isCurrentPlan)
+            },
+
+            if(isCurrentPlan && planUiModel.isExpired())...{
               _buildRenewButton(context),
-              if(isCurrentPlan)
               SizedBox(height: 16),
-              if(!isCurrentPlan)
-              _buildPricingSection(context),
-            ],
-          ),
+            },
+            if(planUiModel.isExpired() )
+            _buildPricingSection(context),
+          ],
         ),
       ),
     );
@@ -64,7 +64,7 @@ class SubscriptionPlanItem extends StatelessWidget {
   BorderSide _getBorderSide(BuildContext context) {
     if (isCurrentPlan) {
       return BorderSide(color: Colors.green, width: 3);
-    } else if (plan.isPopular) {
+    } else if (planUiModel.isPopular) {
       return BorderSide(color: Theme.of(context).primaryColor, width: 2);
     }
     return BorderSide.none;
@@ -76,16 +76,16 @@ class SubscriptionPlanItem extends StatelessWidget {
       children: [
         Expanded(
           child: Text(
-            plan.planName,
+            planUiModel.planName,
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.bold,
-              color: plan.isPopular ? Theme.of(context).primaryColor : null,
+              color: planUiModel.isPopular ? Theme.of(context).primaryColor : null,
             ),
           ),
         ),
         if (isCurrentPlan)
           _buildCurrentPlanBadge(context)
-        else if (plan.isPopular)
+        else if (planUiModel.isPopular)
           _buildPopularBadge(context),
       ],
     );
@@ -129,7 +129,7 @@ class SubscriptionPlanItem extends StatelessWidget {
 
   Widget _buildDescription(BuildContext context) {
     return Text(
-      plan.localizedDescription,
+      planUiModel.localizedDescription,
       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
         color: Colors.grey[600],
       ),
@@ -145,7 +145,7 @@ class SubscriptionPlanItem extends StatelessWidget {
           child: _buildFeatureItem(
             context,
             Icons.group,
-            plan.formattedStudentLimit,
+            planUiModel.formattedStudentLimit,
           ),
         ),
       ],
@@ -185,7 +185,7 @@ class SubscriptionPlanItem extends StatelessWidget {
           ),
           SizedBox(height: 8),
           Text(
-            plan.formattedExpirationDate!,
+            planUiModel.formattedExpirationDate!,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
               color: _getExpirationTextColor(),
               fontWeight: FontWeight.bold,
@@ -206,37 +206,21 @@ class SubscriptionPlanItem extends StatelessWidget {
 
   Widget _buildRenewButton(BuildContext context) {
     return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: onTap,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Theme.of(context).primaryColor,
-          foregroundColor: Colors.white,
-          elevation: 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+      child: Row(
+        children: [
+          Icon(
+            Icons.refresh,
+            size: 20,
           ),
-          padding: EdgeInsets.symmetric(vertical: 14),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.refresh,
-              size: 20,
-              color: Colors.white,
+          SizedBox(width: 8),
+          Text(
+            'Renew'.tr,
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 16,
             ),
-            SizedBox(width: 8),
-            Text(
-              'Renew'.tr,
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-                fontSize: 16,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -272,7 +256,7 @@ class SubscriptionPlanItem extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () => _handleMonthlyPurchase(),
+        onTap: () => onMonthlyTap(),
         borderRadius: BorderRadius.circular(12),
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
@@ -306,7 +290,7 @@ class SubscriptionPlanItem extends StatelessWidget {
               ),
               SizedBox(height: 4),
               Text(
-                plan.formattedMonthlyPrice,
+                planUiModel.formattedMonthlyPrice,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
@@ -323,7 +307,7 @@ class SubscriptionPlanItem extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () => _handleAnnualPurchase(),
+        onTap: () => onYearlyTap(),
         borderRadius: BorderRadius.circular(12),
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
@@ -361,7 +345,7 @@ class SubscriptionPlanItem extends StatelessWidget {
               ),
               SizedBox(height: 4),
               Text(
-                plan.formattedAnnualPrice,
+                planUiModel.formattedAnnualPrice,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: Colors.grey[700],
@@ -374,32 +358,16 @@ class SubscriptionPlanItem extends StatelessWidget {
     );
   }
 
-  Widget _buildTotalPriceBadge(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Text(
-        plan.formattedPrice,
-        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-          fontWeight: FontWeight.w600,
-          color: Theme.of(context).primaryColor,
-        ),
-      ),
-    );
-  }
 
   Widget _buildActionButton(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: isCurrentPlan ? null : onTap,
+        onPressed: null,
         style: ElevatedButton.styleFrom(
           backgroundColor: isCurrentPlan
               ? Colors.green
-              : (plan.isPopular
+              : (planUiModel.isPopular
                   ? Theme.of(context).primaryColor
                   : null),
           shape: RoundedRectangleBorder(
@@ -410,7 +378,7 @@ class SubscriptionPlanItem extends StatelessWidget {
         child: Text(
           isCurrentPlan ? 'Currently Active'.tr : 'Choose Plan'.tr,
           style: TextStyle(
-            color: isCurrentPlan || plan.isPopular ? Colors.white : null,
+            color: isCurrentPlan || planUiModel.isPopular ? Colors.white : null,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -419,10 +387,11 @@ class SubscriptionPlanItem extends StatelessWidget {
   }
 
   Color _getExpirationTextColor() {
-    if (plan.expirationDate == null) return Colors.grey[600]!;
+
+    if (planUiModel.expirationDate == null) return Colors.grey[600]!;
 
     final now = DateTime.now();
-    final expirationDate = plan.expirationDate!;
+    final expirationDate = planUiModel.expirationDate!;
     final daysRemaining = expirationDate.difference(now).inDays;
 
     if (daysRemaining < 0) {
@@ -438,10 +407,10 @@ class SubscriptionPlanItem extends StatelessWidget {
   }
 
   String _getRemainingDaysText() {
-    if (plan.expirationDate == null) return '';
+    if (planUiModel.expirationDate == null) return '';
 
     final now = DateTime.now();
-    final expirationDate = plan.expirationDate!;
+    final expirationDate = planUiModel.expirationDate!;
     final daysRemaining = expirationDate.difference(now).inDays;
 
     if (daysRemaining < 0) {
@@ -452,7 +421,7 @@ class SubscriptionPlanItem extends StatelessWidget {
         return '${'Expired'.tr} $daysExpired ${'days ago'.tr}';
       }
     } else if (daysRemaining == 0) {
-      return '${'Expires today'.tr}';
+      return 'Expires today'.tr;
     } else if (daysRemaining == 1) {
       return '${'Remaining Days'.tr}: 1 ${'day'.tr}';
     } else {
@@ -474,7 +443,7 @@ class SubscriptionPlanItem extends StatelessWidget {
 
     if (isCurrentPlan) {
       return Colors.green.shade50;
-    } else if (plan.isPopular) {
+    } else if (planUiModel.isPopular) {
       return Theme.of(context).primaryColor.withValues(alpha: 0.1);
     }
 
@@ -503,58 +472,193 @@ class SubscriptionPlanItem extends StatelessWidget {
     );
   }
 
-  void _handleMonthlyPurchase() async {
-    if (isCurrentPlan) return; // Don't allow purchase if already current plan
+  void _handleRenewPurchase() async {
+    if (!isCurrentPlan) return; // Only allow renewal for current plan
 
     final purchaseService = Get.find<InAppPurchaseService>();
 
-    // Show confirmation dialog
-    bool? confirmed = await _showPurchaseConfirmationDialog(
-      title: 'Monthly Plan'.tr,
-      price: plan.formattedMonthlyPrice,
-    );
+    // Determine if current plan is monthly or annual based on pricing or plan details
+    // For now, we'll show both options and let user choose
+    bool? renewalChoice = await _showRenewalChoiceDialog();
 
-    if (confirmed == true) {
-      await purchaseService.purchaseSubscription(planModel, isMonthly: true);
+    if (renewalChoice != null) {
+      bool isMonthly = renewalChoice;
+
+      // Show confirmation dialog with renewal details
+      bool? confirmed = await _showRenewalConfirmationDialog(
+        isMonthly: isMonthly,
+        price: isMonthly ? planUiModel.formattedMonthlyPrice : planUiModel.formattedAnnualPrice,
+      );
+
+      if (confirmed == true) {
+        await purchaseService.purchaseSubscription(planUiModel, isMonthly: isMonthly);
+      }
     }
   }
 
-  void _handleAnnualPurchase() async {
-    if (isCurrentPlan) return; // Don't allow purchase if already current plan
 
-    final purchaseService = Get.find<InAppPurchaseService>();
 
-    // Show confirmation dialog
-    bool? confirmed = await _showPurchaseConfirmationDialog(
-      title: 'Annual Plan'.tr,
-      price: plan.formattedAnnualPrice,
-    );
-
-    if (confirmed == true) {
-      await purchaseService.purchaseSubscription(planModel, isMonthly: false);
-    }
-  }
-
-  Future<bool?> _showPurchaseConfirmationDialog({
-    required String title,
-    required String price,
-  }) async {
+  Future<bool?> _showRenewalChoiceDialog() async {
     return await Get.dialog<bool>(
       AlertDialog(
-        title: Text('Confirm Purchase'.tr),
+        title: Row(
+          children: [
+            Icon(Icons.refresh, color: Theme.of(Get.context!).primaryColor),
+            SizedBox(width: 8),
+            Text('Renew Subscription'.tr),
+          ],
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Plan'.tr + ': ${plan.planName}'),
-            SizedBox(height: 8),
-            Text('Type'.tr + ': $title'),
-            SizedBox(height: 8),
-            Text('Price'.tr + ': $price'),
+            Text(
+              'Choose your renewal period:'.tr,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
             SizedBox(height: 16),
             Text(
-              'Are you sure you want to purchase this subscription?'.tr,
-              style: TextStyle(fontWeight: FontWeight.w500),
+              'Plan: ${planUiModel.planName}',
+              style: TextStyle(
+                color: Colors.grey[600],
+                fontSize: 14,
+              ),
+            ),
+            SizedBox(height: 16),
+            // Monthly option
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () => Get.back(result: true),
+                icon: Icon(Icons.calendar_view_month, size: 20),
+                label: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Monthly Renewal'.tr,
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    Text(
+                      planUiModel.formattedMonthlyPrice,
+                      style: TextStyle(fontSize: 12),
+                    ),
+                  ],
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(Get.context!).primaryColor,
+                  foregroundColor: Colors.white,
+                  alignment: Alignment.centerLeft,
+                  padding: EdgeInsets.all(16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 12),
+            // Annual option
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () => Get.back(result: false),
+                icon: Icon(Icons.calendar_today, size: 20),
+                label: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Annual Renewal'.tr,
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    Text(
+                      planUiModel.formattedAnnualPrice,
+                      style: TextStyle(fontSize: 12),
+                    ),
+                  ],
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.grey[700],
+                  foregroundColor: Colors.white,
+                  alignment: Alignment.centerLeft,
+                  padding: EdgeInsets.all(16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: Text('Cancel'.tr),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<bool?> _showRenewalConfirmationDialog({
+    required bool isMonthly,
+    required String price,
+  }) async {
+    final renewalType = isMonthly ? 'Monthly' : 'Annual';
+
+    return await Get.dialog<bool>(
+      AlertDialog(
+        title: Row(
+          children: [
+            Icon(Icons.refresh, color: Colors.green),
+            SizedBox(width: 8),
+            Text('Confirm Renewal'.tr),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.green.shade50,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.green.shade200),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Renewal Details'.tr,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.green.shade700,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Text('Plan: ${planUiModel.planName}'),
+                  Text('Type: ${renewalType.tr} Renewal'.tr),
+                  Text('Price: $price'),
+                ],
+              ),
+            ),
+            SizedBox(height: 16),
+            Text(
+              'Your current subscription will be extended for another ${renewalType.toLowerCase()} period.'.tr,
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey[600],
+              ),
+            ),
+            SizedBox(height: 16),
+            Text(
+              'Are you sure you want to renew this subscription?'.tr,
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
+              ),
             ),
           ],
         ),
@@ -563,9 +667,14 @@ class SubscriptionPlanItem extends StatelessWidget {
             onPressed: () => Get.back(result: false),
             child: Text('Cancel'.tr),
           ),
-          ElevatedButton(
+          ElevatedButton.icon(
             onPressed: () => Get.back(result: true),
-            child: Text('Purchase'.tr),
+            icon: Icon(Icons.refresh, size: 18),
+            label: Text('Confirm Renewal'.tr),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green,
+              foregroundColor: Colors.white,
+            ),
           ),
         ],
       ),

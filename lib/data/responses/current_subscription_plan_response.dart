@@ -38,6 +38,7 @@ class CurrentSubscriptionPlanResponse {
       subscriptionExpireDate: json['subscriptionExpireDate'] != null
           ? DateTime.tryParse(json['subscriptionExpireDate'].toString())
           : null,
+
       isSubscribed: json['isSubscribed'] as bool? ?? false,
       isExpired: json['isExpired'] as bool? ?? false,
       totalStudentCount: json['totalStudentCount'] as int?,

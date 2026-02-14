@@ -6,7 +6,6 @@ class SubscriptionPlanItemUiState {
   final String planCode;
   final String planName;
   final String description;
-  final double price;
   final double? monthlyPrice;
   final double? yearlyPrice;
   final int durationInDays;
@@ -17,17 +16,18 @@ class SubscriptionPlanItemUiState {
   final String? descriptionAr;
   final String? descriptionEn;
   final String? purchaseCode;
+  final bool isCurrentPlan;
 
   SubscriptionPlanItemUiState({
     required this.planCode,
     required this.planName,
     required this.description,
-    required this.price,
-    this.monthlyPrice,
-    this.yearlyPrice,
+    required this.monthlyPrice,
+    required this.yearlyPrice,
     required this.durationInDays,
     required this.studentLimit,
     required this.isActive,
+    required this.isCurrentPlan,
     this.isPopular = false,
     this.expirationDate,
     this.descriptionAr,
@@ -35,12 +35,11 @@ class SubscriptionPlanItemUiState {
     this.purchaseCode,
   });
 
-  factory SubscriptionPlanItemUiState.fromModel(SubscriptionPlanModel model) {
+  factory SubscriptionPlanItemUiState.fromModel(SubscriptionPlanModel model , bool isCurrentPlan) {
     return SubscriptionPlanItemUiState(
       planCode: model.planCode ?? "",
       planName: model.planName ?? "",
       description: model.description ?? "",
-      price: model.price ?? 0.0,
       monthlyPrice: model.monthlyPrice,
       yearlyPrice: model.yearlyPrice,
       durationInDays: model.durationInDays ?? 0,
@@ -49,10 +48,10 @@ class SubscriptionPlanItemUiState {
       descriptionAr: model.descriptionAr,
       descriptionEn: model.descriptionEn,
       purchaseCode: model.purchaseCode,
+      isCurrentPlan: isCurrentPlan,
     );
   }
 
-  String get formattedPrice => "${price.toStringAsFixed(0)} EGP";
   String get formattedStudentLimit => "${'Up to'.tr} $studentLimit ${'students'.tr}";
 
   // Get monthly and annual pricing from API
@@ -77,5 +76,28 @@ class SubscriptionPlanItemUiState {
       return descriptionEn?.isNotEmpty == true ? descriptionEn! :
              (descriptionAr?.isNotEmpty == true ? descriptionAr! : description);
     }
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'planCode': this.planCode,
+      'planName': this.planName,
+      'description': this.description,
+      'monthlyPrice': this.monthlyPrice,
+      'yearlyPrice': this.yearlyPrice,
+      'durationInDays': this.durationInDays,
+      'studentLimit': this.studentLimit,
+      'isActive': this.isActive,
+      'isPopular': this.isPopular,
+      'expirationDate': this.expirationDate,
+      'descriptionAr': this.descriptionAr,
+      'descriptionEn': this.descriptionEn,
+      'purchaseCode': this.purchaseCode,
+    };
+  }
+
+  bool isExpired() {
+    if (expirationDate == null) return true;
+    return expirationDate!.isBefore(DateTime.now());
   }
 }

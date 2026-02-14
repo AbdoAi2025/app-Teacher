@@ -1,25 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:teacher_app/screens/students_list/states/students_state.dart';
+import 'package:teacher_app/screens/subscription_plans/states/subscription_plan_item_ui_state.dart';
 import 'package:teacher_app/screens/subscription_plans/states/subscription_plans_state.dart';
 import 'package:teacher_app/screens/subscription_plans/subscription_plans_controller.dart';
 import 'package:teacher_app/screens/subscription_plans/widgets/subscription_plan_item.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
+import 'package:teacher_app/utils/message_utils.dart';
 import 'package:teacher_app/widgets/app_toolbar_widget.dart';
 
-class SubscriptionPlansScreen extends StatefulWidget {
-  const SubscriptionPlansScreen({Key? key}) : super(key: key);
+import '../../domain/usecases/get_my_students_list_use_case.dart';
+import '../../requests/get_my_students_request.dart';
+import '../../services/in_app_purchase_service.dart';
+import '../students_list/students_controller.dart';
+import 'bottomsheets/purchase_confirmation_bottom_sheet.dart';
 
+class SubscriptionPlansScreen extends StatefulWidget {
+  const SubscriptionPlansScreen({super.key});
   @override
   State<SubscriptionPlansScreen> createState() => _SubscriptionPlansScreenState();
 }
 
 class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
-  late SubscriptionPlansController controller;
+
+  // late SubscriptionPlansController controller = Get.put(SubscriptionPlansController());
+  late SubscriptionPlansController controller = Get.find();
+
+  // Initialize in-app purchase service
+  InAppPurchaseService purchaseService = Get.put(InAppPurchaseService());
 
   @override
   void initState() {
     super.initState();
-    controller = Get.put(SubscriptionPlansController());
+    purchaseService.initializePurchases();
   }
 
   @override
@@ -29,10 +42,10 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
       body: Obx(() {
         final state = controller.state.value;
         appLog("SubscriptionPlansScreen state:$state");
-        return switch (state.runtimeType) {
-          SubscriptionPlansStateLoading => _buildLoadingView(),
-          SubscriptionPlansStateSuccess => _buildSuccessView(context, state as SubscriptionPlansStateSuccess),
-          SubscriptionPlansStateError => _buildErrorView(context, state as SubscriptionPlansStateError),
+        return switch (state) {
+          SubscriptionPlansStateLoading() => _buildLoadingView(),
+          SubscriptionPlansStateSuccess() => _buildSuccessView(context, state),
+          SubscriptionPlansStateError() => _buildErrorView(context, state),
           _ => _buildEmptyView(),
         };
       }),
@@ -127,28 +140,73 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
     }
     return ListView.separated(
       padding: EdgeInsets.only(top: 16, bottom: 30, left: 16, right: 16),
-      itemCount: state.plans.length + 1, // +1 for header
+      itemCount: state.plans.length, // +1 for header
       itemBuilder: (context, index) {
-        if (index == 0) {
-          return Text(
-            'Subscription Plans'.tr,
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+
+        final plan = state.plans[index];
+
+        if(index == 0 ){
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 20,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if(plan.isCurrentPlan)...{
+                _title('Current Plan'.tr,),
+              }else ...{
+                _title('Subscription Plans'.tr,),
+              },
+              SubscriptionPlanItem(
+                planUiModel: plan,
+                planIndex: index - 1,
+                onMonthlyTap: () => onSubscribeTap(plan , true),
+                onYearlyTap: () => onSubscribeTap(plan , false),
+              ),
+               if(plan.isCurrentPlan)
+              _title('Subscription Plans'.tr,),
+            ],
           );
         }
-        final plan = state.plans[index - 1];
-        final planModel = state.planModels[index - 1];
-        final isCurrentPlan = controller.isCurrentPlan(plan);
+
         return SubscriptionPlanItem(
-          plan: plan,
-          planModel: planModel,
-          isCurrentPlan: isCurrentPlan,
-          planIndex: index - 1,
-          onTap: () => controller.onPlanSelected(plan),
+          planUiModel: plan,
+          planIndex: index,
+          onMonthlyTap: () => onSubscribeTap(plan , true),
+          onYearlyTap: () => onSubscribeTap(plan , false),
         );
       },
       separatorBuilder: (context, index) => SizedBox(height: 16),
     );
   }
+
+  _title(String title) => Text(
+    title,
+    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+      fontWeight: FontWeight.bold,
+    ),
+  );
+
+   onSubscribeTap(SubscriptionPlanItemUiState plan , bool isMonthly) async {
+
+     var teacherStudentsCount = 0;
+    if(teacherStudentsCount > plan.studentLimit ) {
+      showErrorMessagePopup("Can't subscribe this plan because you have $teacherStudentsCount students greater than plan limit (${plan.studentLimit})");
+      return;
+    }
+
+     final purchaseService = Get.find<InAppPurchaseService>();
+     // Show confirmation bottom sheet
+     bool? confirmed = await PurchaseConfirmationBottomSheet.show(
+       context,
+       planUiModel: plan,
+       title: isMonthly ? 'Monthly Plan'.tr : 'Annual Plan'.tr,
+       price: plan.formattedAnnualPrice,
+       isMonthly: isMonthly,
+     );
+
+     if (confirmed == true) {
+       await purchaseService.purchaseSubscription(plan, isMonthly: isMonthly);
+     }
+   }
+
 }

@@ -10,6 +10,7 @@ import 'package:teacher_app/screens/subscription_plans/states/subscription_plans
 import 'package:teacher_app/utils/LogUtils.dart';
 
 class SubscriptionPlansController extends GetxController {
+
   GetSubscriptionPlansUseCase getSubscriptionPlansUseCase = GetSubscriptionPlansUseCase();
   GetCurrentSubscriptionPlanUseCase getCurrentSubscriptionPlanUseCase = GetCurrentSubscriptionPlanUseCase();
 
@@ -37,48 +38,46 @@ class SubscriptionPlansController extends GetxController {
       appLog("SubscriptionPlansController loadAllData plansResult : $plansResult");
 
       if (plansResult.isSuccess) {
-        appLog("SubscriptionPlansController loadAllData plansResult.data: ${plansResult.data}");
-
         var planModels = plansResult.data ?? <SubscriptionPlanModel>[];
         var allPlans = planModels
-            .map((model) => SubscriptionPlanItemUiState.fromModel(model))
+            .map((model) => SubscriptionPlanItemUiState.fromModel(model , false))
             .toList();
-
-        appLog("SubscriptionPlansController all mapped plans: $allPlans");
-        appLog("SubscriptionPlansController all mapped plans length: ${allPlans.length}");
-
         CurrentSubscriptionPlanResponse? currentSubscription;
+
         if (currentSubscriptionResult.isSuccess) {
           currentSubscription = currentSubscriptionResult.data;
           appLog("SubscriptionPlansController currentSubscription: $currentSubscription");
         }
 
-        // Show all plans regardless of active status for now
-        var plans = allPlans;
-
         // Sort plans to show current subscription first and update current plan with expiration date
         if (currentSubscription != null) {
           // Update the current plan with expiration date
-          for (int i = 0; i < plans.length; i++) {
-            if (plans[i].planCode == currentSubscription.planCode) {
-              plans[i] = SubscriptionPlanItemUiState(
-                planCode: plans[i].planCode,
-                planName: plans[i].planName,
-                description: plans[i].description,
-                price: plans[i].price,
-                durationInDays: plans[i].durationInDays,
-                studentLimit: plans[i].studentLimit,
-                isActive: plans[i].isActive,
-                isPopular: plans[i].isPopular,
-                expirationDate: currentSubscription.subscriptionExpireDate,
-                descriptionAr: plans[i].descriptionAr,
-                descriptionEn: plans[i].descriptionEn,
+          for (int i = 0; i < allPlans.length; i++) {
+
+            var planItemUiModel = allPlans[i];
+
+            if (planItemUiModel.planCode == currentSubscription.planCode) {
+              allPlans[i] = SubscriptionPlanItemUiState(
+                planCode: planItemUiModel.planCode,
+                planName: planItemUiModel.planName,
+                description: planItemUiModel.description,
+                monthlyPrice: planItemUiModel.monthlyPrice,
+                yearlyPrice: planItemUiModel.yearlyPrice,
+                durationInDays: planItemUiModel.durationInDays,
+                studentLimit: planItemUiModel.studentLimit,
+                isActive:  true,
+                isPopular: planItemUiModel.isPopular,
+                expirationDate: currentSubscription.subscriptionExpireDate,//DateTime.tryParse('2026-02-10T18:26:39.000+00:00'.toString())
+                descriptionAr: planItemUiModel.descriptionAr,
+                descriptionEn: planItemUiModel.descriptionEn,
+                isCurrentPlan: true,
+                purchaseCode: planItemUiModel.purchaseCode,
               );
               break;
             }
           }
 
-          plans.sort((a, b) {
+          allPlans.sort((a, b) {
             bool aIsCurrent = a.planCode == currentSubscription!.planCode;
             bool bIsCurrent = b.planCode == currentSubscription.planCode;
 
@@ -88,12 +87,11 @@ class SubscriptionPlansController extends GetxController {
           });
         }
 
-        appLog("SubscriptionPlansController sorted plans: $plans");
-        appLog("SubscriptionPlansController plans length: ${plans.length}");
+        appLog("SubscriptionPlansController sorted plans: $allPlans");
+        appLog("SubscriptionPlansController plans length: ${allPlans.length}");
 
         _updateState(SubscriptionPlansStateSuccess(
-          plans: plans,
-          planModels: planModels,
+          plans: allPlans,
           currentSubscription: currentSubscription,
         ));
       } else {
@@ -164,4 +162,6 @@ class SubscriptionPlansController extends GetxController {
     );
     // TODO: Navigate to purchase/payment screen
   }
+
+
 }

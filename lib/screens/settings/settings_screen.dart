@@ -15,6 +15,9 @@ import '../../domain/usecases/change_app_locale_use_case.dart';
 import '../../navigation/app_navigator.dart';
 import '../../navigation/app_routes.dart';
 import '../../widgets/app_toolbar_widget.dart';
+import '../subscription_plans/states/subscription_plans_state.dart';
+import '../subscription_plans/subscription_plans_controller.dart';
+import 'widgets/current_subscription_plan_bottom_sheet.dart';
 
 class SettingsScreen extends StatefulWidget{
 
@@ -25,6 +28,9 @@ class SettingsScreen extends StatefulWidget{
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+
+  SubscriptionPlansController subscriptionPlansController = Get.put(SubscriptionPlansController());
+
   get appVersion => AppSetting.getAppSetting().appVersion;
 
   @override
@@ -146,6 +152,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   void onMySubscriptionClick() {
     AppNavigator.navigateToSubscriptionPlans();
+    //
+    // if(subscriptionPlansController.state.value is! SubscriptionPlansStateSuccess){
+    //   subscriptionPlansController.loadAllData();
+    // }
+    // CurrentSubscriptionPlanBottomSheet.show(context, subscriptionPlansController);
   }
 
   void onDeleteAccount() {

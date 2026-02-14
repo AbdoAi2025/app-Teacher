@@ -49,8 +49,6 @@ void main() async {
 
   await AppSetting.initAppVersion();
 
-  // Initialize in-app purchase service
-  Get.put(InAppPurchaseService());
 
   runApp(MyApp());
 }
