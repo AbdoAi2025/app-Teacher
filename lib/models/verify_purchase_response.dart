@@ -1,3 +1,5 @@
+import 'package:teacher_app/utils/safe_json_access.dart';
+
 import '../enums/billing_period.dart';
 
 class VerifyPurchaseResponse {
@@ -41,26 +43,26 @@ class VerifyPurchaseResponse {
 
   factory VerifyPurchaseResponse.fromJson(Map<String, dynamic> json) {
     return VerifyPurchaseResponse(
-      userId: json['userId'],
-      teacherId: json['teacherId'],
-      subscriptionPlanCode: json['subscriptionPlanCode'],
-      subscriptionPlanName: json['subscriptionPlanName'],
-      expirationDate: json['expirationDate'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(json['expirationDate'])
+      userId: json.tryString('userId'),
+      teacherId: json.tryString('teacherId'),
+      subscriptionPlanCode: json.tryString('subscriptionPlanCode'),
+      subscriptionPlanName: json.tryString('subscriptionPlanName'),
+      expirationDate: json.tryInt('expirationDate') != null
+          ? DateTime.fromMillisecondsSinceEpoch(json.tryInt('expirationDate')!)
           : null,
-      billingPeriod: json['billingPeriod'] != null
-          ? BillingPeriod.fromJson(json['billingPeriod'])
+      billingPeriod: json.tryString('billingPeriod') != null
+          ? BillingPeriod.fromJson(json.tryString('billingPeriod')!)
           : null,
-      amountCharged: json['amountCharged']?.toDouble(),
-      actionType: json['actionType'],
-      previousPlanName: json['previousPlanName'],
-      verified: json['verified'] ?? false,
-      success: json['success'] ?? false,
-      message: json['message'] ?? '',
-      purchaseToken: json['purchaseToken'],
-      orderId: json['orderId'],
-      purchaseTime: json['purchaseTime'],
-      purchaseState: json['purchaseState'],
+      amountCharged: json.tryDouble('amountCharged'),
+      actionType: json.tryString('actionType'),
+      previousPlanName: json.tryString('previousPlanName'),
+      verified: json.tryBool('verified') ?? false,
+      success: json.tryBool('success') ?? false,
+      message: json.tryString('message') ?? '',
+      purchaseToken: json.tryString('purchaseToken'),
+      orderId: json.tryString('orderId'),
+      purchaseTime: json.tryInt('purchaseTime'),
+      purchaseState: json.tryString('purchaseState'),
     );
   }
 

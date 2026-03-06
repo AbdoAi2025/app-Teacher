@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:in_app_purchase_android/in_app_purchase_android.dart';
+import 'package:in_app_purchase_android/billing_client_wrappers.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
 import 'package:teacher_app/widgets/dialog_loading_widget.dart';
 import '../screens/subscription_plans/states/subscription_plan_item_ui_state.dart';
@@ -154,11 +156,15 @@ class InAppPurchaseService extends GetxService {
       String productId = _getProductId(plan, isMonthly);
       _log("purchaseSubscription using productId:$productId");
 
+      // Get base plan ID for subscription
+      String basePlanId = _getBasePlanId(plan, isMonthly);
+
       // Store purchase context for verification
       _purchaseContext[productId] = {
         'plan': plan,
         'isMonthly': isMonthly,
         'subscriptionPlanCode': plan.purchaseCode ?? '',
+        'basePlanId': basePlanId,
       };
 
       // Find the product for real products
@@ -182,18 +188,46 @@ class InAppPurchaseService extends GetxService {
         return false;
       }
 
-      // Create purchase param
-      final PurchaseParam purchaseParam = PurchaseParam(
-        productDetails: product,
-      );
 
-      // Initiate purchase
-      bool success;
-      if (product.id.contains('subscription') || isMonthly || !isMonthly) {
-        success = await _inAppPurchase.buyNonConsumable(purchaseParam: purchaseParam);
-      } else {
-        success = await _inAppPurchase.buyConsumable(purchaseParam: purchaseParam);
+
+      // 1. Find the token for your specific basePlanId
+      String? selectedOfferToken;
+
+      // Check if this is a Google Play product and access subscription offers
+      if (product is GooglePlayProductDetails) {
+        final productWrapper = product.productDetails;
+        final offers = productWrapper.subscriptionOfferDetails;
+
+        if (offers != null && offers.isNotEmpty) {
+          String targetBasePlanId = _getBasePlanId(plan, isMonthly);
+
+          // Find the appropriate offer based on base plan ID
+          for (SubscriptionOfferDetailsWrapper offer in offers) {
+            if (offer.basePlanId == targetBasePlanId) {
+              selectedOfferToken = offer.offerIdToken;
+              break;
+            }
+          }
+        }
       }
+
+      // 2. Explicitly pass the token to GooglePlayPurchaseParam
+      bool success = false;
+      if (selectedOfferToken != null) {
+        final purchaseParam = GooglePlayPurchaseParam(
+          productDetails: product,
+          offerToken: selectedOfferToken, // <--- THIS is where it is used
+        );
+        success = await InAppPurchase.instance.buyNonConsumable(purchaseParam: purchaseParam);
+      }
+
+      _log("Product details: ${product.toString()}");
+      _log("Product raw price: ${product.rawPrice}");
+
+      // For Google Play subscriptions, we need to specify the base plan
+      // Note: The base plan selection is handled by Google Play Billing Library
+      // when there are multiple base plans available
+      _log("purchaseSubscription using basePlanId:$basePlanId");
 
       if (!success) {
         Get.snackbar(
@@ -575,22 +609,6 @@ class InAppPurchaseService extends GetxService {
     }
   }
 
-  // Load test subscription for test mode
-  Future<void> _loadTestSubscription() async {
-    _log("Loading test subscription data");
-
-    // Simulate having an active subscription in test mode
-    if (Platform.isAndroid) {
-      // Create a mock PurchaseDetails for testing
-      // Note: In real implementation, this would come from actual purchase history
-      _log("Simulating active Android test subscription");
-
-      // For demonstration purposes, we'll just log the simulation
-      // In practice, you'd create a proper PurchaseDetails object if available
-    } else if (Platform.isIOS) {
-      _log("Simulating active iOS test subscription");
-    }
-  }
 
   // Refresh subscription status
   Future<void> refreshSubscriptionStatus() async {
@@ -600,12 +618,21 @@ class InAppPurchaseService extends GetxService {
 
   // Get appropriate product ID based on environment
   String _getProductId(SubscriptionPlanItemUiState plan, bool isMonthly) {
-    var purchaseCode = plan.purchaseCode ?? "";
-    purchaseCode += isMonthly ? (plan.planCode.endsWith('_200') ? '_month_200' : '_month') : (plan.planCode.endsWith('_200') ? '_yearly_200' : '_yearly');
-    _log("_getProductId purchaseCode:$purchaseCode, plan:${plan.toJson()}");
-    return purchaseCode;
+    // For Google Play subscriptions with specific base plans, create unique product IDs
+    var basePlanId = plan.purchaseCode ?? "";
+    // basePlanId += isMonthly ? '_monthly' : '_yearly';
+    // var productId = "assistant_subscription_plan_$basePlanId";
+    // _log("_getProductId productId:$productId, plan:${plan.toJson()}");
+    return 'assistant_subscription_plan';
   }
 
+  // Get base plan ID for the subscription
+  String _getBasePlanId(SubscriptionPlanItemUiState plan, bool isMonthly) {
+    var basePlanId = plan.purchaseCode ?? "";
+    basePlanId += isMonthly ? '-monthly' : '-yearly';
+    _log("_getBasePlanId basePlanId:$basePlanId");
+    return basePlanId;
+  }
 
   void _log(String s) {
     appLog("InAppPurchaseService $s");
