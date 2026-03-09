@@ -8,10 +8,13 @@ import 'package:teacher_app/screens/subscription_plans/widgets/subscription_plan
 import 'package:teacher_app/utils/LogUtils.dart';
 import 'package:teacher_app/utils/message_utils.dart';
 import 'package:teacher_app/widgets/app_toolbar_widget.dart';
+import 'package:teacher_app/widgets/dialog_loading_widget.dart';
 
 import '../../domain/usecases/get_my_students_list_use_case.dart';
+import '../../enums/payment_provider_type.dart';
 import '../../requests/get_my_students_request.dart';
 import '../../services/in_app_purchase_service.dart';
+import '../../services/paymob_native_service.dart';
 import '../students_list/students_controller.dart';
 import 'bottomsheets/purchase_confirmation_bottom_sheet.dart';
 
@@ -205,7 +208,24 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
      );
 
      if (confirmed == true) {
-       await purchaseService.purchaseSubscription(plan, isMonthly: isMonthly);
+       showDialogLoading();
+       var result = await controller.initiateSubscriptionProcess(plan , isMonthly);
+       hideDialogLoading();
+       var model = result.data;
+       if(result.isSuccess && model != null){
+         if(model.paymentProviderType == PaymentProviderType.PAYMOB){
+           final result = await PaymobNativeService.payWithPaymob(
+             clientSecret:  model.paymentKey ?? "",
+           );
+           if(result.success){
+             await purchaseService.purchaseSubscription(plan, isMonthly: isMonthly);
+           }else {
+             showErrorMessagePopup(result.error ?? "Unknown error");
+           }
+         }
+       }
+
+       // await purchaseService.purchaseSubscription(plan, isMonthly: isMonthly);
      }
    }
 

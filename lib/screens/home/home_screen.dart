@@ -16,6 +16,7 @@ import 'package:teacher_app/widgets/sessions/running_session_item_widget.dart';
 
 import '../../widgets/app_toolbar_widget.dart';
 import '../../widgets/groups/group_item_widget.dart';
+import '../../widgets/paymob_simple_widget.dart';
 import '../groups/groups_state.dart';
 import 'states/home_state.dart';
 import 'states/running_session_item_ui_state.dart';

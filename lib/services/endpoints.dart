@@ -46,6 +46,7 @@ class EndPoints{
   static const String getSubscriptionPlans = "$apiV1/subscription/plans";
   static const String getCurrentSubscriptionPlan = "$apiV1/teachers/current-subscription-plan";
   static const String verifyGooglePlayPurchase = "$apiV1/subscription/verify-google-play-purchase";
+  static const String initiateSubscription = "$apiV1/payments/subscriptions/initiate";
 
 
 
