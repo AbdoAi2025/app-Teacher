@@ -1,3 +1,5 @@
+import 'package:teacher_app/utils/safe_json_access.dart';
+
 class SubscriptionPlanModel {
   final String? planCode;
   final String? planName;
@@ -7,6 +9,7 @@ class SubscriptionPlanModel {
   final double? yearlyPrice;
   final int? durationInDays;
   final int? studentLimit;
+  final int? totalStudentCount;
   final bool? isActive;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -23,6 +26,7 @@ class SubscriptionPlanModel {
     this.yearlyPrice,
     this.durationInDays,
     this.studentLimit,
+    this.totalStudentCount,
     this.isActive,
     this.createdAt,
     this.updatedAt,
@@ -41,6 +45,7 @@ class SubscriptionPlanModel {
       yearlyPrice: (json['yearlyPrice'] as num?)?.toDouble(),
       durationInDays: json['durationInDays'] as int?,
       studentLimit: json['studentLimit'] as int?,
+      totalStudentCount: json.tryInt('totalStudentCount') ,
       isActive: json['isActive'] as bool?,
       createdAt: json['createdAt'] != null
           ? DateTime.tryParse(json['createdAt'] as String)
@@ -64,6 +69,7 @@ class SubscriptionPlanModel {
       'yearlyPrice': yearlyPrice,
       'durationInDays': durationInDays,
       'studentLimit': studentLimit,
+      'totalStudentCount': totalStudentCount,
       'isActive': isActive,
       'createdAt': createdAt?.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String(),

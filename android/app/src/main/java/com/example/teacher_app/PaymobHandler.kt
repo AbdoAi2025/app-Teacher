@@ -1,12 +1,12 @@
 package com.example.teacher_app
 
 import android.graphics.Color
+import android.util.Log
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import com.paymob.paymob_sdk.PaymobSdk
 import com.paymob.paymob_sdk.ui.PaymobSdkListener
 import io.flutter.embedding.engine.FlutterEngine
-import timber.log.Timber
 
 class PaymobHandler(
     private val activity: MainActivity,
@@ -63,11 +63,16 @@ class PaymobHandler(
 
             logPaymob( "Processing payment with colors - Background: $buttonBackgroundColor, Text: $buttonTextColor")
 
+            // Set callback URL for payment redirect
+            val callbackUrl = "teacherassistant://payment"
+
+
+
             val paymobSdk = PaymobSdk.Builder(
                 context = activity,
                 clientSecret = clientSecret,
                 publicKey = publicKey,
-                paymobSdkListener = PaymobListener(result),
+                paymobSdkListener = PaymobListener(result , { activity.onBackPressed() }),
             )
                 .setButtonBackgroundColor(buttonBackgroundColor)
                 .setButtonTextColor(buttonTextColor)
@@ -90,7 +95,7 @@ class PaymobHandler(
     }
 }
 
-class  PaymobListener(private val result: MethodChannel.Result) : PaymobSdkListener{
+class  PaymobListener(private val result: MethodChannel.Result , private val onBack: () -> Unit) : PaymobSdkListener{
 
     // PaymobSDK Callback Methods
     override fun onSuccess(payResponse: HashMap<String, String?>) {
@@ -100,15 +105,14 @@ class  PaymobListener(private val result: MethodChannel.Result) : PaymobSdkListe
 
     override fun onFailure(msg: String?) {
         logPaymob( "Payment failed")
-        result.success("Rejected")
+        result.error("PAYMENT_FAILED",msg, null)
     }
 
     override fun onPending() {
-
         result.success("Pending")
     }
 }
 
 private fun logPaymob(msg: String){
-    Timber.tag("PaymobAndroid").d(msg)
+    Log.e(" PaymobAndroid", msg)
 }

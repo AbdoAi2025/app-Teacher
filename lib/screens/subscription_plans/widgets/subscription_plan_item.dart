@@ -7,6 +7,7 @@ import 'package:teacher_app/widgets/app_txt_widget.dart';
 
 class SubscriptionPlanItem extends StatelessWidget {
   final SubscriptionPlanItemUiState planUiModel;
+  final int totalStudentCount;
   final VoidCallback onMonthlyTap;
   final VoidCallback onYearlyTap;
   final int planIndex;
@@ -14,6 +15,7 @@ class SubscriptionPlanItem extends StatelessWidget {
   const SubscriptionPlanItem({
     super.key,
     required this.planUiModel,
+    required this.totalStudentCount,
     required this.onMonthlyTap,
     required this.onYearlyTap,
     this.planIndex = 0,
@@ -148,6 +150,16 @@ class SubscriptionPlanItem extends StatelessWidget {
             planUiModel.formattedStudentLimit,
           ),
         ),
+        if (isCurrentPlan) ...[
+          SizedBox(width: 12),
+          Expanded(
+            child: _buildFeatureItem(
+              context,
+              Icons.person_outline,
+              'Total: ${totalStudentCount} ${'students'.tr}',
+            ),
+          ),
+        ],
       ],
     );
   }

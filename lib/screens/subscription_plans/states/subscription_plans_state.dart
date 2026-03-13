@@ -9,19 +9,23 @@ class SubscriptionPlansStateLoading extends SubscriptionPlansState {}
 
 class SubscriptionPlansStateSuccess extends SubscriptionPlansState {
   final List<SubscriptionPlanItemUiState> plans;
+  final int totalStudentCount;
   final CurrentSubscriptionPlanResponse? currentSubscription;
 
   SubscriptionPlansStateSuccess({
     required this.plans,
+    required this.totalStudentCount,
     this.currentSubscription,
   });
 
   SubscriptionPlansStateSuccess copyWith({
     List<SubscriptionPlanItemUiState>? plans,
+    int? totalStudentCount,
     CurrentSubscriptionPlanResponse? currentSubscription,
   }) {
     return SubscriptionPlansStateSuccess(
       plans: plans ?? this.plans,
+      totalStudentCount: totalStudentCount ?? this.totalStudentCount,
       currentSubscription: currentSubscription ?? this.currentSubscription,
     );
   }

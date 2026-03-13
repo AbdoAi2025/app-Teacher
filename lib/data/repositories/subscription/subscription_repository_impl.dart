@@ -7,6 +7,8 @@ import 'package:teacher_app/models/verify_purchase_request.dart';
 import 'package:teacher_app/models/verify_purchase_response.dart';
 import 'package:teacher_app/models/initiate_subscription_request.dart';
 import 'package:teacher_app/models/initiate_subscription_response.dart';
+import 'package:teacher_app/models/subscribe_request.dart';
+import 'package:teacher_app/models/subscribe_response.dart';
 
 class SubscriptionRepositoryImpl implements SubscriptionRepository {
   final SubscriptionRemoteDataSource remoteDataSource = SubscriptionRemoteDataSourceImpl();
@@ -32,6 +34,12 @@ class SubscriptionRepositoryImpl implements SubscriptionRepository {
   @override
   Future<InitiateSubscriptionResponse?> initiateSubscriptionProcess(InitiateSubscriptionRequest request) async {
     final response = await remoteDataSource.initiateSubscriptionProcess(request);
+    return response;
+  }
+
+  @override
+  Future<SubscribeResponse?> subscribe(SubscribeRequest request) async {
+    final response = await remoteDataSource.subscribe(request);
     return response;
   }
 }

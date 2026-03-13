@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
+import '../utils/LogUtils.dart';
+
 /// Paymob native SDK service that bridges Flutter with native Android and iOS SDKs
 class PaymobNativeService {
 
@@ -44,6 +46,8 @@ class PaymobNativeService {
       };
 
       final String result = await _channel.invokeMethod('payWithPaymob', arguments);
+
+      appLog("payWithPaymob result:$result");
 
       return PaymobPaymentResult(
         success: result == 'Successful',

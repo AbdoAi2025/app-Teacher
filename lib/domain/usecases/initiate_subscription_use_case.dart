@@ -17,7 +17,7 @@ class InitiateSubscriptionUseCase extends BaseUseCase<InitialSubscriptionModel> 
       if (response != null && response.data != null) {
         final initialSubscription = InitialSubscriptionModel(
           paymentKey: response.data!.paymentKey,
-          paymentTransactionId: response.data!.paymentTransactionId,
+          orderId: response.data!.orderId,
           paymentProviderType: response.data!.paymentProviderType,
         );
         return AppResult.success(initialSubscription);

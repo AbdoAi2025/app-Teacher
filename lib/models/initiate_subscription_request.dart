@@ -21,6 +21,7 @@ class InitiateSubscriptionRequest {
       'subscriptionPlanCode': subscriptionPlanCode,
       'billingPeriod': billingPeriod.toJson(),
       'paymentProviderType': paymentProviderType.toJson(),
+      'serviceType': "RENEW",
       // 'paymentMethod': "MOBILE_WALLET",
     };
   }

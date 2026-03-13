@@ -35,31 +35,38 @@ class SubscriptionPlanItemUiState {
     this.purchaseCode,
   });
 
-  factory SubscriptionPlanItemUiState.fromModel(SubscriptionPlanModel model , bool isCurrentPlan) {
+  factory SubscriptionPlanItemUiState.fromModel(
+      SubscriptionPlanModel model, bool isCurrentPlan,
+      {int? totalStudentCount}) {
     return SubscriptionPlanItemUiState(
-      planCode: model.planCode ?? "",
-      planName: model.planName ?? "",
-      description: model.description ?? "",
-      monthlyPrice: model.monthlyPrice,
-      yearlyPrice: model.yearlyPrice,
-      durationInDays: model.durationInDays ?? 0,
-      studentLimit: model.studentLimit ?? 0,
-      isActive: model.isActive ?? false,
-      descriptionAr: model.descriptionAr,
-      descriptionEn: model.descriptionEn,
-      purchaseCode: model.purchaseCode,
-      isCurrentPlan: isCurrentPlan,
+        planCode: model.planCode ?? "",
+        planName: model.planName ?? "",
+        description: model.description ?? "",
+        monthlyPrice: model.monthlyPrice,
+        yearlyPrice: model.yearlyPrice,
+        durationInDays: model.durationInDays ?? 0,
+        studentLimit: model.studentLimit ?? 0,
+        isActive: model.isActive ?? false,
+        descriptionAr: model.descriptionAr,
+        descriptionEn: model.descriptionEn,
+        purchaseCode: model.purchaseCode,
+        isCurrentPlan: isCurrentPlan
     );
   }
 
-  String get formattedStudentLimit => "${'Up to'.tr} $studentLimit ${'students'.tr}";
+  String get formattedStudentLimit =>
+      "${'Up to'.tr} $studentLimit ${'students'.tr}";
 
   // Get monthly and annual pricing from API
   double get monthlyPriceValue => monthlyPrice ?? 0.0;
+
   double get annualPriceValue => yearlyPrice ?? 0.0;
 
-  String get formattedMonthlyPrice => "${monthlyPriceValue.toStringAsFixed(0)} EGP";
-  String get formattedAnnualPrice => "${annualPriceValue.toStringAsFixed(0)} EGP";
+  String get formattedMonthlyPrice =>
+      "${monthlyPriceValue.toStringAsFixed(0)} EGP";
+
+  String get formattedAnnualPrice =>
+      "${annualPriceValue.toStringAsFixed(0)} EGP";
 
   String? get formattedExpirationDate {
     if (expirationDate == null) return null;
@@ -70,11 +77,13 @@ class SubscriptionPlanItemUiState {
     final currentLocale = Get.locale?.languageCode ?? 'en';
 
     if (currentLocale == 'ar') {
-      return descriptionAr?.isNotEmpty == true ? descriptionAr! :
-             (descriptionEn?.isNotEmpty == true ? descriptionEn! : description);
+      return descriptionAr?.isNotEmpty == true
+          ? descriptionAr!
+          : (descriptionEn?.isNotEmpty == true ? descriptionEn! : description);
     } else {
-      return descriptionEn?.isNotEmpty == true ? descriptionEn! :
-             (descriptionAr?.isNotEmpty == true ? descriptionAr! : description);
+      return descriptionEn?.isNotEmpty == true
+          ? descriptionEn!
+          : (descriptionAr?.isNotEmpty == true ? descriptionAr! : description);
     }
   }
 

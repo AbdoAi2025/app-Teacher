@@ -161,9 +161,10 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
               },
               SubscriptionPlanItem(
                 planUiModel: plan,
+                totalStudentCount: state.totalStudentCount,
                 planIndex: index - 1,
-                onMonthlyTap: () => onSubscribeTap(plan , true),
-                onYearlyTap: () => onSubscribeTap(plan , false),
+                onMonthlyTap: () => onSubscribeTap(plan , true , state.totalStudentCount),
+                onYearlyTap: () => onSubscribeTap(plan , false , state.totalStudentCount),
               ),
                if(plan.isCurrentPlan)
               _title('Subscription Plans'.tr,),
@@ -173,9 +174,10 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
 
         return SubscriptionPlanItem(
           planUiModel: plan,
+          totalStudentCount: state.totalStudentCount,
           planIndex: index,
-          onMonthlyTap: () => onSubscribeTap(plan , true),
-          onYearlyTap: () => onSubscribeTap(plan , false),
+          onMonthlyTap: () => onSubscribeTap(plan , true , state.totalStudentCount),
+          onYearlyTap: () => onSubscribeTap(plan , false , state.totalStudentCount),
         );
       },
       separatorBuilder: (context, index) => SizedBox(height: 16),
@@ -189,21 +191,33 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
     ),
   );
 
-   onSubscribeTap(SubscriptionPlanItemUiState plan , bool isMonthly) async {
+   onSubscribeTap(SubscriptionPlanItemUiState plan , bool isMonthly, int totalStudentCount) async {
 
-     var teacherStudentsCount = 0;
+     var teacherStudentsCount = totalStudentCount;
     if(teacherStudentsCount > plan.studentLimit ) {
       showErrorMessagePopup("Can't subscribe this plan because you have $teacherStudentsCount students greater than plan limit (${plan.studentLimit})");
       return;
     }
 
-     final purchaseService = Get.find<InAppPurchaseService>();
+    //if free plan and plan limit less than student limit, call subscribe direct without payment
+     if(plan.monthlyPrice == 0.0 && plan.studentLimit > teacherStudentsCount){
+       showDialogLoading();
+        var subscribeResult = await controller.subscribe(plan , isMonthly);
+       hideDialogLoading();
+       if(subscribeResult.isSuccess) {
+         onSubscribeSuccess(plan);
+       } else {
+         showErrorMessagePopup(subscribeResult.error?.toString() ?? "failed to complete subscription".tr);
+       }
+       return;
+     }
+
      // Show confirmation bottom sheet
      bool? confirmed = await PurchaseConfirmationBottomSheet.show(
        context,
        planUiModel: plan,
        title: isMonthly ? 'Monthly Plan'.tr : 'Annual Plan'.tr,
-       price: plan.formattedAnnualPrice,
+       price: isMonthly ? plan.formattedMonthlyPrice : plan.formattedAnnualPrice,
        isMonthly: isMonthly,
      );
 
@@ -217,16 +231,36 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
            final result = await PaymobNativeService.payWithPaymob(
              clientSecret:  model.paymentKey ?? "",
            );
-           if(result.success){
-             await purchaseService.purchaseSubscription(plan, isMonthly: isMonthly);
+           appLog("onSubscribeTap PaymobNativeService.payWithPaymob result:$result");
+
+           // if(result.success){
+           //   showDialogLoading();
+           //   await Future.delayed(Duration(seconds: 5));
+           //   hideDialogLoading();
+           //   onSubscribeSuccess(plan);
+           // }else {
+           //   showErrorMessagePopup(result.error?.toString() ?? "failed to complete payment process".tr);
+           // }
+           showDialogLoading();
+           var verifyPaymentResult = await controller.verifyPayment(model.orderId ?? "");
+           hideDialogLoading();
+           if(verifyPaymentResult.isSuccess){
+             onSubscribeSuccess(plan);
            }else {
-             showErrorMessagePopup(result.error ?? "Unknown error");
+             showErrorMessagePopup(verifyPaymentResult.error?.toString() ?? "failed to complete payment process".tr);
            }
          }
+       }else {
+         showErrorMessagePopup(result.error?.toString() ?? "failed to complete payment process".tr);
        }
 
        // await purchaseService.purchaseSubscription(plan, isMonthly: isMonthly);
      }
    }
+
+  Future<void> onSubscribeSuccess(SubscriptionPlanItemUiState plan) async {
+    await showSuccessMessagePopup("Subscription process completed successfully".tr);
+    controller.refreshSubscriptionPlans();
+  }
 
 }

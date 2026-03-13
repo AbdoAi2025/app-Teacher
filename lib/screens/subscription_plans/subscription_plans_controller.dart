@@ -6,14 +6,20 @@ import 'package:teacher_app/domain/models/subscription_plan_model.dart';
 import 'package:teacher_app/domain/usecases/get_current_subscription_plan_use_case.dart';
 import 'package:teacher_app/domain/usecases/get_subscription_plans_use_case.dart';
 import 'package:teacher_app/domain/usecases/initiate_subscription_use_case.dart';
+import 'package:teacher_app/domain/usecases/verify_payment_use_case.dart';
 import 'package:teacher_app/enums/billing_period.dart';
 import 'package:teacher_app/enums/payment_provider_type.dart';
 import 'package:teacher_app/models/initiate_subscription_request.dart';
+import 'package:teacher_app/models/subscribe_request.dart';
+import 'package:teacher_app/models/subscribe_response.dart';
+import 'package:teacher_app/models/verify_payment_request.dart';
 import 'package:teacher_app/screens/subscription_plans/states/subscription_plan_item_ui_state.dart';
 import 'package:teacher_app/screens/subscription_plans/states/subscription_plans_state.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
 
+import '../../domain/usecases/subscribe_use_case.dart';
 import '../../models/initial_subscription_model.dart';
+import '../../models/verify_payment_response.dart';
 
 class SubscriptionPlansController extends GetxController {
   GetSubscriptionPlansUseCase getSubscriptionPlansUseCase =
@@ -22,6 +28,11 @@ class SubscriptionPlansController extends GetxController {
       GetCurrentSubscriptionPlanUseCase();
   InitiateSubscriptionUseCase initiateSubscriptionUseCase =
       InitiateSubscriptionUseCase();
+  VerifyPaymentUseCase verifyPaymentUseCase =
+  VerifyPaymentUseCase();
+
+  SubscribeUseCase subscribeUseCase =
+  SubscribeUseCase();
 
   Rx<SubscriptionPlansState> state = Rx(SubscriptionPlansStateLoading());
 
@@ -104,6 +115,7 @@ class SubscriptionPlansController extends GetxController {
 
         _updateState(SubscriptionPlansStateSuccess(
           plans: allPlans,
+          totalStudentCount : currentSubscription?.totalStudentCount ?? 0,
           currentSubscription: currentSubscription,
         ));
       } else {
@@ -184,5 +196,23 @@ class SubscriptionPlansController extends GetxController {
         paymentProviderType: PaymentProviderType.PAYMOB
     );
     return await initiateSubscriptionUseCase.execute(request);
+
+
+  }
+
+  Future<AppResult<VerifyPaymentResponse?>> verifyPayment(String orderId) async {
+    var request = VerifyPaymentRequest(
+       orderId: orderId
+    );
+    return await verifyPaymentUseCase.execute(request);
+  }
+
+  Future<AppResult<SubscribeResponse?>> subscribe(SubscriptionPlanItemUiState plan, bool isMonthly) async {
+    var request = SubscribeRequest(
+        subscriptionPlanCode: plan.planCode,
+        billingPeriod: BillingPeriod.MONTHLY,
+    );
+    return await subscribeUseCase.execute(request);
+
   }
 }

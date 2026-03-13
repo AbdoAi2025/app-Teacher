@@ -70,8 +70,8 @@ void showErrorMessagePopup(String message ,  {String? buttonText, Function()? on
       ));
 }
 
-void showSuccessMessagePopup(String message, [Function()? onClose]) {
-  showDailog(
+Future<void> showSuccessMessagePopup(String message, [Function()? onClose]) async {
+  return await showDailog(
       Get.context,
       Dialog(
         child: Column(

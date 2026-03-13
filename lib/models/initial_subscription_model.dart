@@ -2,19 +2,19 @@ import '../enums/payment_provider_type.dart';
 
 class InitialSubscriptionModel {
   final String? paymentKey;
-  final String? paymentTransactionId;
+  final String? orderId;
   final PaymentProviderType? paymentProviderType;
 
   InitialSubscriptionModel({
     this.paymentKey,
-    this.paymentTransactionId,
+    this.orderId,
     this.paymentProviderType,
   });
 
   factory InitialSubscriptionModel.fromJson(Map<String, dynamic> json) {
     return InitialSubscriptionModel(
       paymentKey: json['paymentKey'],
-      paymentTransactionId: json['paymentTransactionId'],
+      orderId: json['paymentTransactionId'],
       paymentProviderType: json['paymentProviderType'] != null
           ? PaymentProviderType.fromJson(json['paymentProviderType'])
           : null,
@@ -24,7 +24,7 @@ class InitialSubscriptionModel {
   Map<String, dynamic> toJson() {
     return {
       'paymentKey': paymentKey,
-      'paymentTransactionId': paymentTransactionId,
+      'paymentTransactionId': orderId,
       'paymentProviderType': paymentProviderType?.toJson(),
     };
   }
