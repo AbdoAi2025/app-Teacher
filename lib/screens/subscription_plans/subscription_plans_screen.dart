@@ -242,12 +242,12 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
            //   showErrorMessagePopup(result.error?.toString() ?? "failed to complete payment process".tr);
            // }
            showDialogLoading();
-           var verifyPaymentResult = await controller.verifyPayment(model.orderId ?? "");
+           var verifyPaymentResult = await controller.verifyPayment(model.orderId , model.merchantOrderId);
            hideDialogLoading();
            if(verifyPaymentResult.isSuccess){
              onSubscribeSuccess(plan);
            }else {
-             showErrorMessagePopup(verifyPaymentResult.error?.toString() ?? "failed to complete payment process".tr);
+             showErrorMessagePopup("failed to complete payment process".tr);
            }
          }
        }else {

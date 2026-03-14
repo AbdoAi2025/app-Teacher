@@ -28,11 +28,9 @@ class SubscriptionPlansController extends GetxController {
       GetCurrentSubscriptionPlanUseCase();
   InitiateSubscriptionUseCase initiateSubscriptionUseCase =
       InitiateSubscriptionUseCase();
-  VerifyPaymentUseCase verifyPaymentUseCase =
-  VerifyPaymentUseCase();
+  VerifyPaymentUseCase verifyPaymentUseCase = VerifyPaymentUseCase();
 
-  SubscribeUseCase subscribeUseCase =
-  SubscribeUseCase();
+  SubscribeUseCase subscribeUseCase = SubscribeUseCase();
 
   Rx<SubscriptionPlansState> state = Rx(SubscriptionPlansStateLoading());
 
@@ -115,7 +113,7 @@ class SubscriptionPlansController extends GetxController {
 
         _updateState(SubscriptionPlansStateSuccess(
           plans: allPlans,
-          totalStudentCount : currentSubscription?.totalStudentCount ?? 0,
+          totalStudentCount: currentSubscription?.totalStudentCount ?? 0,
           currentSubscription: currentSubscription,
         ));
       } else {
@@ -189,30 +187,28 @@ class SubscriptionPlansController extends GetxController {
     // TODO: Navigate to purchase/payment screen
   }
 
-  Future<AppResult<InitialSubscriptionModel>> initiateSubscriptionProcess(SubscriptionPlanItemUiState plan, bool isMonthly) async {
+  Future<AppResult<InitialSubscriptionModel>> initiateSubscriptionProcess(
+      SubscriptionPlanItemUiState plan, bool isMonthly) async {
     var request = InitiateSubscriptionRequest(
         subscriptionPlanCode: plan.planCode,
         billingPeriod: isMonthly ? BillingPeriod.MONTHLY : BillingPeriod.YEARLY,
-        paymentProviderType: PaymentProviderType.PAYMOB
-    );
+        paymentProviderType: PaymentProviderType.PAYMOB);
     return await initiateSubscriptionUseCase.execute(request);
-
-
   }
 
-  Future<AppResult<VerifyPaymentResponse?>> verifyPayment(String orderId) async {
+  Future<AppResult<VerifyPaymentResponse?>> verifyPayment(
+      String orderId, String merchantOrderId) async {
     var request = VerifyPaymentRequest(
-       orderId: orderId
-    );
+        orderId: orderId, merchantOrderId: merchantOrderId);
     return await verifyPaymentUseCase.execute(request);
   }
 
-  Future<AppResult<SubscribeResponse?>> subscribe(SubscriptionPlanItemUiState plan, bool isMonthly) async {
+  Future<AppResult<SubscribeResponse?>> subscribe(
+      SubscriptionPlanItemUiState plan, bool isMonthly) async {
     var request = SubscribeRequest(
-        subscriptionPlanCode: plan.planCode,
-        billingPeriod: BillingPeriod.MONTHLY,
+      subscriptionPlanCode: plan.planCode,
+      billingPeriod: BillingPeriod.MONTHLY,
     );
     return await subscribeUseCase.execute(request);
-
   }
 }

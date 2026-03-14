@@ -23,6 +23,7 @@ class InitiateSubscriptionRequest {
       'paymentProviderType': paymentProviderType.toJson(),
       'serviceType': "RENEW",
       // 'paymentMethod': "MOBILE_WALLET",
+      'paymentMethod': "ONLINE_CARD",
     };
   }
 

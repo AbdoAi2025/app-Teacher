@@ -6,6 +6,7 @@ import '../enums/service_type.dart';
 class InitiateSubscriptionData {
   final String? paymentKey;
   final String? orderId;
+  final String? merchantOrderId;
   final PaymentProviderType? paymentProviderType;
   final String? subscriptionPlanCode;
   final String? subscriptionPlanName;
@@ -17,6 +18,7 @@ class InitiateSubscriptionData {
   InitiateSubscriptionData({
     this.paymentKey,
     this.orderId,
+    this.merchantOrderId,
     this.paymentProviderType,
     this.subscriptionPlanCode,
     this.subscriptionPlanName,
@@ -30,6 +32,7 @@ class InitiateSubscriptionData {
     return InitiateSubscriptionData(
       paymentKey: json.tryString('paymentKey'),
       orderId: json.tryString('orderId'),
+      merchantOrderId: json.tryString('merchantOrderId'),
       paymentProviderType: json.tryString('paymentProviderType') != null
           ? PaymentProviderType.fromJson(json.tryString('paymentProviderType')!)
           : null,
@@ -50,6 +53,7 @@ class InitiateSubscriptionData {
     return {
       'paymentKey': paymentKey,
       'orderId': orderId,
+      'merchantOrderId': merchantOrderId,
       'paymentProviderType': paymentProviderType?.toJson(),
       'subscriptionPlanCode': subscriptionPlanCode,
       'subscriptionPlanName': subscriptionPlanName,

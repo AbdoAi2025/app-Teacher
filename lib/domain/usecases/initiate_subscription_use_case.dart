@@ -5,6 +5,7 @@ import 'package:teacher_app/models/initiate_subscription_request.dart';
 import 'package:teacher_app/models/initiate_subscription_response.dart';
 import 'package:teacher_app/models/initial_subscription_model.dart';
 
+import '../../enums/payment_provider_type.dart';
 import '../base_use_case.dart';
 
 class InitiateSubscriptionUseCase extends BaseUseCase<InitialSubscriptionModel> {
@@ -16,9 +17,10 @@ class InitiateSubscriptionUseCase extends BaseUseCase<InitialSubscriptionModel> 
       var response = await repository.initiateSubscriptionProcess(request);
       if (response != null && response.data != null) {
         final initialSubscription = InitialSubscriptionModel(
-          paymentKey: response.data!.paymentKey,
-          orderId: response.data!.orderId,
-          paymentProviderType: response.data!.paymentProviderType,
+          paymentKey: response.data?.paymentKey ?? "",
+          orderId: response.data?.orderId ?? "",
+          paymentProviderType: response.data?.paymentProviderType ?? PaymentProviderType.PAYMOB,
+          merchantOrderId: response.data?.merchantOrderId ?? "",
         );
         return AppResult.success(initialSubscription);
       } else {
