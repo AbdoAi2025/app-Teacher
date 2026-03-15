@@ -8,6 +8,7 @@ import 'package:teacher_app/domain/usecases/get_subscription_plans_use_case.dart
 import 'package:teacher_app/domain/usecases/initiate_subscription_use_case.dart';
 import 'package:teacher_app/domain/usecases/verify_payment_use_case.dart';
 import 'package:teacher_app/enums/billing_period.dart';
+import 'package:teacher_app/enums/payment_method_enum.dart';
 import 'package:teacher_app/enums/payment_provider_type.dart';
 import 'package:teacher_app/models/initiate_subscription_request.dart';
 import 'package:teacher_app/models/subscribe_request.dart';
@@ -188,11 +189,13 @@ class SubscriptionPlansController extends GetxController {
   }
 
   Future<AppResult<InitialSubscriptionModel>> initiateSubscriptionProcess(
-      SubscriptionPlanItemUiState plan, bool isMonthly) async {
+      SubscriptionPlanItemUiState plan, bool isMonthly, PaymentMethodEnum? paymentMethodEnum) async {
     var request = InitiateSubscriptionRequest(
         subscriptionPlanCode: plan.planCode,
         billingPeriod: isMonthly ? BillingPeriod.MONTHLY : BillingPeriod.YEARLY,
-        paymentProviderType: PaymentProviderType.PAYMOB);
+        paymentProviderType: PaymentProviderType.PAYMOB,
+        paymentMethodEnum: paymentMethodEnum
+    );
     return await initiateSubscriptionUseCase.execute(request);
   }
 

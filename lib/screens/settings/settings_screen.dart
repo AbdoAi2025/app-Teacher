@@ -160,7 +160,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void onDeleteAccount() {
-    showConfirmationMessage("delete_account_confirm_message", (){
+    showConfirmationMessage("delete_account_confirm_message".tr, (){
       LogoutUseCase().execute();
       AppNavigator.navigateToLogin();
     });

@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:teacher_app/data/dataSource/payment_remote_data_source.dart';
 import 'package:teacher_app/models/verify_payment_request.dart';
 import 'package:teacher_app/models/verify_payment_response.dart';
+import 'package:teacher_app/data/responses/get_payment_methods_response.dart';
 import 'package:teacher_app/services/api_service.dart';
 import 'package:teacher_app/services/endpoints.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
@@ -29,5 +30,21 @@ class PaymentRemoteDataSourceImpl implements PaymentRemoteDataSource {
         appLog("PaymentRemoteDataSourceImpl: Invalid response status - ${response.statusCode}");
         return null;
       }
+  }
+
+  @override
+  Future<GetPaymentMethodsResponse> getPaymentMethods() async {
+    appLog("PaymentRemoteDataSourceImpl: Getting payment methods");
+
+    Response response = await ApiService.getInstance().get(
+      EndPoints.getPaymentMethods,
+    );
+
+    appLog("PaymentRemoteDataSourceImpl: Response status - ${response.statusCode}");
+    appLog("PaymentRemoteDataSourceImpl: Response data - ${response.data}");
+
+    final paymentMethodsResponse = GetPaymentMethodsResponse.fromJson(response.data);
+    appLog("PaymentRemoteDataSourceImpl: Payment methods retrieved successfully");
+    return paymentMethodsResponse;
   }
 }

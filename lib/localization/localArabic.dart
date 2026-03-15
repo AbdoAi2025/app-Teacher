@@ -232,7 +232,6 @@ final Map<String, String> ar = {
   "Renew Subscription": "تجديد الاشتراك",
   "Available Plans": "الخطط المتاحة",
   "No subscription plans available": "لا توجد خطط اشتراك متاحة",
-  "Retry": "إعادة المحاولة",
   "Error loading subscription plans": "حدث خطأ في تحميل خطط الاشتراك",
   "Unknown error": "خطأ غير معروف",
   "Plan Selected": "تم اختيار الخطة",
@@ -280,6 +279,29 @@ final Map<String, String> ar = {
   "Price": "السعر",
   "Are you sure you want to purchase this subscription?": "هل أنت متأكد من شراء هذا الاشتراك؟",
   "Purchase": "شراء",
+  "Can't subscribe this plan because you have more students than the plan limit": "لا يمكن الاشتراك في هذه الخطة لأن لديك %d طالب أكثر من حد الخطة (%d)",
+  "failed to complete subscription": "فشل في إتمام الاشتراك",
+  "failed to complete payment process": "فشل في إتمام عملية الدفع",
+  "Subscription process completed successfully": "تم إتمام عملية الاشتراك بنجاح",
+
+  // Payment Methods
+  "Payment Methods": "طرق الدفع",
+  "Select Payment Method": "اختر طريقة الدفع",
+  "Continue": "متابعة",
+  "No Payment Methods Available": "لا توجد طرق دفع متاحة",
+  "No payment methods are currently available. Please try again later or contact support.": "لا توجد طرق دفع متاحة حالياً. يرجى المحاولة لاحقاً أو التواصل مع الدعم.",
+  "Cash Payment Instructions": "تعليمات الدفع النقدي",
+  "Cash Payment Description": "إذا اخترت طريقة الدفع النقدي، يجب عليك إرسال صورة المعاملة مع اسم المستخدم إلى مالك الخدمة وسيتم تفعيل الاشتراك خلال 48 ساعة، للوصول إلى المالك انتقل إلى تواصل معنا في الإعدادات.",
+  "Cash Payment Instruction": "يجب عليك إرسال صورة المعاملة مع اسم المستخدم إلى مالك الخدمة وسيتم تفعيل الاشتراك خلال 48 ساعة، للوصول إلى المالك انتقل إلى تواصل معنا في الإعدادات.",
+  "Online Payment Instructions": "تعليمات الدفع الإلكتروني",
+  "Online Payment Description": "إذا كانت طريقة الدفع إلكتروني أو محفظة إلكترونية فسيتم تفعيل الاشتراك فوراً.",
+  "Payment Instructions": "تعليمات الدفع",
+  "Payment Description": "يرجى اتباع تعليمات الدفع للطريقة المختارة.",
+
+  // Individual Payment Method Names
+  "Online Card Payment": "الدفع بالبطاقة الإلكترونية",
+  "Mobile Wallet": "المحفظة الإلكترونية",
+  "Cash Payment": "الدفع النقدي",
 
 };
 

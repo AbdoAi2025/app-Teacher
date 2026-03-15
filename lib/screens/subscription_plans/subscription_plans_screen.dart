@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sprintf/sprintf.dart';
+import 'package:teacher_app/enums/payment_method_enum.dart';
 import 'package:teacher_app/screens/students_list/states/students_state.dart';
 import 'package:teacher_app/screens/subscription_plans/states/subscription_plan_item_ui_state.dart';
 import 'package:teacher_app/screens/subscription_plans/states/subscription_plans_state.dart';
@@ -9,6 +11,7 @@ import 'package:teacher_app/utils/LogUtils.dart';
 import 'package:teacher_app/utils/message_utils.dart';
 import 'package:teacher_app/widgets/app_toolbar_widget.dart';
 import 'package:teacher_app/widgets/dialog_loading_widget.dart';
+import 'package:teacher_app/widgets/payment_methods_bottom_sheet.dart';
 
 import '../../domain/usecases/get_my_students_list_use_case.dart';
 import '../../enums/payment_provider_type.dart';
@@ -195,7 +198,8 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
 
      var teacherStudentsCount = totalStudentCount;
     if(teacherStudentsCount > plan.studentLimit ) {
-      showErrorMessagePopup("Can't subscribe this plan because you have $teacherStudentsCount students greater than plan limit (${plan.studentLimit})");
+      var message = sprintf("Can't subscribe this plan because you have more students than the plan limit".tr, [teacherStudentsCount , plan.studentLimit]);
+      showErrorMessagePopup(message);
       return;
     }
 
@@ -212,6 +216,18 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
        return;
      }
 
+
+     /*show bottom sheet*/
+     var selectedPaymentMethod = await PaymentMethodsBottomSheet.show(context);
+     appLog("selected payment selectedPaymentMethod  ${selectedPaymentMethod?.paymentMethodEnum}");
+
+     if(selectedPaymentMethod == null) return;
+
+     if(selectedPaymentMethod.isCashPayment){
+       showSuccessMessagePopup("Cash Payment Instruction".tr);
+       return;
+     }
+
      // Show confirmation bottom sheet
      bool? confirmed = await PurchaseConfirmationBottomSheet.show(
        context,
@@ -223,7 +239,7 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
 
      if (confirmed == true) {
        showDialogLoading();
-       var result = await controller.initiateSubscriptionProcess(plan , isMonthly);
+       var result = await controller.initiateSubscriptionProcess(plan , isMonthly ,  selectedPaymentMethod.paymentMethodEnum);
        hideDialogLoading();
        var model = result.data;
        if(result.isSuccess && model != null){
@@ -232,19 +248,10 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
              clientSecret:  model.paymentKey ?? "",
            );
            appLog("onSubscribeTap PaymobNativeService.payWithPaymob result:$result");
-
-           // if(result.success){
-           //   showDialogLoading();
-           //   await Future.delayed(Duration(seconds: 5));
-           //   hideDialogLoading();
-           //   onSubscribeSuccess(plan);
-           // }else {
-           //   showErrorMessagePopup(result.error?.toString() ?? "failed to complete payment process".tr);
-           // }
            showDialogLoading();
            var verifyPaymentResult = await controller.verifyPayment(model.orderId , model.merchantOrderId);
            hideDialogLoading();
-           if(verifyPaymentResult.isSuccess){
+           if(verifyPaymentResult.isSuccess && verifyPaymentResult.data?.data == true){
              onSubscribeSuccess(plan);
            }else {
              showErrorMessagePopup("failed to complete payment process".tr);

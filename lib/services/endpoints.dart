@@ -51,6 +51,7 @@ class EndPoints{
 
   /*Payment*/
   static const String verifyPayment = "$apiV1/payments/verify";
+  static const String getPaymentMethods = "$apiV1/payment-methods/enabled";
 
 
 

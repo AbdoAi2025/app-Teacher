@@ -70,7 +70,6 @@ final Map<String, String> enUS = {
   "ok_well": "Ok Well",
   "yes": "yes",
   "Cancel": "Cancel",
-  "Retry": "Retry",
   "Status": "Status",
   "End Session": "End Session",
   "Quiz": "Quiz",
@@ -262,5 +261,28 @@ final Map<String, String> enUS = {
   "Price": "Price",
   "Are you sure you want to purchase this subscription?": "Are you sure you want to purchase this subscription?",
   "Purchase": "Purchase",
+  "Can't subscribe this plan because you have more students than the plan limit": "Can't subscribe this plan because you have %d students greater than plan limit (%d)",
+  "failed to complete subscription": "Failed to complete subscription",
+  "failed to complete payment process": "Failed to complete payment process",
+  "Subscription process completed successfully": "Subscription process completed successfully",
+
+  // Payment Methods
+  "Payment Methods": "Payment Methods",
+  "Select Payment Method": "Select Payment Method",
+  "Continue": "Continue",
+  "No Payment Methods Available": "No Payment Methods Available",
+  "No payment methods are currently available. Please try again later or contact support.": "No payment methods are currently available. Please try again later or contact support.",
+  "Cash Payment Instructions": "Cash Payment Instructions",
+  "Cash Payment Description": "If you select cash method, you must send the transaction image with username to the service owner and the subscription will be activated within 48 hours, to access to owner go to contact us in setting.",
+  "Cash Payment Instruction": "You must send the transaction image with username to the service owner and the subscription will be activated within 48 hours, to access to owner go to contact us in setting.",
+  "Online Payment Instructions": "Online Payment Instructions",
+  "Online Payment Description": "If the payment method online or wallet show the description that the subscription will be activated immediately.",
+  "Payment Instructions": "Payment Instructions",
+  "Payment Description": "Please follow the payment instructions for your selected method.",
+
+  // Individual Payment Method Names
+  "online": "Online Card Payment",
+  "wallet": "Mobile Wallet",
+  "cash": "Cash Payment",
 
 };
