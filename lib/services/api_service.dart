@@ -145,13 +145,17 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_alice/alice.dart';
 import 'package:get/get.dart';
+import 'package:shake/shake.dart';
 import 'package:talker_dio_logger/talker_dio_logger.dart';
 import 'package:teacher_app/appSetting/appSetting.dart';
 import 'package:teacher_app/app_mode.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
 import 'package:teacher_app/services/environment_service.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
+
+import '../main.dart';
 
 
 
@@ -161,6 +165,9 @@ import 'package:teacher_app/utils/LogUtils.dart';
 
 class ApiService {
   static Dio? _dio;
+
+  // Create Alice with the navigator key
+  static final  alice = Alice(navigatorKey: navigatorKey, showNotification: kDebugMode,);
 
   static Dio getInstance() {
     // var instance = _dio;
@@ -177,16 +184,6 @@ class ApiService {
   }
 
   static _init(Dio dio) async {
-
-    dio.interceptors.add(
-      TalkerDioLogger(
-        settings: const TalkerDioLoggerSettings(
-          printRequestHeaders: !kReleaseMode,
-          printResponseHeaders: !kReleaseMode,
-          printResponseMessage: !kReleaseMode,
-        ),
-      ),
-    );
 
     dio.interceptors.add(
       InterceptorsWrapper(
@@ -206,6 +203,8 @@ class ApiService {
         },
       ),
     );
+
+    addDioLogging(dio);
 
 
     appLog("setting header");
@@ -227,10 +226,49 @@ class ApiService {
     );
   }
 
+  static void addDioLogging(Dio dio) {
+    addAliceLogging(dio);
+    addTalkerDioLogger(dio);
+  }
+
+  static void addAliceLogging(Dio dio) {
+    if (AppMode.isDebug || AppMode.isDev || AppMode.isLocal) {
+      dio.interceptors.add(alice.getDioInterceptor());
+    }
+  }
+
+  static void addTalkerDioLogger(Dio dio) {
+    dio.interceptors.add(
+      TalkerDioLogger(
+        settings: const TalkerDioLoggerSettings(
+          printRequestHeaders: !kReleaseMode,
+          printResponseHeaders: !kReleaseMode,
+          printResponseMessage: !kReleaseMode,
+        ),
+      ),
+    );
+  }
 
   static String get token => AppSetting.getAppSetting().accessToken;
   static String get currentLanguage =>  Get.locale?.languageCode ?? "en";
   static double? get appVersion =>  AppSetting.getAppSetting().appVersion;
+
+
+
+
+  static void startApiLoggerIfNeeded() {
+
+    var showApiLogger = AppMode.showApiLogger;
+
+    appLog("startApiLoggerIfNeeded showApiLogger:$showApiLogger");
+
+    if (showApiLogger) { return; }
+    ShakeDetector.autoStart(
+        onPhoneShake: (ShakeEvent event) {
+          alice.showInspector();
+        }
+    );
+  }
 
 
 }

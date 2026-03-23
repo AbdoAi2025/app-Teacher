@@ -58,6 +58,11 @@ dependencies:
   visibility_detector: ^0.4.0+2
   in_app_purchase: ^3.2.3
   in_app_purchase_android: ^0.4.0+3
+  flutter_alice: ^2.0.1
+  overlay_support: ^2.1.0
+  shake: ^3.0.0
+
+
 
 
 #  whatsapp_share: ^2.0.2

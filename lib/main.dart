@@ -4,6 +4,8 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:overlay_support/overlay_support.dart';
+import 'package:shake/shake.dart';
 import 'package:teacher_app/appSetting/appSetting.dart';
 import 'package:teacher_app/navigation/app_routes.dart';
 import 'package:teacher_app/navigation/app_routes_screens.dart';
@@ -27,12 +29,17 @@ GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
-
 void main() async {
-
-
   WidgetsFlutterBinding.ensureInitialized();
+  _initSystemUi();
+  initAppLocale();
+  await initAppEnvironment();
+  await AppSetting.initAppVersion();
+  ApiService.startApiLoggerIfNeeded();
+  runApp(MyApp());
+}
 
+Future<void> _initSystemUi() async {
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
@@ -44,17 +51,7 @@ void main() async {
     [DeviceOrientation.portraitUp],
   );
 
-  initAppLocale();
-  await initAppEnvironment();
-
-  await AppSetting.initAppVersion();
-
-
-  runApp(MyApp());
 }
-
-
-
 
 class MyApp extends StatefulWidget {
 
@@ -79,7 +76,8 @@ class _MyAppState extends State<MyApp> {
         builder: (context, AppSetting setting, _) {
           var appLocaleModel = setting.appLocaleModel;
           var langCode =( appLocaleModel?.toLocale() ?? appLocale)?.languageCode;
-          return GetMaterialApp(
+          return OverlaySupport.global(
+            child: GetMaterialApp(
             navigatorObservers: [MyRouteObserver() , routeObserver], // attach observer 🚀
             navigatorKey: navigatorKey,
             textDirection: (rtlLanguages.contains(langCode)
@@ -158,7 +156,7 @@ class _MyAppState extends State<MyApp> {
                 ),
               ),
             ),
-          );
+          ));
         });
   }
 }

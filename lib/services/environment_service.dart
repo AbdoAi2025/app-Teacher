@@ -19,6 +19,8 @@ class AppMode {
 
   static final RxInt _currentMode = (defaultMode).obs;
 
+  static bool get showApiLogger => isDebug || isDev || isLocal;
+
   static int get mode => _currentMode.value;
   static set mode(int newMode) => _currentMode.value = newMode;
 
