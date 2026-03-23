@@ -1,10 +1,11 @@
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:teacher_app/domain/models/subscription_plan_model.dart';
+import 'package:teacher_app/enums/subscription_plan_enum.dart';
 
 class SubscriptionPlanItemUiState {
   final String planCode;
-  final String planName;
+  final String _planName;
   final String description;
   final double? monthlyPrice;
   final double? yearlyPrice;
@@ -20,7 +21,7 @@ class SubscriptionPlanItemUiState {
 
   SubscriptionPlanItemUiState({
     required this.planCode,
-    required this.planName,
+    required String  planName,
     required this.description,
     required this.monthlyPrice,
     required this.yearlyPrice,
@@ -33,7 +34,7 @@ class SubscriptionPlanItemUiState {
     this.descriptionAr,
     this.descriptionEn,
     this.purchaseCode,
-  });
+  }) : _planName = planName;
 
   factory SubscriptionPlanItemUiState.fromModel(
       SubscriptionPlanModel model, bool isCurrentPlan,
@@ -54,8 +55,14 @@ class SubscriptionPlanItemUiState {
     );
   }
 
-  String get formattedStudentLimit =>
-      "${'Up to'.tr} $studentLimit ${'students'.tr}";
+  String get formattedStudentLimit {
+    // Check if this is an unlimited plan (PREMIUM or UNLIMITED)
+    final planEnum = SubscriptionPlanEnum.fromValue(planCode);
+    if (planEnum == SubscriptionPlanEnum.UNLIMITED) {
+      return "Unlimited".tr;
+    }
+    return "${'Up to'.tr} $studentLimit ${'students'.tr}";
+  }
 
   // Get monthly and annual pricing from API
   double get monthlyPriceValue => monthlyPrice ?? 0.0;
@@ -86,6 +93,9 @@ class SubscriptionPlanItemUiState {
           : (descriptionAr?.isNotEmpty == true ? descriptionAr! : description);
     }
   }
+
+  String get planName =>_planName.tr;
+
 
   Map<String, dynamic> toJson() {
     return {

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:teacher_app/screens/subscription_plans/states/subscription_plan_item_ui_state.dart';
 import 'package:teacher_app/services/in_app_purchase_service.dart';
 import 'package:teacher_app/domain/models/subscription_plan_model.dart';
+import 'package:teacher_app/themes/txt_styles.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
 
 class SubscriptionPlanItem extends StatelessWidget {
@@ -132,9 +133,7 @@ class SubscriptionPlanItem extends StatelessWidget {
   Widget _buildDescription(BuildContext context) {
     return Text(
       planUiModel.localizedDescription,
-      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-        color: Colors.grey[600],
-      ),
+      style: AppTextStyle.body,
       maxLines: 2,
       overflow: TextOverflow.ellipsis,
     );
@@ -156,7 +155,7 @@ class SubscriptionPlanItem extends StatelessWidget {
             child: _buildFeatureItem(
               context,
               Icons.person_outline,
-              'Total: ${totalStudentCount} ${'students'.tr}',
+              '${"Total".tr}: $totalStudentCount ${'students'.tr}',
             ),
           ),
         ],
@@ -474,9 +473,7 @@ class SubscriptionPlanItem extends StatelessWidget {
         Expanded(
           child: Text(
             text,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Colors.grey[600],
-            ),
+            style: AppTextStyle.body,
             overflow: TextOverflow.ellipsis,
           ),
         ),

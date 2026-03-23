@@ -307,4 +307,14 @@ final Map<String, String> enUS = {
   "Clear Filter": "Clear Filter",
   "Report Period": "Report Period",
 
+  // Subscription Plan Names
+  "Free Plan": "Free Plan",
+  "Basic Plan": "Basic Plan",
+  "Premium Plan": "Premium Plan",
+  "Unlimited Plan": "Unlimited Plan",
+
+  // General Text
+  "Total": "Total",
+  "Unlimited": "Unlimited",
+
 };

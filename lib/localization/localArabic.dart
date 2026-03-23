@@ -325,6 +325,16 @@ final Map<String, String> ar = {
   "Clear Filter": "إلغاء التصفية",
   "Report Period": "فترة التقرير",
 
+  // Subscription Plan Names
+  "Free Plan": "الخطة المجانية",
+  "Basic Plan": "الخطة الأساسية",
+  "Premium Plan": "الخطة المميزة",
+  "Unlimited Plan": "الخطة غير المحدودة",
+
+  // General Text
+  "Total": "الإجمالي",
+  "Unlimited": "غير محدود",
+
 };
 
 /*

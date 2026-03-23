@@ -25,6 +25,9 @@ class AppTextStyle {
         color: AppColors.textValueColor
       );
 
+  static TextStyle get body => teshrinArLtRegular.copyWith(
+    fontSize: 13
+  );
 
 
   static TextStyle get small =>
