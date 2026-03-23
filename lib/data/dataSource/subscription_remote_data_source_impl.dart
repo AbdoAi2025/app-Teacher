@@ -2,8 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:teacher_app/data/dataSource/subscription_remote_data_source.dart';
 import 'package:teacher_app/data/responses/current_subscription_plan_response.dart';
 import 'package:teacher_app/data/responses/get_subscription_plans_response.dart';
-import 'package:teacher_app/models/verify_purchase_request.dart';
-import 'package:teacher_app/models/verify_purchase_response.dart';
 import 'package:teacher_app/models/initiate_subscription_request.dart';
 import 'package:teacher_app/models/initiate_subscription_response.dart';
 import 'package:teacher_app/models/subscribe_request.dart';
@@ -25,40 +23,6 @@ class SubscriptionRemoteDataSourceImpl implements SubscriptionRemoteDataSource {
     Response response = await ApiService.getInstance().get(EndPoints.getCurrentSubscriptionPlan);
     CurrentSubscriptionPlanResponse responseResult = CurrentSubscriptionPlanResponse.fromJson(response.data);
     return responseResult;
-  }
-
-  @override
-  Future<VerifyPurchaseResponse?> verifyGooglePlayPurchase(VerifyPurchaseRequest request) async {
-    try {
-      appLog("SubscriptionRemoteDataSourceImpl: Verifying Google Play purchase");
-      appLog("SubscriptionRemoteDataSourceImpl: Request - ${request.toJson()}");
-
-      Response response = await ApiService.getInstance().post(
-        EndPoints.verifyGooglePlayPurchase,
-        data: request.toJson(),
-      );
-
-      appLog("SubscriptionRemoteDataSourceImpl: Response status - ${response.statusCode}");
-      appLog("SubscriptionRemoteDataSourceImpl: Response data - ${response.data}");
-
-      if (response.statusCode == 200) {
-        final data = response.data;
-        if (data['data'] != null) {
-          final verifyResponse = VerifyPurchaseResponse.fromJson(data['data']);
-          appLog("SubscriptionRemoteDataSourceImpl: Verification successful - ${verifyResponse.message}");
-          return verifyResponse;
-        } else {
-          appLog("SubscriptionRemoteDataSourceImpl: No data in response");
-          return null;
-        }
-      } else {
-        appLog("SubscriptionRemoteDataSourceImpl: Invalid response status - ${response.statusCode}");
-        return null;
-      }
-    } catch (e) {
-      appLog("SubscriptionRemoteDataSourceImpl: Error verifying purchase - $e");
-      return null;
-    }
   }
 
   @override

@@ -16,7 +16,6 @@ import 'package:teacher_app/widgets/payment_methods_bottom_sheet.dart';
 import '../../domain/usecases/get_my_students_list_use_case.dart';
 import '../../enums/payment_provider_type.dart';
 import '../../requests/get_my_students_request.dart';
-import '../../services/in_app_purchase_service.dart';
 import '../../services/paymob_native_service.dart';
 import '../students_list/students_controller.dart';
 import 'bottomsheets/purchase_confirmation_bottom_sheet.dart';
@@ -32,13 +31,9 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
   // late SubscriptionPlansController controller = Get.put(SubscriptionPlansController());
   late SubscriptionPlansController controller = Get.find();
 
-  // Initialize in-app purchase service
-  InAppPurchaseService purchaseService = Get.put(InAppPurchaseService());
-
   @override
   void initState() {
     super.initState();
-    purchaseService.initializePurchases();
   }
 
   @override

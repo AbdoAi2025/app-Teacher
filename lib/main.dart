@@ -20,7 +20,6 @@ import 'localization/app_translation.dart';
 
 import 'navigation/my_route_observer.dart';
 import 'services/api_service.dart';
-import 'services/in_app_purchase_service.dart';
 import 'services/environment_service.dart';
 import 'app_mode.dart';
 
