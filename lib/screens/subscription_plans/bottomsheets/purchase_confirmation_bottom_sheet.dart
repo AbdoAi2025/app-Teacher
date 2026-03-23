@@ -187,7 +187,7 @@ class PurchaseConfirmationBottomSheet extends StatelessWidget {
                       ),
                       SizedBox(width: 8),
                       Text(
-                        '/ ${isMonthly ? 'month' : 'year'}'.tr,
+                        '/ ${isMonthly ? 'month'.tr : 'year'.tr}',
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.grey[600],

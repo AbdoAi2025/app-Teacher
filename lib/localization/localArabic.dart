@@ -283,6 +283,8 @@ final Map<String, String> ar = {
   "failed to complete subscription": "فشل في إتمام الاشتراك",
   "failed to complete payment process": "فشل في إتمام عملية الدفع",
   "Subscription process completed successfully": "تم إتمام عملية الاشتراك بنجاح",
+  "Review your subscription details": "راجع تفاصيل اشتراكك",
+  "Student Limit": "حد عدد الطلاب",
 
   // Payment Methods
   "Payment Methods": "طرق الدفع",

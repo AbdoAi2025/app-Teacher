@@ -265,6 +265,8 @@ final Map<String, String> enUS = {
   "failed to complete subscription": "Failed to complete subscription",
   "failed to complete payment process": "Failed to complete payment process",
   "Subscription process completed successfully": "Subscription process completed successfully",
+  "Review your subscription details": "Review your subscription details",
+  "Student Limit": "Student Limit",
 
   // Payment Methods
   "Payment Methods": "Payment Methods",
@@ -288,10 +290,10 @@ final Map<String, String> enUS = {
   // Date Filter Localization
   "Filter by Date": "Filter by Date",
   "Filter Type": "Filter Type",
-  "Teaching Year": "Teaching Year",
+  "Teaching Year": "Year",
   "Term": "Term",
   "Custom Range": "Custom Range",
-  "Select Teaching Year": "Select Teaching Year",
+  "Select Teaching Year": "Select Year",
   "Select Year": "Select Year",
   "Select Term": "Select Term",
   "First Term": "First Term",
