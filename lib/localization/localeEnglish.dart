@@ -285,4 +285,26 @@ final Map<String, String> enUS = {
   "wallet": "Mobile Wallet",
   "cash": "Cash Payment",
 
+  // Date Filter Localization
+  "Filter by Date": "Filter by Date",
+  "Filter Type": "Filter Type",
+  "Teaching Year": "Teaching Year",
+  "Term": "Term",
+  "Custom Range": "Custom Range",
+  "Select Teaching Year": "Select Teaching Year",
+  "Select Year": "Select Year",
+  "Select Term": "Select Term",
+  "First Term": "First Term",
+  "Second Term": "Second Term",
+  "Aug - Jan": "Aug - Jan",
+  "Feb - Jul": "Feb - Jul",
+  "Custom Date Range": "Custom Date Range",
+  "From Date": "From Date",
+  "To Date": "To Date",
+  "Select Date": "Select Date",
+  "End date must be after start date": "End date must be after start date",
+  "Apply Filter": "Apply Filter",
+  "Clear Filter": "Clear Filter",
+  "Report Period": "Report Period",
+
 };

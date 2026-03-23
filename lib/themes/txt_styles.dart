@@ -8,6 +8,13 @@ class AppTextStyle {
   static TextStyle get title =>
       teshrinArLtRegular.copyWith(fontSize: 16, fontWeight: FontWeight.w600);
 
+  static TextStyle get subTitle =>
+      teshrinArLtRegular.copyWith(
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+          color: AppColors.textValueColor
+      );
+
   static TextStyle get label =>
       teshrinArLtRegular.copyWith(fontSize: 14, fontWeight: FontWeight.w600);
 
@@ -17,6 +24,8 @@ class AppTextStyle {
           fontWeight: FontWeight.w500,
         color: AppColors.textValueColor
       );
+
+
 
   static TextStyle get small =>
       teshrinArLtRegular.copyWith(

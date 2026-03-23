@@ -7,6 +7,7 @@ class PrimaryButtonWidget extends StatelessWidget {
   final Function() onClick;
   final EdgeInsetsGeometry? padding;
   final TextStyle? textStyle;
+  final bool enabled;
 
   const PrimaryButtonWidget(
       {super.key,
@@ -14,14 +15,15 @@ class PrimaryButtonWidget extends StatelessWidget {
         required this.onClick ,
         this.padding,
         this.textStyle,
+        this.enabled = true,
       });
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {
+      onPressed: enabled ? () {
         onClick();
-      },
+      } : null,
       style: ElevatedButton.styleFrom(
         padding: padding ?? EdgeInsets.symmetric(horizontal: 50, vertical: 15),
         shape: RoundedRectangleBorder(

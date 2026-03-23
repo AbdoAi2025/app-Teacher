@@ -299,9 +299,31 @@ final Map<String, String> ar = {
   "Payment Description": "يرجى اتباع تعليمات الدفع للطريقة المختارة.",
 
   // Individual Payment Method Names
-  "Online Card Payment": "الدفع بالبطاقة الإلكترونية",
-  "Mobile Wallet": "المحفظة الإلكترونية",
-  "Cash Payment": "الدفع النقدي",
+  "online": "الدفع بالبطاقة الإلكترونية",
+  "wallet": "المحفظة الإلكترونية",
+  "cash": "الدفع النقدي",
+
+  // Date Filter Localization
+  "Filter by Date": "تصفية حسب التاريخ",
+  "Filter Type": "نوع التصفية",
+  "Teaching Year": "السنة الدراسية",
+  "Term": "الفصل الدراسي",
+  "Custom Range": "نطاق مخصص",
+  "Select Teaching Year": "اختر السنة الدراسية",
+  "Select Year": "اختر السنة",
+  "Select Term": "اختر الفصل الدراسي",
+  "First Term": "الفصل الأول",
+  "Second Term": "الفصل الثاني",
+  "Aug - Jan": "أغسطس - يناير",
+  "Feb - Jul": "فبراير - يوليو",
+  "Custom Date Range": "نطاق تاريخ مخصص",
+  "From Date": "من تاريخ",
+  "To Date": "إلى تاريخ",
+  "Select Date": "اختر التاريخ",
+  "End date must be after start date": "يجب أن يكون تاريخ الانتهاء بعد تاريخ البداية",
+  "Apply Filter": "تطبيق التصفية",
+  "Clear Filter": "إلغاء التصفية",
+  "Report Period": "فترة التقرير",
 
 };
 

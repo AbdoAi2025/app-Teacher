@@ -61,9 +61,9 @@ class SessionActivityItemUiState {
   final int? sessionQuizGrade;
   final double? quizGrade;
   final bool? attended;
-  final StudentBehaviorEnum? behaviorStatus;
+  final StudentBehaviorEnum? _behaviorStatus;
   final String? behaviorNotes;
-  final HomeworkEnum? homeworkStatus;
+  final HomeworkEnum? _homeworkStatus;
   final String? homeworkNotes;
 
   SessionActivityItemUiState(
@@ -75,10 +75,11 @@ class SessionActivityItemUiState {
       required this.sessionQuizGrade,
       required this.quizGrade,
       required this.attended,
-      required this.behaviorStatus,
       required this.behaviorNotes,
-      required this.homeworkStatus,
-      required this.homeworkNotes});
+      required HomeworkEnum? homeworkStatus,
+      required StudentBehaviorEnum? behaviorStatus,
+      required this.homeworkNotes})
+      : _homeworkStatus = homeworkStatus , _behaviorStatus = behaviorStatus;
 
   @override
   String toString() {
@@ -114,6 +115,14 @@ class SessionActivityItemUiState {
       homeworkNotes: homeworkNotes ?? this.homeworkNotes,
     );
   }
+
+  isStudentPresent() => attended == true;
+
+  HomeworkEnum? get homeworkStatus =>
+      isStudentPresent() ? _homeworkStatus : null;
+
+  StudentBehaviorEnum? get behaviorStatus =>
+      isStudentPresent() ? _behaviorStatus : null;
 }
 
 class StudentReportItemUiState extends SessionActivityItemUiState {
