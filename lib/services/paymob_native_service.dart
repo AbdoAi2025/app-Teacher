@@ -7,9 +7,10 @@ import '../utils/LogUtils.dart';
 /// Paymob native SDK service that bridges Flutter with native Android and iOS SDKs
 class PaymobNativeService {
 
-
+  // Use your actual public key - this is just for testing
   static const String _publicKey = "egy_pk_test_Zxpr8meJ0u7SCkEnyRNSFV2UChgYAdZi";
   static const MethodChannel _channel = MethodChannel('paymob_sdk_flutter');
+  static const MethodChannel _legacyChannel = MethodChannel('paymob_payment');
 
   /// Pay with Paymob using native SDK
   ///
@@ -68,6 +69,96 @@ class PaymobNativeService {
       );
     }
   }
+
+  /// Legacy method: Pay with card using payment key (for backward compatibility)
+  ///
+  /// [paymentKey] - Payment key from Paymob API
+  /// [saveCard] - Whether to save card for future use
+  static Future<PaymobPaymentResult> payWithCard({
+    required String paymentKey,
+    bool saveCard = false,
+  }) async {
+    try {
+      final Map<String, dynamic> arguments = {
+        'paymentKey': paymentKey,
+        'save': saveCard,
+      };
+
+      final Map<dynamic, dynamic> result = await _legacyChannel.invokeMethod('payWithCard', arguments);
+
+      return PaymobPaymentResult.fromMap(Map<String, dynamic>.from(result));
+    } on PlatformException catch (e) {
+      return PaymobPaymentResult(
+        success: false,
+        error: e.message ?? 'Platform error occurred',
+      );
+    } catch (e) {
+      return PaymobPaymentResult(
+        success: false,
+        error: 'Unexpected error: $e',
+      );
+    }
+  }
+
+  /// Legacy method: Pay with wallet using payment key
+  ///
+  /// [paymentKey] - Payment key from Paymob API
+  /// [redirectUrl] - URL for wallet redirect
+  static Future<PaymobPaymentResult> payWithWallet({
+    required String paymentKey,
+    required String redirectUrl,
+  }) async {
+    try {
+      final Map<String, dynamic> arguments = {
+        'paymentKey': paymentKey,
+        'redirectUrl': redirectUrl,
+      };
+
+      final Map<dynamic, dynamic> result = await _legacyChannel.invokeMethod('payWithWallet', arguments);
+
+      return PaymobPaymentResult.fromMap(Map<String, dynamic>.from(result));
+    } on PlatformException catch (e) {
+      return PaymobPaymentResult(
+        success: false,
+        error: e.message ?? 'Platform error occurred',
+      );
+    } catch (e) {
+      return PaymobPaymentResult(
+        success: false,
+        error: 'Unexpected error: $e',
+      );
+    }
+  }
+
+  /// Legacy method: Save card using payment key
+  ///
+  /// [paymentKey] - Payment key from Paymob API
+  static Future<PaymobPaymentResult> saveCard({
+    required String paymentKey,
+  }) async {
+    try {
+      final Map<String, dynamic> arguments = {
+        'paymentKey': paymentKey,
+      };
+
+      final Map<dynamic, dynamic> result = await _legacyChannel.invokeMethod('saveCard', arguments);
+
+      return PaymobPaymentResult.fromMap(Map<String, dynamic>.from(result));
+    } on PlatformException catch (e) {
+      return PaymobPaymentResult(
+        success: false,
+        error: e.message ?? 'Platform error occurred',
+      );
+    } catch (e) {
+      return PaymobPaymentResult(
+        success: false,
+        error: 'Unexpected error: $e',
+      );
+    }
+  }
+
+  /// Get a publicly accessible public key for testing
+  static String get publicKey => _publicKey;
 }
 
 /// Result model for Paymob payment operations
