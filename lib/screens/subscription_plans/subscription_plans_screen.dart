@@ -13,6 +13,7 @@ import 'package:teacher_app/widgets/app_toolbar_widget.dart';
 import 'package:teacher_app/widgets/dialog_loading_widget.dart';
 import 'package:teacher_app/widgets/payment_methods_bottom_sheet.dart';
 
+import '../../dialogs/user_not_subscribed_dialog.dart';
 import '../../domain/usecases/get_my_students_list_use_case.dart';
 import '../../enums/payment_provider_type.dart';
 import '../../requests/get_my_students_request.dart';
@@ -218,7 +219,7 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
      if(selectedPaymentMethod == null) return;
 
      if(selectedPaymentMethod.isCashPayment){
-       showSuccessMessagePopup("Cash Payment Instruction".tr);
+       UserNotSubscribedDialog.showTransferByInstaPayDialog();
        return;
      }
 

@@ -292,8 +292,7 @@ final Map<String, String> ar = {
   "Continue": "متابعة",
   "No Payment Methods Available": "لا توجد طرق دفع متاحة",
   "No payment methods are currently available. Please try again later or contact support.": "لا توجد طرق دفع متاحة حالياً. يرجى المحاولة لاحقاً أو التواصل مع الدعم.",
-  "Cash Payment Instructions": "تعليمات الدفع النقدي",
-  "Cash Payment Description": "إذا اخترت طريقة الدفع النقدي، يجب عليك إرسال صورة المعاملة مع اسم المستخدم إلى مالك الخدمة وسيتم تفعيل الاشتراك خلال 48 ساعة، للوصول إلى المالك انتقل إلى تواصل معنا في الإعدادات.",
+  "Cash Payment Description": "إذا اخترت طريقة التحويل عن طريق انستاباي، يجب عليك إرسال صورة المعاملة مع اسم المستخدم إلى مالك الخدمة وسيتم تفعيل الاشتراك خلال 48 ساعة، للوصول إلى المالك انتقل إلى تواصل معنا في الإعدادات.",
   "Cash Payment Instruction": "يجب عليك إرسال صورة المعاملة مع اسم المستخدم إلى مالك الخدمة وسيتم تفعيل الاشتراك خلال 48 ساعة، للوصول إلى المالك انتقل إلى تواصل معنا في الإعدادات.",
   "Online Payment Instructions": "تعليمات الدفع الإلكتروني",
   "Online Payment Description": "إذا كانت طريقة الدفع إلكتروني أو محفظة إلكترونية فسيتم تفعيل الاشتراك فوراً.",
@@ -303,7 +302,7 @@ final Map<String, String> ar = {
   // Individual Payment Method Names
   "online": "الدفع بالبطاقة الإلكترونية",
   "wallet": "المحفظة الإلكترونية",
-  "cash": "الدفع النقدي",
+  "cash": "تحويل خارجي عن طريق انستاباي",
 
   // Date Filter Localization
   "Filter by Date": "تصفية حسب التاريخ",

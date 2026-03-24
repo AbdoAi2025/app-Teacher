@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/domain/states/current_subscription_plan_state.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
+import 'package:teacher_app/utils/open_insta_pay_utils.dart';
 import '../data/responses/current_subscription_plan_response.dart';
 import '../themes/app_colors.dart';
 import '../utils/LogUtils.dart';
@@ -155,5 +156,19 @@ class UserNotSubscribedDialog {
   static void _dismissDialog() {
     _isDialogShown = false;
     Get.back();
+  }
+
+  static void showTransferByInstaPayDialog() {
+
+    showConfirmationMessage(
+      "Cash Payment Instruction".tr, () {
+        OpenInstaPayUtils.openUrl();
+      },
+      barrierDismissible: false,
+      positiveButtonText: "Renew".tr,
+      negativeButtonText: "Got It".tr,
+      subTitleWidget: _buildContactWidget(),
+      onCancel: () {},
+    );
   }
 }

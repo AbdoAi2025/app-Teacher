@@ -274,8 +274,7 @@ final Map<String, String> enUS = {
   "Continue": "Continue",
   "No Payment Methods Available": "No Payment Methods Available",
   "No payment methods are currently available. Please try again later or contact support.": "No payment methods are currently available. Please try again later or contact support.",
-  "Cash Payment Instructions": "Cash Payment Instructions",
-  "Cash Payment Description": "If you select cash method, you must send the transaction image with username to the service owner and the subscription will be activated within 48 hours, to access to owner go to contact us in setting.",
+  "Cash Payment Description": "If you select Transfer by InstaPay method, you must send the transaction image with username to the service owner and the subscription will be activated within 48 hours, to access to owner go to contact us in setting.",
   "Cash Payment Instruction": "You must send the transaction image with username to the service owner and the subscription will be activated within 48 hours, to access to owner go to contact us in setting.",
   "Online Payment Instructions": "Online Payment Instructions",
   "Online Payment Description": "If the payment method online or wallet show the description that the subscription will be activated immediately.",
@@ -285,7 +284,7 @@ final Map<String, String> enUS = {
   // Individual Payment Method Names
   "online": "Online Card Payment",
   "wallet": "Mobile Wallet",
-  "cash": "Cash Payment",
+  "cash": "Transfer by InstaPay",
 
   // Date Filter Localization
   "Filter by Date": "Filter by Date",
