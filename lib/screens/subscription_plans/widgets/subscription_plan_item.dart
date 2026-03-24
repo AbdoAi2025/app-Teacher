@@ -398,14 +398,14 @@ class SubscriptionPlanItem extends StatelessWidget {
 
     if (planUiModel.expirationDate == null) return Colors.grey[600]!;
 
-    final now = DateTime.now();
     final expirationDate = planUiModel.expirationDate!;
-    final daysRemaining = expirationDate.difference(now).inDays;
+    final daysRemaining = expirationDate.remainingDays;
+    final isDayWarningLimit = expirationDate.warningLimitExceed;
 
     if (daysRemaining < 0) {
       // Expired
       return Colors.red[600]!;
-    } else if (daysRemaining <= 5) {
+    } else if (isDayWarningLimit) {
       // Warning (5 days or less)
       return Colors.orange[600]!;
     } else {
@@ -417,9 +417,8 @@ class SubscriptionPlanItem extends StatelessWidget {
   String _getRemainingDaysText() {
     if (planUiModel.expirationDate == null) return '';
 
-    final now = DateTime.now();
     final expirationDate = planUiModel.expirationDate!;
-    final daysRemaining = expirationDate.difference(now).inDays;
+    final daysRemaining = expirationDate.remainingDays;
 
     if (daysRemaining < 0) {
       final daysExpired = daysRemaining.abs();

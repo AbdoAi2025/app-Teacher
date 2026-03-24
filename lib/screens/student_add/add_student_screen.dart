@@ -330,6 +330,7 @@ import 'package:teacher_app/utils/message_utils.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
 import 'package:teacher_app/widgets/primary_button_widget.dart';
+import '../../dialogs/user_not_subscribed_dialog.dart';
 import '../../presentation/app_message_dialogs.dart';
 import '../../themes/app_colors.dart';
 import '../../validations/phone_validation.dart';
@@ -520,7 +521,7 @@ class AddStudentScreenState extends State<AddStudentScreen> {
 
         if(event is AddStudentStateStudentLimitExceeded){
           hideDialogLoading();
-          AppMessageDialogs.showUserNotSubscribedDialog(true);
+          UserNotSubscribedDialog.showUserNotSubscribedDialog(true);
         }else {
           onSaveStudentResult(event);
         }

@@ -17,6 +17,8 @@ import 'package:teacher_app/models/verify_payment_request.dart';
 import 'package:teacher_app/screens/subscription_plans/states/subscription_plan_item_ui_state.dart';
 import 'package:teacher_app/screens/subscription_plans/states/subscription_plans_state.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
+import 'package:teacher_app/domain/managers/current_subscription_plan_manager.dart';
+import 'package:teacher_app/domain/states/current_subscription_plan_state.dart';
 
 import '../../domain/usecases/subscribe_use_case.dart';
 import '../../models/initial_subscription_model.dart';
@@ -33,6 +35,9 @@ class SubscriptionPlansController extends GetxController {
 
   SubscribeUseCase subscribeUseCase = SubscribeUseCase();
 
+  // Access to subscription plan manager
+  CurrentSubscriptionPlanManager get subscriptionManager => CurrentSubscriptionPlanManager.instance;
+
   Rx<SubscriptionPlansState> state = Rx(SubscriptionPlansStateLoading());
 
   @override
@@ -48,15 +53,14 @@ class SubscriptionPlansController extends GetxController {
       // Load plans and current subscription in parallel
       final results = await Future.wait([
         getSubscriptionPlansUseCase.execute(),
-        getCurrentSubscriptionPlanUseCase.execute(),
+        subscriptionManager.getCurrentSubscriptionState(),
       ]);
 
       final plansResult = results[0] as AppResult<List<SubscriptionPlanModel>>;
-      final currentSubscriptionResult =
-          results[1] as AppResult<CurrentSubscriptionPlanResponse>;
+      final currentSubscriptionState = results[1] as CurrentSubscriptionPlanState;
 
-      appLog(
-          "SubscriptionPlansController loadAllData plansResult : $plansResult");
+      appLog("SubscriptionPlansController loadAllData plansResult: $plansResult");
+      appLog("SubscriptionPlansController currentSubscriptionState: ${currentSubscriptionState.runtimeType}");
 
       if (plansResult.isSuccess) {
         var planModels = plansResult.data ?? <SubscriptionPlanModel>[];
@@ -65,10 +69,13 @@ class SubscriptionPlansController extends GetxController {
             .toList();
         CurrentSubscriptionPlanResponse? currentSubscription;
 
-        if (currentSubscriptionResult.isSuccess) {
-          currentSubscription = currentSubscriptionResult.data;
-          appLog(
-              "SubscriptionPlansController currentSubscription: $currentSubscription");
+        // Extract subscription data from sealed state
+        if (currentSubscriptionState is CurrentSubscriptionPlanSuccess) {
+          currentSubscription = currentSubscriptionState.data;
+          appLog("SubscriptionPlansController currentSubscription: $currentSubscription");
+        } else if (currentSubscriptionState is CurrentSubscriptionPlanError) {
+          appLog("SubscriptionPlansController subscription error: ${currentSubscriptionState.message}");
+          // Continue without subscription data - user may not be subscribed
         }
 
         // Sort plans to show current subscription first and update current plan with expiration date
@@ -128,7 +135,8 @@ class SubscriptionPlansController extends GetxController {
 
   Future<void> loadSubscriptionPlans() => loadAllData();
 
-  void refreshSubscriptionPlans() {
+  Future<void> refreshSubscriptionPlans() async{
+    subscriptionManager.refresh();
     loadAllData();
   }
 
@@ -140,26 +148,12 @@ class SubscriptionPlansController extends GetxController {
     final currentState = state.value;
     if (currentState is SubscriptionPlansStateSuccess &&
         currentState.currentSubscription?.subscriptionExpireDate != null) {
-      return DateFormat('yyyy/MM/dd')
-          .format(currentState.currentSubscription!.subscriptionExpireDate!);
+      var subscriptionExpireDate = currentState.currentSubscription?.subscriptionExpireDate;
+     return subscriptionExpireDate!.getSubscriptionEndDateFormat('yyyy/MM/dd');
     }
-    // Fallback mock date
-    final endDate = DateTime.now().add(Duration(days: 25));
-    return DateFormat('yyyy/MM/dd').format(endDate);
+    return "";
   }
 
-  void renewCurrentSubscription() {
-    final currentState = state.value;
-    if (currentState is SubscriptionPlansStateSuccess &&
-        currentState.currentSubscription != null) {
-      Get.snackbar(
-        'Renew Subscription'.tr,
-        'Renewing ${currentState.currentSubscription!.planName}...',
-        snackPosition: SnackPosition.BOTTOM,
-      );
-      // TODO: Implement actual renewal logic
-    }
-  }
 
   CurrentSubscriptionPlanResponse? get currentSubscription {
     final currentState = state.value;
@@ -176,16 +170,6 @@ class SubscriptionPlansController extends GetxController {
       return currentState.currentSubscription!.planCode == plan.planCode;
     }
     return false;
-  }
-
-  void onPlanSelected(SubscriptionPlanItemUiState plan) {
-    // Handle plan selection - you can navigate to purchase screen or show details
-    Get.snackbar(
-      'Plan Selected'.tr,
-      'You selected ${plan.planName}',
-      snackPosition: SnackPosition.BOTTOM,
-    );
-    // TODO: Navigate to purchase/payment screen
   }
 
   Future<AppResult<InitialSubscriptionModel>> initiateSubscriptionProcess(

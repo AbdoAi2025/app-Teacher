@@ -56,6 +56,10 @@ class LoginController extends GetxController{
       return;
     }
 
+    if(getCheckUserSessionResult is UserSessionStateRemainDays) {
+      yield LoginStateRemainDays(getCheckUserSessionResult.remainingDays);
+      return;
+    }
 
     yield LoginStateSuccess();
 

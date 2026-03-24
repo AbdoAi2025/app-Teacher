@@ -29,8 +29,6 @@ class SettingsScreen extends StatefulWidget{
 
 class _SettingsScreenState extends State<SettingsScreen> {
 
-  SubscriptionPlansController subscriptionPlansController = Get.put(SubscriptionPlansController());
-
   get appVersion => AppSetting.getAppSetting().appVersion;
 
   @override

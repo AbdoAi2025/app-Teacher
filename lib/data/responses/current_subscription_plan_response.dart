@@ -1,4 +1,7 @@
 import 'package:teacher_app/utils/LogUtils.dart';
+import 'package:teacher_app/utils/safe_json_access.dart';
+
+import '../../models/subscription_date_model.dart';
 
 class CurrentSubscriptionPlanResponse {
   final String? planCode;
@@ -6,12 +9,19 @@ class CurrentSubscriptionPlanResponse {
   final int? studentLimit;
   final double? monthlyPrice;
   final double? yearlyPrice;
-  final DateTime? subscriptionExpireDate;
-  final bool isSubscribed;
-  final bool isExpired;
+  final SubscriptionDateModel subscriptionExpireDate;
   final int? totalStudentCount;
   final String? descriptionAr;
   final String? descriptionEn;
+  final bool? _isSubscribed;
+  final bool? _isExpired;
+
+  // Computed properties
+  bool get isSubscribed => _isSubscribed == true && planCode != null && planCode!.isNotEmpty;
+
+  bool get isExpired {
+    return subscriptionExpireDate.isExpired;
+  }
 
   CurrentSubscriptionPlanResponse({
     this.planCode,
@@ -19,13 +29,14 @@ class CurrentSubscriptionPlanResponse {
     this.studentLimit,
     this.monthlyPrice,
     this.yearlyPrice,
-    this.subscriptionExpireDate,
-    this.isSubscribed = false,
-    this.isExpired = false,
+    required this.subscriptionExpireDate,
     this.totalStudentCount,
     this.descriptionAr,
     this.descriptionEn,
-  });
+    bool? isSubscribed,
+    bool? isExpired,
+  }) : _isSubscribed = isSubscribed,
+        _isExpired = isExpired;
 
   factory CurrentSubscriptionPlanResponse.fromJson(Map<String, dynamic> json) {
     appLog("CurrentSubscriptionPlanResponse fromJson json:$json");
@@ -35,12 +46,9 @@ class CurrentSubscriptionPlanResponse {
       studentLimit: json['studentLimit'] as int?,
       monthlyPrice: (json['monthlyPrice'] as num?)?.toDouble(),
       yearlyPrice: (json['yearlyPrice'] as num?)?.toDouble(),
-      subscriptionExpireDate: json['subscriptionExpireDate'] != null
-          ? DateTime.tryParse(json['subscriptionExpireDate'].toString())
-          : null,
-
-      isSubscribed: json['isSubscribed'] as bool? ?? false,
-      isExpired: json['isExpired'] as bool? ?? false,
+      subscriptionExpireDate: SubscriptionDateModel(dateString: json.tryString('subscriptionExpireDate') ?? ""),
+      isSubscribed: json['subscribed'] as bool? ?? false,
+      isExpired: json['expired'] as bool? ?? false,
       totalStudentCount: json['totalStudentCount'] as int?,
       descriptionAr: json['descriptionAr'] as String?,
       descriptionEn: json['descriptionEn'] as String?,
@@ -54,7 +62,7 @@ class CurrentSubscriptionPlanResponse {
       'studentLimit': studentLimit,
       'monthlyPrice': monthlyPrice,
       'yearlyPrice': yearlyPrice,
-      'subscriptionExpireDate': subscriptionExpireDate?.toIso8601String(),
+      'subscriptionExpireDate': subscriptionExpireDate.toString(),
       'isSubscribed': isSubscribed,
       'isExpired': isExpired,
       'totalStudentCount': totalStudentCount,

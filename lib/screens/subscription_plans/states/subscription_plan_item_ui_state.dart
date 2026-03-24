@@ -3,6 +3,8 @@ import 'package:intl/intl.dart';
 import 'package:teacher_app/domain/models/subscription_plan_model.dart';
 import 'package:teacher_app/enums/subscription_plan_enum.dart';
 
+import '../../../models/subscription_date_model.dart';
+
 class SubscriptionPlanItemUiState {
   final String planCode;
   final String _planName;
@@ -13,7 +15,7 @@ class SubscriptionPlanItemUiState {
   final int studentLimit;
   final bool isActive;
   final bool isPopular;
-  final DateTime? expirationDate;
+  final SubscriptionDateModel? expirationDate;
   final String? descriptionAr;
   final String? descriptionEn;
   final String? purchaseCode;
@@ -36,9 +38,7 @@ class SubscriptionPlanItemUiState {
     this.purchaseCode,
   }) : _planName = planName;
 
-  factory SubscriptionPlanItemUiState.fromModel(
-      SubscriptionPlanModel model, bool isCurrentPlan,
-      {int? totalStudentCount}) {
+  factory SubscriptionPlanItemUiState.fromModel(SubscriptionPlanModel model, bool isCurrentPlan, {int? totalStudentCount}) {
     return SubscriptionPlanItemUiState(
         planCode: model.planCode ?? "",
         planName: model.planName ?? "",
@@ -77,7 +77,7 @@ class SubscriptionPlanItemUiState {
 
   String? get formattedExpirationDate {
     if (expirationDate == null) return null;
-    return DateFormat('yyyy/MM/dd').format(expirationDate!);
+    return  expirationDate?.getSubscriptionEndDateFormat();
   }
 
   String get localizedDescription {
@@ -117,6 +117,6 @@ class SubscriptionPlanItemUiState {
 
   bool isExpired() {
     if (expirationDate == null) return true;
-    return expirationDate!.isBefore(DateTime.now());
+    return expirationDate!.isExpired;
   }
 }

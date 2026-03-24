@@ -10,6 +10,8 @@ import 'package:teacher_app/models/check_user_session_model.dart';
 import 'package:teacher_app/models/profile_info_model.dart';
 import 'package:teacher_app/models/user_auth_model.dart';
 
+import '../../../models/subscription_date_model.dart';
+
 class IdentityRepositoryImpl extends IdentityRepository {
   LocalIdentityDataSource localIdentityDataSource = LocalIdentityDataSource();
   IdentityRemoteDataSource remoteIdentityDataSource =
@@ -76,7 +78,7 @@ class IdentityRepositoryImpl extends IdentityRepository {
     return CheckUserSessionModel(
       isActive: response.data?.active ?? false,
       isSubscribed: response.data?.subscribed ?? false,
-      subscriptionExpireDate: response.data?.subscriptionExpireDate,
+      subscriptionExpireDate: SubscriptionDateModel(dateString: response.data?.subscriptionExpireDate ?? ""),
     );
   }
 }

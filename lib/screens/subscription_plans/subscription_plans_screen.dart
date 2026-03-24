@@ -28,8 +28,7 @@ class SubscriptionPlansScreen extends StatefulWidget {
 
 class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
 
-  // late SubscriptionPlansController controller = Get.put(SubscriptionPlansController());
-  late SubscriptionPlansController controller = Get.find();
+  late SubscriptionPlansController controller = Get.put(SubscriptionPlansController());
 
   @override
   void initState() {
@@ -62,7 +61,7 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
 
   Widget _buildSuccessView(BuildContext context, SubscriptionPlansStateSuccess state) {
     return RefreshIndicator(
-      onRefresh: controller.loadSubscriptionPlans,
+      onRefresh: controller.refreshSubscriptionPlans,
       child: _buildAllPlansListView(context, state),
     );
   }
