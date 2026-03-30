@@ -5,12 +5,21 @@ def versionProperties = new Properties()
 versionProperties.load(new FileInputStream(versionPropertiesFile))
 
 buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+
     dependencies {
         // إضافة Android Gradle Plugin
 //        classpath 'com.android.tools.build:gradle:8.13.2'
 
         // إضافة Kotlin Gradle Plugin
 //        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.10"
+
+        // Google Services plugin
+        classpath 'com.google.gms:google-services:4.4.2'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:3.0.2'
     }
 }
 

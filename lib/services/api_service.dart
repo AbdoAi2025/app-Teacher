@@ -153,6 +153,7 @@ import 'package:teacher_app/appSetting/appSetting.dart';
 import 'package:teacher_app/app_mode.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
 import 'package:teacher_app/services/environment_service.dart';
+import 'package:teacher_app/services/device_info_service.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
 
 import '../main.dart';
@@ -185,9 +186,35 @@ class ApiService {
 
   static _init(Dio dio) async {
 
+    var baseUrl = EnvironmentService.baseUrl;
+    appLog("setting header baseUrl:$baseUrl");
+
+    // Set base URL and timeouts
+    dio.options = BaseOptions(
+      baseUrl: baseUrl,
+      connectTimeout: Duration(seconds: 30),
+      receiveTimeout: Duration(seconds: 30),
+    );
+
     dio.interceptors.add(
       InterceptorsWrapper(
-        onRequest: (options, handler) {
+        onRequest: (options, handler) async {
+          // Get device info with automatic initialization
+          final deviceInfo = await DeviceInfoService.instance.getDeviceInfo();
+          // Set headers dynamically for each request
+          options.headers.addAll({
+            "Content-Type": "application/json",
+            "Authorization": "Bearer $token",
+            "X-Platform": deviceInfo.platform,
+            "X-Device-ID": deviceInfo.deviceId ?? "unknown",
+            "X-Device-Name": deviceInfo.deviceName ?? "unknown",
+            "appVersion": appVersion,
+            "Accept-Language": currentLanguage,
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, POST,OPTIONS',
+            "Access-Control-Allow-Headers": "Content-Type, Authorization"
+          });
+
           return handler.next(options);
         },
         onResponse: (response, handler) {
@@ -205,25 +232,6 @@ class ApiService {
     );
 
     addDioLogging(dio);
-
-
-    appLog("setting header");
-
-    dio.options = BaseOptions(
-      baseUrl: EnvironmentService.baseUrl,
-      connectTimeout: Duration(seconds: 30),
-      receiveTimeout: Duration(seconds: 30),
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer $token",
-        "platform": Platform.isAndroid ? "Android" : "IOS",
-        "appVersion" : appVersion,
-        "Accept-Language" : currentLanguage,
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST,OPTIONS',
-        "Access-Control-Allow-Headers": "Content-Type, Authorization"
-      },
-    );
   }
 
   static void addDioLogging(Dio dio) {

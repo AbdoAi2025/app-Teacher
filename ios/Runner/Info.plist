@@ -56,5 +56,17 @@
 		<string>whatsapp</string>
 		<string>whatsapp-business</string>
 	</array>
+
+	<!-- Firebase Crashlytics -->
+	<key>firebase_crashlytics_collection_enabled</key>
+	<true/>
+
+	<!-- Background Processing for Firebase Messaging -->
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>background-processing</string>
+		<string>background-fetch</string>
+		<string>remote-notification</string>
+	</array>
 </dict>
 </plist>

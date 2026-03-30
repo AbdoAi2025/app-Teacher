@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -16,6 +18,7 @@ import 'package:teacher_app/utils/app_localization_utils.dart';
 import 'domain/models/app_locale_model.dart';
 import 'domain/usecases/get_app_setting_use_case.dart';
 import 'localization/app_translation.dart';
+import 'services/firebase_service.dart';
 
 
 import 'navigation/my_route_observer.dart';
@@ -30,6 +33,10 @@ final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase
+  await initializeFirebase();
+
   _initSystemUi();
   initAppLocale();
   await initAppEnvironment();
@@ -77,7 +84,11 @@ class _MyAppState extends State<MyApp> {
           var langCode =( appLocaleModel?.toLocale() ?? appLocale)?.languageCode;
           return OverlaySupport.global(
             child: GetMaterialApp(
-            navigatorObservers: [MyRouteObserver() , routeObserver], // attach observer 🚀
+            navigatorObservers: [
+              MyRouteObserver(),
+              routeObserver,
+              FirebaseService.instance.analytics.observer,
+            ], // attach observer 🚀
             navigatorKey: navigatorKey,
             textDirection: (rtlLanguages.contains(langCode)
                 ? TextDirection.rtl
@@ -171,6 +182,44 @@ Future<void> initAppLocale() async {
   appLocale = Locale(lang , country);
   AppLocalizationUtils.setLocale(AppLocaleModel(language: lang, country: country));
   Get.locale = appLocale;
+
+  // Log language change to Firebase
+  try {
+    await FirebaseService.instance.logLanguageChanged(language: lang);
+  } catch (e) {
+    appLog("Error logging language change: $e");
+  }
+}
+
+Future<void> initializeFirebase() async {
+  try {
+    await Firebase.initializeApp();
+
+    // Initialize Crashlytics
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+
+    // Pass all uncaught asynchronous errors to Crashlytics
+    PlatformDispatcher.instance.onError = (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      return true;
+    };
+
+    // Initialize Firebase services
+    await FirebaseService.instance.initializeServices();
+
+    // Log app open event
+    await FirebaseService.instance.logAppOpen();
+
+    appLog("Firebase initialized successfully");
+  } catch (e) {
+    appLog("Error initializing Firebase: $e");
+    // Still try to record the error even if initialization failed
+    try {
+      await FirebaseCrashlytics.instance.recordError(e, StackTrace.current, reason: 'Firebase initialization failed');
+    } catch (_) {
+      // If crashlytics also fails, just log it
+    }
+  }
 }
 
 Future<void> initAppEnvironment() async {

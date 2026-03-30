@@ -60,7 +60,7 @@ void showErrorMessagePopup(String message ,  {String? buttonText, Function()? on
           mainAxisSize: MainAxisSize.min,
           children: [
             ConfirmDailogWidget(
-                title: message,
+                title: message.isNotEmpty ? message : "Unknown error".tr,
                 positive_button_text: buttonText ?? "Ok".tr,
                 showCancelBtn: false,
                 onSuccess: () {onClose?.call();},
