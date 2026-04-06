@@ -8,6 +8,7 @@ import 'package:teacher_app/screens/login/login_state.dart';
 
 import '../../domain/usecases/get_check_user_session_state_use_case.dart';
 import '../../main.dart';
+import '../../services/environment_service.dart';
 
 class LoginController extends GetxController{
 
@@ -55,6 +56,10 @@ class LoginController extends GetxController{
       return;
     }
 
+    if(getCheckUserSessionResult is UserSessionStateRemainDays) {
+      yield LoginStateRemainDays(getCheckUserSessionResult.remainingDays);
+      return;
+    }
 
     yield LoginStateSuccess();
 

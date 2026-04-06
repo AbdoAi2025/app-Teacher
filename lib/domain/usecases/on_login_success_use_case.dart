@@ -6,6 +6,7 @@ import 'package:teacher_app/domain/base_use_case.dart';
 import 'package:teacher_app/domain/models/login_model.dart';
 import 'package:teacher_app/domain/models/login_result.dart';
 import 'package:teacher_app/models/user_auth_model.dart';
+import 'package:teacher_app/services/firebase_service.dart';
 
 import '../../data/responses/error_response.dart';
 import '../../exceptions/app_http_exception.dart';
@@ -30,6 +31,23 @@ class OnLoginSuccessUseCase extends BaseUseCase<LoginResult>{
           id: loginResult.id,
           name: loginResult.name
       ));
+
+      // Set up Firebase user context after successful login
+      try {
+        await FirebaseService.instance.setUser(
+          userId: loginResult.id,
+          name: loginResult.name,
+          role: 'teacher', // You can add role to LoginResult if available
+        );
+
+        // Log successful login to Firebase Analytics
+        await FirebaseService.instance.logLogin(method: 'username_password');
+
+        appLog("Firebase user context set for user: ${loginResult.id}");
+      } catch (e) {
+        appLog("Error setting Firebase user context: $e");
+        // Continue with login even if Firebase setup fails
+      }
 
       return AppResult.success(loginResult);
     },);

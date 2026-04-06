@@ -26,10 +26,15 @@ class BaseUseCase<T> {
         return AppResult.error(AppNoInternetException());
       }
       var errorResponse = ErrorResponse.fromJson(ex.response?.data);
-      return AppResult.error(AppHttpException(errorResponse.message ?? ex.message , ex.response?.statusCode));
+      return onErrorResponse(errorResponse , ex);
+
     }
     appLog("BaseUseCase execute ex:${ex.toString()}");
     return AppResult.error(AppHttpException(ex.toString()));
+  }
+
+  AppResult<T> onErrorResponse(ErrorResponse errorResponse, DioException ex) {
+    return  AppResult.error(AppHttpException(errorResponse.message ?? ex.message , ex.response?.statusCode));
   }
 
 }

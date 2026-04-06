@@ -13,7 +13,11 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../domain/usecases/change_app_locale_use_case.dart';
 import '../../navigation/app_navigator.dart';
+import '../../navigation/app_routes.dart';
 import '../../widgets/app_toolbar_widget.dart';
+import '../subscription_plans/states/subscription_plans_state.dart';
+import '../subscription_plans/subscription_plans_controller.dart';
+import 'widgets/current_subscription_plan_bottom_sheet.dart';
 
 class SettingsScreen extends StatefulWidget{
 
@@ -24,6 +28,9 @@ class SettingsScreen extends StatefulWidget{
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+
+  get appVersion => AppSetting.getAppSetting().appVersion;
+
   @override
   Widget build(BuildContext context) {
     appLog("SettingsScreen build");
@@ -33,11 +40,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
           child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Column(
-              spacing: 20,
               children: [
-                _language(),
-                _privacyPolicy(),
-                _deleteAccount()
+                Column(
+                  spacing: 20,
+                  children: [
+                    _language(),
+                    _mySubscription(),
+                    _privacyPolicy(),
+                    _contactUs(),
+                    _deleteAccount()
+                  ],
+                ),
+
+                if(appVersion != null)...{
+                  Spacer(),
+                  _versionInfo(appVersion!.toString()),
+                }
+
               ],
             ),
           )),
@@ -53,7 +72,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
       },
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 15 , vertical: 10),
+        padding: EdgeInsets.symmetric(horizontal: 15 , vertical: 15),
         decoration: AppBackgroundStyle.backgroundWithShadow(),
         child: Row(
           spacing: 5,
@@ -87,6 +106,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return  _cell("Privacy Policy".tr , Icons.privacy_tip_outlined ,onPrivacyPolicyClick );
   }
 
+  _contactUs() {
+    return  _cell("Contact Us".tr , Icons.support_agent ,onContactUsClick );
+  }
+
+  _mySubscription() {
+    return _cell("My Subscription".tr , Icons.subscriptions_outlined , onMySubscriptionClick );
+  }
+
   _deleteAccount() {
     return  _cell("Delete Account".tr , Icons.person_off ,onDeleteAccount );
   }
@@ -106,12 +133,50 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
+  Future<void> onContactUsClick() async {
+    final String phoneNumber = "+201063271529";
+    final String whatsappUrl = "https://wa.me/$phoneNumber";
+    final Uri uri = Uri.parse(whatsappUrl);
+
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(
+        uri,
+        mode: LaunchMode.externalApplication,
+      );
+    } else {
+      debugPrint("❌ Could not launch WhatsApp with $phoneNumber");
+    }
+  }
+
+  void onMySubscriptionClick() {
+    AppNavigator.navigateToSubscriptionPlans();
+    //
+    // if(subscriptionPlansController.state.value is! SubscriptionPlansStateSuccess){
+    //   subscriptionPlansController.loadAllData();
+    // }
+    // CurrentSubscriptionPlanBottomSheet.show(context, subscriptionPlansController);
+  }
+
   void onDeleteAccount() {
-    showConfirmationMessage("delete_account_confirm_message", (){
+    showConfirmationMessage("delete_account_confirm_message".tr, (){
       LogoutUseCase().execute();
       AppNavigator.navigateToLogin();
     });
 
+  }
+
+  Widget _versionInfo(String version) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20.0),
+      child: Text(
+        "Version $version",
+        style: TextStyle(
+          color: Colors.grey[600],
+          fontSize: 14,
+        ),
+        textAlign: TextAlign.center,
+      ),
+    );
   }
 
   Widget _cell(String text , IconData icon , Function() onClick) {

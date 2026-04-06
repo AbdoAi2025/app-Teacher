@@ -2,6 +2,7 @@
 import 'dart:io';
 
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:teacher_app/appSetting/appSetting.dart';
 import 'package:teacher_app/base/AppResult.dart';
 import 'package:teacher_app/data/repositories/app_config_repository.dart';
 import 'package:teacher_app/domain/base_use_case.dart';
@@ -16,7 +17,7 @@ class ChangeAppVersionUseCase extends BaseUseCase<CheckAppVersionModel>{
   Future<AppResult<CheckAppVersionModel>> execute() async {
     return call(() async {
 
-      var appVersion = await _getAppVersion();
+      var appVersion = AppSetting.getAppSetting().appVersion;
 
       var request = CheckAppVersionRequest(
         version:  appVersion,
@@ -28,18 +29,7 @@ class ChangeAppVersionUseCase extends BaseUseCase<CheckAppVersionModel>{
     });
   }
 
-  Future<double?> _getAppVersion() async {
-    final info = await PackageInfo.fromPlatform();
-    String versionName = info.version;      // e.g. "1.2.3"
-    String buildNumber = info.buildNumber;  // e.g. "42"
-    print("App Version: $versionName ($buildNumber)");
 
-    if(Platform.isIOS){
-      String majorMinor = versionName.split(".").take(2).join(".");
-      return double.tryParse(majorMinor);
-    }
-    return double.tryParse(versionName);
-  }
 
   //
   // Future<double?> _getAndroidVersion() async {

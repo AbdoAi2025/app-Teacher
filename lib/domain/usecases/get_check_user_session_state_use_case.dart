@@ -16,6 +16,10 @@ class UserSessionStateInvalidSession extends UserSessionState{}
 class UserSessionStateNotSubscribed extends UserSessionState{}
 class UserSessionStateNotActive extends UserSessionState{}
 class UserSessionStateSuccess extends UserSessionState{}
+class UserSessionStateRemainDays extends UserSessionState{
+  final int remainingDays;
+  UserSessionStateRemainDays(this.remainingDays);
+}
 
 
 class GetCheckUserSessionStateUseCase  {
@@ -48,6 +52,13 @@ class GetCheckUserSessionStateUseCase  {
 
     if(checkUserSession != null && !checkUserSession.isSubscribed){
       return UserSessionStateNotSubscribed();
+    }
+
+    if(checkUserSession != null && checkUserSession.isSubscribed == true){
+      final remainingDays = checkUserSession.getRemainingDays();
+      if(remainingDays != null && checkUserSession.warningLimitExceed && remainingDays >= 0){
+        return UserSessionStateRemainDays(remainingDays);
+      }
     }
 
     return UserSessionStateSuccess();

@@ -5,6 +5,7 @@ import 'package:teacher_app/screens/session_details/args/session_details_args_mo
 import 'package:teacher_app/screens/student_reports/states/student_reports_state.dart';
 import 'package:teacher_app/themes/app_colors.dart';
 import 'package:teacher_app/utils/app_background_styles.dart';
+import 'package:teacher_app/widgets/app_error_widget.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'package:teacher_app/widgets/behavior_status_widget.dart';
 import 'package:teacher_app/widgets/empty_view_widget.dart';
@@ -20,8 +21,10 @@ import '../../widgets/primary_button_widget.dart';
 import '../../widgets/quiz_grade_widget.dart';
 import '../report_full_report/args/student_full_report_args.dart';
 import '../session_details/states/session_details_ui_state.dart';
+import 'models/date_filter_model.dart';
 import 'states/session_item_ui_state.dart';
 import 'student_reports_controller.dart';
+import 'widgets/date_filter_bottom_sheet.dart';
 
 class StudentsReportsScreen extends StatefulWidget {
   const StudentsReportsScreen({super.key});
@@ -87,21 +90,21 @@ class _StudentsReportsScreenState
   }
 
   _showError(StudentReportsStateError state) {
-    return ErrorWidget(state.exception?.toString() ?? "");
+    return Center(child: AppErrorWidget(message : state.exception?.toString() ?? ""));
   }
 
   _showDetails(StudentReportsStateSuccess state) {
-    if (state.uiStates.isEmpty) {
-      return _emptyTable();
-    }
-
+    var isEmpty = state.uiStates.isEmpty;
     return Column(
       spacing: 20,
       children: [
+        if(!isEmpty)
         _info(state),
+        _filterSection(),
         Expanded(
-          child: _table(state.uiStates),
+          child: isEmpty ? _emptyTable() : _table(state.uiStates),
         ),
+        if(!isEmpty)
         _creteReport(state)
       ],
     );
@@ -327,8 +330,64 @@ class _StudentsReportsScreenState
     return PrimaryButtonWidget(text: "Send Report".tr, onClick: () {
       AppNavigator.navigateToStudentFullReportScreen(
           StudentFullReportArgs(
-              state: state
+              state: state,
+              dateFilter: controller.currentDateFilter.value,
           ));
     });
+  }
+
+  Widget _filterSection() {
+    return Obx(() {
+      return InkWell(
+        onTap: _showDateFilterBottomSheet,
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: AppColors.color_DBD5CC),
+          ),
+          child: Row(
+            spacing: 8,
+            children: [
+              Icon(Icons.filter_list, color: AppColors.appMainColor, size: 20),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AppTextWidget(
+                      'Filter by Date'.tr,
+                      style: AppTextStyle.label.copyWith(
+                        // color: AppColors.lightGrey,
+                        fontSize: 12,
+                      ),
+                    ),
+                    AppTextWidget(
+                      controller.currentFilterDisplayText.tr,
+                      style: AppTextStyle.label.copyWith(
+                        color: AppColors.textSecondaryColor,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(Icons.edit, color: AppColors.appMainColor, size: 18),
+            ],
+          ),
+        ),
+      );
+    });
+  }
+
+  void _showDateFilterBottomSheet() {
+    DateFilterBottomSheet.show(
+      context: context,
+      currentFilter: controller.currentDateFilter.value,
+      onFilterApplied: (filter) {
+        controller.applyDateFilter(filter);
+      },
+    );
   }
 }

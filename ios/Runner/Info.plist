@@ -2,6 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+
+	<key>CFBundleShortVersionString</key>
+	<string>1.5</string>
+    <key>CFBundleVersion</key>
+    <string>1</string>
+
 	<key>contact</key>
 	<string></string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
@@ -20,12 +26,8 @@
 	<string>teacher_app</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSContactsUsageDescription</key>
@@ -53,6 +55,18 @@
 	<array>
 		<string>whatsapp</string>
 		<string>whatsapp-business</string>
+	</array>
+
+	<!-- Firebase Crashlytics -->
+	<key>firebase_crashlytics_collection_enabled</key>
+	<true/>
+
+	<!-- Background Processing for Firebase Messaging -->
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>background-processing</string>
+		<string>background-fetch</string>
+		<string>remote-notification</string>
 	</array>
 </dict>
 </plist>

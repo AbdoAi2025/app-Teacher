@@ -330,6 +330,8 @@ import 'package:teacher_app/utils/message_utils.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
 import 'package:teacher_app/widgets/primary_button_widget.dart';
+import '../../dialogs/user_not_subscribed_dialog.dart';
+import '../../presentation/app_message_dialogs.dart';
 import '../../themes/app_colors.dart';
 import '../../validations/phone_validation.dart';
 import '../../widgets/app_phone_input_text_field_widget.dart';
@@ -518,7 +520,13 @@ class AddStudentScreenState extends State<AddStudentScreen> {
   void onSaveGroupClick() {
     getController().onSave().listen(
       (event) {
-        onSaveStudentResult(event);
+
+        if(event is AddStudentStateStudentLimitExceeded){
+          hideDialogLoading();
+          UserNotSubscribedDialog.showUserNotSubscribedDialog(true);
+        }else {
+          onSaveStudentResult(event);
+        }
       },
     );
   }
