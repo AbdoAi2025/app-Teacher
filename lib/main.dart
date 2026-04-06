@@ -1,9 +1,12 @@
 import 'dart:ui';
 
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:teacher_app/appSetting/appSetting.dart';
 import 'package:teacher_app/navigation/app_routes.dart';
 import 'package:teacher_app/navigation/app_routes_screens.dart';
@@ -14,22 +17,33 @@ import 'package:teacher_app/utils/app_localization_utils.dart';
 import 'domain/models/app_locale_model.dart';
 import 'domain/usecases/get_app_setting_use_case.dart';
 import 'localization/app_translation.dart';
+import 'services/firebase_service.dart';
 
 
 import 'navigation/my_route_observer.dart';
 import 'services/api_service.dart';
+import 'services/environment_service.dart';
 
 Locale? appLocale;
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
-
 void main() async {
-
-
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Initialize Firebase
+  await initializeFirebase();
+
+  _initSystemUi();
+  initAppLocale();
+  await initAppEnvironment();
+  await AppSetting.initAppVersion();
+  ApiService.startApiLoggerIfNeeded();
+  runApp(MyApp());
+}
+
+Future<void> _initSystemUi() async {
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
@@ -41,15 +55,7 @@ void main() async {
     [DeviceOrientation.portraitUp],
   );
 
-  initAppLocale();
-
-  await AppSetting.initAppVersion();
-
-  runApp(MyApp());
 }
-
-
-
 
 class MyApp extends StatefulWidget {
 
@@ -74,8 +80,13 @@ class _MyAppState extends State<MyApp> {
         builder: (context, AppSetting setting, _) {
           var appLocaleModel = setting.appLocaleModel;
           var langCode =( appLocaleModel?.toLocale() ?? appLocale)?.languageCode;
-          return GetMaterialApp(
-            navigatorObservers: [MyRouteObserver() , routeObserver], // attach observer 🚀
+          return OverlaySupport.global(
+            child: GetMaterialApp(
+            navigatorObservers: [
+              MyRouteObserver(),
+              routeObserver,
+              _getFirebaseObserver(),
+            ], // attach observer
             navigatorKey: navigatorKey,
             textDirection: (rtlLanguages.contains(langCode)
                 ? TextDirection.rtl
@@ -153,7 +164,7 @@ class _MyAppState extends State<MyApp> {
                 ),
               ),
             ),
-          );
+          ));
         });
   }
 }
@@ -169,6 +180,74 @@ Future<void> initAppLocale() async {
   appLocale = Locale(lang , country);
   AppLocalizationUtils.setLocale(AppLocaleModel(language: lang, country: country));
   Get.locale = appLocale;
+
+  // Log language change to Firebase
+  try {
+    await FirebaseService.instance.logLanguageChanged(language: lang);
+  } catch (e) {
+    appLog("Error logging language change: $e");
+  }
 }
 
+Future<void> initializeFirebase() async {
+  try {
+    appLog("Starting Firebase initialization...");
+    await Firebase.initializeApp();
+    appLog("Firebase core initialized successfully");
+
+    // Initialize Crashlytics
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+
+    // Pass all uncaught asynchronous errors to Crashlytics
+    PlatformDispatcher.instance.onError = (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      return true;
+    };
+
+    appLog("Crashlytics configured successfully");
+
+    // Initialize Firebase services
+    await FirebaseService.instance.initializeServices();
+    appLog("Firebase services initialized successfully");
+
+    // Log app open event
+    await FirebaseService.instance.logAppOpen();
+    appLog("Firebase app open event logged");
+
+    appLog("Firebase initialized successfully");
+  } catch (e) {
+    appLog("Error initializing Firebase: $e");
+    // Still try to record the error even if initialization failed
+    try {
+      await FirebaseCrashlytics.instance.recordError(e, StackTrace.current, reason: 'Firebase initialization failed');
+    } catch (_) {
+      // If crashlytics also fails, just log it
+      appLog("Failed to record Firebase initialization error to Crashlytics");
+    }
+  }
+}
+
+Future<void> initAppEnvironment() async {
+  try {
+    final savedEnvironment = await EnvironmentService.getEnvironment();
+    AppMode.mode = savedEnvironment;
+    await EnvironmentService.loadCustomLocalUrl();
+    appLog("App environment initialized: ${EnvironmentService.getEnvironmentName(savedEnvironment)}");
+    appLog("Custom local URL: ${EnvironmentService.currentCustomLocalUrl}");
+  } catch (e) {
+    appLog("Error initializing app environment: $e");
+    AppMode.mode = AppMode.defaultMode; // Default fallback
+  }
+}
+
+NavigatorObserver _getFirebaseObserver() {
+  try {
+    // Check if Firebase is initialized before accessing analytics
+    return FirebaseService.instance.analytics.observer;
+  } catch (e) {
+    appLog("Firebase observer not available yet: $e");
+    // Return a no-op observer if Firebase is not ready
+    return NavigatorObserver();
+  }
+}
 

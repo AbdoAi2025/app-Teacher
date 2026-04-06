@@ -31,4 +31,8 @@ class IdentityRemoteDataSource {
 
   }
 
+  Future<void> logout() async {
+    await ApiService.getInstance().post(EndPoints.logout);
+  }
+
 }

@@ -9,9 +9,12 @@ import 'package:teacher_app/widgets/app_text_field_widget.dart';
 import 'package:teacher_app/widgets/dialog_loading_widget.dart';
 import 'package:teacher_app/widgets/primary_button_widget.dart';
 
+import '../../dialogs/user_not_active_dialog.dart';
+import '../../dialogs/user_not_subscribed_dialog.dart';
 import '../../generated/assets.dart';
 import '../../widgets/app_password_field_widget.dart';
 import '../../widgets/app_toolbar_widget.dart';
+import '../../widgets/environment_display_widget.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -39,6 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
             spacing: 20,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const EnvironmentDisplayWidget(),
               Image(
                 image: AssetImage(Assets.imagesLogo),
                 height: 200,
@@ -94,6 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+
   void onLoginClick() {
     controller.login().listen(
       (event) {
@@ -110,14 +115,18 @@ class _LoginScreenState extends State<LoginScreen> {
             showErrorMessageEx(result.exception);
             break;
           case LoginStateInvalidSession():
-            AppMessageDialogs.showUserNotActive();
+            UserNotActiveDialog.showUserNotActive();
             break;
           case LoginStateNotSubscribed():
-            AppMessageDialogs.showUserNotSubscribedDialog();
+            AppNavigator.navigateToHome();
+            UserNotSubscribedDialog.showUserNotSubscribedDialog();
             break;
           case LoginStateNotActive():
-            AppMessageDialogs.showUserNotActive();
+            UserNotActiveDialog.showUserNotActive();
             break;
+          case LoginStateRemainDays():
+            AppNavigator.navigateToHome();
+            UserNotSubscribedDialog.showSubscriptionExpiringDialog(remainingDays: result.remainingDays,);();
         }
       },
     );

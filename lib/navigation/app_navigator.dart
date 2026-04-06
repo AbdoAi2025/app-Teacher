@@ -82,6 +82,10 @@ class AppNavigator {
     Get.toNamed(AppRoutes.studentFullReport , arguments: args);
   }
 
+  static void navigateToSubscriptionPlans() {
+    Get.toNamed(AppRoutes.subscriptionPlans);
+  }
+
   static void back() {
     Get.back();
   }

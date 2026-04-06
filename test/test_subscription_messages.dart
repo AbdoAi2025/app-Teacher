@@ -3,6 +3,7 @@ import 'package:teacher_app/models/check_user_session_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/localization/app_translation.dart';
+import 'package:teacher_app/models/subscription_date_model.dart';
 
 void main() async {
   // Initialize GetX and localization
@@ -24,7 +25,7 @@ void main() async {
     final sessionModel = CheckUserSessionModel(
       isActive: true,
       isSubscribed: true,
-      subscriptionExpireDate: expireDateStr,
+      subscriptionExpireDate: SubscriptionDateModel(dateString: expireDateStr),
     );
 
     // Test English

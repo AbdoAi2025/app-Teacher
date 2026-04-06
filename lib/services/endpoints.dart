@@ -17,7 +17,7 @@ class EndPoints{
   ///api/v1/users/signin
   static const String login = "$apiV1/users/signin";
   static const String register = "$apiV1/teachers/add";
-  static const String logout = "$apiV1/users/signout";
+  static const String logout = "$apiV1/users/logout";
   static const String checkSession = "$apiV1/users/checkSession";
 
   /*Groups*/
@@ -42,6 +42,18 @@ class EndPoints{
   static const String getMySessions = "$apiV1/sessions/getMySessions";
   static const String checkAppVersion = "$apiV1/appVersions/check";
 
+  /*Subscription*/
+  static const String getSubscriptionPlans = "$apiV1/subscription/plans";
+  static const String getCurrentSubscriptionPlan = "$apiV1/teachers/current-subscription-plan";
+  static const String verifyGooglePlayPurchase = "$apiV1/subscription/verify-google-play-purchase";
+  static const String initiateSubscription = "$apiV1/payments/subscription/initiate";
+  static const String subscribe = "$apiV1/teachers/subscribe";
+
+  /*Payment*/
+  static const String verifyPayment = "$apiV1/payments/verify";
+  static const String getPaymentMethods = "$apiV1/payment-methods/enabled";
+
+  static String updateFcmToken = "$apiV1/api/v1/fcm/register-token";
 
 
 }

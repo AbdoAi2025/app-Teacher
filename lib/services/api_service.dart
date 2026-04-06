@@ -145,38 +145,30 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_alice/alice.dart';
 import 'package:get/get.dart';
+import 'package:shake/shake.dart';
 import 'package:talker_dio_logger/talker_dio_logger.dart';
 import 'package:teacher_app/appSetting/appSetting.dart';
 import 'package:teacher_app/app_mode.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
+import 'package:teacher_app/services/environment_service.dart';
+import 'package:teacher_app/services/device_info_service.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
 
-const String prodBaseUrl = "https://assistant-app-2136afb92d95.herokuapp.com";
-const String devBaseUrl = "https://assistant-app-2136afb92d95.herokuapp.com";
-const String localBaseUrlOrange = "http://192.168.2.179:8080";
-const String localBaseUrlTpLink = "http://192.168.1.105:8080";
-const String localBaseUrlOnePlusLink = "http://10.19.38.129:8080";
-const String localBaseUrlVodafone = "http://192.168.8.176:8080";
-// const String localBaseUrlOnPlus = "http://192.168.212.129:8080";
-// const String localBaseUrl = "http://192.168.100.70:8080";
+import '../main.dart';
 
-// const String localBaseUrl = localBaseUrlVodafone;
-const String localBaseUrl = localBaseUrlOrange;
-// const String localBaseUrl = localBaseUrlTpLink;
-// const String localBaseUrl = localBaseUrlOnePlusLink;
 
-var baseUrl = switch (AppMode.mode) {
-  AppMode.dev => devBaseUrl,
-  AppMode.local => localBaseUrl,
-  _ => prodBaseUrl
-};
+
 
 // Create Alice with the navigator key
 // final alice = Alice(navigatorKey: navigatorKey);
 
 class ApiService {
   static Dio? _dio;
+
+  // Create Alice with the navigator key
+  static final  alice = Alice(navigatorKey: navigatorKey, showNotification: kDebugMode,);
 
   static Dio getInstance() {
     // var instance = _dio;
@@ -194,19 +186,35 @@ class ApiService {
 
   static _init(Dio dio) async {
 
-    dio.interceptors.add(
-      TalkerDioLogger(
-        settings: const TalkerDioLoggerSettings(
-          printRequestHeaders: !kReleaseMode,
-          printResponseHeaders: !kReleaseMode,
-          printResponseMessage: !kReleaseMode,
-        ),
-      ),
+    var baseUrl = EnvironmentService.baseUrl;
+    appLog("setting header baseUrl:$baseUrl");
+
+    // Set base URL and timeouts
+    dio.options = BaseOptions(
+      baseUrl: baseUrl,
+      connectTimeout: Duration(seconds: 30),
+      receiveTimeout: Duration(seconds: 30),
     );
 
     dio.interceptors.add(
       InterceptorsWrapper(
-        onRequest: (options, handler) {
+        onRequest: (options, handler) async {
+          // Get device info with automatic initialization
+          final deviceInfo = await DeviceInfoService.instance.getDeviceInfo();
+          // Set headers dynamically for each request
+          options.headers.addAll({
+            "Content-Type": "application/json",
+            "Authorization": "Bearer $token",
+            "X-Platform": deviceInfo.platform,
+            "X-Device-ID": deviceInfo.deviceId ?? "unknown",
+            "X-Device-Name": deviceInfo.deviceName ?? "unknown",
+            "appVersion": appVersion,
+            "Accept-Language": currentLanguage,
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, POST,OPTIONS',
+            "Access-Control-Allow-Headers": "Content-Type, Authorization"
+          });
+
           return handler.next(options);
         },
         onResponse: (response, handler) {
@@ -223,30 +231,52 @@ class ApiService {
       ),
     );
 
-
-    appLog("setting header");
-
-    dio.options = BaseOptions(
-      baseUrl: baseUrl,
-      connectTimeout: Duration(seconds: 30),
-      receiveTimeout: Duration(seconds: 30),
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer $token",
-        "platform": Platform.isAndroid ? "Android" : "IOS",
-        "appVersion" : appVersion,
-        "Accept-Language" : currentLanguage,
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST,OPTIONS',
-        "Access-Control-Allow-Headers": "Content-Type, Authorization"
-      },
-    );
+    addDioLogging(dio);
   }
 
+  static void addDioLogging(Dio dio) {
+    addAliceLogging(dio);
+    addTalkerDioLogger(dio);
+  }
+
+  static void addAliceLogging(Dio dio) {
+    if (AppMode.isDebug || AppMode.isDev || AppMode.isLocal) {
+      dio.interceptors.add(alice.getDioInterceptor());
+    }
+  }
+
+  static void addTalkerDioLogger(Dio dio) {
+    dio.interceptors.add(
+      TalkerDioLogger(
+        settings: const TalkerDioLoggerSettings(
+          printRequestHeaders: !kReleaseMode,
+          printResponseHeaders: !kReleaseMode,
+          printResponseMessage: !kReleaseMode,
+        ),
+      ),
+    );
+  }
 
   static String get token => AppSetting.getAppSetting().accessToken;
   static String get currentLanguage =>  Get.locale?.languageCode ?? "en";
   static double? get appVersion =>  AppSetting.getAppSetting().appVersion;
+
+
+
+
+  static void startApiLoggerIfNeeded() {
+
+    var showApiLogger = AppMode.showApiLogger;
+
+    appLog("startApiLoggerIfNeeded showApiLogger:$showApiLogger");
+
+    if (showApiLogger) { return; }
+    ShakeDetector.autoStart(
+        onPhoneShake: (ShakeEvent event) {
+          alice.showInspector();
+        }
+    );
+  }
 
 
 }

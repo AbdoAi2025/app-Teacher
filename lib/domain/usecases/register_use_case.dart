@@ -5,6 +5,7 @@ import 'package:teacher_app/domain/base_use_case.dart';
 import 'package:teacher_app/domain/models/register_model.dart';
 import 'package:teacher_app/models/profile_info_model.dart';
 import 'package:teacher_app/models/user_auth_model.dart';
+import 'package:teacher_app/services/firebase_service.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
 
 class RegisterUseCase extends BaseUseCase<dynamic> {
@@ -28,6 +29,23 @@ class RegisterUseCase extends BaseUseCase<dynamic> {
           id: registerResult.id,
           name: registerResult.name
       ));
+
+      // Set up Firebase user context after successful registration
+      try {
+        await FirebaseService.instance.setUser(
+          userId: registerResult.id,
+          name: registerResult.name,
+          role: 'teacher',
+        );
+
+        // Log successful signup to Firebase Analytics
+        await FirebaseService.instance.analytics.logSignUp(method: 'username_password');
+
+        appLog("Firebase user context set for new user: ${registerResult.id}");
+      } catch (e) {
+        appLog("Error setting Firebase user context after registration: $e");
+        // Continue with registration even if Firebase setup fails
+      }
 
       return AppResult.success(null);
     });

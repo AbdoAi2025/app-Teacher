@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:teacher_app/dialogs/force_update_dialog.dart';
 import 'package:teacher_app/generated/assets.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
 import 'package:teacher_app/screens/splash/SplashController.dart';
@@ -9,8 +10,11 @@ import 'package:teacher_app/utils/LogUtils.dart';
 import 'package:teacher_app/utils/message_utils.dart';
 import 'package:teacher_app/utils/open_store_utils.dart';
 
+import '../../dialogs/user_not_active_dialog.dart';
+import '../../dialogs/user_not_subscribed_dialog.dart';
 import '../../presentation/app_message_dialogs.dart';
 import '../../utils/whatsapp_utils.dart';
+import '../../widgets/environment_display_widget.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -31,13 +35,29 @@ class _SplashscreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                fit: BoxFit.fill,
-                image: AssetImage(Assets.imagesSplashScreen))),
+      body: Stack(
+        children: [
+          Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    fit: BoxFit.fill,
+                    image: AssetImage(Assets.imagesSplashScreen))),
+          ),
+          Positioned(
+            top: 60,
+            left: 20,
+            right: 20,
+            child: Row(
+              children: [
+                const EnvironmentDisplayWidget(),
+                IconButton(onPressed: onRefresh, icon: Icon(Icons.refresh))
+
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -61,18 +81,28 @@ class _SplashscreenState extends State<SplashScreen> {
           case SplashEventLoading():
             break;
           case SplashEventUserNotActive():
-            AppMessageDialogs.showUserNotActive();
+            UserNotActiveDialog.showUserNotActive();
             break;
           case SplashEventForceUpdate():
-            AppMessageDialogs.showForceUpdate();
+            ForceUpdateDialog.show();
             break;
           case SplashEventNotSubscribed():
-            AppMessageDialogs.showUserNotSubscribedDialog();
+            {
+              AppNavigator.navigateToHome();
+              UserNotSubscribedDialog.showUserNotSubscribedDialog();
+            }
             break;
           case SplashEventShowRemainingDays():
-            AppMessageDialogs.showSubscriptionExpiringDialog(remainingDays: callback.remainingDays , onGotItClick: () => AppNavigator.navigateToHome());
+            {
+              AppNavigator.navigateToHome();
+              UserNotSubscribedDialog.showSubscriptionExpiringDialog(remainingDays: callback.remainingDays,);
+            }
         }
       },
     );
+  }
+
+  void onRefresh() {
+    splashController.retry();
   }
 }

@@ -17,6 +17,7 @@ class AppColors{
   static const Color colorSeparator = color_767676;
   static const Color sectionBackgroundColor = color_DBD5CC;
   static const Color textValueColor = color_6F6A6F;
+  static const Color textSecondaryColor = color_767676;
   static const Color activeColor = color_3FCBA6;
   static const Color inactiveColor = color_6F6A6F;
   static const Color dividerColor = color_6F6A6F;

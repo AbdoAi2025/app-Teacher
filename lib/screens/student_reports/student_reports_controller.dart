@@ -4,9 +4,11 @@ import 'package:teacher_app/enums/student_behavior_enum.dart';
 import 'package:teacher_app/screens/session_details/states/session_details_ui_state.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
 import 'package:teacher_app/utils/day_utils.dart';
+import '../../data/requests/get_student_activities_request.dart';
 import '../../domain/events/sessions_events.dart';
 import '../../domain/usecases/get_student_activities_use_case.dart';
 import 'args/student_reports_args_model.dart';
+import 'models/date_filter_model.dart';
 import 'states/student_reports_state.dart';
 
 class StudentReportsController extends GetxController {
@@ -14,6 +16,7 @@ class StudentReportsController extends GetxController {
       GetStudentActivitiesUseCase();
 
   Rx<StudentReportsState> state = Rx(StudentReportsStateLoading());
+  Rx<DateFilter> currentDateFilter = Rx(DateFilter.teachingYear(DateFilterHelper.getCurrentTeachingYear()));
 
   StudentReportsArgsModel? args;
 
@@ -42,7 +45,14 @@ class StudentReportsController extends GetxController {
       return;
     }
 
-    var result = await getStudentActivitiesUseCase.execute(studentId);
+    // Create request with current date filter
+    var request = GetStudentActivitiesRequest(
+      studentId: studentId,
+      dateFrom: currentDateFilter.value.startDate,
+      dateTo: currentDateFilter.value.endDate,
+    );
+
+    var result = await getStudentActivitiesUseCase.execute(request);
 
     if (result.isSuccess) {
       List<StudentReportItemUiState> items = [];
@@ -152,4 +162,13 @@ class StudentReportsController extends GetxController {
       };
     }
   }
+
+  // Date filtering methods
+  void applyDateFilter(DateFilter filter) {
+    currentDateFilter.value = filter;
+    _updateState(StudentReportsStateLoading());
+    _loadReports();
+  }
+
+  String get currentFilterDisplayText => currentDateFilter.value.displayName;
 }

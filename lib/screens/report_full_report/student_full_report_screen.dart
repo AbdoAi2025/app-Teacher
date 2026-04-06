@@ -40,6 +40,7 @@ class _StudentFullReportScreen extends StudentReportScreenState {
     return Column(
       spacing: 10,
       children: [
+        _buildDateRangeInfo(),
         ...reportTexts(state),
         notes(),
         //Under the supervision of Mr. Hassan
@@ -98,5 +99,60 @@ class _StudentFullReportScreen extends StudentReportScreenState {
         ),
       ),
     ];
+  }
+
+  Widget _buildDateRangeInfo() {
+
+    /*
+    RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          style: TextStyle(fontSize: 16, color: Colors.black),
+          children: [
+            //We would like to inform you that the student /...... attended the class on
+            // Day: Saturday — Date: 14/6/2025
+            reportText("${'fulReportInfoText'.tr}: \n"),
+            reportValue("${state.studentName} \n" , getReportTextValueStyle().copyWith(fontWeight: FontWeight.bold)),
+          ],
+        ),
+      ),
+      */
+
+    return Obx(() {
+      var fullReportArgs = _controller.fullReportState.value;
+      if (fullReportArgs?.dateFilter == null) {
+        return SizedBox.shrink();
+      }
+      var dateFilter = fullReportArgs!.dateFilter;
+      return Container(
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+        // margin: EdgeInsets.only(bottom: 10),
+        // decoration: BoxDecoration(
+        //   color: AppColors.appMainColor.withOpacity(0.1),
+        //   borderRadius: BorderRadius.circular(8),
+        //   border: Border.all(color: AppColors.appMainColor.withOpacity(0.3)),
+        // ),
+        child: RichText(
+          textAlign: TextAlign.center,
+          text: TextSpan(
+            style: TextStyle(fontSize: 16, color: Colors.black),
+            children: [
+              reportText('${'Report Period'.tr}: '),
+              reportValue(dateFilter.displayName),
+
+              // TextSpan(
+              //   text: '${'Report Period'.tr}: ',
+              //   style: TextStyle(fontWeight: FontWeight.w600),
+              // ),
+              // TextSpan(
+              //   text: dateFilter.displayName,
+              //   style: TextStyle(fontWeight: FontWeight.normal),
+              // ),
+            ],
+          ),
+        ),
+      );
+    });
   }
 }
