@@ -34,6 +34,7 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
   @override
   void initState() {
     super.initState();
+    controller.init();
   }
 
   @override

@@ -40,14 +40,17 @@ class SubscriptionPlansController extends GetxController {
 
   Rx<SubscriptionPlansState> state = Rx(SubscriptionPlansStateLoading());
 
-  @override
-  void onInit() {
-    super.onInit();
-    loadAllData();
+
+  void init() {
+    _loadAllData();
   }
 
-  Future<void> loadAllData() async {
+
+  Future<void> _loadAllData() async {
+
     _updateState(SubscriptionPlansStateLoading());
+
+    _refreshMySubscription();
 
     try {
       // Load plans and current subscription in parallel
@@ -133,11 +136,9 @@ class SubscriptionPlansController extends GetxController {
     }
   }
 
-  Future<void> loadSubscriptionPlans() => loadAllData();
-
   Future<void> refreshSubscriptionPlans() async{
-    subscriptionManager.refresh();
-    loadAllData();
+     _refreshMySubscription();
+    _loadAllData();
   }
 
   void _updateState(SubscriptionPlansState newState) {
@@ -198,4 +199,9 @@ class SubscriptionPlansController extends GetxController {
     );
     return await subscribeUseCase.execute(request);
   }
+
+  void _refreshMySubscription() {
+    subscriptionManager.refresh();
+  }
+
 }
