@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:shake/shake.dart';
 import 'package:teacher_app/appSetting/appSetting.dart';
 import 'package:teacher_app/navigation/app_routes.dart';
 import 'package:teacher_app/navigation/app_routes_screens.dart';
@@ -24,7 +23,6 @@ import 'services/firebase_service.dart';
 import 'navigation/my_route_observer.dart';
 import 'services/api_service.dart';
 import 'services/environment_service.dart';
-import 'app_mode.dart';
 
 Locale? appLocale;
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -87,8 +85,8 @@ class _MyAppState extends State<MyApp> {
             navigatorObservers: [
               MyRouteObserver(),
               routeObserver,
-              FirebaseService.instance.analytics.observer,
-            ], // attach observer 🚀
+              _getFirebaseObserver(),
+            ], // attach observer
             navigatorKey: navigatorKey,
             textDirection: (rtlLanguages.contains(langCode)
                 ? TextDirection.rtl
@@ -193,7 +191,9 @@ Future<void> initAppLocale() async {
 
 Future<void> initializeFirebase() async {
   try {
+    appLog("Starting Firebase initialization...");
     await Firebase.initializeApp();
+    appLog("Firebase core initialized successfully");
 
     // Initialize Crashlytics
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
@@ -204,11 +204,15 @@ Future<void> initializeFirebase() async {
       return true;
     };
 
+    appLog("Crashlytics configured successfully");
+
     // Initialize Firebase services
     await FirebaseService.instance.initializeServices();
+    appLog("Firebase services initialized successfully");
 
     // Log app open event
     await FirebaseService.instance.logAppOpen();
+    appLog("Firebase app open event logged");
 
     appLog("Firebase initialized successfully");
   } catch (e) {
@@ -218,6 +222,7 @@ Future<void> initializeFirebase() async {
       await FirebaseCrashlytics.instance.recordError(e, StackTrace.current, reason: 'Firebase initialization failed');
     } catch (_) {
       // If crashlytics also fails, just log it
+      appLog("Failed to record Firebase initialization error to Crashlytics");
     }
   }
 }
@@ -235,4 +240,14 @@ Future<void> initAppEnvironment() async {
   }
 }
 
+NavigatorObserver _getFirebaseObserver() {
+  try {
+    // Check if Firebase is initialized before accessing analytics
+    return FirebaseService.instance.analytics.observer;
+  } catch (e) {
+    appLog("Firebase observer not available yet: $e");
+    // Return a no-op observer if Firebase is not ready
+    return NavigatorObserver();
+  }
+}
 

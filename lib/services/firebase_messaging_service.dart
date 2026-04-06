@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
+import 'package:teacher_app/domain/usecases/update_fcm_token_use_case.dart';
 
 // Top-level function for background message handling
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -18,15 +19,19 @@ class FirebaseMessagingService {
   static final FirebaseMessagingService _instance = FirebaseMessagingService._internal();
   static FirebaseMessagingService get instance => _instance;
 
-  late final FirebaseMessaging _messaging;
+  FirebaseMessaging? _messaging;
   late final FlutterLocalNotificationsPlugin _localNotifications;
   String? _fcmToken;
   final StreamController<RemoteMessage> _messageStreamController = StreamController<RemoteMessage>.broadcast();
   final StreamController<String> _tokenStreamController = StreamController<String>.broadcast();
 
   FirebaseMessagingService._internal() {
-    _messaging = FirebaseMessaging.instance;
     _localNotifications = FlutterLocalNotificationsPlugin();
+  }
+
+  FirebaseMessaging get _messagingInstance {
+    _messaging ??= FirebaseMessaging.instance;
+    return _messaging!;
   }
 
   // Getters
@@ -66,7 +71,7 @@ class FirebaseMessagingService {
   // Permission Management
   Future<NotificationSettings> requestNotificationPermissions() async {
     try {
-      final settings = await _messaging.requestPermission(
+      final settings = await _messagingInstance.requestPermission(
         alert: true,
         announcement: false,
         badge: true,
@@ -86,7 +91,7 @@ class FirebaseMessagingService {
 
   Future<bool> areNotificationsEnabled() async {
     try {
-      final settings = await _messaging.getNotificationSettings();
+      final settings = await _messagingInstance.getNotificationSettings();
       return settings.authorizationStatus == AuthorizationStatus.authorized;
     } catch (e) {
       appLog("Firebase Messaging Error checking notification permissions: $e");
@@ -97,7 +102,7 @@ class FirebaseMessagingService {
   // Token Management
   Future<String?> _getToken() async {
     try {
-      _fcmToken = await _messaging.getToken();
+      _fcmToken = await _messagingInstance.getToken();
       appLog("Firebase Messaging: FCM Token received - ${_fcmToken?.substring(0, 20)}...");
 
       if (_fcmToken != null) {
@@ -118,7 +123,7 @@ class FirebaseMessagingService {
   // Message Handlers Setup
   void _setupMessageHandlers() {
     // Handle token refresh
-    _messaging.onTokenRefresh.listen((token) {
+    _messagingInstance.onTokenRefresh.listen((token) {
       _fcmToken = token;
       _tokenStreamController.add(token);
       appLog("Firebase Messaging: Token refreshed - ${token.substring(0, 20)}...");
@@ -344,7 +349,7 @@ class FirebaseMessagingService {
   // Topic Subscription
   Future<void> subscribeToTopic(String topic) async {
     try {
-      await _messaging.subscribeToTopic(topic);
+      await _messagingInstance.subscribeToTopic(topic);
       appLog("Firebase Messaging: Subscribed to topic - $topic");
     } catch (e) {
       appLog("Firebase Messaging Error subscribing to topic: $e");
@@ -353,7 +358,7 @@ class FirebaseMessagingService {
 
   Future<void> unsubscribeFromTopic(String topic) async {
     try {
-      await _messaging.unsubscribeFromTopic(topic);
+      await _messagingInstance.unsubscribeFromTopic(topic);
       appLog("Firebase Messaging: Unsubscribed from topic - $topic");
     } catch (e) {
       appLog("Firebase Messaging Error unsubscribing from topic: $e");
@@ -421,7 +426,7 @@ class FirebaseMessagingService {
   // Get initial message (when app is opened from notification)
   Future<RemoteMessage?> getInitialMessage() async {
     try {
-      final message = await _messaging.getInitialMessage();
+      final message = await _messagingInstance.getInitialMessage();
       if (message != null) {
         appLog("Firebase Messaging: Initial message received - ${message.messageId}");
         _handleNotificationTap(message);
@@ -442,9 +447,18 @@ class FirebaseMessagingService {
   // Send token to server (to be called after getting user authentication)
   Future<void> sendTokenToServer(String token) async {
     try {
-      // TODO: Implement API call to send token to your server
-      // This should be integrated with your existing API service
-      appLog("Firebase Messaging: Token should be sent to server - ${token.substring(0, 20)}...");
+      appLog("Firebase Messaging: Sending token to server - ${token.substring(0, 20)}...");
+
+      // Use the UpdateFcmTokenUseCase to register the token
+      final updateFcmTokenUseCase = UpdateFcmTokenUseCase();
+      final result = await updateFcmTokenUseCase.execute(token);
+
+      if (result.isSuccess) {
+        appLog("Firebase Messaging: Token successfully registered with server");
+        appLog("Firebase Messaging: Server response - Token ID: ${result.data?.id}");
+      } else {
+        appLog("Firebase Messaging: Failed to register token with server: ${result.error}");
+      }
     } catch (e) {
       appLog("Firebase Messaging Error sending token to server: $e");
     }
@@ -453,7 +467,7 @@ class FirebaseMessagingService {
   // Delete token (on logout)
   Future<void> deleteToken() async {
     try {
-      await _messaging.deleteToken();
+      await _messagingInstance.deleteToken();
       _fcmToken = null;
       appLog("Firebase Messaging: Token deleted");
     } catch (e) {

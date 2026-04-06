@@ -5,20 +5,25 @@ class FirebaseAnalyticsService {
   static final FirebaseAnalyticsService _instance = FirebaseAnalyticsService._internal();
   static FirebaseAnalyticsService get instance => _instance;
 
-  late final FirebaseAnalytics _analytics;
-  late final FirebaseAnalyticsObserver _observer;
+  FirebaseAnalytics? _analytics;
+  FirebaseAnalyticsObserver? _observer;
 
-  FirebaseAnalyticsService._internal() {
-    _analytics = FirebaseAnalytics.instance;
-    _observer = FirebaseAnalyticsObserver(analytics: _analytics);
+  FirebaseAnalyticsService._internal();
+
+  FirebaseAnalytics get _analyticsInstance {
+    _analytics ??= FirebaseAnalytics.instance;
+    return _analytics!;
   }
 
-  FirebaseAnalyticsObserver get observer => _observer;
+  FirebaseAnalyticsObserver get observer {
+    _observer ??= FirebaseAnalyticsObserver(analytics: _analyticsInstance);
+    return _observer!;
+  }
 
   // User Events
   Future<void> setUserId(String userId) async {
     try {
-      await _analytics.setUserId(id: userId);
+      await _analyticsInstance.setUserId(id: userId);
       appLog("Firebase Analytics: User ID set to $userId");
     } catch (e) {
       appLog("Firebase Analytics Error setting user ID: $e");
@@ -27,7 +32,7 @@ class FirebaseAnalyticsService {
 
   Future<void> setUserProperty(String name, String value) async {
     try {
-      await _analytics.setUserProperty(name: name, value: value);
+      await _analyticsInstance.setUserProperty(name: name, value: value);
       appLog("Firebase Analytics: User property set - $name: $value");
     } catch (e) {
       appLog("Firebase Analytics Error setting user property: $e");
@@ -37,7 +42,7 @@ class FirebaseAnalyticsService {
   // Screen Tracking
   Future<void> logScreenView(String screenName, {String? screenClass}) async {
     try {
-      await _analytics.logScreenView(
+      await _analyticsInstance.logScreenView(
         screenName: screenName,
         screenClass: screenClass ?? screenName,
       );
@@ -50,7 +55,7 @@ class FirebaseAnalyticsService {
   // Authentication Events
   Future<void> logLogin({String? method}) async {
     try {
-      await _analytics.logLogin(loginMethod: method);
+      await _analyticsInstance.logLogin(loginMethod: method);
       appLog("Firebase Analytics: Login logged - method: $method");
     } catch (e) {
       appLog("Firebase Analytics Error logging login: $e");
@@ -59,7 +64,7 @@ class FirebaseAnalyticsService {
 
   Future<void> logSignUp({String? method}) async {
     try {
-      await _analytics.logSignUp(signUpMethod: method ?? 'unknown');
+      await _analyticsInstance.logSignUp(signUpMethod: method ?? 'unknown');
       appLog("Firebase Analytics: Sign up logged - method: $method");
     } catch (e) {
       appLog("Firebase Analytics Error logging sign up: $e");
@@ -69,7 +74,7 @@ class FirebaseAnalyticsService {
   // Session Management
   Future<void> logSessionStart() async {
     try {
-      await _analytics.logEvent(
+      await _analyticsInstance.logEvent(
         name: 'session_start',
         parameters: {
           'timestamp': DateTime.now().millisecondsSinceEpoch,
@@ -84,7 +89,7 @@ class FirebaseAnalyticsService {
   // Student & Group Management Events
   Future<void> logStudentAdded({required String groupId}) async {
     try {
-      await _analytics.logEvent(
+      await _analyticsInstance.logEvent(
         name: 'student_added',
         parameters: {
           'group_id': groupId,
@@ -99,7 +104,7 @@ class FirebaseAnalyticsService {
 
   Future<void> logGroupCreated({required String groupType}) async {
     try {
-      await _analytics.logEvent(
+      await _analyticsInstance.logEvent(
         name: 'group_created',
         parameters: {
           'group_type': groupType,
@@ -114,7 +119,7 @@ class FirebaseAnalyticsService {
 
   Future<void> logSessionTracked({required String sessionType, required String duration}) async {
     try {
-      await _analytics.logEvent(
+      await _analyticsInstance.logEvent(
         name: 'session_tracked',
         parameters: {
           'session_type': sessionType,
@@ -136,7 +141,7 @@ class FirebaseAnalyticsService {
     String? method,
   }) async {
     try {
-      await _analytics.logPurchase(
+      await _analyticsInstance.logPurchase(
         currency: currency,
         value: value,
         transactionId: transactionId,
@@ -159,7 +164,7 @@ class FirebaseAnalyticsService {
         if (parameters != null) ...parameters,
       };
 
-      await _analytics.logEvent(
+      await _analyticsInstance.logEvent(
         name: 'feature_used',
         parameters: eventParams,
       );
@@ -172,7 +177,7 @@ class FirebaseAnalyticsService {
   // Error Events
   Future<void> logError({required String errorType, String? errorMessage}) async {
     try {
-      await _analytics.logEvent(
+      await _analyticsInstance.logEvent(
         name: 'app_error',
         parameters: {
           'error_type': errorType,
@@ -192,7 +197,7 @@ class FirebaseAnalyticsService {
     Map<String, Object>? parameters,
   }) async {
     try {
-      await _analytics.logEvent(
+      await _analyticsInstance.logEvent(
         name: eventName,
         parameters: parameters,
       );
@@ -205,7 +210,7 @@ class FirebaseAnalyticsService {
   // App Lifecycle Events
   Future<void> logAppOpen() async {
     try {
-      await _analytics.logAppOpen();
+      await _analyticsInstance.logAppOpen();
       appLog("Firebase Analytics: App open logged");
     } catch (e) {
       appLog("Firebase Analytics Error logging app open: $e");
@@ -215,7 +220,7 @@ class FirebaseAnalyticsService {
   // Language and Localization Events
   Future<void> logLanguageChanged({required String language}) async {
     try {
-      await _analytics.logEvent(
+      await _analyticsInstance.logEvent(
         name: 'language_changed',
         parameters: {
           'language': language,

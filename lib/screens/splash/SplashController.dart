@@ -7,12 +7,15 @@ import 'package:teacher_app/utils/LogUtils.dart';
 
 import '../../domain/usecases/change_app_version_use_case.dart';
 import '../../domain/usecases/check_user_session_use_case.dart';
+import '../../domain/usecases/update_fcm_token_use_case.dart';
+import '../../services/firebase_service.dart';
 
 class SplashController extends GetxController{
 
   final GetUserAuthUseCase _getUserAuthUseCase = GetUserAuthUseCase();
   final CheckUserSessionUseCase _checkUserSessionUseCase = CheckUserSessionUseCase();
   final ChangeAppVersionUseCase _changeAppVersionUseCase = ChangeAppVersionUseCase();
+  final UpdateFcmTokenUseCase _updateFcmTokenUseCase = UpdateFcmTokenUseCase();
 
   Rx<SplashEvent> splashEvent = Rx(SplashEventLoading());
 
@@ -20,6 +23,7 @@ class SplashController extends GetxController{
   Future<void> onInit() async {
     super.onInit();
     _init();
+
   }
 
   void updateEvent(SplashEvent event) {
@@ -92,7 +96,39 @@ class SplashController extends GetxController{
       }
     }
 
+    // Update FCM token with server (for authenticated users)
+    await _updateFcmTokenIfAvailable();
+
     updateEvent(SplashEventGoToHome());
+  }
+
+  /// Updates FCM token with server if available
+  Future<void> _updateFcmTokenIfAvailable() async {
+    try {
+      appLog("SplashController: Attempting to update FCM token", "SplashController");
+
+      // Get FCM token from Firebase service
+      final fcmToken = await FirebaseService.instance.getFCMToken();
+
+      if (fcmToken != null && fcmToken.isNotEmpty) {
+        appLog("SplashController: FCM token retrieved - ${fcmToken.substring(0, 20)}...", "SplashController");
+
+        // Update FCM token with server
+        final result = await _updateFcmTokenUseCase.execute(fcmToken);
+
+        if (result.isSuccess) {
+          appLog("SplashController: FCM token successfully updated with server", "SplashController");
+          appLog("SplashController: Server response - Token ID: ${result.data?.id}", "SplashController");
+        } else {
+          appLog("SplashController: Failed to update FCM token with server: ${result.error}", "SplashController");
+        }
+      } else {
+        appLog("SplashController: No FCM token available to update", "SplashController");
+      }
+    } catch (e) {
+      // Don't block app flow if FCM token update fails
+      appLog("SplashController: Error updating FCM token: $e", "SplashController");
+    }
   }
 
 }
