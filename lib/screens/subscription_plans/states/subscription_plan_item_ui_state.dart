@@ -79,6 +79,9 @@ class SubscriptionPlanItemUiState {
     if (expirationDate == null) return null;
     return  expirationDate?.getSubscriptionEndDateFormat();
   }
+  
+  bool get showExpirationSection => formattedExpirationDate != null && formattedExpirationDate!.isNotEmpty && isCurrentPlan  && !isFree();
+
 
   String get localizedDescription {
     final currentLocale = Get.locale?.languageCode ?? 'en';
@@ -119,4 +122,6 @@ class SubscriptionPlanItemUiState {
     if (expirationDate == null) return true;
     return expirationDate!.isExpired;
   }
+
+  bool isFree() => SubscriptionPlanEnum.fromDisplayName(planCode) == SubscriptionPlanEnum.FREE;
 }

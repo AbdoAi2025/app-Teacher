@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/domain/states/current_subscription_plan_state.dart';
+import 'package:teacher_app/enums/subscription_plan_enum.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
 import 'package:teacher_app/utils/open_insta_pay_utils.dart';
 import '../data/responses/current_subscription_plan_response.dart';
@@ -109,6 +110,9 @@ class UserNotSubscribedDialog {
       appLog("UserNotSubscribedDialog: Subscription invalid but dialog already shown - doing nothing");
       return;
     }
+
+    //if plan is free return
+    if(subscription.subscriptionPlanEnum == SubscriptionPlanEnum.FREE) return;
 
     appLog("UserNotSubscribedDialog: handleSubscriptionState Get.currentRoute:${Get.currentRoute}");
 

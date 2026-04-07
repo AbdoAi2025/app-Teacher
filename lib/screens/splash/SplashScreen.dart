@@ -89,7 +89,6 @@ class _SplashscreenState extends State<SplashScreen> {
           case SplashEventNotSubscribed():
             {
               AppNavigator.navigateToHome();
-              UserNotSubscribedDialog.showUserNotSubscribedDialog();
             }
             break;
           case SplashEventShowRemainingDays():

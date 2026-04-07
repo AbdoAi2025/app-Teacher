@@ -1,6 +1,7 @@
 import 'package:teacher_app/utils/LogUtils.dart';
 import 'package:teacher_app/utils/safe_json_access.dart';
 
+import '../../enums/subscription_plan_enum.dart';
 import '../../models/subscription_date_model.dart';
 
 class CurrentSubscriptionPlanResponse {
@@ -22,6 +23,12 @@ class CurrentSubscriptionPlanResponse {
   bool get isExpired {
     return subscriptionExpireDate.isExpired;
   }
+
+  SubscriptionPlanEnum? get subscriptionPlanEnum {
+    return SubscriptionPlanEnum.fromDisplayName(planName);
+  }
+
+
 
   CurrentSubscriptionPlanResponse({
     this.planCode,

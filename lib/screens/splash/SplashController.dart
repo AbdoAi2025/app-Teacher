@@ -88,7 +88,7 @@ class SplashController extends GetxController{
     }
 
     // Check if subscription is about to expire (5 or fewer days remaining)
-    if(checkUserSession != null && checkUserSession.isSubscribed == true){
+    if(checkUserSession != null && checkUserSession.isSubscribed == true && checkUserSession.warningLimitExceed ){
       final remainingDays = checkUserSession.getRemainingDays();
       if(remainingDays != null && checkUserSession.warningLimitExceed && remainingDays >= 0){
         updateEvent(SplashEventShowRemainingDays(remainingDays: remainingDays));

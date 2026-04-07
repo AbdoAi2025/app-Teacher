@@ -4,10 +4,9 @@
 <dict>
 
 	<key>CFBundleShortVersionString</key>
-	<string>1.6</string>
+	<string>1.7</string>
     <key>CFBundleVersion</key>
     <string>1</string>
-
 	<key>contact</key>
 	<string></string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
@@ -64,6 +63,8 @@
 	<!-- Background Processing for Firebase Messaging -->
 	<key>UIBackgroundModes</key>
 	<array>
+		<string>background-processing</string>
+		<string>background-fetch</string>
 		<string>remote-notification</string>
 	</array>
 </dict>
