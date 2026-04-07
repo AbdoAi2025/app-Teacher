@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/screens/subscription_plans/states/subscription_plan_item_ui_state.dart';
 import 'package:teacher_app/themes/txt_styles.dart';
+import 'package:teacher_app/utils/LogUtils.dart';
 
 class SubscriptionPlanItem extends StatelessWidget {
   final SubscriptionPlanItemUiState planUiModel;
@@ -25,6 +26,10 @@ class SubscriptionPlanItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+
+
+    appLog("planUiModel.showExpirationSection :${planUiModel.showExpirationSection} , name :${planUiModel.planName}");
     return Card(
       margin: EdgeInsets.zero,
       elevation: 4,
@@ -44,7 +49,7 @@ class SubscriptionPlanItem extends StatelessWidget {
             SizedBox(height: 16),
             _buildFeatures(context),
             SizedBox(height: 16),
-            if(isCurrentPlan && planUiModel.formattedExpirationDate != null)...{
+            if(planUiModel.showExpirationSection)...{
               _buildExpirationSection(context),
               SizedBox(height: 16),
             },

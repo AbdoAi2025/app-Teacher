@@ -5,18 +5,17 @@ class CheckUserSessionModel {
 
   final bool isActive;
   final bool isSubscribed;
-  final SubscriptionDateModel? subscriptionExpireDate;
+  final SubscriptionDateModel subscriptionExpireDate;
 
   CheckUserSessionModel({
     required this.isActive,
     required this.isSubscribed,
-    this.subscriptionExpireDate,
+    required this.subscriptionExpireDate,
   });
 
   int? getRemainingDays() {
-    if (subscriptionExpireDate == null) return null;
-    return subscriptionExpireDate!.remainingDays;
+    return subscriptionExpireDate.remainingDays;
   }
 
-  bool get warningLimitExceed => subscriptionExpireDate?.warningLimitExceed ?? false;
+  bool get warningLimitExceed => subscriptionExpireDate.warningLimitExceed;
 }
