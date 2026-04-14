@@ -40,9 +40,10 @@ class StudentsRepository {
       return responseResult.data;
   }
 
-  Future<dynamic>  deleteStudent(String id) async {
+  Future<dynamic>  deleteStudent(String id , String gradeId) async {
     var url = "${EndPoints.deleteStudent}/$id";
-    Response response = await ApiService.getInstance().delete(url);
+    var params = {"gradeId":gradeId};
+    Response response = await ApiService.getInstance().delete(url , queryParameters: params);
     return response.data;
   }
 }

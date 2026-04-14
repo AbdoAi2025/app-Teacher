@@ -11,6 +11,7 @@ import 'package:teacher_app/widgets/loading_widget.dart';
 import '../../utils/message_utils.dart';
 import '../../widgets/app_error_widget.dart';
 import '../../widgets/close_icon_widget.dart';
+import '../../widgets/date_filter_bar_widget.dart';
 import '../../widgets/dialog_loading_widget.dart';
 import '../../widgets/error_view_widget.dart';
 import '../../widgets/groups/group_item_widget.dart';
@@ -103,17 +104,32 @@ class _GroupsScreenState extends State<GroupsScreen> {
   _sortIcon() => InkWell(onTap: onSortClick, child: SortIconWidget());
 
   Widget _content() {
-    return Obx(() {
-      var state = controller.state.value;
-      switch (state) {
-        case GroupsStateLoading():
-          return Center(child: LoadingWidget());
-        case GroupsStateSuccess():
-          return _groupsList(state);
-        case GroupsStateError():
-          return _errorView(state);
-      }
-    });
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: DateFilterBarWidget(
+            onFilterChanged: (filter) {
+              // Handle filter change if needed for groups
+            },
+          ),
+        ),
+        SizedBox(height: 20),
+        Expanded(
+          child: Obx(() {
+            var state = controller.state.value;
+            switch (state) {
+              case GroupsStateLoading():
+                return Center(child: LoadingWidget());
+              case GroupsStateSuccess():
+                return _groupsList(state);
+              case GroupsStateError():
+                return _errorView(state);
+            }
+          }),
+        ),
+      ],
+    );
   }
 
   refresh() {

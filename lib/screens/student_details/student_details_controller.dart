@@ -101,6 +101,9 @@ class StudentDetailsController extends GetxController {
 
   Stream<AppResult<dynamic>> deleteStudent()  async*{
     var useCase = DeleteStudentUseCase();
-    yield await useCase.execute(getStudentDetailsUiState()?.studentId ?? "");
+    var studentDetailsUiState = getStudentDetailsUiState();
+    var studentId = studentDetailsUiState?.studentId ?? "";
+    var gradeId = studentDetailsUiState?.gradeId ?? "";
+    yield await useCase.execute(studentId  , gradeId.toString());
   }
 }

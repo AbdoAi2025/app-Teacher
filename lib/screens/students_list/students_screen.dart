@@ -231,6 +231,7 @@ import 'package:teacher_app/widgets/app_toolbar_widget.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'package:teacher_app/widgets/app_visibility_widget.dart';
 import 'package:teacher_app/widgets/close_icon_widget.dart';
+import 'package:teacher_app/widgets/date_filter_bar_widget.dart';
 import 'package:teacher_app/widgets/empty_view_widget.dart';
 import 'package:teacher_app/widgets/error_view_widget.dart';
 import 'package:teacher_app/widgets/lifecycle_widget.dart';
@@ -341,20 +342,32 @@ class _StudentsScreenState extends LifecycleWidgetState<StudentsScreen> {
   );
 
   Widget _content() {
-    return Obx(() {
-      var state = controller.state.value;
+    return Column(
+      children: [
+        DateFilterBarWidget(
+          onFilterChanged: (filter) {
+            // Handle filter change if needed for students
+          },
+        ),
+        SizedBox(height: 20),
+        Expanded(
+          child: Obx(() {
+            var state = controller.state.value;
 
-      switch (state) {
-        case StudentsStateLoading():
-          return Center(child: LoadingWidget());
-        case StudentsStateSuccess():
-          return _studentsList(state);
-        case StudentsStateError():
-          return _error(state);
-      }
+            switch (state) {
+              case StudentsStateLoading():
+                return Center(child: LoadingWidget());
+              case StudentsStateSuccess():
+                return _studentsList(state);
+              case StudentsStateError():
+                return _error(state);
+            }
 
-      return _emptyView();
-    });
+            return _emptyView();
+          }),
+        ),
+      ],
+    );
   }
 
   refresh() {
@@ -393,23 +406,7 @@ class _StudentsScreenState extends LifecycleWidgetState<StudentsScreen> {
     AppNavigator.navigateToStudentDetails(StudentDetailsArgModel(id: p1.id));
   }
 
-  onDeleteStudentClick(StudentItemUiState uiState) {
-    showConfirmationMessage("${"Are you sure to delete ?".tr} ${uiState.name}",
-        () {
-      showDialogLoading();
-      controller.deleteStudent(uiState).listen(
-        (event) {
-          hideDialogLoading();
-          if (event.isSuccess) {
-            return;
-          }
-          if (event.isError) {
-            showErrorMessage(event.error?.toString());
-          }
-        },
-      );
-    });
-  }
+
 
   _studentsListView(StudentsStateSuccess state) {
     return StudentsListPaginationWidget(

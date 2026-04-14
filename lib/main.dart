@@ -18,6 +18,7 @@ import 'domain/models/app_locale_model.dart';
 import 'domain/usecases/get_app_setting_use_case.dart';
 import 'localization/app_translation.dart';
 import 'services/firebase_service.dart';
+import 'utils/date_filter_manager.dart';
 
 
 import 'navigation/my_route_observer.dart';
@@ -40,6 +41,10 @@ void main() async {
   await initAppEnvironment();
   await AppSetting.initAppVersion();
   ApiService.startApiLoggerIfNeeded();
+
+  // Initialize GetX services
+  Get.put(DateFilterManager());
+
   runApp(MyApp());
 }
 

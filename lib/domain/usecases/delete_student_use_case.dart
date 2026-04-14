@@ -9,9 +9,9 @@ class DeleteStudentUseCase extends BaseUseCase<dynamic>{
 
   var repository = StudentsRepository();
 
-  Future<AppResult<dynamic>> execute(String id) async {
+  Future<AppResult<dynamic>> execute(String id , String gradeId) async {
    return call(() async {
-      var items =  await repository.deleteStudent(id);
+      var items =  await repository.deleteStudent(id, gradeId);
       StudentsEvents.onStudentDeleted();
       return AppResult.success(AppResultSuccess(items));
     });

@@ -75,12 +75,6 @@ class StudentsController extends GetxController {
 
 
 
-
-  Stream<AppResult<dynamic>> deleteStudent(StudentItemUiState uiState) async* {
-    var useCase = DeleteStudentUseCase();
-    yield await useCase.execute(uiState.id);
-  }
-
   Future<void> getMoreStudents() async {
 
     // request.pageIndex++;
