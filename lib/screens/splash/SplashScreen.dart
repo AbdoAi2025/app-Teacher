@@ -13,6 +13,7 @@ import 'package:teacher_app/utils/open_store_utils.dart';
 import '../../dialogs/user_not_active_dialog.dart';
 import '../../dialogs/user_not_subscribed_dialog.dart';
 import '../../presentation/app_message_dialogs.dart';
+import '../../services/environment_service.dart';
 import '../../utils/whatsapp_utils.dart';
 import '../../widgets/environment_display_widget.dart';
 
@@ -45,6 +46,8 @@ class _SplashscreenState extends State<SplashScreen> {
                     fit: BoxFit.fill,
                     image: AssetImage(Assets.imagesSplashScreen))),
           ),
+
+          if(AppMode.showApiLogger)
           Positioned(
             top: 60,
             left: 20,
