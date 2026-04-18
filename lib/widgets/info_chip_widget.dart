@@ -4,12 +4,13 @@ import '../themes/txt_styles.dart';
 import 'app_txt_widget.dart';
 
 class InfoChipWidget extends StatelessWidget{
-  final String text;
+  final String? text;
   final Color? color;
   final IconData? icon;
   final VoidCallback? onTap;
   final TextStyle? textStyle;
-  const InfoChipWidget({super.key, required this.text, this.color, this.icon, this.textStyle, this.onTap});
+  final double? size;
+  const InfoChipWidget({super.key,  this.text, this.color, this.icon, this.textStyle,this.size, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -20,17 +21,18 @@ class InfoChipWidget extends StatelessWidget{
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
+        spacing: 5,
         mainAxisSize: MainAxisSize.min,
         children: [
           if(icon != null)
             Icon(
               icon,
-              size: 14,
+              size: size ?? 14,
               color: color,
             ),
-          SizedBox(width: 6),
+          if(text != null && text!.isNotEmpty)
           AppTextWidget(
-            text,
+            text!,
             style: textStyle ?? AppTextStyle.label.copyWith(
               fontSize: 12,
               fontWeight: FontWeight.w500,

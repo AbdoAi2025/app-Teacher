@@ -5,12 +5,16 @@ import 'package:teacher_app/themes/app_colors.dart';
 import 'package:teacher_app/themes/txt_styles.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'package:teacher_app/widgets/app_divider_widget.dart';
+import 'package:teacher_app/widgets/date_info_chip_widget.dart';
+import 'package:teacher_app/widgets/day_info_chip_widget.dart';
 import 'package:teacher_app/widgets/forward_arrow_widget.dart';
 
 import '../../navigation/app_navigator.dart';
 import '../../screens/group_details/args/group_details_arg_model.dart';
 import '../grade_chip_widget.dart';
 import '../info_chip_widget.dart';
+import '../student_count_info_chip_widget.dart';
+import '../time_from_to_info_chip_widget.dart';
 
 class GroupItemWidget extends StatelessWidget {
   final GroupItemUiState uiState;
@@ -61,21 +65,9 @@ class GroupItemWidget extends StatelessWidget {
                   spacing: 5,
                   runSpacing: 5,
                   children: [
-                    _infoChip(
-                      Icons.people_outline,
-                      "${uiState.studentsCount} ${'Students'.tr}",
-                      null,
-                    ),
-                    _infoChip(
-                      Icons.schedule_outlined,
-                      "${uiState.timeFrom} - ${uiState.timeTo}",
-                      AppColors.color_008E73,
-                    ),
-                    _infoChip(
-                      Icons.calendar_today_outlined,
-                      uiState.dayName.tr,
-                      AppColors.color_3D5AB6,
-                    ),
+                    StudentCountInfoChipWidget(count: uiState.studentsCount),
+                    TimeFromToInfoChipWidget(text: "${uiState.timeFrom} - ${uiState.timeTo}"),
+                    DayInfoChipWidget(text:  uiState.dayName.tr)
                   ],
                 ),
               ],
@@ -93,15 +85,6 @@ class GroupItemWidget extends StatelessWidget {
       return;
     }
     AppNavigator.navigateToGroupDetails(GroupDetailsArgModel(id: uiState.groupId));
-  }
-
-
-  Widget _infoChip(IconData? icon, String text, Color? color) {
-   return InfoChipWidget(
-      icon: icon,
-     text: text,
-     color: color,
-   );
   }
 
   _groupName() => AppTextWidget(

@@ -28,6 +28,8 @@ import '../../themes/txt_styles.dart';
 import '../../utils/localized_name_model.dart';
 import '../../widgets/app_toolbar_widget.dart';
 import '../../widgets/section_widget.dart';
+import '../../widgets/student_group_item_widget.dart';
+import '../../widgets/student_grade_item_widget.dart';
 import '../student_edit/args/edit_student_args_model.dart';
 import '../student_reports/args/student_reports_args_model.dart';
 import 'states/student_details_state.dart';
@@ -397,174 +399,44 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
 
   Widget _availableGroupsSection(StudentDetailsUiState uiState) {
     return SectionWidget(
-      title: "Available Groups".tr,
+      title: "Groups".tr,
+      isCard: false,
       child: Column(
         spacing: 10,
-        children: uiState.groups.map((group) => _groupItem(group, uiState)).toList(),
+        children: uiState.groups.map((group) => StudentGroupItemWidget(
+          group: group,
+          uiState: uiState,
+          onRemoveTap: () => _onGroupRemoveClick(group, uiState),
+        )).toList(),
       ),
     );
   }
 
-  Widget _groupItem(StudentGroupApiModel group, StudentDetailsUiState uiState) {
-    final isCurrentGroup = group.groupId == uiState.groupId;
-    return Container(
-      padding: EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: isCurrentGroup ? AppColors.appMainColor.withOpacity(0.1) : AppColors.white,
-        border: Border.all(
-          color: isCurrentGroup ? AppColors.appMainColor : AppColors.color_DBD5CC,
-          width: isCurrentGroup ? 2 : 1,
-        ),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 4,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: AppTextWidget(
-                        group.groupName ?? "Unknown Group".tr,
-                        style: AppTextStyle.label.copyWith(
-                          fontWeight: isCurrentGroup ? FontWeight.bold : FontWeight.normal,
-                          color: isCurrentGroup ? AppColors.appMainColor : AppColors.colorBlack,
-                        ),
-                      ),
-                    ),
-                    if (isCurrentGroup)
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: AppColors.appMainColor,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: AppTextWidget(
-                          "Current".tr,
-                          style: AppTextStyle.small.copyWith(color: AppColors.white),
-                        ),
-                      ),
-                  ],
-                ),
-                if (group.groupDay != null && group.groupTimeFrom != null && group.groupTimeTo != null)
-                  AppTextWidget(
-                    "${AppDateUtils.getDayName(group.groupDay!).tr}, ${group.groupTimeFrom} - ${group.groupTimeTo}",
-                    style: AppTextStyle.small.copyWith(color: AppColors.textSecondaryColor),
-                  ),
-              ],
-            ),
-          ),
-          if (!isCurrentGroup) ...[
-            SizedBox(width: 8),
-            InkWell(
-              onTap: () => _onGroupSwitchClick(group, uiState),
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: AppColors.appMainColor,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: AppTextWidget(
-                  "Switch".tr,
-                  style: AppTextStyle.small.copyWith(color: AppColors.white),
-                ),
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
 
   Widget _availableGradesSection(StudentDetailsUiState uiState) {
     return SectionWidget(
-      title: "Available Grades".tr,
+      title: "Grades".tr,
+      isCard: false,
       child: Column(
         spacing: 10,
-        children: uiState.grades.map((grade) => _gradeItem(grade, uiState)).toList(),
+        children: uiState.grades.map((grade) => StudentGradeItemWidget(
+          grade: grade,
+          uiState: uiState,
+          onUpgradeTap: () => _onGradeUpgradeClick(grade),
+        )).toList(),
       ),
     );
   }
 
-  Widget _gradeItem(StudentGradeApiModel grade, StudentDetailsUiState uiState) {
-    final isCurrentGrade = grade.id == uiState.gradeId.toString();
-    final gradeName = LocalizedNameModel(
-      nameEn: grade.nameEn ?? "",
-      nameAr: grade.nameAr ?? "",
-    ).toLocalizedName();
 
-    return Container(
-      padding: EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: isCurrentGrade ? AppColors.appMainColor.withOpacity(0.1) : AppColors.white,
-        border: Border.all(
-          color: isCurrentGrade ? AppColors.appMainColor : AppColors.color_DBD5CC,
-          width: isCurrentGrade ? 2 : 1,
-        ),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Row(
-              children: [
-                Expanded(
-                  child: AppTextWidget(
-                    gradeName,
-                    style: AppTextStyle.label.copyWith(
-                      fontWeight: isCurrentGrade ? FontWeight.bold : FontWeight.normal,
-                      color: isCurrentGrade ? AppColors.appMainColor : AppColors.colorBlack,
-                    ),
-                  ),
-                ),
-                if (isCurrentGrade)
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: AppColors.appMainColor,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: AppTextWidget(
-                      "Current".tr,
-                      style: AppTextStyle.small.copyWith(color: AppColors.white),
-                    ),
-                  ),
-              ],
-            ),
-          ),
-          if (!isCurrentGrade) ...[
-            SizedBox(width: 8),
-            InkWell(
-              onTap: () => _onGradeUpgradeClick(grade),
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: AppColors.appMainColor,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: AppTextWidget(
-                  "Upgrade".tr,
-                  style: AppTextStyle.small.copyWith(color: AppColors.white),
-                ),
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-
-  void _onGroupSwitchClick(StudentGroupApiModel group, StudentDetailsUiState uiState) {
-    // TODO: Implement group switch functionality
-    // This would typically involve calling an API to move the student to a different group
-    showSuccessMessage("Group switch functionality not implemented yet".tr);
+  void _onGroupRemoveClick(StudentGroupApiModel group, StudentDetailsUiState uiState) {
+    // TODO: Implement group remove functionality
+    // This would typically involve calling an API to remove the student from the group
+    showSuccessMessage("Group remove functionality not implemented yet".tr);
   }
 
   void _onGradeUpgradeClick(StudentGradeApiModel grade) {
-    final gradeId = int.tryParse(grade.id ?? "");
+    final gradeId = int.tryParse(grade.id?.toString() ?? "");
     if (gradeId != null) {
       final uiState = controller.getStudentDetailsUiState();
       if (uiState != null) {

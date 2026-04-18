@@ -13,13 +13,6 @@ class GetStudentDetailsResponse {
 
   StudentDetailsApiModel? data;
 
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    if (data != null) {
-      map['data'] = data?.toJson();
-    }
-    return map;
-  }
 }
 
 /// studentId : "bab9c2f3-0d49-4a94-8b9c-de740929b89f"
@@ -99,28 +92,6 @@ class StudentDetailsApiModel {
   List<StudentGroupApiModel>? groups;
   List<StudentGradeApiModel>? grades;
 
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['studentId'] = studentId;
-    map['studentName'] = studentName;
-    map['studentPhone'] = studentPhone;
-    map['studentParentPhone'] = studentParentPhone;
-    map['gradeId'] = gradeId;
-    map['gradeNameEn'] = gradeNameEn;
-    map['gradeNameAr'] = gradeNameAr;
-    map['groupId'] = groupId;
-    map['groupName'] = groupName;
-    map['groupDay'] = groupDay;
-    map['groupTimeFrom'] = groupTimeFrom;
-    map['groupTimeTo'] = groupTimeTo;
-    if (groups != null) {
-      map['groups'] = groups?.map((v) => v.toJson()).toList();
-    }
-    if (grades != null) {
-      map['grades'] = grades?.map((v) => v.toJson()).toList();
-    }
-    return map;
-  }
 }
 
 /// groupId : "ab513c19-65e9-4ef9-867a-a4cbd9a65229"
@@ -138,6 +109,7 @@ class StudentGroupApiModel {
     this.groupTimeFrom,
     this.groupTimeTo,
     this.groupCreatedAt,
+    this.archive,
   });
 
   StudentGroupApiModel.fromJson(dynamic json) {
@@ -147,6 +119,7 @@ class StudentGroupApiModel {
     groupTimeFrom = json['groupTimeFrom'];
     groupTimeTo = json['groupTimeTo'];
     groupCreatedAt = json['groupCreatedAt'];
+    archive = json['archive'] ?? false;
   }
 
   String? groupId;
@@ -155,17 +128,8 @@ class StudentGroupApiModel {
   String? groupTimeFrom;
   String? groupTimeTo;
   String? groupCreatedAt;
+  bool? archive;
 
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['groupId'] = groupId;
-    map['groupName'] = groupName;
-    map['groupDay'] = groupDay;
-    map['groupTimeFrom'] = groupTimeFrom;
-    map['groupTimeTo'] = groupTimeTo;
-    map['groupCreatedAt'] = groupCreatedAt;
-    return map;
-  }
 }
 
 /// id : "3"
@@ -178,27 +142,20 @@ class StudentGradeApiModel {
     this.id,
     this.nameEn,
     this.nameAr,
-    this.groupCreatedAt,
+    this.gradeCreatedAt,
   });
 
   StudentGradeApiModel.fromJson(dynamic json) {
     id = json['id'];
     nameEn = json['nameEn'];
     nameAr = json['nameAr'];
-    groupCreatedAt = json['groupCreatedAt'];
+    gradeCreatedAt = json['gradeCreatedAt'];
+    archive = json['archive'];
   }
 
-  String? id;
+  int? id;
   String? nameEn;
   String? nameAr;
-  String? groupCreatedAt;
-
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['id'] = id;
-    map['nameEn'] = nameEn;
-    map['nameAr'] = nameAr;
-    map['groupCreatedAt'] = groupCreatedAt;
-    return map;
-  }
+  String? gradeCreatedAt;
+  bool? archive;
 }
