@@ -5,6 +5,7 @@ import 'package:teacher_app/themes/app_colors.dart';
 import 'package:teacher_app/themes/txt_styles.dart';
 import 'package:teacher_app/utils/message_utils.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
+import 'package:teacher_app/widgets/info_chip_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PhoneWithIconWidget extends StatelessWidget {
@@ -24,6 +25,10 @@ class PhoneWithIconWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return InkWell(
+        onTap: onClick,
+        child: InfoChipWidget(text: phone , icon: showCallIcon ? Icons.phone : null , color: AppColors.appMainColor));
+
     return InkWell(
       onTap: onClick,
       child: Row(
@@ -57,9 +62,6 @@ class PhoneWithIconWidget extends StatelessWidget {
       ));
 
   void onClick() {
-
-
-
     if (canCall) {
       showConfirmationMessage( sprintf("Are you sure to call".tr, [phone]) , (){
         launchUrl(Uri.parse('tel:$phone'));

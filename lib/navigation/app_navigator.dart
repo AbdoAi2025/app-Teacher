@@ -50,6 +50,10 @@ class AppNavigator {
     return await Get.toNamed(AppRoutes.editGroup , arguments: model);
   }
 
+  static Future<dynamic> navigateToUpgradeGroup(EditGroupArgsModel model) async {
+    return await Get.toNamed(AppRoutes.upgradeGroup , arguments: model);
+  }
+
   static Future<dynamic>? navigateToEditStudent(EditStudentArgsModel args) {
     return Get.toNamed(AppRoutes.editStudent , arguments: args);
   }

@@ -229,26 +229,22 @@ import 'package:teacher_app/screens/students_list/states/student_item_ui_state.d
 import 'package:teacher_app/screens/students_list/students_controller.dart';
 import 'package:teacher_app/widgets/app_toolbar_widget.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
-import 'package:teacher_app/widgets/app_visibility_widget.dart';
 import 'package:teacher_app/widgets/close_icon_widget.dart';
-import 'package:teacher_app/widgets/date_filter_bar_widget.dart';
 import 'package:teacher_app/widgets/empty_view_widget.dart';
 import 'package:teacher_app/widgets/error_view_widget.dart';
+import 'package:teacher_app/widgets/filters/current_filters_display_widget.dart';
 import 'package:teacher_app/widgets/lifecycle_widget.dart';
 import 'package:teacher_app/widgets/search_icon_widget.dart';
 import 'package:teacher_app/widgets/students/students_list_pagination_widget.dart';
 import '../../navigation/app_navigator.dart';
 import '../../themes/app_colors.dart';
-import '../../utils/message_utils.dart';
-import '../../widgets/app_error_widget.dart';
-import '../../widgets/dialog_loading_widget.dart';
+import '../../themes/txt_styles.dart';
+import '../../utils/Keyboard_utils.dart';
 import '../../widgets/loading_widget.dart';
 import '../../widgets/search_text_field.dart';
 import '../../widgets/sort_icon_widget.dart';
 import '../student_details/args/student_details_arg_model.dart';
 import 'states/students_state.dart';
-import '../../widgets/students/student_item_widget.dart';
-import '../../widgets/students/student_item_widget.dart';
 
 class StudentsScreen extends StatefulWidget {
   const StudentsScreen({super.key});
@@ -261,25 +257,30 @@ class _StudentsScreenState extends LifecycleWidgetState<StudentsScreen> {
 
   StudentsController controller = Get.put(StudentsController());
   bool searchState = false;
+  TextEditingController searchController = TextEditingController();
+  String currentSearchText = '';
 
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: _appBar(),
-        body: Container(
-          width: double.infinity,
-          height: double.infinity,
-          padding: const EdgeInsets.all(20),
-          child: RefreshIndicator(
-              onRefresh: () async {
-                refresh();
+        backgroundColor: AppColors.white,
+        body: SafeArea(
+          child: GestureDetector(
+              onTapDown: (v) {
+                KeyboardUtils.hideKeyboard(context);
               },
-              child: _content()),
+              child: Container(
+                width: double.infinity,
+                height: double.infinity,
+                padding: const EdgeInsets.all(15),
+                child: RefreshIndicator(
+                    onRefresh: () async {
+                      refresh();
+                    },
+                    child: _content()),
+              )),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
@@ -297,13 +298,12 @@ class _StudentsScreenState extends LifecycleWidgetState<StudentsScreen> {
     return _appBarWithActions();
   }
 
-  _appBarWithActions() =>AppToolbarWidget.appBar(
-      title: "Students".tr,
-      hasLeading: false,
-      actions: [
-        _searchIcon(),
-        _sortIcon(),
-      ]
+  _appBarWithActions() => AppBar(
+    backgroundColor: AppColors.white,
+    elevation: 0,
+    surfaceTintColor: Colors.transparent,
+    automaticallyImplyLeading: false,
+    toolbarHeight: 0,
   );
 
   _searchAppBar() => AppToolbarWidget.appBar(
@@ -343,17 +343,21 @@ class _StudentsScreenState extends LifecycleWidgetState<StudentsScreen> {
 
   Widget _content() {
     return Column(
+      spacing: 15,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        DateFilterBarWidget(
-          onFilterChanged: (filter) {
-            // Handle filter change if needed for students
-          },
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _titleAndFilterRow(),
+            SizedBox(height: 16),
+            _searchAndSortBar(),
+            SizedBox(height: 16),
+          ],
         ),
-        SizedBox(height: 20),
         Expanded(
           child: Obx(() {
             var state = controller.state.value;
-
             switch (state) {
               case StudentsStateLoading():
                 return Center(child: LoadingWidget());
@@ -367,6 +371,159 @@ class _StudentsScreenState extends LifecycleWidgetState<StudentsScreen> {
           }),
         ),
       ],
+    );
+  }
+
+  Widget _titleAndFilterRow() {
+    return Row(
+      children: [
+        Expanded(
+          child: AppTextWidget(
+            "Students".tr,
+            style: AppTextStyle.title.copyWith(
+              fontSize: 24,
+              fontWeight: FontWeight.w700,
+              color: AppColors.colorBlack,
+            ),
+          ),
+        ),
+        SizedBox(width: 16),
+        CurrentFiltersDisplayWidget(filterManager: controller.dateFilterManager,),
+      ],
+    );
+  }
+
+  Widget _searchAndSortBar() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 4, vertical: 0),
+      decoration: BoxDecoration(
+        color: AppColors.colorOffWhite,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: AppColors.color_DBD5CC.withValues(alpha: 0.5),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 8,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 5,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: _searchField(),
+            ),
+          ),
+          // Divider
+          Container(
+            width: 1,
+            height: 32,
+            color: AppColors.color_DBD5CC.withValues(alpha: 0.5),
+            margin: EdgeInsets.symmetric(horizontal: 8),
+          ),
+          // Sort button
+          _unifiedActionButton(
+            icon: Icons.sort_rounded,
+            color: AppColors.color_008E73,
+            onTap: onSortClick,
+            tooltip: 'Sort'.tr,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _unifiedActionButton({
+    required IconData icon,
+    required Color color,
+    required VoidCallback onTap,
+    required String tooltip,
+  }) {
+    return Tooltip(
+      message: tooltip,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(8),
+          onTap: onTap,
+          child: Container(
+            padding: EdgeInsets.all(8),
+            child: Icon(
+              icon,
+              color: color,
+              size: 22,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  _searchField() {
+    return TextField(
+      controller: searchController,
+      onChanged: (value) {
+        setState(() {
+          currentSearchText = value;
+        });
+        controller.onSearchChanged(value);
+      },
+      style: AppTextStyle.label.copyWith(
+        fontSize: 14,
+        color: AppColors.colorBlack,
+      ),
+      decoration: InputDecoration(
+        hintText: 'Search students...'.tr,
+        hintStyle: AppTextStyle.label.copyWith(
+          color: AppColors.textSecondaryColor,
+          fontSize: 14,
+        ),
+        prefixIcon: Container(
+          padding: EdgeInsets.all(8),
+          child: Icon(
+            Icons.search_rounded,
+            color: AppColors.textSecondaryColor,
+            size: 20,
+          ),
+        ),
+        suffixIcon: currentSearchText.isNotEmpty
+            ? Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(8),
+            onTap: () {
+              setState(() {
+                currentSearchText = '';
+              });
+              searchController.text = '';
+              controller.onCloseSearch();
+            },
+            child: Container(
+              padding: EdgeInsets.all(8),
+              child: Icon(
+                Icons.close_rounded,
+                color: AppColors.textSecondaryColor,
+                size: 20,
+              ),
+            ),
+          ),
+        )
+            : null,
+        filled: false,
+        border: InputBorder.none,
+        enabledBorder: InputBorder.none,
+        focusedBorder: InputBorder.none,
+        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      ),
     );
   }
 

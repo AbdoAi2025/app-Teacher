@@ -16,12 +16,5 @@ class GetMyStudentsResponses {
   }
   List<StudentListItemApiModel>? data;
 
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    if (data != null) {
-      map['data'] = data?.map((v) => v.toJson()).toList();
-    }
-    return map;
-  }
 
 }

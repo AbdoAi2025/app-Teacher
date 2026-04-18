@@ -10,6 +10,7 @@ class EndPoints{
   static const String getGrades = "$apiV1/grade/all";
   static const String addStudents = "$apiV1/students/add";
   static const String updateStudents = "$apiV1/students/update";
+  static const String upgradeStudents = "$apiV1/students/upgrade";
   static const String getStudentDetails = "$apiV1/students";
   static const String deleteStudent = "$apiV1/students/removeFromTeacher";
 
@@ -24,6 +25,7 @@ class EndPoints{
   static const String getMyGroups = "$apiV1/groups/myGroups";
   static const String addGroup = "$apiV1/groups/add";
   static const String updateGroup = "$apiV1/groups/update";
+  static const String upgradeGroup = "$apiV1/groups/teacher/upgradeGroup";
   static const String getGroupDetails = "$apiV1/groups";
   static const String deleteGroup = "$apiV1/groups/delete";
 

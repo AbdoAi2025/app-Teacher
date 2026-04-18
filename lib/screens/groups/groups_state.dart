@@ -48,8 +48,10 @@ class GroupItemUiState {
 
 class GroupItemTitleUiState extends GroupItemUiState {
   final String title;
+  final int count;
 
-  GroupItemTitleUiState({required this.title})
+
+  GroupItemTitleUiState({required this.title , required this.count})
       : super(
           dayName: "",
           dayNameEn: "",

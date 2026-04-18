@@ -21,6 +21,7 @@ import 'package:teacher_app/widgets/lifecycle_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
 import 'package:teacher_app/widgets/sessions/running_session_item_widget.dart';
 import 'package:teacher_app/widgets/sessions/start_session_button_widget.dart';
+import '../../bottomsheets/setting_bottom_sheet.dart';
 import '../../themes/txt_styles.dart';
 import '../../utils/LogUtils.dart';
 import '../../widgets/app_toolbar_widget.dart';
@@ -28,6 +29,7 @@ import '../../widgets/groups/states/group_student_item_ui_state.dart';
 import '../../widgets/students/students_group_list_search_widget.dart';
 import '../../widgets/students/students_group_list_widget.dart';
 import '../group_edit/args/edit_group_args_model.dart';
+import '../group_upgrade/upgrade_group_screen.dart';
 import '../sessions_list/args/session_list_args_model.dart';
 import 'group_details_controller.dart';
 import 'states/group_details_state.dart';
@@ -48,10 +50,7 @@ class _GroupDetailsScreenState extends LifecycleWidgetState<GroupDetailsScreen> 
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppToolbarWidget.appBar(title: "Group Details".tr, actions: [
-          _deleteIcon(),
-          SizedBox(
-            width: 10,
-          ),
+          _settingsIcon(),
         ]),
         body: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -88,7 +87,7 @@ class _GroupDetailsScreenState extends LifecycleWidgetState<GroupDetailsScreen> 
   _groupDetails(GroupDetailsStateSuccess state) {
     var uiState = state.uiState;
     return Column(
-      spacing: 10,
+      spacing: 20,
       children: [
         _sessionSection(uiState),
         _groupInfoSection(uiState),
@@ -117,19 +116,19 @@ class _GroupDetailsScreenState extends LifecycleWidgetState<GroupDetailsScreen> 
       ),
     );
 
-    var endIcon = EditIconWidget(onClick: onEditClick);
-    return _sectionLabelValue("Group Info".tr, content, endIcon);
+    return _sectionLabelValue("Group Info".tr, content);
   }
 
   Widget _studentsSection(GroupDetailsUiState uiState) {
     var students = uiState.students;
-    var count = 5;
+    var count = 4;
     final firstFive = students.take(count).toList();
 
     return _sectionLabelValue(
       "Students".tr,
       _studentsList(firstFive),
       students.length > count ? _showAllStudents(students) : null,
+      false,
     );
   }
 
@@ -159,11 +158,11 @@ class _GroupDetailsScreenState extends LifecycleWidgetState<GroupDetailsScreen> 
 
   Widget _value(String text) => AppTextWidget(text, style: AppTextStyle.value);
 
-  Widget _sectionLabelValue(String label, Widget content, [Widget? endIcon]) {
+  Widget _sectionLabelValue(String label, Widget content, [Widget? endIcon , bool hasBackground = true]) {
     return Container(
       width: double.infinity,
-      decoration: AppBackgroundStyle.backgroundWithShadow(),
-      padding: EdgeInsets.all(10),
+      decoration: hasBackground ? AppBackgroundStyle.backgroundWithShadow() : null,
+      padding: hasBackground ? EdgeInsets.all(10): EdgeInsets.zero,
       child: Column(
         spacing: 10,
         mainAxisSize: MainAxisSize.min,
@@ -192,16 +191,34 @@ class _GroupDetailsScreenState extends LifecycleWidgetState<GroupDetailsScreen> 
   }
 
 
-  _deleteIcon() {
+  _settingsIcon() {
     return Obx(() {
       var state = controller.state.value;
       if (state is GroupDetailsStateSuccess) {
-        return DeleteIconWidget(onClick: () {
-          onDeleteClick(state.uiState);
-        });
+        return IconButton(
+          icon: Icon(Icons.settings, color: AppColors.appMainColor),
+          onPressed: () => _showSettingsBottomSheet(state.uiState),
+        );
       }
       return Container();
     });
+  }
+
+  void _showSettingsBottomSheet(GroupDetailsUiState uiState) {
+    SettingBottomSheet.show(
+        context: context,
+        itemsModels : [
+          SettingItemModel.editItem(() {
+            onEditClick();
+          }),
+          SettingItemModel.upgradeItem(() {
+            onUpgradeClick();
+          }),
+          SettingItemModel.deleteItem(() {
+            onDeleteClick(uiState);
+          }),
+        ]
+    );
   }
 
   onEditClick() async {
@@ -221,6 +238,25 @@ class _GroupDetailsScreenState extends LifecycleWidgetState<GroupDetailsScreen> 
     // if (result == true) {
     //   controller.reload();
     // }
+  }
+
+  onUpgradeClick() async {
+    var uiState = controller.getGroupDetailsUiState();
+    var args = EditGroupArgsModel(
+        groupId: uiState?.groupId ?? "",
+        groupName: uiState?.groupName ?? "",
+        groupDay: uiState?.groupDay ?? 0,
+        timeFrom: uiState?.timeFrom ?? "",
+        timeTo: uiState?.timeTo ?? "",
+        gradeName: uiState?.grade ?? "",
+        gradeId: uiState?.gradeId ?? 0,
+        students: uiState?.students ?? List.empty());
+
+    var result = await AppNavigator.navigateToUpgradeGroup(args);
+
+    if (result == true) {
+      controller.reload();
+    }
   }
 
   onDeleteClick(GroupDetailsUiState uiState) {
@@ -343,6 +379,7 @@ class _GroupDetailsScreenState extends LifecycleWidgetState<GroupDetailsScreen> 
         isScrollControlled: true,
         useSafeArea: true,
         showDragHandle: true,
+        backgroundColor: AppColors.scaffoldBackgroundColor,
         context: context,
         builder: (context) => StudentsGroupListSearchWidget(
               query: "",

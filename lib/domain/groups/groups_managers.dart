@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
+import 'package:teacher_app/utils/date_filter_manager.dart';
 
 import '../../exceptions/app_http_exception.dart';
 import '../../models/group_item_model.dart';
@@ -21,8 +22,19 @@ class GroupsManagers {
 
   static Rx<GroupsState> todayGroupsState = Rx(GroupsStateLoading());
 
+  static  DateFilterManager dateFilterManager = DateFilterManager(
+    onFilterChanged: () {
+      onRefresh();
+    },
+  );
+
+
   static Future<void> loadGroups() async {
-    var groupsResult = await _getGroupsListUseCase.execute();
+    final dateFilter = dateFilterManager.currentDateFilter;
+    var groupsResult = await _getGroupsListUseCase.execute(
+      dateFrom: dateFilter.dateFromFormatted,
+      dateTo: dateFilter.dateToFormatted,
+    );
     if (groupsResult.isSuccess) {
       var groups = groupsResult.data;
       groups = sortGroups(groups!);
@@ -123,7 +135,7 @@ class GroupsManagers {
     List<GroupItemUiState> sortedGroups = [];
 
     grouped.forEach((key, value) {
-      sortedGroups.add(GroupItemTitleUiState(title: key));
+      sortedGroups.add(GroupItemTitleUiState(title: key , count : value.length));
       sortedGroups.addAll(value);
     });
     return sortedGroups;

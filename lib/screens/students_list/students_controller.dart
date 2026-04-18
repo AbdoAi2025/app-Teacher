@@ -3,6 +3,7 @@ import 'package:teacher_app/apimodels/student_list_item_api_model.dart';
 import 'package:teacher_app/domain/usecases/get_my_students_list_use_case.dart';
 import 'package:teacher_app/screens/students_list/states/students_state.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
+import 'package:teacher_app/utils/day_utils.dart';
 import 'package:teacher_app/utils/extensions_utils.dart';
 import 'package:teacher_app/utils/localized_name_model.dart';
 
@@ -10,6 +11,7 @@ import '../../base/AppResult.dart';
 import '../../domain/events/students_events.dart';
 import '../../domain/usecases/delete_student_use_case.dart';
 import '../../requests/get_my_students_request.dart';
+import '../../utils/date_filter_manager.dart';
 import 'states/student_item_ui_state.dart';
 
 class StudentsController extends GetxController {
@@ -24,6 +26,8 @@ class StudentsController extends GetxController {
   List<StudentItemUiState> studentsUiStates = [];
   List<StudentItemUiState> searchStudentsUiStates = [];
 
+  final  DateFilterManager dateFilterManager = DateFilterManager();
+
   static const  sortByGroupType = 0;
   static const  sortByGradeType = 1;
   int? sortType ;
@@ -35,11 +39,26 @@ class StudentsController extends GetxController {
     super.onInit();
     _loadStudents();
     _initOnStudentEvents();
+    initDateFilter();
+  }
+
+  void initDateFilter() {
+    dateFilterManager.onFilterChanged = () {
+      refreshStudents();
+    };
   }
 
   Future<void> _loadStudents() async {
 
     request.pageIndex = 0;
+
+    final dateFilter = dateFilterManager.currentDateFilter;
+    appLog("StudentsController dateFilter: ${dateFilter.dateFromFormatted} - ${dateFilter.dateToFormatted}");
+
+    request = request.copyWith(
+      dateFrom: dateFilter.dateFromFormatted,
+      dateTo: dateFilter.dateToFormatted,
+    );
 
     var studentsResult = await getMyStudentsListUseCase.execute(request);
 
@@ -124,6 +143,7 @@ class StudentsController extends GetxController {
                       .toLocalizedName(),
                   groupName: e.groupName ?? "",
                   parentPhone: e.studentParentPhone ?? "",
+                  createdDate : AppDateUtils.parsStringToString(e.createdDate ,  "dd MMM, yyyy")
                 ))
             .toList() ??
         List.empty();
@@ -268,4 +288,6 @@ class StudentsController extends GetxController {
       updateRefresh = null;
     }
   }
+
+
 }

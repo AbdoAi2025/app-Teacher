@@ -21,18 +21,29 @@ class SectionWidget extends StatelessWidget {
       children: [
         if (title != null)
           _titleText(title!),
-        Container(
-            decoration: AppBackgroundStyle.backgroundWithShadow(),
-            padding: EdgeInsets.all(15),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              spacing: 15,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (innerTitle != null)
-                  _titleText(innerTitle!),
-                child,
-              ],
+        Card(
+            color: AppColors.white,
+            margin: EdgeInsets.zero,
+            shape: RoundedRectangleBorder(
+              side: BorderSide(
+                color: AppColors.color_DBD5CC.withOpacity(0.5),
+                width: 1,
+              ),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            elevation: 1,
+            child: Container(
+              padding: EdgeInsets.all(20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                spacing: 15,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (innerTitle != null)
+                    _titleText(innerTitle!),
+                  child,
+                ],
+              ),
             )
         ),
       ],

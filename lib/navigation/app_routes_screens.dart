@@ -13,6 +13,7 @@ import 'package:teacher_app/screens/login/login_screen.dart';
 import 'package:teacher_app/screens/register/register_screen.dart';
 import '../screens/group_details/group_details_screen.dart';
 import '../screens/group_edit/edit_group_screen.dart';
+import '../screens/group_upgrade/upgrade_group_screen.dart';
 import '../screens/student_details/student_details_screen.dart';
 import '../screens/student_edit/edit_student_screen.dart';
 import '../screens/student_reports/students_reports_screen.dart';
@@ -30,6 +31,7 @@ List<GetPage> appRoutes() => [
   _getPage(AppRoutes.createGroup, CreateGroupScreen()),
   _getPage(AppRoutes.groupDetails, GroupDetailsScreen()),
   _getPage(AppRoutes.editGroup, EditGroupScreen()),
+  _getPage(AppRoutes.upgradeGroup, UpgradeGroupScreen()),
   _getPage(AppRoutes.addStudent, AddStudentScreen()),
   _getPage(AppRoutes.editStudent, EditStudentScreen()),
   _getPage(AppRoutes.studentDetails, StudentDetailsScreen()),

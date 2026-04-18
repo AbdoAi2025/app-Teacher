@@ -229,17 +229,16 @@ class _HomeScreenState extends State<HomeScreen> {
       return _noTodayGroups();
     }
 
-    return Column(
-      spacing: 15,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-          child: AppTextWidget("Today Groups".tr , style: AppTextStyle.title,),
-        ),
-        ...uiStates.map((e) => GroupItemWidget(uiState: e,))
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
+      child: Column(
+        spacing: 15,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AppTextWidget("Today Groups".tr , style: AppTextStyle.title,),
+          ...uiStates.map((e) => GroupItemWidget(uiState: e,))
+        ],
+      ),
     );
   }
 

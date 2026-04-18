@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:teacher_app/themes/app_colors.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
 
+import 'grade_chip_widget.dart';
+
 class GradeWithIconWidget extends StatelessWidget {
 
   final String grade;
@@ -10,6 +12,11 @@ class GradeWithIconWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    return GradeChipWidget(
+      gradeName: grade,
+    );
+
     return  Row(
         mainAxisSize: MainAxisSize.min,
         children: [

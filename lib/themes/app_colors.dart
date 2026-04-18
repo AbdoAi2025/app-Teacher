@@ -122,6 +122,8 @@ class AppColors{
   static const Color color_0007140D = Color(0xd000714);
   static const Color colorOffWhite = Color(0xFFF5F5F5);
 
+  static Color? orange = Colors.orange ;
+
 
   static getAppColorsList() => [
     appMainColor,

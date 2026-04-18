@@ -3,9 +3,11 @@ import 'package:teacher_app/screens/students_list/states/student_item_ui_state.d
 import 'package:teacher_app/widgets/delete_icon_widget.dart';
 import 'package:teacher_app/widgets/grade_with_icon_widget.dart';
 import 'package:teacher_app/widgets/phone_with_icon_widget.dart';
+import 'package:teacher_app/widgets/students/student_first_letter_widget.dart';
 import '../../themes/txt_styles.dart';
 import '../app_txt_widget.dart';
 import '../forward_arrow_widget.dart';
+import '../section_widget.dart';
 import 'states/group_student_item_ui_state.dart';
 
 class GroupStudentItemWidget extends StatelessWidget {
@@ -24,24 +26,21 @@ class GroupStudentItemWidget extends StatelessWidget {
       onTap: () {
         onItemClick(uiState);
       },
-      child: Padding(
-        padding: const EdgeInsets.all(15.0),
+      child: SectionWidget(
         child: Column(
           spacing: 15,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
+              spacing: 5,
               children: [
-                _studentName(),
-              ],
-            ),
-            Row(
-              children: [
-                Expanded(
-                    child: Column(
+                StudentFirstLetterWidget(name: uiState.name),
+                Expanded(child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [_parentPhone()],
+                  children: [
+                    _studentName(),
+                    // _parentPhone()
+                  ],
                 )),
                 _arrowIcon()
               ],
@@ -55,7 +54,7 @@ class GroupStudentItemWidget extends StatelessWidget {
   _parentPhone() => PhoneWithIconWidget(uiState.parentPhone);
 
 
-  _arrowIcon() => ForwardArrowWidget();
+  _arrowIcon() => ForwardArrowWidget(size: 16,);
 
-  _studentName() => AppTextWidget(uiState.name, style: AppTextStyle.title);
+  Widget _studentName() => AppTextWidget(uiState.name, style: AppTextStyle.title , maxLines: 1, overflow: TextOverflow.ellipsis,);
 }

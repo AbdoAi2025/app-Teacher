@@ -9,6 +9,8 @@ import '../../base/AppResult.dart';
 import '../../domain/events/students_events.dart';
 import '../../domain/usecases/delete_student_use_case.dart';
 import '../../domain/usecases/get_student_details_use_case.dart';
+import '../../domain/usecases/update_student_use_case.dart';
+import '../../requests/update_student_request.dart';
 import 'states/student_details_state.dart';
 
 class StudentDetailsController extends GetxController {
@@ -57,6 +59,8 @@ class StudentDetailsController extends GetxController {
         groupTimeFrom: data.groupTimeFrom ?? "",
         groupTimeTo: data.groupTimeTo ?? "",
         gradeId: data.gradeId ?? 0,
+        groups: data.groups ?? [],
+        grades: data.grades ?? [],
       );
       updateState(StudentDetailsStateSuccess(uiState: uiState));
     } else {
@@ -79,24 +83,6 @@ class StudentDetailsController extends GetxController {
 
   void onRefresh() {
     reload();
-  }
-
-  Stream<AppResult<dynamic>> addStudentToGroup(StudentDetailsUiState uiState) async*{
-
-    //
-    // GetGroupsListUseCase useCase = GetGroupsListUseCase();
-    //
-    // if(groupsState)
-    //
-    //
-    // GetGroupDetailsUseCase useCase = GetGroupDetailsUseCase();
-    // var groupDetailsResult = await useCase.execute(uiState.groupId);
-    //
-    // if(!groupDetailsResult.isSuccess){
-    //
-    // }
-
-
   }
 
   Stream<AppResult<dynamic>> deleteStudent()  async*{

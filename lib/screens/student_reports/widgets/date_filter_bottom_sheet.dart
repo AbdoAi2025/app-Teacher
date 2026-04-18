@@ -139,6 +139,7 @@ class _DateFilterBottomSheetState extends State<DateFilterBottomSheet> {
           style: AppTextStyle.label.copyWith(fontWeight: FontWeight.w600),
         ),
         SizedBox(height: 12),
+        _buildFilterTypeOption(DateFilterType.all, 'All'.tr),
         _buildFilterTypeOption(DateFilterType.teachingYear, 'Teaching Year'.tr),
         _buildFilterTypeOption(DateFilterType.term, 'Term'.tr),
         _buildFilterTypeOption(DateFilterType.customRange, 'Custom Range'.tr),
@@ -381,6 +382,8 @@ class _DateFilterBottomSheetState extends State<DateFilterBottomSheet> {
 
   bool _isFilterValid() {
     switch (selectedType) {
+      case DateFilterType.all:
+        return true;
       case DateFilterType.teachingYear:
         return selectedTeachingYear != null;
       case DateFilterType.term:
@@ -398,6 +401,9 @@ class _DateFilterBottomSheetState extends State<DateFilterBottomSheet> {
     DateFilter filter;
 
     switch (selectedType) {
+      case DateFilterType.all:
+        filter = DateFilter.all();
+        break;
       case DateFilterType.teachingYear:
         filter = DateFilter.teachingYear(selectedTeachingYear!);
         break;

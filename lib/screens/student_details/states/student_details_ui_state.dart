@@ -1,3 +1,5 @@
+import '../../../data/responses/get_student_details_response.dart';
+
 class StudentDetailsUiState {
   final String studentId;
   final String studentName;
@@ -12,6 +14,8 @@ class StudentDetailsUiState {
   final int gradeId;
 
   final String gradeName;
+  final List<StudentGroupApiModel> groups;
+  final List<StudentGradeApiModel> grades;
 
   StudentDetailsUiState({
     required this.studentId,
@@ -25,5 +29,7 @@ class StudentDetailsUiState {
     required this.groupTimeFrom,
     required this.groupTimeTo,
     required this.gradeId,
+    required this.groups,
+    required this.grades,
   });
 }

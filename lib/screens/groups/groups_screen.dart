@@ -4,21 +4,14 @@ import 'package:teacher_app/navigation/app_navigator.dart';
 import 'package:teacher_app/themes/app_colors.dart';
 import 'package:teacher_app/themes/txt_styles.dart';
 import 'package:teacher_app/utils/Keyboard_utils.dart';
-import 'package:teacher_app/widgets/app_toolbar_widget.dart';
+import 'package:teacher_app/utils/date_filter_manager.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'package:teacher_app/widgets/empty_view_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
-import '../../utils/message_utils.dart';
-import '../../widgets/app_error_widget.dart';
-import '../../widgets/close_icon_widget.dart';
-import '../../widgets/date_filter_bar_widget.dart';
-import '../../widgets/dialog_loading_widget.dart';
 import '../../widgets/error_view_widget.dart';
+import '../../widgets/filters/current_filters_display_widget.dart';
 import '../../widgets/groups/group_item_widget.dart';
-import '../../widgets/search_icon_widget.dart';
-import '../../widgets/search_text_field.dart';
-import '../../widgets/sort_icon_widget.dart';
-import '../group_details/args/group_details_arg_model.dart';
+import '../../widgets/info_chip_widget.dart';
 import 'groups_controller.dart';
 import 'groups_state.dart';
 
@@ -30,8 +23,11 @@ class GroupsScreen extends StatefulWidget {
 }
 
 class _GroupsScreenState extends State<GroupsScreen> {
+  TextEditingController searchController = TextEditingController();
   GroupsController controller = Get.put(GroupsController());
   bool searchState = false;
+  String currentSearchText = '';
+  late DateFilterManager dateFilterManager;
 
   @override
   void initState() {
@@ -39,104 +35,182 @@ class _GroupsScreenState extends State<GroupsScreen> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    searchController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: AppColors.white,
         appBar: _appBar(),
-        //AppToolbarWidget.appBar(title: "Groups".tr, hasLeading: false),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.0),
+        body: SafeArea(
           child: GestureDetector(
               onTapDown: (v) {
                 KeyboardUtils.hideKeyboard(context);
               },
               child: _content()),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            AppNavigator.navigateToCreateGroup();
-          },
-          backgroundColor: AppColors.appMainColor,
-          child: Icon(Icons.add, color: Colors.white),
-        ));
+        floatingActionButton: _createGroupFab(),
+    );
   }
 
   _appBar() {
-    if (searchState) {
-      return _searchAppBar();
-    }
     return _appBarWithActions();
   }
 
-  _appBarWithActions() =>
-      AppToolbarWidget.appBar(title: "Groups".tr, hasLeading: false, actions: [
-        _searchIcon(),
-        _sortIcon(),
-      ]);
-
-  _searchAppBar() => AppToolbarWidget.appBar(
-          titleWidget: SearchTextField(
-            controller: TextEditingController(),
-            onChanged: controller.onSearchChanged,
-          ),
-          hasLeading: false,
-          actions: [
-            InkWell(
-                onTap: () {
-                  setState(() {
-                    searchState = false;
-                    controller.onCloseSearch();
-                  });
-                },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                  child: CloseIconWidget(),
-                ))
-          ]);
-
-  _searchIcon() => InkWell(
-      onTap: () {
-        setState(() {
-          searchState = true;
-        });
-      },
-      child: SearchIconWidget());
-
-  _sortIcon() => InkWell(onTap: onSortClick, child: SortIconWidget());
+  _appBarWithActions() => AppBar(
+    backgroundColor: AppColors.white,
+    elevation: 0,
+    surfaceTintColor: Colors.transparent,
+    automaticallyImplyLeading: false,
+    toolbarHeight: 0,
+  );
 
   Widget _content() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      child: Column(
+        spacing: 15,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _controlsSection(),
+            ],
+          ),
+          Expanded(
+            child: Obx(() {
+              var state = controller.state.value;
+              switch (state) {
+                case GroupsStateLoading():
+                  return Center(child: LoadingWidget());
+                case GroupsStateSuccess():
+                  return _groupsList(state);
+                case GroupsStateError():
+                  return _errorView(state);
+              }
+            }),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _controlsSection() {
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: DateFilterBarWidget(
-            onFilterChanged: (filter) {
-              // Handle filter change if needed for groups
-            },
-          ),
-        ),
-        SizedBox(height: 20),
-        Expanded(
-          child: Obx(() {
-            var state = controller.state.value;
-            switch (state) {
-              case GroupsStateLoading():
-                return Center(child: LoadingWidget());
-              case GroupsStateSuccess():
-                return _groupsList(state);
-              case GroupsStateError():
-                return _errorView(state);
-            }
-          }),
-        ),
+        _titleAndFilterRow(),
+        SizedBox(height: 16),
+        _searchAndSortBar(),
       ],
     );
   }
+
+  Widget _titleAndFilterRow() {
+    return Row(
+      children: [
+        Expanded(
+          child: AppTextWidget(
+            "Groups".tr,
+            style: AppTextStyle.title.copyWith(
+              fontSize: 24,
+              fontWeight: FontWeight.w700,
+              color: AppColors.colorBlack,
+            ),
+          ),
+        ),
+        SizedBox(width: 16),
+        CurrentFiltersDisplayWidget(filterManager: controller.dateFilterManager,),
+      ],
+    );
+  }
+
+
+  Widget _searchAndSortBar() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 4, vertical: 0),
+      decoration: BoxDecoration(
+        color: AppColors.colorOffWhite,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: AppColors.color_DBD5CC.withOpacity(0.5),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.02),
+            blurRadius: 8,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 5,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: _searchField(),
+            ),
+          ),
+          // Divider
+          Container(
+            width: 1,
+            height: 32,
+            color: AppColors.color_DBD5CC.withValues(alpha: 0.5),
+            margin: EdgeInsets.symmetric(horizontal: 8),
+          ),
+
+          // Sort button
+          _sortButton(
+            icon: Icons.sort_rounded,
+            color: AppColors.color_008E73,
+            onTap: onSortClick,
+            tooltip: 'Sort'.tr,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _sortButton({
+    required IconData icon,
+    required Color color,
+    required VoidCallback onTap,
+    required String tooltip,
+  }) {
+    return Tooltip(
+      message: tooltip,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(8),
+          onTap: onTap,
+          child: Container(
+            padding: EdgeInsets.all(8),
+            child: Icon(
+              icon,
+              color: color,
+              size: 22,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
 
   refresh() {
     controller.refreshGroups();
   }
 
-  _groupsList(GroupsStateSuccess state) {
+  Widget _groupsList(GroupsStateSuccess state) {
     var items = state.uiStates;
     if (items.isEmpty) {
       return _emptyView();
@@ -145,45 +219,45 @@ class _GroupsScreenState extends State<GroupsScreen> {
       onRefresh: () async {
         controller.refreshGroups();
       },
+      backgroundColor: AppColors.white,
+      color: AppColors.appMainColor,
       child: ListView.separated(
+          padding: EdgeInsets.only(bottom: 50),
           itemBuilder: (context, index) {
             var uiState = items[index];
-
             if (uiState is GroupItemTitleUiState) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    AppTextWidget(
-                      uiState.title,
-                      style: AppTextStyle.title,
+              return Row(
+                spacing: 10,
+                children: [
+                  AppTextWidget(
+                    uiState.title,
+                    style: AppTextStyle.title.copyWith(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.colorBlack,
                     ),
-                  ],
-                ),
+                  ),
+
+                  InfoChipWidget(
+                    icon: Icons.group,
+                    text: "${uiState.count} ${'Groups'.tr}",
+                    color : AppColors.orange,
+                  ),
+
+                ],
               );
             }
 
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: GroupItemWidget(
-                uiState: uiState,
-                onClick: onGroupItemClick,
-                onDeleteClick: onDeleteClick,
-              ),
+            return GroupItemWidget(
+              uiState: uiState,
             );
           },
-          separatorBuilder: (context, index) => SizedBox(
-                height: 15,
-              ),
+          separatorBuilder: (context, index) => SizedBox(height: 12),
           itemCount: items.length),
     );
   }
 
-  onGroupItemClick(GroupItemUiState p1) {
-    AppNavigator.navigateToGroupDetails(GroupDetailsArgModel(id: p1.groupId));
-  }
+
 
   _emptyView() {
     return Center(
@@ -194,59 +268,107 @@ class _GroupsScreenState extends State<GroupsScreen> {
     ));
   }
 
-  onDeleteClick(GroupItemUiState uiState) {
-    showConfirmationMessage(
-        "${"Are you sure to delete ?".tr} ${uiState.groupName}", () {
-      showDialogLoading();
-      controller.deleteGroup(uiState).listen(
-        (event) {
-          hideDialogLoading();
-          if (event.isSuccess) {
-            return;
-          }
-          if (event.isError) {
-            showErrorMessage(event.error?.toString());
-          }
-        },
-      );
-    });
-  }
-
   void onSortClick() {
     showModalBottomSheet(
       context: context,
-      useSafeArea: true,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
       builder: (context) {
         return Container(
-          padding: EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+          ),
+          padding: EdgeInsets.all(24),
           child: Column(
-            spacing: 10,
             mainAxisSize: MainAxisSize.min,
             children: [
-              AppTextWidget("Sort".tr),
-              Divider(),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 30.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: 20,
-                  children: [
-                    InkWell(
-                        onTap: onSortByDayClick,
-                        child: AppTextWidget("By Day".tr)),
-                    InkWell(
-                        onTap: onSortByGradeClick,
-                        child: AppTextWidget("By grade".tr)),
-                    InkWell(
-                        onTap: onSortResetClick,
-                        child: AppTextWidget("Reset".tr)),
-                  ],
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: AppColors.color_DBD5CC,
+                  borderRadius: BorderRadius.circular(2),
                 ),
               ),
+              SizedBox(height: 20),
+              Row(
+                children: [
+                  AppTextWidget(
+                    "Sort Groups".tr,
+                    style: AppTextStyle.title.copyWith(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Spacer(),
+                  IconButton(
+                    onPressed: () => Get.back(),
+                    icon: Icon(Icons.close, color: AppColors.textSecondaryColor),
+                  ),
+                ],
+              ),
+              SizedBox(height: 24),
+              _sortOption(Icons.calendar_today, "By Day".tr, onSortByDayClick),
+              SizedBox(height: 12),
+              _sortOption(Icons.school, "By Grade".tr, onSortByGradeClick),
+              SizedBox(height: 12),
+              _sortOption(Icons.refresh, "Reset".tr, onSortResetClick),
+              SizedBox(height: 24),
             ],
           ),
         );
       },
+    );
+  }
+
+  Widget _sortOption(IconData icon, String title, VoidCallback onTap) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: onTap,
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          decoration: BoxDecoration(
+            color: AppColors.colorOffWhite,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppColors.appMainColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  icon,
+                  color: AppColors.appMainColor,
+                  size: 20,
+                ),
+              ),
+              SizedBox(width: 16),
+              Expanded(
+                child: AppTextWidget(
+                  title,
+                  style: AppTextStyle.label.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              Icon(
+                Icons.arrow_forward_ios,
+                color: AppColors.textSecondaryColor,
+                size: 16,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -271,5 +393,94 @@ class _GroupsScreenState extends State<GroupsScreen> {
       message: state.message,
       onRetry: refresh,
     ));
+  }
+
+  Widget _createGroupFab() {
+    return Container(
+      margin: EdgeInsets.only(bottom: 16, right: 4),
+      child: FloatingActionButton.extended(
+        onPressed: () {
+          AppNavigator.navigateToCreateGroup();
+        },
+        backgroundColor: AppColors.appMainColor,
+        elevation: 8,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        icon: Icon(
+          Icons.add,
+          color: Colors.white,
+          size: 24,
+        ),
+        label: AppTextWidget(
+          'New Group'.tr,
+          style: AppTextStyle.label.copyWith(
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+            fontSize: 16,
+          ),
+        ),
+      ),
+    );
+  }
+
+  _searchField() {
+    return TextField(
+      controller: searchController,
+      onChanged: (value) {
+        setState(() {
+          currentSearchText = value;
+        });
+        controller.onSearchChanged(value);
+      },
+      style: AppTextStyle.label.copyWith(
+        fontSize: 14,
+        color: AppColors.colorBlack,
+      ),
+      decoration: InputDecoration(
+        hintText: 'Search groups...'.tr,
+        hintStyle: AppTextStyle.label.copyWith(
+          color: AppColors.textSecondaryColor,
+          fontSize: 14,
+        ),
+        prefixIcon: Container(
+          padding: EdgeInsets.all(8),
+          child: Icon(
+            Icons.search_rounded,
+            color: AppColors.textSecondaryColor,
+            size: 20,
+          ),
+        ),
+        suffixIcon: currentSearchText.isNotEmpty
+            ? Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(8),
+            onTap: () {
+              setState(() {
+                currentSearchText = '';
+              });
+
+              searchController.text = '';
+              controller.onCloseSearch();
+            },
+            child: Container(
+              padding: EdgeInsets.all(8),
+              child: Icon(
+                Icons.close_rounded,
+                color: AppColors.textSecondaryColor,
+                size: 20,
+              ),
+            ),
+          ),
+        )
+            : null,
+        filled: false,
+        border: InputBorder.none,
+        enabledBorder: InputBorder.none,
+        focusedBorder: InputBorder.none,
+        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      ),
+    );
   }
 }

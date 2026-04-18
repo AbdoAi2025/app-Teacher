@@ -13,10 +13,10 @@ class EditGroupScreen extends CreateGroupScreen {
   const EditGroupScreen({super.key});
 
   @override
-  State<CreateGroupScreen> createState() => _EditGroupScreenState();
+  State<CreateGroupScreen> createState() => EditGroupScreenState();
 }
 
-class _EditGroupScreenState extends CreateGroupScreenState {
+class EditGroupScreenState extends CreateGroupScreenState {
 
   final EditGroupController _controller = Get.put(EditGroupController());
 

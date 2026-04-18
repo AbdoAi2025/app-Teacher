@@ -3,6 +3,7 @@ import 'package:teacher_app/domain/groups/groups_managers.dart';
 import 'package:teacher_app/domain/usecases/delete_group_use_case.dart';
 import 'package:teacher_app/domain/usecases/groups_sort_useCase.dart';
 import 'package:teacher_app/enums/sort_enum.dart';
+import 'package:teacher_app/utils/date_filter_manager.dart';
 import 'package:teacher_app/utils/day_utils.dart';
 
 import '../../base/AppResult.dart';
@@ -19,6 +20,8 @@ class GroupsController extends GetxController{
   SortEnum sortType = SortEnum.byDay;
 
   String? query;
+
+  final DateFilterManager dateFilterManager = GroupsManagers.dateFilterManager;
 
   @override
   void onInit() {
@@ -73,7 +76,10 @@ class GroupsController extends GetxController{
     updateList();
   }
 
-  void resetSort() {}
+  void resetSort() {
+    sortType = SortEnum.byDay;
+    updateList();
+  }
 
   void updateList() {
     var stateValue = GroupsManagers.state.value;

@@ -265,11 +265,8 @@ class ApiService {
 
 
   static void startApiLoggerIfNeeded() {
-
     var showApiLogger = AppMode.showApiLogger;
-
     appLog("startApiLoggerIfNeeded showApiLogger:$showApiLogger");
-
     if (showApiLogger) { return; }
     ShakeDetector.autoStart(
         onPhoneShake: (ShakeEvent event) {

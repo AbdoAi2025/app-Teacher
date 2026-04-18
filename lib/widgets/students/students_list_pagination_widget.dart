@@ -24,14 +24,9 @@ class StudentsListPaginationWidget extends PaginationListWidget<StudentItemUiSta
 
   @override
   Widget getItemWidget(StudentItemUiState item, index) {
-
     if(item is StudentItemTitleUiState){
       return AppTextWidget(item.title.isEmpty ? "Without group".tr : item.title , style: AppTextStyle.title,);
     }
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      child: StudentItemWidget(uiState: item, onItemClick: onItemSelected),
-    );
+    return StudentItemWidget(uiState: item, onItemClick: onItemSelected);
   }
 }

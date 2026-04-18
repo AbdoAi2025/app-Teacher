@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:teacher_app/models/group_item_model.dart';
 import 'package:teacher_app/requests/add_group_request.dart';
 import 'package:teacher_app/requests/update_group_request.dart';
+import 'package:teacher_app/requests/upgrade_group_request.dart';
 import 'package:teacher_app/services/api_service.dart';
 import 'package:teacher_app/services/endpoints.dart';
 
@@ -25,9 +26,28 @@ class GroupsRepository {
     return responseResult;
   }
 
-  Future<GetGroupDetailsResponse?> getGroupDetails(String id) async {
-    Response response =
-        await ApiService.getInstance().get("${EndPoints.getGroupDetails}/$id");
+  Future<AddGroupResponse?> upgradeGroup(UpgradeGroupRequest request) async {
+    Response response = await ApiService.getInstance()
+        .post(EndPoints.upgradeGroup, data: request.toJson());
+    AddGroupResponse responseResult = AddGroupResponse.fromJson(response.data);
+    return responseResult;
+  }
+
+  Future<GetGroupDetailsResponse?> getGroupDetails(String id, {DateTime? dateFrom, DateTime? dateTo}) async {
+    Map<String, dynamic> queryParameters = {};
+
+    if (dateFrom != null) {
+      queryParameters['dateFrom'] = dateFrom.toIso8601String();
+    }
+
+    if (dateTo != null) {
+      queryParameters['dateTo'] = dateTo.toIso8601String();
+    }
+
+    Response response = await ApiService.getInstance().get(
+      "${EndPoints.getGroupDetails}/$id",
+      queryParameters: queryParameters.isNotEmpty ? queryParameters : null
+    );
     GetGroupDetailsResponse responseResult =
         GetGroupDetailsResponse.fromJson(response.data);
     return responseResult;
@@ -39,9 +59,21 @@ class GroupsRepository {
     ;
   }
 
-  Future<List<GroupItemModel>> fetchGroups() async {
-    Response response =
-        await ApiService.getInstance().get(EndPoints.getMyGroups);
+  Future<List<GroupItemModel>> fetchGroups({String? dateFrom, String? dateTo}) async {
+    Map<String, dynamic> queryParameters = {};
+
+    if (dateFrom != null) {
+      queryParameters['dateFrom'] = dateFrom;
+    }
+
+    if (dateTo != null) {
+      queryParameters['dateTo'] = dateTo;
+    }
+
+    Response response = await ApiService.getInstance().get(
+      EndPoints.getMyGroups,
+      queryParameters: queryParameters.isNotEmpty ? queryParameters : null
+    );
     GetMyGroupsResponse responseResult =
         GetMyGroupsResponse.fromJson(response.data);
     return responseResult.data

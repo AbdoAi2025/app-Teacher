@@ -39,7 +39,7 @@ class StudentsGroupListWidget extends StatelessWidget {
     return ListView.separated(
         shrinkWrap: true,
         physics: physics ?? NeverScrollableScrollPhysics(),
-        // disables ListView scroll
+        padding: EdgeInsets.zero,
         itemBuilder: (context, index) {
           var item = students[index];
           return GroupStudentItemWidget(
@@ -53,7 +53,7 @@ class StudentsGroupListWidget extends StatelessWidget {
             },
           );
         },
-        separatorBuilder: (context, index) => Divider(height: 1),
+        separatorBuilder: (context, index) => SizedBox(height: 10),
         itemCount: students.length);
   }
 }
