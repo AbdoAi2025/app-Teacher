@@ -32,4 +32,8 @@ class StudentDetailsUiState {
     required this.groups,
     required this.grades,
   });
+
+
+  get showAddStudentToGroup => groups.isEmpty || !(groups.any((element) => element.archive == true));
+
 }

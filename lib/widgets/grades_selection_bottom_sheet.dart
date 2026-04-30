@@ -293,8 +293,8 @@ class _GradesSelectionBottomSheetState extends State<GradesSelectionBottomSheet>
     if (selectedItem != null) {
       final grade = _gradeManager.findGradeById(selectedItem.id);
       if (grade != null) {
-        widget.onGradeSelected(grade);
         Get.back();
+        widget.onGradeSelected(grade);
       }
     }
   }

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sprintf/sprintf.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
 import 'package:teacher_app/screens/group_details/args/group_details_arg_model.dart';
 import 'package:teacher_app/screens/sessions_list/args/session_list_args_model.dart';
 import 'package:teacher_app/screens/student_details/states/student_details_ui_state.dart';
 import 'package:teacher_app/screens/student_details/student_details_controller.dart';
+import 'package:teacher_app/utils/LogUtils.dart';
 import 'package:teacher_app/utils/app_background_styles.dart';
 import 'package:teacher_app/utils/day_utils.dart';
 import 'package:teacher_app/utils/extensions_utils.dart';
@@ -17,6 +19,7 @@ import 'package:teacher_app/widgets/forward_arrow_widget.dart';
 import 'package:teacher_app/widgets/key_value_row_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
 import 'package:teacher_app/widgets/phone_with_icon_widget.dart';
+import 'package:teacher_app/widgets/select_group_bottom_sheet.dart';
 import 'package:teacher_app/widgets/time_with_icon_widget.dart';
 import 'package:teacher_app/widgets/grades_selection_bottom_sheet.dart';
 import 'package:teacher_app/domain/usecases/upgrade_student_use_case.dart';
@@ -27,6 +30,7 @@ import '../../themes/app_colors.dart';
 import '../../themes/txt_styles.dart';
 import '../../utils/localized_name_model.dart';
 import '../../widgets/app_toolbar_widget.dart';
+import '../../widgets/primary_button_widget.dart';
 import '../../widgets/section_widget.dart';
 import '../../widgets/student_group_item_widget.dart';
 import '../../widgets/student_grade_item_widget.dart';
@@ -91,7 +95,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
       children: [
         _studentInfoSection(uiState),
         // _groupSection(uiState),
-        if (uiState.groups.isNotEmpty) _availableGroupsSection(uiState),
+        _availableGroupsSection(uiState),
         if (uiState.grades.isNotEmpty) _availableGradesSection(uiState),
         if (uiState.groupId.isNotEmpty) _viewAllSessionSection(uiState),
       ],
@@ -323,8 +327,27 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
   }
 
   void onAddToGroupClick(StudentDetailsUiState uiState) {
-
-
+    SelectGroupBottomSheet.show(
+      context: context,
+      onGroupSelected: (group) {
+        showConfirmationMessage(
+          "${"Are you sure to add this student to this group ?".tr} ${group.groupName}",
+          () {
+            showDialogLoading();
+            controller.addStudentToGroup(group.groupId).listen((event) {
+              hideDialogLoading();
+              if (event.isSuccess) {
+                controller.reload();
+                return;
+              }
+              if (event.isError) {
+                showErrorMessage(event.error?.toString());
+              }
+            });
+          },
+        );
+      },
+    );
   }
 
   void onBack() {
@@ -338,28 +361,83 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
           SettingItemModel.editItem(() {
             onEditClick();
           }),
-          SettingItemModel.upgradeItem(() {
-            onUpgradeClick();
-          }),
           SettingItemModel.deleteItem(() {
             onDeleteClick();
-          }),
-          if(uiState.groupId.isNotEmpty)
-          SettingItemModel.addStudentToGroup(() {
-            onAddToGroupClick(uiState);
           }),
         ]
     );
 
   }
 
-  void onUpgradeClick() {
+
+  Widget _availableGroupsSection(StudentDetailsUiState uiState) {
+    return SizedBox(
+      width: double.infinity,
+      child: SectionWidget(
+        title: "Groups".tr,
+        isCard: false,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 10,
+          children: [
+            ...uiState.groups.map((group) => StudentGroupItemWidget(
+              group: group,
+              uiState: uiState,
+              onRemoveTap: () => _onGroupRemoveClick(group, uiState),
+            )),
+
+            if(uiState.showAddStudentToGroup) _addStudentToGroupButton(uiState)
+
+          ],
+        ),
+      ),
+    );
+  }
+
+
+  Widget _availableGradesSection(StudentDetailsUiState uiState) {
+    return SectionWidget(
+      title: "Grades".tr,
+      isCard: false,
+      child: Column(
+        spacing: 10,
+        children: uiState.grades.map((grade) => StudentGradeItemWidget(
+          grade: grade,
+          uiState: uiState,
+          onUpgradeTap: () => _onGradeUpgradeClick(grade),
+          onEditClick: () => _onUpdateGradeClick(grade, uiState),
+        )).toList(),
+      ),
+    );
+  }
+
+
+  void _onGroupRemoveClick(StudentGroupApiModel group, StudentDetailsUiState uiState) {
+    showConfirmationMessage(
+      "${"Are you sure to remove ?".tr} ${group.groupName ?? ""}",
+      () {
+        showDialogLoading();
+        controller.removeStudentFromGroup(group.groupId ?? "").listen((event) {
+          hideDialogLoading();
+          if (event.isSuccess) {
+            controller.reload();
+            return;
+          }
+          if (event.isError) {
+            showErrorMessage(event.error?.toString());
+          }
+        });
+      },
+    );
+  }
+
+  void _onGradeUpgradeClick(StudentGradeApiModel grade) {
     final uiState = controller.getStudentDetailsUiState();
     if (uiState == null) return;
 
     GradesSelectionBottomSheet.show(
       context: context,
-      currentGradeId: uiState.gradeId.toString(),
+      currentGradeId: grade.gradeId.toString(),
       onGradeSelected: (selectedGrade) async {
         await _upgradeStudentGrade(uiState, selectedGrade.id ?? 0);
       },
@@ -397,51 +475,42 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
     }
   }
 
-  Widget _availableGroupsSection(StudentDetailsUiState uiState) {
-    return SectionWidget(
-      title: "Groups".tr,
-      isCard: false,
-      child: Column(
-        spacing: 10,
-        children: uiState.groups.map((group) => StudentGroupItemWidget(
-          group: group,
-          uiState: uiState,
-          onRemoveTap: () => _onGroupRemoveClick(group, uiState),
-        )).toList(),
-      ),
+  void _onUpdateGradeClick(StudentGradeApiModel grade, StudentDetailsUiState uiState) {
+    GradesSelectionBottomSheet.show(
+      context: context,
+      currentGradeId: grade.gradeId.toString(),
+      onGradeSelected: (selectedGrade) {
+
+        var message = sprintf( "Are you sure to update this grade from '%s' to '%s'".tr , [grade.localizedName?.name ?? "" , selectedGrade.localizedName?.name ?? ""]);
+
+        showConfirmationMessage(
+          message,
+          () {
+            showDialogLoading();
+            controller.updateStudentGrade(grade.id.toString(), selectedGrade.id.toString()).listen((event) {
+              hideDialogLoading();
+              if (event.isSuccess) {
+                controller.reload();
+                return;
+              }
+              if (event.isError) {
+                showErrorMessage(event.error?.toString());
+              }
+            });
+          },
+        );
+      },
     );
   }
 
-
-  Widget _availableGradesSection(StudentDetailsUiState uiState) {
-    return SectionWidget(
-      title: "Grades".tr,
-      isCard: false,
-      child: Column(
-        spacing: 10,
-        children: uiState.grades.map((grade) => StudentGradeItemWidget(
-          grade: grade,
-          uiState: uiState,
-          onUpgradeTap: () => _onGradeUpgradeClick(grade),
-        )).toList(),
+  _addStudentToGroupButton(StudentDetailsUiState uiState) {
+    return Center(
+      child: PrimaryButtonWidget(
+        text: "Add to Group".tr,
+        onClick: () {
+          onAddToGroupClick(uiState);
+        },
       ),
     );
-  }
-
-
-  void _onGroupRemoveClick(StudentGroupApiModel group, StudentDetailsUiState uiState) {
-    // TODO: Implement group remove functionality
-    // This would typically involve calling an API to remove the student from the group
-    showSuccessMessage("Group remove functionality not implemented yet".tr);
-  }
-
-  void _onGradeUpgradeClick(StudentGradeApiModel grade) {
-    final gradeId = int.tryParse(grade.id?.toString() ?? "");
-    if (gradeId != null) {
-      final uiState = controller.getStudentDetailsUiState();
-      if (uiState != null) {
-        _upgradeStudentGrade(uiState, gradeId);
-      }
-    }
   }
 }

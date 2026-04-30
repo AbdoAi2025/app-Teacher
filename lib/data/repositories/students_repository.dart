@@ -53,4 +53,17 @@ class StudentsRepository {
     Response response = await ApiService.getInstance().delete(url , queryParameters: params);
     return response.data;
   }
+
+  Future<dynamic> removeStudentGrade(String id) async {
+    var url = "${EndPoints.removeStudentGrade}/$id";
+    Response response = await ApiService.getInstance().delete(url);
+    return response.data;
+  }
+
+  Future<dynamic> updateStudentGrade(String id, String gradeId) async {
+    var url = "${EndPoints.updateStudentGrade}/$id/update-student-grade";
+    var params = {"gradeId": gradeId};
+    Response response = await ApiService.getInstance().put(url, queryParameters: params);
+    return response.data;
+  }
 }

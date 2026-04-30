@@ -13,6 +13,8 @@ class EndPoints{
   static const String upgradeStudents = "$apiV1/students/upgrade";
   static const String getStudentDetails = "$apiV1/students";
   static const String deleteStudent = "$apiV1/students/removeFromTeacher";
+  static const String removeStudentGrade = "$apiV1/teachers/student-teacher";
+  static const String updateStudentGrade = "$apiV1/teachers/student-teacher";
 
 
   ///api/v1/users/signin
@@ -28,6 +30,8 @@ class EndPoints{
   static const String upgradeGroup = "$apiV1/groups/teacher/upgradeGroup";
   static const String getGroupDetails = "$apiV1/groups";
   static const String deleteGroup = "$apiV1/groups/delete";
+  static const String removeStudentFromGroup = "$apiV1/groups/removeStudentFromGroup";
+  static const String addStudentToGroup = "$apiV1/groups/addStudentToGroup";
 
   /*Sessions*/
   static const String startSession = "$apiV1/sessions/startSession";

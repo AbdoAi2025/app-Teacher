@@ -1,3 +1,5 @@
+import '../../utils/localized_name_model.dart';
+
 /// data : {"studentId":"bab9c2f3-0d49-4a94-8b9c-de740929b89f","studentName":"student1 for Hamdy5","studentPhone":"+20123123123123123","studentParentPhone":"+201032434567","gradeId":3,"gradeNameEn":"Grade 1","gradeNameAr":"الصف الأول الابتدائي","groupId":"ab513c19-65e9-4ef9-867a-a4cbd9a65229","groupName":"group1 grade1  hamdy5 ","groupDay":0,"groupTimeFrom":"12:00","groupTimeTo":"14:00","groups":[{"groupId":"ab513c19-65e9-4ef9-867a-a4cbd9a65229","groupName":"group1 grade1  hamdy5 ","groupDay":0,"groupTimeFrom":"12:00","groupTimeTo":"14:00","groupCreatedAt":"2025-04-11T23:23:19.572+00:00"}],"grades":[{"id":"3","nameEn":"Grade 1","nameAr":"الصف الأول الابتدائي","groupCreatedAt":"2025-04-11T23:22:05.209+00:00"}]}
 
 class GetStudentDetailsResponse {
@@ -140,6 +142,7 @@ class StudentGroupApiModel {
 class StudentGradeApiModel {
   StudentGradeApiModel({
     this.id,
+    this.gradeId,
     this.nameEn,
     this.nameAr,
     this.gradeCreatedAt,
@@ -147,6 +150,7 @@ class StudentGradeApiModel {
 
   StudentGradeApiModel.fromJson(dynamic json) {
     id = json['id'];
+    gradeId = json['gradeId'];
     nameEn = json['nameEn'];
     nameAr = json['nameAr'];
     gradeCreatedAt = json['gradeCreatedAt'];
@@ -154,8 +158,12 @@ class StudentGradeApiModel {
   }
 
   int? id;
+  int? gradeId;
   String? nameEn;
   String? nameAr;
   String? gradeCreatedAt;
   bool? archive;
+
+
+  LocalizedNameModel? get localizedName => LocalizedNameModel(nameEn: nameEn ?? "", nameAr: nameAr ?? "");
 }

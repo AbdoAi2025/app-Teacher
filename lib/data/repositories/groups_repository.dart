@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:teacher_app/models/group_item_model.dart';
 import 'package:teacher_app/requests/add_group_request.dart';
+import 'package:teacher_app/requests/remove_student_from_group_request.dart';
 import 'package:teacher_app/requests/update_group_request.dart';
 import 'package:teacher_app/requests/upgrade_group_request.dart';
 import 'package:teacher_app/services/api_service.dart';
@@ -56,7 +57,18 @@ class GroupsRepository {
   Future<dynamic> deleteGroup(String id) async {
     return await ApiService.getInstance()
         .delete("${EndPoints.deleteGroup}/$id");
-    ;
+  }
+
+  Future<dynamic> removeStudentFromGroup(RemoveStudentFromGroupRequest request) async {
+    Response response = await ApiService.getInstance()
+        .delete(EndPoints.removeStudentFromGroup, data: request.toJson());
+    return response.data;
+  }
+
+  Future<dynamic> addStudentToGroup(RemoveStudentFromGroupRequest request) async {
+    Response response = await ApiService.getInstance()
+        .post(EndPoints.addStudentToGroup, data: request.toJson());
+    return response.data;
   }
 
   Future<List<GroupItemModel>> fetchGroups({String? dateFrom, String? dateTo}) async {
