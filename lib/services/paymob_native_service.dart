@@ -3,12 +3,14 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../utils/LogUtils.dart';
+import 'environment_service.dart';
 
 /// Paymob native SDK service that bridges Flutter with native Android and iOS SDKs
 class PaymobNativeService {
 
   // Use your actual public key - this is just for testing
-  static const String _publicKey = "egy_pk_test_Zxpr8meJ0u7SCkEnyRNSFV2UChgYAdZi";
+  static const String _publicKeyTest = "egy_pk_test_Zxpr8meJ0u7SCkEnyRNSFV2UChgYAdZi";
+  static const String _publicKeyProd = "egy_pk_live_wURrok4W0iWmbvjpVeOJ8DHpBhvIWrbU";
   static const MethodChannel _channel = MethodChannel('paymob_sdk_flutter');
   static const MethodChannel _legacyChannel = MethodChannel('paymob_payment');
 
@@ -37,7 +39,7 @@ class PaymobNativeService {
   }) async {
     try {
       final Map<String, dynamic> arguments = {
-        'publicKey': _publicKey,
+        'publicKey': _getPublicKey(),
         'clientSecret': clientSecret,
         'appName': appName.tr,
         'buttonBackgroundColor': buttonBackgroundColor,
@@ -158,7 +160,11 @@ class PaymobNativeService {
   }
 
   /// Get a publicly accessible public key for testing
-  static String get publicKey => _publicKey;
+  static String get publicKey => _publicKeyTest;
+
+  static _getPublicKey() {
+    return AppMode.isProd ? _publicKeyProd : _publicKeyTest;
+  }
 }
 
 /// Result model for Paymob payment operations
