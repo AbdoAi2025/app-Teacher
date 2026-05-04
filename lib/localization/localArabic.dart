@@ -336,6 +336,34 @@ final Map<String, String> ar = {
   "Total": "الإجمالي",
   "Unlimited": "غير محدود",
 
+  // Register Fields
+  "Email": "البريد الإلكتروني",
+  "Enter your email": "أدخل بريدك الإلكتروني",
+  "Enter a valid email address": "أدخل بريدًا إلكترونيًا صحيحًا",
+  "Email is required": "البريد الإلكتروني مطلوب",
+  "Gender": "الجنس",
+  "Select your gender": "اختر جنسك",
+  "Select Gender": "اختر الجنس",
+  "Please select your gender": "يرجى اختيار الجنس",
+  "Male": "ذكر",
+  "Female": "أنثى",
+  "Subject": "المادة",
+  "Select your subject": "اختر مادتك",
+  "Select Subject": "اختر المادة",
+  "Please select your subject": "يرجى اختيار المادة",
+  "No subjects available": "لا توجد مواد متاحة",
+
+  // OTP Verification
+  "OTP Verification": "التحقق من الرمز",
+  "Enter the code sent to your email": "أدخل الرمز المرسل إلى بريدك الإلكتروني",
+  "Enter the code sent to your phone": "أدخل الرمز المرسل إلى هاتفك",
+  "Verify": "تحقق",
+  "Resend Code": "إعادة إرسال الرمز",
+  "Resend in": "إعادة الإرسال بعد",
+  "Invalid or expired code. Please try again.": "رمز غير صالح أو منتهي الصلاحية. حاول مرة أخرى.",
+  "Code resent successfully": "تم إعادة إرسال الرمز بنجاح",
+  "Failed to resend code": "فشل إعادة إرسال الرمز",
+
 };
 
 /*

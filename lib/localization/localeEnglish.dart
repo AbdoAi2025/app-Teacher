@@ -318,4 +318,32 @@ final Map<String, String> enUS = {
   "Total": "Total",
   "Unlimited": "Unlimited",
 
+  // Register Fields
+  "Email": "Email",
+  "Enter your email": "Enter your email",
+  "Enter a valid email address": "Enter a valid email address",
+  "Email is required": "Email is required",
+  "Gender": "Gender",
+  "Select your gender": "Select your gender",
+  "Select Gender": "Select Gender",
+  "Please select your gender": "Please select your gender",
+  "Male": "Male",
+  "Female": "Female",
+  "Subject": "Subject",
+  "Select your subject": "Select your subject",
+  "Select Subject": "Select Subject",
+  "Please select your subject": "Please select your subject",
+  "No subjects available": "No subjects available",
+
+  // OTP Verification
+  "OTP Verification": "OTP Verification",
+  "Enter the code sent to your email": "Enter the code sent to your email",
+  "Enter the code sent to your phone": "Enter the code sent to your phone",
+  "Verify": "Verify",
+  "Resend Code": "Resend Code",
+  "Resend in": "Resend in",
+  "Invalid or expired code. Please try again.": "Invalid or expired code. Please try again.",
+  "Code resent successfully": "Code resent successfully",
+  "Failed to resend code": "Failed to resend code",
+
 };
