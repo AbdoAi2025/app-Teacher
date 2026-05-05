@@ -28,6 +28,7 @@ class OtpVerificationBottomSheet extends StatefulWidget {
     final result = await showModalBottomSheet<bool>(
       context: context,
       isScrollControlled: true,
+      useSafeArea: true,
       backgroundColor: Colors.transparent,
       builder: (_) => OtpVerificationBottomSheet(
         userId: userId,
@@ -182,23 +183,17 @@ class _OtpVerificationBottomSheetState
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:
-          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        child: SafeArea(
-          top: false,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _buildHandle(),
-              _buildHeader(),
-              const Divider(height: 1),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
+        height: double.infinity,
+        decoration: const BoxDecoration(color: Colors.white),
+        child: Column(
+          children: [
+            _buildHeader(),
+            const Divider(height: 1),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(24, 40, 24, 32),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -218,24 +213,14 @@ class _OtpVerificationBottomSheetState
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildHandle() {
-    return Container(
-      width: 40,
-      height: 4,
-      margin: const EdgeInsets.only(top: 12, bottom: 8),
-      decoration: BoxDecoration(
-        color: Colors.grey[300],
-        borderRadius: BorderRadius.circular(2),
-      ),
-    );
-  }
+
 
   Widget _buildHeader() {
     return Padding(
@@ -287,7 +272,9 @@ class _OtpVerificationBottomSheetState
   }
 
   Widget _buildOtpFields() {
-    return Row(
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(_digitCount, (index) {
         return Padding(
@@ -330,6 +317,7 @@ class _OtpVerificationBottomSheetState
           ),
         );
       }),
+    ),
     );
   }
 

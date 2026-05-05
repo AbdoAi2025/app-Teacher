@@ -161,6 +161,7 @@ final Map<String, String> ar = {
   "Privacy Policy" : "سياسة الخصوصية",
   "Delete Account" : "حذف الحساب",
   "delete_account_confirm_message" : "هل أنت متأكد من حذف حسابك؟",
+  "Logout" : "تسجيل الخروج",
   "Are you sure to logout" : "هل أنت متأكد من تسجيل خروج؟",
   "Enter Grade" : "أدخل الدرجة",
   "Group has no students" : "لا يوجد طلبة في المجموعة",
@@ -336,6 +337,16 @@ final Map<String, String> ar = {
   "Total": "الإجمالي",
   "Unlimited": "غير محدود",
 
+  // Profile
+  "Profile": "الملف الشخصي",
+  "Edit Profile": "تعديل الملف الشخصي",
+  "Save Changes": "حفظ التغييرات",
+  "Profile updated successfully": "تم تحديث الملف الشخصي بنجاح",
+  "Verification Status": "حالة التحقق",
+  "Verified": "موثق",
+  "Not Verified": "غير موثق",
+  "Something went wrong": "حدث خطأ ما",
+
   // Register Fields
   "Email": "البريد الإلكتروني",
   "Enter your email": "أدخل بريدك الإلكتروني",
@@ -363,6 +374,7 @@ final Map<String, String> ar = {
   "Invalid or expired code. Please try again.": "رمز غير صالح أو منتهي الصلاحية. حاول مرة أخرى.",
   "Code resent successfully": "تم إعادة إرسال الرمز بنجاح",
   "Failed to resend code": "فشل إعادة إرسال الرمز",
+  "send_otp_failed": "فشل إرسال رمز التحقق. يرجى المحاولة مرة أخرى.",
 
 };
 

@@ -142,6 +142,7 @@ final Map<String, String> enUS = {
   "Privacy Policy" : "Privacy Policy",
   "Delete Account" : "Delete Account",
   "delete_account_confirm_message" : "Are you sure you want to delete your account?",
+  "Logout" : "Logout",
   "Are you sure to logout" : "Are you sure to logout?",
   "Enter Grade" : "Enter Grade",
   "Group has no students" : "Group has no students",
@@ -318,6 +319,16 @@ final Map<String, String> enUS = {
   "Total": "Total",
   "Unlimited": "Unlimited",
 
+  // Profile
+  "Profile": "Profile",
+  "Edit Profile": "Edit Profile",
+  "Save Changes": "Save Changes",
+  "Profile updated successfully": "Profile updated successfully",
+  "Verification Status": "Verification Status",
+  "Verified": "Verified",
+  "Not Verified": "Not Verified",
+  "Something went wrong": "Something went wrong",
+
   // Register Fields
   "Email": "Email",
   "Enter your email": "Enter your email",
@@ -345,5 +356,6 @@ final Map<String, String> enUS = {
   "Invalid or expired code. Please try again.": "Invalid or expired code. Please try again.",
   "Code resent successfully": "Code resent successfully",
   "Failed to resend code": "Failed to resend code",
+  "send_otp_failed": "Failed to send verification code. Please try again.",
 
 };

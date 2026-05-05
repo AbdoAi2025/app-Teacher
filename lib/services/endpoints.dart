@@ -62,4 +62,7 @@ class EndPoints{
   /*Subjects*/
   static const String getSubjects = "$apiV1/subjects";
 
+  /*Teacher Profile*/
+  static const String teacherProfile = "$apiV1/teachers/profile";
+
 }
