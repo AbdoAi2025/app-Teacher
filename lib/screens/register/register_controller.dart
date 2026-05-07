@@ -142,7 +142,10 @@ class RegisterController extends GetxController {
       return;
     }
 
-    yield RegisterStateSuccess();
+    yield RegisterStateSuccess(
+      userId: result.data ?? '',
+      email: emailController.text.trim(),
+    );
   }
 
   @override

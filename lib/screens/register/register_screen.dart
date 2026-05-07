@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:teacher_app/domain/usecases/login_use_case.dart';
 import 'package:teacher_app/enums/gender_enum.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
 import 'package:teacher_app/screens/register/register_controller.dart';
@@ -12,7 +13,13 @@ import 'package:teacher_app/widgets/dialog_loading_widget.dart';
 import 'package:teacher_app/widgets/primary_button_widget.dart';
 import 'package:teacher_app/widgets/subject_selection_bottom_sheet.dart';
 
+import '../../dialogs/user_not_active_dialog.dart';
+import '../../dialogs/user_not_subscribed_dialog.dart';
+import '../../enums/otp_channel_enum.dart';
 import '../../generated/assets.dart';
+import '../../widgets/otp_verification_bottom_sheet.dart';
+import '../login/login_controller.dart';
+import '../login/login_state.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -284,6 +291,56 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
+  Future<void> _openOtpVerification(String userId, String email) async {
+    final verified = await OtpVerificationBottomSheet.show(
+      context,
+      userId: userId,
+      otpChannel: OtpChannel.EMAIL,
+      channelValue: email,
+    );
+
+    if (verified && mounted) {
+      onLoginByEmail(email);
+    }
+  }
+
+  void onLoginByEmail(String email) {
+    LoginController loginController = Get.put(LoginController());
+    loginController.usernameController.text = email;
+    loginController.passwordController.text = passwordController.text;
+    loginController.login().listen(
+          (event) {
+        var result = event;
+        hideDialogLoading();
+        switch (result) {
+          case LoginStateLoading():
+            showDialogLoading();
+            break;
+          case LoginStateSuccess():
+            AppNavigator.navigateToHome();
+            break;
+          case LoginStateError():
+            showErrorMessageEx(result.exception);
+            break;
+          case LoginStateInvalidSession():
+            UserNotActiveDialog.showUserNotActive();
+            break;
+          case LoginStateNotSubscribed():
+            AppNavigator.navigateToHome();
+            UserNotSubscribedDialog.showUserNotSubscribedDialog();
+            break;
+          case LoginStateNotActive():
+            UserNotActiveDialog.showUserNotActive();
+            break;
+          case LoginStateRemainDays():
+            AppNavigator.navigateToHome();
+            UserNotSubscribedDialog.showSubscriptionExpiringDialog(remainingDays: result.remainingDays,);();
+        }
+      },
+    );
+  }
+
+
   void onRegisterClick() {
     if (_formKey.currentState!.validate()) {
       controller.register().listen(
@@ -295,7 +352,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               showDialogLoading();
               break;
             case RegisterStateSuccess():
-              AppNavigator.navigateToHome();
+              _openOtpVerification(result.userId, result.email);
               break;
             case RegisterStateError():
               showErrorMessageEx(result.exception);
