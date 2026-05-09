@@ -346,6 +346,21 @@ final Map<String, String> enUS = {
   "Please select your subject": "Please select your subject",
   "No subjects available": "No subjects available",
 
+  // Forgot Password
+  "Forgot Password": "Forgot Password",
+  "Email or Username": "Email or Username",
+  "Enter your email or username": "Enter your email or username",
+  "Send Reset Code": "Send Reset Code",
+  "Identifier is required": "Email or username is required",
+  "Reset code sent to": "Reset code sent to",
+  "New Password": "New Password",
+  "Enter new password": "Enter new password",
+  "Confirm New Password": "Confirm New Password",
+  "Confirm your new password": "Confirm your new password",
+  "New password is required": "New password is required",
+  "Reset Password": "Reset Password",
+  "Password reset successfully": "Password reset successfully",
+
   // OTP Verification
   "OTP Verification": "OTP Verification",
   "Enter the code sent to your email": "Enter the code sent to your email",

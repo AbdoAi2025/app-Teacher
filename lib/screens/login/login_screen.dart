@@ -17,6 +17,7 @@ import '../../generated/assets.dart';
 import '../../widgets/app_password_field_widget.dart';
 import '../../widgets/app_toolbar_widget.dart';
 import '../../widgets/environment_display_widget.dart';
+import '../../widgets/forgot_password_bottom_sheet.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -56,6 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               _userNameField(),
               _passwordField(),
+              _forgotPasswordButton(),
               _submitButton(),
               _registerRedirect(),
             ],
@@ -78,6 +80,19 @@ class _LoginScreenState extends State<LoginScreen> {
         hint: "Password".tr,
         prefixIcon: Icon(Icons.lock_outline),
       );
+
+  _forgotPasswordButton() {
+    return Align(
+      alignment: AlignmentDirectional.centerEnd,
+      child: TextButton(
+        onPressed: () => ForgotPasswordBottomSheet.show(
+          context,
+          initialIdentifier: usernameController.text.trim(),
+        ),
+        child: Text('Forgot Password'.tr),
+      ),
+    );
+  }
 
   _submitButton() {
     return SizedBox(

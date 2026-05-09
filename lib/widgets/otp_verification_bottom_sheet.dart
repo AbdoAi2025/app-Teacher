@@ -4,19 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/domain/usecases/resend_otp_use_case.dart';
+import 'package:teacher_app/domain/usecases/verify_forgot_password_otp_use_case.dart';
 import 'package:teacher_app/domain/usecases/verify_otp_use_case.dart';
 import 'package:teacher_app/enums/otp_channel_enum.dart';
+import 'package:teacher_app/widgets/reset_password_bottom_sheet.dart';
 
 class OtpVerificationBottomSheet extends StatefulWidget {
   final String userId;
   final OtpChannel otpChannel;
   final String channelValue;
+  final bool isForgot;
 
   const OtpVerificationBottomSheet({
     super.key,
     required this.userId,
     required this.otpChannel,
     required this.channelValue,
+    this.isForgot = false,
   });
 
   static Future<bool> show(
@@ -24,6 +28,7 @@ class OtpVerificationBottomSheet extends StatefulWidget {
     required String userId,
     required OtpChannel otpChannel,
     required String channelValue,
+    bool isForgot = false,
   }) async {
     final result = await showModalBottomSheet<bool>(
       context: context,
@@ -34,6 +39,7 @@ class OtpVerificationBottomSheet extends StatefulWidget {
         userId: userId,
         otpChannel: otpChannel,
         channelValue: channelValue,
+        isForgot: isForgot,
       ),
     );
     return result ?? false;
@@ -56,6 +62,7 @@ class _OtpVerificationBottomSheetState
 
   final _verifyUseCase = VerifyOtpUseCase();
   final _resendUseCase = ResendOtpUseCase();
+  final _verifyForgotUseCase = VerifyForgotPasswordOtpUseCase();
 
   bool _isVerifying = false;
   bool _isResending = false;
@@ -112,21 +119,39 @@ class _OtpVerificationBottomSheetState
       _errorMessage = null;
     });
 
-    final result = await _verifyUseCase.execute(
-      userId: widget.userId,
-      code: _code,
-      channel: widget.otpChannel,
-    );
-
-    if (!mounted) return;
-
-    if (result.isSuccess) {
-      Navigator.pop(context, true);
+    if (widget.isForgot) {
+      final result = await _verifyForgotUseCase.execute(
+        userId: widget.userId,
+        code: _code,
+      );
+      if (!mounted) return;
+      if (result.isSuccess) {
+        final resetToken = result.value!.resetToken;
+        Navigator.pop(context, true);
+        if (context.mounted) {
+          await ResetPasswordBottomSheet.show(context, resetToken: resetToken);
+        }
+      } else {
+        setState(() {
+          _isVerifying = false;
+          _errorMessage = 'Invalid or expired code. Please try again.'.tr;
+        });
+      }
     } else {
-      setState(() {
-        _isVerifying = false;
-        _errorMessage = 'Invalid or expired code. Please try again.'.tr;
-      });
+      final result = await _verifyUseCase.execute(
+        userId: widget.userId,
+        code: _code,
+        channel: widget.otpChannel,
+      );
+      if (!mounted) return;
+      if (result.isSuccess) {
+        Navigator.pop(context, true);
+      } else {
+        setState(() {
+          _isVerifying = false;
+          _errorMessage = 'Invalid or expired code. Please try again.'.tr;
+        });
+      }
     }
   }
 
@@ -208,8 +233,10 @@ class _OtpVerificationBottomSheetState
                     ],
                     const SizedBox(height: 28),
                     _buildVerifyButton(),
-                    const SizedBox(height: 16),
-                    _buildResendRow(),
+                    if (!widget.isForgot) ...[
+                      const SizedBox(height: 16),
+                      _buildResendRow(),
+                    ],
                   ],
                 ),
               ),

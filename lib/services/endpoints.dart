@@ -65,4 +65,9 @@ class EndPoints{
   /*Teacher Profile*/
   static const String teacherProfile = "$apiV1/teachers/profile";
 
+  /*Password Reset*/
+  static const String forgotPassword = "$apiV1/password/forgot";
+  static const String verifyForgotPasswordOtp = "$apiV1/password/verify-otp";
+  static const String resetPassword = "$apiV1/password/reset";
+
 }

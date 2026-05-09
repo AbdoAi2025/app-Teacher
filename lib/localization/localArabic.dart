@@ -364,6 +364,21 @@ final Map<String, String> ar = {
   "Please select your subject": "يرجى اختيار المادة",
   "No subjects available": "لا توجد مواد متاحة",
 
+  // Forgot Password
+  "Forgot Password": "نسيت كلمة المرور",
+  "Email or Username": "البريد الإلكتروني أو اسم المستخدم",
+  "Enter your email or username": "أدخل بريدك الإلكتروني أو اسم المستخدم",
+  "Send Reset Code": "إرسال رمز إعادة التعيين",
+  "Identifier is required": "البريد الإلكتروني أو اسم المستخدم مطلوب",
+  "Reset code sent to": "تم إرسال رمز إعادة التعيين إلى",
+  "New Password": "كلمة المرور الجديدة",
+  "Enter new password": "أدخل كلمة المرور الجديدة",
+  "Confirm New Password": "تأكيد كلمة المرور الجديدة",
+  "Confirm your new password": "أكد كلمة المرور الجديدة",
+  "New password is required": "كلمة المرور الجديدة مطلوبة",
+  "Reset Password": "إعادة تعيين كلمة المرور",
+  "Password reset successfully": "تم إعادة تعيين كلمة المرور بنجاح",
+
   // OTP Verification
   "OTP Verification": "التحقق من الرمز",
   "Enter the code sent to your email": "أدخل الرمز المرسل إلى بريدك الإلكتروني",
