@@ -8,6 +8,7 @@ import 'package:teacher_app/screens/profile/profile_controller.dart';
 import 'package:teacher_app/widgets/app_error_widget.dart';
 import 'package:teacher_app/widgets/app_toolbar_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
+import 'package:teacher_app/widgets/change_password_bottom_sheet.dart';
 import 'package:teacher_app/widgets/otp_verification_bottom_sheet.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -65,8 +66,25 @@ class ProfileScreen extends StatelessWidget {
             _buildInfoSection(context, profile),
             const SizedBox(height: 16),
             _buildVerificationSection(context, profile, controller),
+            const SizedBox(height: 16),
+            _buildChangePasswordButton(context),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildChangePasswordButton(BuildContext context) {
+    return Container(
+      decoration: _cardDecoration(),
+      child: ListTile(
+        leading: Icon(Icons.lock_outline, color: Theme.of(context).primaryColor),
+        title: Text(
+          'Change Password'.tr,
+          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+        ),
+        trailing: Icon(Icons.chevron_right, color: Colors.grey[400]),
+        onTap: () => ChangePasswordBottomSheet.show(context),
       ),
     );
   }

@@ -367,6 +367,11 @@ final Map<String, String> enUS = {
   "New password is required": "New password is required",
   "Reset Password": "Reset Password",
   "Password reset successfully": "Password reset successfully",
+  "Change Password": "Change Password",
+  "Current Password": "Current Password",
+  "Enter current password": "Enter current password",
+  "Current password is required": "Current password is required",
+  "Password changed successfully": "Password changed successfully",
 
   // OTP Verification
   "OTP Verification": "OTP Verification",

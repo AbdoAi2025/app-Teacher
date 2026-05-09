@@ -385,6 +385,11 @@ final Map<String, String> ar = {
   "New password is required": "كلمة المرور الجديدة مطلوبة",
   "Reset Password": "إعادة تعيين كلمة المرور",
   "Password reset successfully": "تم إعادة تعيين كلمة المرور بنجاح",
+  "Change Password": "تغيير كلمة المرور",
+  "Current Password": "كلمة المرور الحالية",
+  "Enter current password": "أدخل كلمة المرور الحالية",
+  "Current password is required": "كلمة المرور الحالية مطلوبة",
+  "Password changed successfully": "تم تغيير كلمة المرور بنجاح",
 
   // OTP Verification
   "OTP Verification": "التحقق من الرمز",

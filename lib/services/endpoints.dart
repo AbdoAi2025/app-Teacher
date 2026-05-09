@@ -69,5 +69,6 @@ class EndPoints{
   static const String forgotPassword = "$apiV1/password/forgot";
   static const String verifyForgotPasswordOtp = "$apiV1/password/verify-otp";
   static const String resetPassword = "$apiV1/password/reset";
+  static const String changePassword = "$apiV1/password/change";
 
 }
