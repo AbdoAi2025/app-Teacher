@@ -7,6 +7,7 @@ class CheckUserSessionModel {
   final SubscriptionDateModel subscriptionExpireDate;
   final bool mustCompleteProfile;
   final bool requireVerify;
+  final String? userId;
 
   CheckUserSessionModel({
     required this.isActive,
@@ -14,6 +15,7 @@ class CheckUserSessionModel {
     required this.subscriptionExpireDate,
     this.mustCompleteProfile = false,
     this.requireVerify = false,
+    this.userId,
   });
 
   int? getRemainingDays() {

@@ -368,6 +368,8 @@ final Map<String, String> ar = {
   "Complete Profile": "إكمال الملف الشخصي",
   "complete_profile_message": "يرجى إكمال بيانات ملفك الشخصي للمتابعة واستخدام التطبيق.",
   "Complete Now": "إكمال الآن",
+  "require_verify_message": "يرجى التحقق من حسابك للمتابعة واستخدام التطبيق.",
+  "Verify Now": "تحقق الآن",
 
   // Forgot Password
   "Forgot Password": "نسيت كلمة المرور",

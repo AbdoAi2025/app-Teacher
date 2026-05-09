@@ -350,6 +350,8 @@ final Map<String, String> enUS = {
   "Complete Profile": "Complete Profile",
   "complete_profile_message": "Please complete your profile information to continue using the app.",
   "Complete Now": "Complete Now",
+  "require_verify_message": "Please verify your account to continue using the app.",
+  "Verify Now": "Verify Now",
 
   // Forgot Password
   "Forgot Password": "Forgot Password",

@@ -7,6 +7,8 @@ import 'package:teacher_app/domain/usecases/resend_otp_use_case.dart';
 import 'package:teacher_app/domain/usecases/verify_forgot_password_otp_use_case.dart';
 import 'package:teacher_app/domain/usecases/verify_otp_use_case.dart';
 import 'package:teacher_app/enums/otp_channel_enum.dart';
+import 'package:teacher_app/utils/message_utils.dart';
+import 'package:teacher_app/widgets/dialog_loading_widget.dart';
 import 'package:teacher_app/widgets/reset_password_bottom_sheet.dart';
 
 class OtpVerificationBottomSheet extends StatefulWidget {
@@ -22,6 +24,12 @@ class OtpVerificationBottomSheet extends StatefulWidget {
     required this.channelValue,
     this.isForgot = false,
   });
+
+
+  static Future<bool> sendVerificationOtp(String userId , OtpChannel channel) async {
+    final result = await ResendOtpUseCase().execute(userId: userId, channel: channel);
+    return result.isSuccess;
+  }
 
   static Future<bool> show(
     BuildContext context, {
@@ -43,6 +51,47 @@ class OtpVerificationBottomSheet extends StatefulWidget {
       ),
     );
     return result ?? false;
+  }
+
+  static void showRequireVerify(
+    BuildContext context, {
+    required String userId,
+    required VoidCallback onSuccess,
+  }) {
+    showConfirmationMessage(
+      'require_verify_message'.tr,
+      () => _resendAndVerify(context, userId: userId, onSuccess: onSuccess),
+      barrierDismissible: false,
+      positiveButtonText: 'Verify Now'.tr,
+    );
+  }
+
+  static Future<void> _resendAndVerify(
+    BuildContext context, {
+    required String userId,
+    required VoidCallback onSuccess,
+  }) async {
+    showDialogLoading();
+    final result = await ResendOtpUseCase().execute(
+      userId: userId,
+      channel: OtpChannel.EMAIL,
+    );
+    hideDialogLoading();
+
+    if (!context.mounted) return;
+
+    if (result.isSuccess) {
+      final channelValue = result.value?.data ?? '';
+      final verified = await show(
+        context,
+        userId: userId,
+        otpChannel: OtpChannel.EMAIL,
+        channelValue: channelValue,
+      );
+      if (verified) onSuccess();
+    } else {
+      showErrorMessageEx(result.error);
+    }
   }
 
   @override

@@ -13,7 +13,7 @@ import 'package:teacher_app/utils/open_store_utils.dart';
 import '../../dialogs/user_not_active_dialog.dart';
 import '../../dialogs/user_not_subscribed_dialog.dart';
 import '../../widgets/complete_profile_bottom_sheet.dart';
-import '../../widgets/confirm_dailog_widget.dart';
+import '../../widgets/otp_verification_bottom_sheet.dart';
 import '../../presentation/app_message_dialogs.dart';
 import '../../services/environment_service.dart';
 import '../../utils/whatsapp_utils.dart';
@@ -95,6 +95,13 @@ class _SplashscreenState extends State<SplashScreen> {
             {
               AppNavigator.navigateToHome();
             }
+            break;
+          case SplashEventRequireVerify():
+            OtpVerificationBottomSheet.showRequireVerify(
+              context,
+              userId: callback.userId,
+              onSuccess: splashController.retry,
+            );
             break;
           case SplashEventMustCompleteProfile():
             CompleteProfileBottomSheet.show(

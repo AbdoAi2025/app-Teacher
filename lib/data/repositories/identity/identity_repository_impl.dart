@@ -140,6 +140,7 @@ class IdentityRepositoryImpl extends IdentityRepository {
       subscriptionExpireDate: SubscriptionDateModel(dateString: response.data?.subscriptionExpireDate ?? ""),
       mustCompleteProfile: response.data?.mustCompleteProfile ?? false,
       requireVerify: response.data?.requireVerify ?? false,
+      userId: response.data?.userId,
     );
   }
 }

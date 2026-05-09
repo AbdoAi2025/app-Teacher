@@ -25,6 +25,13 @@ class EditProfileController extends GetxController {
   RxBool isSaving = false.obs;
   RxString errorMessage = ''.obs;
 
+  String? userId;
+  String? _initialEmail;
+
+  bool get hasEmailChanged =>
+      _initialEmail != null &&
+      emailController.text.trim() != _initialEmail!.trim();
+
   @override
   void onInit() {
     super.onInit();
@@ -42,6 +49,8 @@ class EditProfileController extends GetxController {
   }
 
   void _populateFields(TeacherProfileData profile) {
+    userId = profile.userId;
+    _initialEmail = profile.email;
     nameController.text = profile.name ?? '';
     emailController.text = profile.email ?? '';
     phoneController.text = profile.phone ?? '';

@@ -4,7 +4,10 @@ import 'package:teacher_app/data/responses/get_teacher_profile_response.dart';
 import 'package:teacher_app/enums/gender_enum.dart';
 import 'package:teacher_app/screens/edit_profile/edit_profile_controller.dart';
 import 'package:teacher_app/widgets/app_text_field_widget.dart';
+import 'package:teacher_app/enums/otp_channel_enum.dart';
 import 'package:teacher_app/widgets/app_toolbar_widget.dart';
+import 'package:teacher_app/widgets/dialog_loading_widget.dart';
+import 'package:teacher_app/widgets/otp_verification_bottom_sheet.dart';
 import 'package:teacher_app/widgets/primary_button_widget.dart';
 import 'package:teacher_app/widgets/subject_selection_bottom_sheet.dart';
 
@@ -24,8 +27,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   void initState() {
     super.initState();
+    final tag = widget.onSaved != null ? 'complete' : null;
+    Get.delete<EditProfileController>(tag: tag, force: true);
     final profile = widget.onSaved != null ? null : Get.arguments as TeacherProfileData?;
-    controller = Get.put(EditProfileController(profile), tag: widget.onSaved != null ? 'complete' : null);
+    controller = Get.put(EditProfileController(profile), tag: tag);
   }
 
   @override
@@ -257,6 +262,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Future<void> _onSave() async {
+
+    var context = this.context;
+
     if (!_formKey.currentState!.validate()) return;
     if (controller.selectedGender.value == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -271,8 +279,32 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       return;
     }
 
+
     final success = await controller.save();
     if (!mounted) return;
+
+    if (controller.hasEmailChanged && controller.userId != null) {
+      var channel = OtpChannel.EMAIL;
+      showDialogLoading();
+      final sent = await OtpVerificationBottomSheet.sendVerificationOtp(controller.userId! ,channel);
+      hideDialogLoading();
+      if (!context.mounted) return;
+      if (!sent) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('send_otp_failed'.tr)),
+        );
+        return;
+      }
+
+      final verified = await OtpVerificationBottomSheet.show(
+        context,
+        userId: controller.userId!,
+        otpChannel: channel,
+        channelValue: controller.emailController.text.trim(),
+      );
+      if (!mounted) return;
+      if (!verified) return;
+    }
 
     if (success) {
       ScaffoldMessenger.of(context).showSnackBar(
