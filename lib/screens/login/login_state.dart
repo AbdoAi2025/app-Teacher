@@ -11,6 +11,7 @@ class LoginStateRemainDays extends LoginState{
   LoginStateRemainDays(this.remainingDays);
 }
 class LoginStateNotActive extends LoginState {}
+class LoginStateMustCompleteProfile extends LoginState {}
 class LoginStateError extends LoginState {
   final Exception? exception;
   LoginStateError(this.exception);

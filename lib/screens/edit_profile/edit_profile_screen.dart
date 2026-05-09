@@ -9,7 +9,9 @@ import 'package:teacher_app/widgets/primary_button_widget.dart';
 import 'package:teacher_app/widgets/subject_selection_bottom_sheet.dart';
 
 class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({super.key});
+  final VoidCallback? onSaved;
+
+  const EditProfileScreen({super.key, this.onSaved});
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
@@ -22,15 +24,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   void initState() {
     super.initState();
-    final profile = Get.arguments as TeacherProfileData;
-    controller = Get.put(EditProfileController(profile));
+    final profile = widget.onSaved != null ? null : Get.arguments as TeacherProfileData?;
+    controller = Get.put(EditProfileController(profile), tag: widget.onSaved != null ? 'complete' : null);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppToolbarWidget.appBar(title: 'Edit Profile'.tr),
-      body: GestureDetector(
+      body: Obx(() {
+        if (controller.isLoading.value) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        return GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
@@ -64,7 +70,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
           ),
         ),
-      ),
+      );
+      }),
     );
   }
 
@@ -271,7 +278,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Profile updated successfully'.tr)),
       );
-      Navigator.pop(context, true);
+      if (widget.onSaved != null) {
+        widget.onSaved!();
+      } else {
+        Navigator.pop(context, true);
+      }
     }
   }
 }

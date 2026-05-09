@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/data/responses/get_teacher_profile_response.dart';
 import 'package:teacher_app/domain/models/subject_model.dart';
+import 'package:teacher_app/domain/usecases/get_teacher_profile_use_case.dart';
 import 'package:teacher_app/domain/usecases/update_teacher_profile_use_case.dart';
 import 'package:teacher_app/enums/gender_enum.dart';
 
 class EditProfileController extends GetxController {
-  final TeacherProfileData initialProfile;
+  final TeacherProfileData? initialProfile;
 
   EditProfileController(this.initialProfile);
 
   final _useCase = UpdateTeacherProfileUseCase();
+  final _getProfileUseCase = GetTeacherProfileUseCase();
 
   late final TextEditingController nameController;
   late final TextEditingController emailController;
@@ -19,33 +21,59 @@ class EditProfileController extends GetxController {
   late Rx<GenderEnum?> selectedGender;
   late Rx<SubjectModel?> selectedSubject;
 
+  RxBool isLoading = false.obs;
   RxBool isSaving = false.obs;
   RxString errorMessage = ''.obs;
 
   @override
   void onInit() {
     super.onInit();
-    nameController = TextEditingController(text: initialProfile.name ?? '');
-    emailController = TextEditingController(text: initialProfile.email ?? '');
-    phoneController = TextEditingController(text: initialProfile.phone ?? '');
+    nameController = TextEditingController();
+    emailController = TextEditingController();
+    phoneController = TextEditingController();
+    selectedGender = Rx(null);
+    selectedSubject = Rx(null);
 
-    selectedGender = Rx(
-      initialProfile.gender != null
-          ? GenderEnum.values.firstWhereOrNull(
-              (g) => g.name.toLowerCase() ==
-                  initialProfile.gender!.toLowerCase())
-          : null,
-    );
+    if (initialProfile != null) {
+      _populateFields(initialProfile!);
+    } else {
+      _loadProfile();
+    }
+  }
 
-    selectedSubject = Rx(
-      initialProfile.subject != null
-          ? SubjectModel(
-              id: initialProfile.subject!.id,
-              nameEn: initialProfile.subject!.nameEn,
-              nameAr: initialProfile.subject!.nameAr,
-            )
-          : null,
-    );
+  void _populateFields(TeacherProfileData profile) {
+    nameController.text = profile.name ?? '';
+    emailController.text = profile.email ?? '';
+    phoneController.text = profile.phone ?? '';
+
+    selectedGender.value = profile.gender != null
+        ? GenderEnum.values.firstWhereOrNull(
+            (g) => g.name.toLowerCase() == profile.gender!.toLowerCase())
+        : null;
+
+    selectedSubject.value = profile.subject != null
+        ? SubjectModel(
+            id: profile.subject!.id,
+            nameEn: profile.subject!.nameEn,
+            nameAr: profile.subject!.nameAr,
+          )
+        : null;
+  }
+
+  Future<void> _loadProfile() async {
+    isLoading.value = true;
+    errorMessage.value = '';
+
+    final result = await _getProfileUseCase.execute();
+
+    isLoading.value = false;
+
+    if (result.isSuccess && result.value != null) {
+      _populateFields(result.value!);
+    } else {
+      errorMessage.value =
+          result.error?.toString() ?? 'Something went wrong'.tr;
+    }
   }
 
   String? validateName(String? v) {

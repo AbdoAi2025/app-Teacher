@@ -17,6 +17,7 @@ import '../../generated/assets.dart';
 import '../../widgets/app_password_field_widget.dart';
 import '../../widgets/app_toolbar_widget.dart';
 import '../../widgets/environment_display_widget.dart';
+import '../../widgets/complete_profile_bottom_sheet.dart';
 import '../../widgets/forgot_password_bottom_sheet.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -160,6 +161,9 @@ class _LoginScreenState extends State<LoginScreen> {
             break;
           case LoginStateNotActive():
             UserNotActiveDialog.showUserNotActive();
+            break;
+          case LoginStateMustCompleteProfile():
+            CompleteProfileBottomSheet.show(context, onSuccess: onLoginClick);
             break;
           case LoginStateRemainDays():
             AppNavigator.navigateToHome();

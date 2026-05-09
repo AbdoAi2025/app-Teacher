@@ -364,6 +364,11 @@ final Map<String, String> ar = {
   "Please select your subject": "يرجى اختيار المادة",
   "No subjects available": "لا توجد مواد متاحة",
 
+  // Complete Profile
+  "Complete Profile": "إكمال الملف الشخصي",
+  "complete_profile_message": "يرجى إكمال بيانات ملفك الشخصي للمتابعة واستخدام التطبيق.",
+  "Complete Now": "إكمال الآن",
+
   // Forgot Password
   "Forgot Password": "نسيت كلمة المرور",
   "Email or Username": "البريد الإلكتروني أو اسم المستخدم",

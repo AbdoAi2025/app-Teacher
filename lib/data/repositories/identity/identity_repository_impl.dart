@@ -51,6 +51,7 @@ class IdentityRepositoryImpl extends IdentityRepository {
       id: response.id ?? "",
       name: response.name ?? "",
       refreshToken: "",
+      mustCompleteProfile: response.mustCompleteProfile ?? false,
     );
   }
 
@@ -137,6 +138,8 @@ class IdentityRepositoryImpl extends IdentityRepository {
       isActive: response.data?.active ?? false,
       isSubscribed: response.data?.subscribed ?? false,
       subscriptionExpireDate: SubscriptionDateModel(dateString: response.data?.subscriptionExpireDate ?? ""),
+      mustCompleteProfile: response.data?.mustCompleteProfile ?? false,
+      requireVerify: response.data?.requireVerify ?? false,
     );
   }
 }

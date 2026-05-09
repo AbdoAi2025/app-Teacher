@@ -16,6 +16,7 @@ class UserSessionStateInvalidSession extends UserSessionState{}
 class UserSessionStateNotSubscribed extends UserSessionState{}
 class UserSessionStateNotActive extends UserSessionState{}
 class UserSessionStateSuccess extends UserSessionState{}
+class UserSessionStateMustCompleteProfile extends UserSessionState{}
 class UserSessionStateRemainDays extends UserSessionState{
   final int remainingDays;
   UserSessionStateRemainDays(this.remainingDays);
@@ -48,6 +49,10 @@ class GetCheckUserSessionStateUseCase  {
     var isValidSession = checkUserSessionResult.isSuccess &&  checkUserSession != null && checkUserSession.isActive == true;
     if(!isValidSession && checkUserSession != null){
       return UserSessionStateNotActive();
+    }
+
+    if(checkUserSession != null && checkUserSession.mustCompleteProfile){
+      return UserSessionStateMustCompleteProfile();
     }
 
     if(checkUserSession != null && !checkUserSession.isSubscribed){

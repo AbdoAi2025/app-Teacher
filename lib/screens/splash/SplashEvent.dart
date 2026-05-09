@@ -9,6 +9,7 @@ class SplashEventLoading extends SplashEvent {}
 class SplashEventGoToLogin extends SplashEvent {}
 class SplashEventGoToHome extends SplashEvent {}
 class SplashEventNotSubscribed extends SplashEvent {}
+class SplashEventMustCompleteProfile extends SplashEvent {}
 
 class SplashEventForceUpdate extends SplashEvent {
   final CheckAppVersionModel model;

@@ -346,6 +346,11 @@ final Map<String, String> enUS = {
   "Please select your subject": "Please select your subject",
   "No subjects available": "No subjects available",
 
+  // Complete Profile
+  "Complete Profile": "Complete Profile",
+  "complete_profile_message": "Please complete your profile information to continue using the app.",
+  "Complete Now": "Complete Now",
+
   // Forgot Password
   "Forgot Password": "Forgot Password",
   "Email or Username": "Email or Username",
