@@ -1,4 +1,3 @@
-import 'package:intl/intl.dart';
 import 'package:teacher_app/models/subscription_date_model.dart';
 
 class CheckUserSessionModel {
@@ -6,11 +5,17 @@ class CheckUserSessionModel {
   final bool isActive;
   final bool isSubscribed;
   final SubscriptionDateModel subscriptionExpireDate;
+  final bool mustCompleteProfile;
+  final bool requireVerify;
+  final String? userId;
 
   CheckUserSessionModel({
     required this.isActive,
     required this.isSubscribed,
     required this.subscriptionExpireDate,
+    this.mustCompleteProfile = false,
+    this.requireVerify = false,
+    this.userId,
   });
 
   int? getRemainingDays() {

@@ -6,6 +6,7 @@ import 'package:teacher_app/data/requests/register_request.dart';
 import 'package:teacher_app/domain/models/login_model.dart';
 import 'package:teacher_app/domain/models/login_result.dart';
 import 'package:teacher_app/domain/models/register_model.dart';
+import 'package:teacher_app/enums/gender_enum.dart';
 import 'package:teacher_app/models/check_user_session_model.dart';
 import 'package:teacher_app/models/profile_info_model.dart';
 import 'package:teacher_app/models/user_auth_model.dart';
@@ -50,6 +51,7 @@ class IdentityRepositoryImpl extends IdentityRepository {
       id: response.id ?? "",
       name: response.name ?? "",
       refreshToken: "",
+      mustCompleteProfile: response.mustCompleteProfile ?? false,
     );
   }
 
@@ -69,6 +71,9 @@ class IdentityRepositoryImpl extends IdentityRepository {
             username: model.userName,
             password: model.password,
             phoneNumber: model.phone,
+            email: model.email,
+            gender: model.gender.toJson(),
+            subjectId: model.subjectId,
             fcmToken: fcmToken,
             deviceId: deviceInfo.deviceId,
             deviceName: deviceInfo.deviceName,
@@ -133,6 +138,9 @@ class IdentityRepositoryImpl extends IdentityRepository {
       isActive: response.data?.active ?? false,
       isSubscribed: response.data?.subscribed ?? false,
       subscriptionExpireDate: SubscriptionDateModel(dateString: response.data?.subscriptionExpireDate ?? ""),
+      mustCompleteProfile: response.data?.mustCompleteProfile ?? false,
+      requireVerify: response.data?.requireVerify ?? false,
+      userId: response.data?.userId,
     );
   }
 }

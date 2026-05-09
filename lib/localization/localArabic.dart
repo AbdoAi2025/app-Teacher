@@ -161,6 +161,7 @@ final Map<String, String> ar = {
   "Privacy Policy" : "سياسة الخصوصية",
   "Delete Account" : "حذف الحساب",
   "delete_account_confirm_message" : "هل أنت متأكد من حذف حسابك؟",
+  "Logout" : "تسجيل الخروج",
   "Are you sure to logout" : "هل أنت متأكد من تسجيل خروج؟",
   "Enter Grade" : "أدخل الدرجة",
   "Group has no students" : "لا يوجد طلبة في المجموعة",
@@ -335,6 +336,72 @@ final Map<String, String> ar = {
   // General Text
   "Total": "الإجمالي",
   "Unlimited": "غير محدود",
+
+  // Profile
+  "Profile": "الملف الشخصي",
+  "Edit Profile": "تعديل الملف الشخصي",
+  "Save Changes": "حفظ التغييرات",
+  "Profile updated successfully": "تم تحديث الملف الشخصي بنجاح",
+  "Verification Status": "حالة التحقق",
+  "Verified": "موثق",
+  "Not Verified": "غير موثق",
+  "Something went wrong": "حدث خطأ ما",
+
+  // Register Fields
+  "Email": "البريد الإلكتروني",
+  "Enter your email": "أدخل بريدك الإلكتروني",
+  "Enter a valid email address": "أدخل بريدًا إلكترونيًا صحيحًا",
+  "Email is required": "البريد الإلكتروني مطلوب",
+  "Gender": "الجنس",
+  "Select your gender": "اختر جنسك",
+  "Select Gender": "اختر الجنس",
+  "Please select your gender": "يرجى اختيار الجنس",
+  "Male": "ذكر",
+  "Female": "أنثى",
+  "Subject": "المادة",
+  "Select your subject": "اختر مادتك",
+  "Select Subject": "اختر المادة",
+  "Please select your subject": "يرجى اختيار المادة",
+  "No subjects available": "لا توجد مواد متاحة",
+
+  // Complete Profile
+  "Complete Profile": "إكمال الملف الشخصي",
+  "complete_profile_message": "يرجى إكمال بيانات ملفك الشخصي للمتابعة واستخدام التطبيق.",
+  "Complete Now": "إكمال الآن",
+  "require_verify_message": "يرجى التحقق من حسابك للمتابعة واستخدام التطبيق.",
+  "Verify Now": "تحقق الآن",
+
+  // Forgot Password
+  "Forgot Password": "نسيت كلمة المرور",
+  "Email or Username": "البريد الإلكتروني أو اسم المستخدم",
+  "Enter your email or username": "أدخل بريدك الإلكتروني أو اسم المستخدم",
+  "Send Reset Code": "إرسال رمز إعادة التعيين",
+  "Identifier is required": "البريد الإلكتروني أو اسم المستخدم مطلوب",
+  "Reset code sent to": "تم إرسال رمز إعادة التعيين إلى",
+  "New Password": "كلمة المرور الجديدة",
+  "Enter new password": "أدخل كلمة المرور الجديدة",
+  "Confirm New Password": "تأكيد كلمة المرور الجديدة",
+  "Confirm your new password": "أكد كلمة المرور الجديدة",
+  "New password is required": "كلمة المرور الجديدة مطلوبة",
+  "Reset Password": "إعادة تعيين كلمة المرور",
+  "Password reset successfully": "تم إعادة تعيين كلمة المرور بنجاح",
+  "Change Password": "تغيير كلمة المرور",
+  "Current Password": "كلمة المرور الحالية",
+  "Enter current password": "أدخل كلمة المرور الحالية",
+  "Current password is required": "كلمة المرور الحالية مطلوبة",
+  "Password changed successfully": "تم تغيير كلمة المرور بنجاح",
+
+  // OTP Verification
+  "OTP Verification": "التحقق من الرمز",
+  "Enter the code sent to your email": "أدخل الرمز المرسل إلى بريدك الإلكتروني",
+  "Enter the code sent to your phone": "أدخل الرمز المرسل إلى هاتفك",
+  "Verify": "تحقق",
+  "Resend Code": "إعادة إرسال الرمز",
+  "Resend in": "إعادة الإرسال بعد",
+  "Invalid or expired code. Please try again.": "رمز غير صالح أو منتهي الصلاحية. حاول مرة أخرى.",
+  "Code resent successfully": "تم إعادة إرسال الرمز بنجاح",
+  "Failed to resend code": "فشل إعادة إرسال الرمز",
+  "send_otp_failed": "فشل إرسال رمز التحقق. يرجى المحاولة مرة أخرى.",
 
 };
 

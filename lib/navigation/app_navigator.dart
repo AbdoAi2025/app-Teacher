@@ -90,6 +90,15 @@ class AppNavigator {
     Get.toNamed(AppRoutes.subscriptionPlans);
   }
 
+  static void navigateToProfile() {
+    Get.toNamed(AppRoutes.profile);
+  }
+
+  static Future<dynamic> navigateToEditProfile(dynamic profileData) {
+    return Get.toNamed(AppRoutes.editProfile, arguments: profileData)
+        ?? Future.value(null);
+  }
+
   static void back() {
     Get.back();
   }

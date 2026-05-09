@@ -61,5 +61,20 @@ class EndPoints{
 
   static String updateFcmToken = "$apiV1/api/v1/fcm/register-token";
 
+  /*OTP*/
+  static const String verifyOtp = "$apiV1/otp/verify";
+  static const String resendOtp = "$apiV1/otp/resend";
+
+  /*Subjects*/
+  static const String getSubjects = "$apiV1/subjects";
+
+  /*Teacher Profile*/
+  static const String teacherProfile = "$apiV1/teachers/profile";
+
+  /*Password Reset*/
+  static const String forgotPassword = "$apiV1/password/forgot";
+  static const String verifyForgotPasswordOtp = "$apiV1/password/verify-otp";
+  static const String resetPassword = "$apiV1/password/reset";
+  static const String changePassword = "$apiV1/password/change";
 
 }

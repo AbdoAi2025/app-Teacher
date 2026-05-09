@@ -11,10 +11,14 @@ import 'package:teacher_app/widgets/primary_button_widget.dart';
 
 import '../../dialogs/user_not_active_dialog.dart';
 import '../../dialogs/user_not_subscribed_dialog.dart';
+import '../../domain/models/app_locale_model.dart';
+import '../../domain/usecases/change_app_locale_use_case.dart';
 import '../../generated/assets.dart';
 import '../../widgets/app_password_field_widget.dart';
 import '../../widgets/app_toolbar_widget.dart';
 import '../../widgets/environment_display_widget.dart';
+import '../../widgets/complete_profile_bottom_sheet.dart';
+import '../../widgets/forgot_password_bottom_sheet.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -31,7 +35,11 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppToolbarWidget.appBar(title: "Login".tr, leading: Container()),
+      appBar: AppToolbarWidget.appBar(
+        title: "Login".tr,
+        leading: Container(),
+        actions: [_languageToggleButton()],
+      ),
       body: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();
@@ -50,6 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               _userNameField(),
               _passwordField(),
+              _forgotPasswordButton(),
               _submitButton(),
               _registerRedirect(),
             ],
@@ -72,6 +81,19 @@ class _LoginScreenState extends State<LoginScreen> {
         hint: "Password".tr,
         prefixIcon: Icon(Icons.lock_outline),
       );
+
+  _forgotPasswordButton() {
+    return Align(
+      alignment: AlignmentDirectional.centerEnd,
+      child: TextButton(
+        onPressed: () => ForgotPasswordBottomSheet.show(
+          context,
+          initialIdentifier: usernameController.text.trim(),
+        ),
+        child: Text('Forgot Password'.tr),
+      ),
+    );
+  }
 
   _submitButton() {
     return SizedBox(
@@ -99,6 +121,22 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
 
+  Widget _languageToggleButton() {
+    final isArabic = Get.locale?.languageCode == 'ar';
+    return TextButton(
+      onPressed: _changeLanguage,
+      child: Text(isArabic ? 'EN' : 'ع'),
+    );
+  }
+
+  void _changeLanguage() {
+    final isArabic = Get.locale?.languageCode == 'ar';
+    final newLocale = isArabic
+        ? AppLocaleModel(language: 'en', country: 'US')
+        : AppLocaleModel(language: 'ar');
+    ChangeAppLocaleUseCase().execute(newLocale).then((_) => setState(() {}));
+  }
+
   void onLoginClick() {
     controller.login().listen(
       (event) {
@@ -123,6 +161,9 @@ class _LoginScreenState extends State<LoginScreen> {
             break;
           case LoginStateNotActive():
             UserNotActiveDialog.showUserNotActive();
+            break;
+          case LoginStateMustCompleteProfile():
+            CompleteProfileBottomSheet.show(context, onSuccess: onLoginClick);
             break;
           case LoginStateRemainDays():
             AppNavigator.navigateToHome();

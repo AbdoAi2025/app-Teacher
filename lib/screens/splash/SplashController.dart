@@ -82,6 +82,18 @@ class SplashController extends GetxController{
       return;
     }
 
+    if(checkUserSession != null && checkUserSession.mustCompleteProfile){
+      updateEvent(SplashEventMustCompleteProfile());
+      return;
+    }
+
+    if(checkUserSession != null && checkUserSession.requireVerify && checkUserSession.userId != null){
+      updateEvent(SplashEventRequireVerify(userId: checkUserSession.userId!));
+      return;
+    }
+
+
+
     if(checkUserSession != null && !checkUserSession.isSubscribed){
       updateEvent(SplashEventNotSubscribed());
       return;
