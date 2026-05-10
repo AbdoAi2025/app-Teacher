@@ -7,6 +7,7 @@ import 'package:teacher_app/utils/LogUtils.dart';
 import 'package:teacher_app/utils/app_background_styles.dart';
 import 'package:teacher_app/widgets/app_text_field_widget.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
+import 'package:teacher_app/widgets/info_chip_widget.dart';
 import 'package:teacher_app/widgets/sessions/start_session/start_session_form_model.dart';
 
 import '../../data/requests/start_session_request.dart';
@@ -35,6 +36,24 @@ class StartSessionButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+
+    return InkWell(
+      onTap: () {
+        onStartSessionClick();
+      },
+      child: InfoChipWidget(
+        text: "Start session".tr,
+        icon: Icons.play_circle_outline,
+        color: AppColors.green,
+      ),
+    );
+
+   return AppTextWidget(
+      "Start session".tr,
+      style: AppTextStyle.value.copyWith(color: AppColors.primaryButtonColor, fontSize: 12 ,),
+    );
+
     return PrimaryButtonWidget(
       text: "Start session".tr,
       padding: padding,

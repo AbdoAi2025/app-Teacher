@@ -1,41 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/data/responses/get_group_details_response.dart';
-import 'package:teacher_app/domain/models/group_timing_model.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
 import 'package:teacher_app/screens/group_details/states/group_details_ui_state.dart';
 import 'package:teacher_app/screens/home/states/running_session_item_ui_state.dart';
+import 'package:teacher_app/screens/session_details/args/session_details_args_model.dart';
 import 'package:teacher_app/screens/student_details/args/student_details_arg_model.dart';
 import 'package:teacher_app/themes/app_colors.dart';
 import 'package:teacher_app/utils/app_background_styles.dart';
 import 'package:teacher_app/utils/day_utils.dart';
 import 'package:teacher_app/utils/message_utils.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
-import 'package:teacher_app/widgets/app_visibility_widget.dart';
 import 'package:teacher_app/widgets/day_info_chip_widget.dart';
-import 'package:teacher_app/widgets/day_with_icon_widget.dart';
-import 'package:teacher_app/widgets/delete_icon_widget.dart';
 import 'package:teacher_app/widgets/dialog_loading_widget.dart';
-import 'package:teacher_app/widgets/edit_icon_widget.dart';
-import 'package:teacher_app/widgets/forward_arrow_widget.dart';
-import 'package:teacher_app/widgets/grade_with_icon_widget.dart';
 import 'package:teacher_app/widgets/lifecycle_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
 import 'package:teacher_app/widgets/sessions/running_session_item_widget.dart';
+import 'package:teacher_app/widgets/sessions/session_item/session_item_widget.dart';
 import 'package:teacher_app/widgets/sessions/start_session_button_widget.dart';
 import '../../bottomsheets/setting_bottom_sheet.dart';
+import '../../widgets/back_icon_widget.dart';
 import '../../themes/txt_styles.dart';
 import '../../utils/LogUtils.dart';
-import '../../widgets/app_toolbar_widget.dart';
 import '../../widgets/groups/states/group_student_item_ui_state.dart';
 import '../../widgets/students/students_group_list_search_widget.dart';
-import '../../widgets/students/students_group_list_widget.dart';
 import '../group_edit/args/edit_group_args_model.dart';
-import '../group_upgrade/upgrade_group_screen.dart';
-import '../sessions_list/args/session_list_args_model.dart';
 import 'group_details_controller.dart';
 import 'states/group_details_state.dart';
-import 'states/group_details_student_item_ui_state.dart';
 
 class GroupDetailsScreen extends StatefulWidget {
   const GroupDetailsScreen({super.key});
@@ -50,134 +41,178 @@ class _GroupDetailsScreenState extends LifecycleWidgetState<GroupDetailsScreen> 
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: _appBar(),
-        body: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: RefreshIndicator(
-              onRefresh: () async {
-                controller.reload();
-              },
-              child: SingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  child: _content())),
-        ));
-  }
-
-  PreferredSizeWidget _appBar() {
-    return AppToolbarWidget.appBar(
-      title: "",
-      centerTitle: false,
-      titleWidget: Obx(() {
-        final state = controller.state.value;
-        if (state is GroupDetailsStateSuccess) {
-          final uiState = state.uiState;
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AppTextWidget(
-                uiState.groupName.isNotEmpty ? uiState.groupName : "Group Details".tr,
-                style: AppTextStyle.appToolBarTitle,
-              ),
-
-              // _grade(uiState.grade),
-              if (uiState.grade.isNotEmpty)
-                AppTextWidget(
-                  uiState.grade,
-                  style: AppTextStyle.subTitle,
-                ),
-            ],
-          );
-        }
-        return AppTextWidget("", style: AppTextStyle.appToolBarTitle);
-      }),
-      actions: [_settingsIcon()],
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        backgroundColor: AppColors.appBarBackgroundColor,
+        body: SafeArea(
+          child: Obx(() {
+            final state = controller.state.value;
+            switch (state) {
+              case GroupDetailsStateLoading():
+                return Column(children: [_header(null), const Expanded(child: Center(child: LoadingWidget()))]);
+              case GroupDetailsStateInvalidArgs():
+                return Column(children: [_header(null), const Expanded(child: Center(child: Text("Invalid Args")))]);
+              case GroupDetailsStateSuccess():
+                return _successBody(state);
+              case GroupDetailsStateError():
+                return Column(children: [_header(null), Expanded(child: Center(child: Text(state.exception.toString())))]);
+            }
+          }),
+        ),
+      ),
     );
   }
 
-  Widget _content() {
-    return Obx(() {
-      var state = controller.state.value;
-      switch (state) {
-        case GroupDetailsStateLoading():
-          return _showLoading();
-        case GroupDetailsStateInvalidArgs():
-          return Center(child: Text("Invalid Args"));
-        case GroupDetailsStateSuccess():
-          return _groupDetails(state);
-        case GroupDetailsStateError():
-          return Center(child: Text(state.exception.toString()));
-      }
-    });
-  }
-
-  _showLoading() {
-    return Center(child: LoadingWidget());
-  }
-
-  _groupDetails(GroupDetailsStateSuccess state) {
-    var uiState = state.uiState;
-    return Column(
-      spacing: 20,
-      children: [
-        _sessionSection(uiState),
-        _groupInfoSection(uiState),
-        _studentsSection(uiState),
-        _viewSessionsSection(uiState),
-        SizedBox(
-          height: 20,
-        )
-      ],
-    );
-  }
-
-  Widget _groupInfoSection(GroupDetailsUiState uiState) {
-    var content = Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+  Widget _header(GroupDetailsUiState? uiState) {
+    final hasTimings = uiState != null && uiState.timings.isNotEmpty;
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        border: Border(
+          bottom: BorderSide(color: AppColors.color_E2E2E2, width: 0.8),
+        ),
+      ),
       child: Column(
-        spacing: 10,
-        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ...uiState.timings.map((t) => _timing(t , uiState)),
-
+          // ── Title row ──────────────────────────────────────────
+          Padding(
+            padding: const EdgeInsets.fromLTRB(4, 8, 8, 4),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                BackIconWidget(),
+                const SizedBox(width: 4),
+                Expanded(
+                  child: uiState != null
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            AppTextWidget(
+                              uiState.groupName.isNotEmpty
+                                  ? uiState.groupName
+                                  : "Group Details".tr,
+                              style: AppTextStyle.appToolBarTitle,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            if (uiState.grade.isNotEmpty)
+                              AppTextWidget(uiState.grade, style: AppTextStyle.subTitle),
+                          ],
+                        )
+                      : AppTextWidget("Group Details".tr, style: AppTextStyle.appToolBarTitle),
+                ),
+                if (uiState != null) _settingsIconButton(uiState),
+              ],
+            ),
+          ),
+          // ── Timings ────────────────────────────────────────────
+          if (hasTimings) _timingsInHeader(uiState),
         ],
       ),
     );
-
-    return _sectionLabelValue("Timings".tr, content);
   }
 
-  Widget _studentsSection(GroupDetailsUiState uiState) {
-    var students = uiState.students;
-    var count = 4;
-    final firstFive = students.take(count).toList();
+  Widget _timingsInHeader(GroupDetailsUiState uiState) {
+    final timings = uiState.timings;
+    final first = timings.first;
+    final rest = timings.skip(1).toList();
 
-    return _sectionLabelValue(
-      "Students".tr,
-      _studentsList(firstFive),
-      students.length > count ? _showAllStudents(students) : null,
-      false,
+    if (rest.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
+        child: _timing(first, uiState),
+      );
+    }
+
+    return Theme(
+      data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+      child: ExpansionTile(
+        tilePadding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+        childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+        expandedCrossAxisAlignment: CrossAxisAlignment.start,
+        minTileHeight: 40,
+        title: _timing(first, uiState),
+        children: rest.map((t) => Padding(
+          padding: EdgeInsetsDirectional.only(bottom: 8 , end: 40),
+          child: _timing(t, uiState),
+        )).toList(),
+      ),
     );
   }
 
-  _groupName(String groupName) {
+  Widget _successBody(GroupDetailsStateSuccess state) {
+    final uiState = state.uiState;
     return Column(
-      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _label("Group Name".tr),
-        Padding(
-          padding: const EdgeInsetsDirectional.only(start: 10),
-          child: _value(groupName),
+        _header(uiState),
+        if (uiState.activeSession != null)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+            child: _sessionSection(uiState),
+          ),
+        const SizedBox(height: 4),
+        TabBar(
+          tabAlignment: TabAlignment.start,
+          isScrollable: true,
+          indicatorSize: TabBarIndicatorSize.label,
+          indicatorColor: AppColors.appMainColor,
+          indicatorWeight: 2.5,
+          dividerColor: AppColors.color_E2E2E2,
+          labelColor: AppColors.appMainColor,
+          unselectedLabelColor: AppColors.textSecondaryColor,
+          labelStyle: AppTextStyle.label.copyWith(fontSize: 14),
+          unselectedLabelStyle: AppTextStyle.label.copyWith(
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+          ),
+          tabs: [
+            Tab(text: "${"Students".tr} (${uiState.students.length})"),
+            Obx(() => Tab(text: "${"Sessions".tr} (${controller.sessions.length})")),
+          ],
+        ),
+        Expanded(
+          child: TabBarView(
+            children: [
+              _studentsTab(uiState),
+              _sessionsTab(),
+            ],
+          ),
         ),
       ],
     );
   }
 
-  _timing(GroupDetailsTiming t, GroupDetailsUiState uiState) {
-    var day = "${AppDateUtils.getDayName(t.day ?? -1).tr} : ${t.timeFrom ?? ''} - ${t.timeTo ?? ''}";
+  // ─── Active Session ───────────────────────────────────────────────────────
+
+  Widget _sessionSection(GroupDetailsUiState uiState) {
+    final activeSession = uiState.activeSession;
+    if (activeSession == null) return const SizedBox.shrink();
+    appLog("GroupDetailsScreen _sessionSection activeSession:$activeSession");
+    return Container(
+      width: double.infinity,
+      decoration: AppBackgroundStyle.getColoredBackgroundRounded(
+        16,
+        AppColors.color_008E73.withValues(alpha: .1),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      child: RunningSessionItemWidget(
+        item: RunningSessionItemUiState(
+          id: activeSession.sessionId ?? "",
+          date: AppDateUtils.parseStringToDateTime(activeSession.startDate ?? ""),
+        ),
+        onSessionEnded: () => controller.reload(),
+      ),
+    );
+  }
+
+
+  Widget _timing(GroupDetailsTiming t, GroupDetailsUiState uiState) {
+    final day = "${AppDateUtils.getDayName(t.day ?? -1).tr} : ${t.timeFrom ?? ''} - ${t.timeTo ?? ''}";
     return Row(
       spacing: 10,
       children: [
@@ -187,123 +222,149 @@ class _GroupDetailsScreenState extends LifecycleWidgetState<GroupDetailsScreen> 
             DayInfoChipWidget(text: day),
           ],
         )),
-        if(t.id != null && !uiState.hasActiveSession)
-        _startSession(t.id!  , uiState)
+        if (t.id != null && !uiState.hasActiveSession)
+          _startSession(t.id!, uiState),
       ],
     );
   }
 
-  _grade(String grade) {
-    return GradeWithIconWidget(grade);
+  Widget _startSession(int timingId, GroupDetailsUiState uiState) => Center(
+    child: StartSessionButtonWidget(
+      timingId: timingId.toString(),
+      studentsCount: uiState.students.length,
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      textStyle: AppTextStyle.value.copyWith(color: AppColors.white, fontSize: 12),
+      onSessionStarted: () => controller.reload(),
+    ),
+  );
+
+  // ─── Students Tab ─────────────────────────────────────────────────────────
+
+  Widget _studentsTab(GroupDetailsUiState uiState) {
+    return StudentsGroupListSearchWidget(
+      query: "",
+      students: uiState.students,
+      onStudentItemClick: onStudentItemClick,
+      onAddStudents: onEditClick,
+    );
   }
 
-  Widget _label(String text) => AppTextWidget(text, style: AppTextStyle.label);
+  // ─── Sessions Tab ─────────────────────────────────────────────────────────
 
-  Widget _value(String text) => AppTextWidget(text, style: AppTextStyle.value);
+  Widget _sessionsTab() {
+    return Obx(() {
+      if (controller.sessionsLoading.value) {
+        return const Center(child: LoadingWidget());
+      }
+      final sessions = controller.sessions;
+      if (sessions.isEmpty) return _sessionsEmptyView();
 
-  Widget _sectionLabelValue(String label, Widget content, [Widget? endIcon , bool hasBackground = true]) {
-    return Container(
-      width: double.infinity,
-      decoration: hasBackground ? AppBackgroundStyle.backgroundWithShadow() : null,
-      padding: hasBackground ? EdgeInsets.all(10): EdgeInsets.zero,
-      child: Column(
-        spacing: 10,
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Expanded(child: _label(label)),
-              if (endIcon != null) endIcon
-            ],
+      return RefreshIndicator(
+        onRefresh: controller.loadSessions,
+        child: ListView.separated(
+          padding: const EdgeInsets.all(16),
+          itemCount: sessions.length,
+          separatorBuilder: (_, __) => const SizedBox(height: 10),
+          itemBuilder: (_, index) => SessionItemWidget(
+            uiState: sessions[index],
+            onClick: (s) => AppNavigator.navigateToSessionDetails(
+              SessionDetailsArgsModel(s.id),
+            ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(0.0),
-            child: SizedBox(width: double.infinity, child: content),
+        ),
+      );
+    });
+  }
+
+  Widget _sessionsEmptyView() {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 64,
+            height: 64,
+            decoration: BoxDecoration(
+              color: AppColors.appMainColor.withValues(alpha: 0.08),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.history_edu_outlined,
+              size: 32,
+              color: AppColors.appMainColor,
+            ),
+          ),
+          const SizedBox(height: 12),
+          AppTextWidget(
+            "No Sessions Found".tr,
+            style: AppTextStyle.title.copyWith(fontSize: 15),
+          ),
+          const SizedBox(height: 4),
+          AppTextWidget(
+            "No sessions have been held for this group yet".tr,
+            style: AppTextStyle.value.copyWith(color: AppColors.textSecondaryColor),
+            textAlign: TextAlign.center,
           ),
         ],
       ),
     );
   }
 
-  Widget _studentsList(List<GroupDetailsStudentItemUiState> student) {
-    return StudentsGroupListWidget(
-      students: student,
-      onStudentItemClick: onStudentItemClick,
+  // ─── Settings ─────────────────────────────────────────────────────────────
+
+  Widget _settingsIconButton(GroupDetailsUiState uiState) {
+    return IconButton(
+      icon: Icon(Icons.settings, color: AppColors.appMainColor),
+      onPressed: () => _showSettingsBottomSheet(uiState),
     );
-  }
-
-
-  _settingsIcon() {
-    return Obx(() {
-      var state = controller.state.value;
-      if (state is GroupDetailsStateSuccess) {
-        return IconButton(
-          icon: Icon(Icons.settings, color: AppColors.appMainColor),
-          onPressed: () => _showSettingsBottomSheet(state.uiState),
-        );
-      }
-      return Container();
-    });
   }
 
   void _showSettingsBottomSheet(GroupDetailsUiState uiState) {
     SettingBottomSheet.show(
-        context: context,
-        itemsModels : [
-          SettingItemModel.editItem(() {
-            onEditClick();
-          }),
-          SettingItemModel.upgradeItem(() {
-            onUpgradeClick();
-          }),
-          SettingItemModel.deleteItem(() {
-            onDeleteClick(uiState);
-          }),
-        ]
+      context: context,
+      itemsModels: [
+        SettingItemModel.editItem(onEditClick),
+        SettingItemModel.upgradeItem(onUpgradeClick),
+        SettingItemModel.deleteItem(() => onDeleteClick(uiState)),
+      ],
     );
   }
 
+  // ─── Actions ──────────────────────────────────────────────────────────────
+
   onEditClick() async {
-    var uiState = controller.getGroupDetailsUiState();
-    var args = EditGroupArgsModel(
-        groupId: uiState?.groupId ?? "",
-        groupName: uiState?.groupName ?? "",
-        gradeName: uiState?.grade ?? "",
-        gradeId: uiState?.gradeId ?? 0,
-        timings: uiState?.timings ?? [],
-        students: uiState?.students ?? List.empty());
-
-    var result = await AppNavigator.navigateToEditGroup(args);
-
-    // if (result == true) {
-    //   controller.reload();
-    // }
+    final uiState = controller.getGroupDetailsUiState();
+    final args = EditGroupArgsModel(
+      groupId: uiState?.groupId ?? "",
+      groupName: uiState?.groupName ?? "",
+      gradeName: uiState?.grade ?? "",
+      gradeId: uiState?.gradeId ?? 0,
+      timings: uiState?.timings ?? [],
+      students: uiState?.students ?? List.empty(),
+    );
+    await AppNavigator.navigateToEditGroup(args);
   }
 
   onUpgradeClick() async {
-    var uiState = controller.getGroupDetailsUiState();
-    var args = EditGroupArgsModel(
-        groupId: uiState?.groupId ?? "",
-        groupName: uiState?.groupName ?? "",
-        gradeName: uiState?.grade ?? "",
-        gradeId: uiState?.gradeId ?? 0,
-        timings: uiState?.timings ?? [],
-        students: uiState?.students ?? List.empty());
-
-    var result = await AppNavigator.navigateToUpgradeGroup(args);
-
-    if (result == true) {
-      controller.reload();
-    }
+    final uiState = controller.getGroupDetailsUiState();
+    final args = EditGroupArgsModel(
+      groupId: uiState?.groupId ?? "",
+      groupName: uiState?.groupName ?? "",
+      gradeName: uiState?.grade ?? "",
+      gradeId: uiState?.gradeId ?? 0,
+      timings: uiState?.timings ?? [],
+      students: uiState?.students ?? List.empty(),
+    );
+    final result = await AppNavigator.navigateToUpgradeGroup(args);
+    if (result == true) controller.reload();
   }
 
   onDeleteClick(GroupDetailsUiState uiState) {
     showConfirmationMessage(
-        "${"Are you sure to delete ?".tr} ${uiState.groupName}", () {
-      showDialogLoading();
-      controller.deleteGroup(uiState).listen(
-        (event) {
+      "${"Are you sure to delete ?".tr} ${uiState.groupName}",
+      () {
+        showDialogLoading();
+        controller.deleteGroup(uiState).listen((event) {
           hideDialogLoading();
           if (event.isSuccess) {
             Get.back();
@@ -312,123 +373,13 @@ class _GroupDetailsScreenState extends LifecycleWidgetState<GroupDetailsScreen> 
           if (event.isError) {
             showErrorMessage(event.error?.toString());
           }
-        },
-      );
-    });
+        });
+      },
+    );
   }
-
-  _divider() => Divider(
-        height: 0,
-      );
 
   void onStudentItemClick(GroupStudentItemUiState uiState) {
-    AppNavigator.navigateToStudentDetails(
-        StudentDetailsArgModel(id: uiState.id));
-  }
-
-  _sessionSection(GroupDetailsUiState uiState) {
-    var activeSession = uiState.activeSession;
-    if(activeSession == null) return SizedBox.shrink();
-    appLog("GroupDetailsScreen _sessionSection activeSession:$activeSession");
-    return Container(
-      width: double.infinity,
-      decoration: AppBackgroundStyle.getColoredBackgroundRounded(16, AppColors.color_008E73.withValues(alpha: .1)),
-      // decoration: AppBackgroundStyle.backgroundWithShadow(),
-      padding: EdgeInsets.all(15),
-      child: _activeSession(uiState, activeSession)
-    );
-  }
-
-  _activeSession(
-      GroupDetailsUiState uiState, ActiveSessionApiModel activeSession) {
-    return RunningSessionItemWidget(
-      item: RunningSessionItemUiState(
-          id: activeSession.sessionId ?? "",
-          date: AppDateUtils.parseStringToDateTime(activeSession.startDate ?? ""),
-      ),
-      onSessionEnded: () {
-        controller.reload();
-      },
-    );
-  }
-
-  _noActiveSession(GroupDetailsUiState uiState) {
-    return Column(spacing: 15, mainAxisSize: MainAxisSize.min, children: [
-      AppTextWidget(
-        "No Active Sessions".tr,
-        style: AppTextStyle.value,
-      ),
-      // _startSession(uiState)
-    ]);
-  }
-
-  _startSession(int timingId , GroupDetailsUiState uiState) => Center(
-        child: StartSessionButtonWidget(
-          timingId: timingId.toString(),
-          studentsCount: uiState.students.length,
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-          textStyle: AppTextStyle.value.copyWith(color: AppColors.white , fontSize: 12),
-          onSessionStarted: () {
-            controller.reload();
-          },
-        ),
-      );
-
-  _viewSessionsSection(GroupDetailsUiState uiState) {
-    return InkWell(
-      onTap: () {
-        onViewAllSessionClick(uiState);
-      },
-      child: Container(
-        width: double.infinity,
-        decoration: AppBackgroundStyle.backgroundWithShadow(),
-        padding: EdgeInsets.all(15),
-        child: Row(
-          children: [
-            Expanded(
-                child: AppTextWidget("View All Sessions".tr,
-                    style: AppTextStyle.value)),
-            ForwardArrowWidget()
-          ],
-        ),
-      ),
-    );
-  }
-
-  void onViewAllSessionClick(GroupDetailsUiState uiState) {
-    AppNavigator.navigateToSessionsList(
-        SessionListArgsModel(groupId: uiState.groupId));
-  }
-
-  Widget _showAllStudents(List<GroupDetailsStudentItemUiState> students) {
-    return InkWell(
-      onTap: () {
-        onViewAllStudentsClick(students);
-      },
-      child: AppTextWidget(
-        "All Students".tr,
-        style: AppTextStyle.teshrinArLtRegular.copyWith(
-            decoration: TextDecoration.underline,
-            fontSize: 15,
-            color: AppColors.appMainColor),
-      ),
-    );
-  }
-
-  void onViewAllStudentsClick(List<GroupDetailsStudentItemUiState> students) {
-    showModalBottomSheet(
-        isScrollControlled: true,
-        useSafeArea: true,
-        showDragHandle: true,
-        backgroundColor: AppColors.scaffoldBackgroundColor,
-        context: context,
-        builder: (context) => StudentsGroupListSearchWidget(
-              query: "",
-              students: students,
-              onStudentItemClick: (uiState) {
-                onStudentItemClick(uiState);
-              },
-            ));
+    AppNavigator.navigateToStudentDetails(StudentDetailsArgModel(id: uiState.id));
   }
 
   @override

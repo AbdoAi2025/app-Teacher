@@ -5,6 +5,7 @@ import 'package:teacher_app/widgets/grade_with_icon_widget.dart';
 import 'package:teacher_app/widgets/phone_with_icon_widget.dart';
 import 'package:teacher_app/widgets/students/student_first_letter_widget.dart';
 import '../../themes/txt_styles.dart';
+import '../../utils/app_background_styles.dart';
 import '../app_txt_widget.dart';
 import '../forward_arrow_widget.dart';
 import '../section_widget.dart';
@@ -26,7 +27,9 @@ class GroupStudentItemWidget extends StatelessWidget {
       onTap: () {
         onItemClick(uiState);
       },
-      child: SectionWidget(
+      child: Container(
+        // decoration: AppBackgroundStyle.backgroundWithShadow(),
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         child: Column(
           spacing: 15,
           crossAxisAlignment: CrossAxisAlignment.start,

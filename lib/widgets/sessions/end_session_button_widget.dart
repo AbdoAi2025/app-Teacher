@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:teacher_app/widgets/info_chip_widget.dart';
 
 import '../../domain/states/end_session_state.dart';
 import '../../domain/usecases/end_session_use_case.dart';
@@ -18,6 +20,21 @@ class EndSessionButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    return InkWell(
+      onTap: () =>   onEndSession(),
+      child: CircleAvatar(
+        backgroundColor: AppColors.color_E75260.withValues(alpha: .1),
+        child: Icon(Icons.stop , color: AppColors.color_E75260),
+      ),
+    );
+
+    return InfoChipWidget(
+      icon: Icons.stop,
+      color: AppColors.color_E75260,
+      size: 30,
+    );
+
     return PrimaryButtonWidget(
       text: "End Session".tr,
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),

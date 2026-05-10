@@ -80,7 +80,7 @@ class _RunningSessionItemWidgetState extends State<RunningSessionItemWidget> {
   _timerView() => AppTextWidget(
         _elapsed,
         style: AppTextStyle.title
-            .copyWith(fontSize: 25, color: AppColors.appMainColor),
+            .copyWith(fontSize: 16, color: AppColors.appMainColor),
       );
 
   _endSession(RunningSessionItemUiState item) => EndSessionButtonWidget(

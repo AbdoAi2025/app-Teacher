@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/utils/Keyboard_utils.dart';
-import 'package:teacher_app/utils/LogUtils.dart';
 import '../../screens/group_details/states/group_details_student_item_ui_state.dart';
+import '../../themes/app_colors.dart';
 import '../../themes/txt_styles.dart';
-import '../app_text_field_widget.dart';
+import '../../utils/app_background_styles.dart';
 import '../app_txt_widget.dart';
 import '../groups/states/group_student_item_ui_state.dart';
 import 'students_group_list_widget.dart';
@@ -15,12 +15,15 @@ class StudentsGroupListSearchWidget extends StatefulWidget {
   final String query;
   final List<GroupDetailsStudentItemUiState> students;
   final Function(GroupStudentItemUiState) onStudentItemClick;
+  final VoidCallback? onAddStudents;
 
-  const StudentsGroupListSearchWidget(
-      {super.key,
-      required this.query,
-      required this.students,
-      required this.onStudentItemClick});
+  const StudentsGroupListSearchWidget({
+    super.key,
+    required this.query,
+    required this.students,
+    required this.onStudentItemClick,
+    this.onAddStudents,
+  });
 
   @override
   State<StudentsGroupListSearchWidget> createState() =>
@@ -30,94 +33,105 @@ class StudentsGroupListSearchWidget extends StatefulWidget {
 class _StudentsGroupListSearchWidgetState
     extends State<StudentsGroupListSearchWidget> {
   late List<GroupDetailsStudentItemUiState> students = widget.students;
-  late final TextEditingController _controller = TextEditingController(text: widget.query);
+  late final TextEditingController _controller =
+      TextEditingController(text: widget.query);
   Timer? _debounce;
-
   late List<GroupDetailsStudentItemUiState> filteredItems = students;
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    appLog(
-        "_StudentsGroupListSearchWidgetState build filteredItems :${filteredItems.length}");
-
-    return Container(
-        // height: Get.height * .90,
-        // width: double.infinity,
-        padding: EdgeInsets.symmetric(horizontal: 20),
+    return GestureDetector(
+      onTapDown: (_) => _hideKeyboard(),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15.0 , vertical: 15),
         child: Column(
-          spacing: 20,
+          spacing: 10,
           children: [
-            _allStudentsTitle(),
-            _searchField(),
+            _searchBar(),
             Expanded(
-                child: GestureDetector(
-              onTapDown: (details) =>   hideKeyboard(),
               child: StudentsGroupListWidget(
                 students: filteredItems,
-                physics: AlwaysScrollableScrollPhysics(),
-                onStudentItemClick: (item) {
-                  widget.onStudentItemClick(item);
-                },
+                physics: const AlwaysScrollableScrollPhysics(),
+                onStudentItemClick: widget.onStudentItemClick,
+                onAddStudents: widget.onAddStudents,
               ),
-            )),
+            ),
           ],
-        ));
+        ),
+      ),
+    );
   }
+
+  Widget _searchBar() {
+    return Container(
+      decoration: AppBackgroundStyle.backgroundWithShadow(),
+      // decoration: BoxDecoration(
+      //   color: AppColors.color_F5F5F5,
+      //   borderRadius: BorderRadius.circular(14),
+      // ),
+      child: TextField(
+        controller: _controller,
+        onChanged: _onSearchChanged,
+        textInputAction: TextInputAction.search,
+        style: AppTextStyle.value,
+        decoration: InputDecoration(
+          hintText: "Search".tr,
+          hintStyle: AppTextStyle.value.copyWith(color: AppColors.textSecondaryColor),
+          prefixIcon: Icon(
+            Icons.search_rounded,
+            color: AppColors.textSecondaryColor,
+            // size: 20,
+          ),
+          suffixIcon: _controller.text.isNotEmpty
+              ? IconButton(
+                  icon: Icon(Icons.close_rounded,
+                      color: AppColors.textSecondaryColor, size: 18),
+                  onPressed: _clearSearch,
+                )
+              : null,
+          border: InputBorder.none,
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        ),
+      ),
+    );
+  }
+
+  Widget _countLabel() {
+    final count = filteredItems.length;
+    final total = students.length;
+    final label = _controller.text.isEmpty
+        ? "$count ${"Students".tr}"
+        : "$count / $total ${"Students".tr}";
+    return AppTextWidget(label, style: AppTextStyle.small);
+  }
+
+  void _clearSearch() {
+    _controller.clear();
+    setState(() => filteredItems = students);
+  }
+
+  void _onSearchChanged(String? query) {
+    if (query == null) return;
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 300), () {
+      setState(() {
+        filteredItems = query.isEmpty
+            ? students
+            : students
+                .where((item) =>
+                    item.studentName.toLowerCase().contains(query.toLowerCase()))
+                .toList();
+      });
+    });
+  }
+
+  void _hideKeyboard() => KeyboardUtils.hideKeyboard(context);
 
   @override
   void dispose() {
     _debounce?.cancel();
     _controller.dispose();
     super.dispose();
-  }
-
-  _allStudentsTitle() => AppTextWidget(
-        "All Students".tr,
-        style: AppTextStyle.title,
-      );
-
-  _searchField() {
-    return AppTextFieldWidget(
-      hint: "Search".tr,
-      onChanged: _onSearchChanged,
-      controller: _controller,
-      textInputAction: TextInputAction.search,
-    );
-  }
-
-  void _onSearchChanged(String? query) {
-    appLog("_onSearchChanged query:$query ");
-
-    if (query == null) return;
-
-    // Cancel previous timer if still active
-    if (_debounce?.isActive ?? false) _debounce!.cancel();
-
-    // Start new debounce timer
-    _debounce = Timer(const Duration(milliseconds: 500), () {
-      setState(() {
-        appLog("_onSearchChanged search query:$query ");
-
-        appLog("_onSearchChanged filteredItems :${filteredItems.length}");
-        filteredItems = students
-            .where((item) =>
-                    item.studentName.toLowerCase().contains(query.toLowerCase())
-                // || item.studentParentPhone.contains(query.toLowerCase())
-                )
-            .toList();
-
-        appLog(
-            "_onSearchChanged searched filteredItems :${filteredItems.length}");
-      });
-    });
-  }
-
-  void hideKeyboard() {
-    KeyboardUtils.hideKeyboard(context);
   }
 }
