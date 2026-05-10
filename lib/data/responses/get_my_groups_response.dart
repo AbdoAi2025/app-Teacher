@@ -1,81 +1,68 @@
-/// data : [{"groupId":"string","groupName":"string","groupDay":1073741824,"studentCount":1073741824}]
+import 'package:teacher_app/data/responses/get_group_details_response.dart';
+import 'package:teacher_app/utils/safe_json_access.dart';
 
 class GetMyGroupsResponse {
-  GetMyGroupsResponse({
-    this.data,
-  });
+  GetMyGroupsResponse({this.data});
 
-  GetMyGroupsResponse.fromJson(dynamic json) {
-    if (json['data'] != null) {
-      data = [];
-      json['data'].forEach((v) {
-        data?.add(Data.fromJson(v));
-      });
-    }
+  factory GetMyGroupsResponse.fromJson(Map<String, dynamic> json) {
+    return GetMyGroupsResponse(
+      data: json.tryList('data')
+          ?.whereType<Map<String, dynamic>>()
+          .map(GroupData.fromJson)
+          .toList(),
+    );
   }
 
-  List<Data>? data;
+  List<GroupData>? data;
 
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    if (data != null) {
-      map['data'] = data?.map((v) => v.toJson()).toList();
-    }
-    return map;
-  }
+  Map<String, dynamic> toJson() => {
+        if (data != null) 'data': data!.map((v) => v.toJson()).toList(),
+      };
 }
 
-/// groupId : "string"
-/// groupName : "string"
-/// groupDay : 1073741824
-/// studentCount : 1073741824
-
-class Data {
-  Data({
+class GroupData {
+  GroupData({
     this.groupId,
     this.groupName,
-    this.groupDay,
-    this.timeFrom,
-    this.timeTo,
     this.studentCount,
     this.gradeId,
     this.gradeNameEn,
     this.gradeNameAr,
+    this.timings,
   });
 
-  Data.fromJson(dynamic json) {
-    groupId = json['groupId'];
-    groupName = json['groupName'];
-    groupDay = json['groupDay'];
-    studentCount = json['studentCount'];
-    timeFrom = json['timeFrom'];
-    timeTo = json['timeTo'];
-    gradeId = json['gradeId'];
-    gradeNameEn = json['gradeNameEn'];
-    gradeNameAr = json['gradeNameAr'];
+  factory GroupData.fromJson(Map<String, dynamic> json) {
+    return GroupData(
+      groupId: json.tryString('groupId'),
+      groupName: json.tryString('groupName'),
+      studentCount: json.tryInt('studentCount'),
+      gradeId: json.tryInt('gradeId'),
+      gradeNameEn: json.tryString('gradeNameEn'),
+      gradeNameAr: json.tryString('gradeNameAr'),
+      timings: json.tryList('timings')
+          ?.whereType<Map<String, dynamic>>()
+          .map(GroupDetailsTiming.fromJson)
+          .toList(),
+    );
   }
 
   String? groupId;
   String? groupName;
-  int? groupDay;
-  String? timeFrom;
-  String? timeTo;
   int? studentCount;
   int? gradeId;
   String? gradeNameEn;
   String? gradeNameAr;
+  List<GroupDetailsTiming>? timings;
 
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['groupId'] = groupId;
-    map['groupName'] = groupName;
-    map['groupDay'] = groupDay;
-    map['studentCount'] = studentCount;
-    map['timeFrom'] = timeFrom;
-    map['timeTo'] = timeTo;
-    map['gradeId'] = gradeId;
-    map['gradeNameEn'] = gradeNameEn;
-    map['gradeNameAr'] = gradeNameAr;
-    return map;
-  }
+  GroupDetailsTiming? get firstTiming => timings?.isNotEmpty == true ? timings!.first : null;
+
+  Map<String, dynamic> toJson() => {
+        'groupId': groupId,
+        'groupName': groupName,
+        'studentCount': studentCount,
+        'gradeId': gradeId,
+        'gradeNameEn': gradeNameEn,
+        'gradeNameAr': gradeNameAr,
+        'timings': timings?.map((t) => t.toJson()).toList(),
+      };
 }

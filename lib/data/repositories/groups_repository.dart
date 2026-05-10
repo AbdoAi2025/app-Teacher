@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:teacher_app/models/group_item_model.dart';
 import 'package:teacher_app/requests/add_group_request.dart';
 import 'package:teacher_app/requests/remove_student_from_group_request.dart';
+import 'package:teacher_app/requests/set_group_students_request.dart';
 import 'package:teacher_app/requests/update_group_request.dart';
 import 'package:teacher_app/requests/upgrade_group_request.dart';
 import 'package:teacher_app/services/api_service.dart';
@@ -71,6 +72,22 @@ class GroupsRepository {
     return response.data;
   }
 
+  Future<dynamic> setGroupStudents(SetGroupStudentsRequest request) async {
+    Response response = await ApiService.getInstance()
+        .put(EndPoints.groupStudents(request.groupId), data: request.toJson());
+    return response.data;
+  }
+
+  Future<void> addGroupTimings(String groupId, List<Map<String, dynamic>> timings) async {
+    await ApiService.getInstance()
+        .post(EndPoints.groupTimings(groupId), data: timings);
+  }
+
+  Future<void> updateGroupTimings(String groupId, List<Map<String, dynamic>> timings) async {
+    await ApiService.getInstance()
+        .put(EndPoints.groupTimings(groupId), data: timings);
+  }
+
   Future<List<GroupItemModel>> fetchGroups({String? dateFrom, String? dateTo}) async {
     Map<String, dynamic> queryParameters = {};
 
@@ -92,16 +109,13 @@ class GroupsRepository {
             ?.map((e) => GroupItemModel(
                 id: e.groupId ?? "",
                 name: e.groupName ?? "",
-                day: e.groupDay ?? 0,
                 studentCount: e.studentCount ?? 0,
-                timeFrom: e.timeFrom ?? "",
-                timeTo: e.timeTo ?? "",
+                timings: e.timings ?? [],
                 grade: GradeModel(
                   id: e.gradeId,
                   nameEn: e.gradeNameEn ?? "",
                   nameAr: e.gradeNameAr ?? "",
-                ),
-                studentsIds: []))
+                )))
             .toList() ??
         List.empty();
   }

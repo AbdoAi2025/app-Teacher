@@ -64,11 +64,9 @@ class GroupDetailsController extends GetxController {
       var uiState = GroupDetailsUiState(
           groupId: data.groupId ?? "",
           groupName: data.groupName ?? "",
-          groupDay: data.groupDay ?? -1,
-          timeFrom: data.timeFrom ?? "",
-          timeTo: data.timeTo ?? "",
           grade: data.grade?.localizedName?.toLocalizedName() ?? "",
-          gradeId: data.grade?.id ?? 0,
+          gradeId: data.gradeId ?? data.grade?.id ?? 0,
+          timings: data.timings ?? [],
           students: students,
           activeSession: data.activeSession);
       updateState(GroupDetailsStateSuccess(uiState: uiState));
@@ -147,7 +145,7 @@ class GroupDetailsController extends GetxController {
         var activeSession = uiState.activeSession;
         appLog("GroupDetailsController _sessionsEventsUpdated activeSession.sessionId:${activeSession?.sessionId} , event.id:${event.id}");
         if(activeSession?.sessionId == event.id){
-          var uiStateCopy = uiState.copyWith(activeSession: null);
+          var uiStateCopy = uiState.copyWith(clearActiveSession: true);
           appLog("GroupDetailsController _sessionsEventsUpdated uiStateCopy:$uiStateCopy");
           updateState(GroupDetailsStateSuccess(uiState:uiStateCopy));
         }

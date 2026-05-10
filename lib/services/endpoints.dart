@@ -71,6 +71,12 @@ class EndPoints{
   /*Teacher Profile*/
   static const String teacherProfile = "$apiV1/teachers/profile";
 
+  /*Group Timings*/
+  static String groupTimings(String groupId) => "$apiV1/groups/$groupId/timings";
+
+  /*Group Students*/
+  static String groupStudents(String groupId) => "$apiV1/groups/$groupId/students";
+
   /*Password Reset*/
   static const String forgotPassword = "$apiV1/password/forgot";
   static const String verifyForgotPasswordOtp = "$apiV1/password/verify-otp";

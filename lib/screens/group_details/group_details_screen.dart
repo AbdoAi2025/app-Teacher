@@ -109,8 +109,8 @@ class _GroupDetailsScreenState extends LifecycleWidgetState<GroupDetailsScreen> 
         mainAxisSize: MainAxisSize.min,
         children: [
           _groupName(uiState.groupName),
-          _groupDay(
-              "${AppDateUtils.getDayName(uiState.groupDay).tr} : ${uiState.timeFrom} - ${uiState.timeTo}"),
+          ...uiState.timings.map((t) => _groupDay(
+              "${AppDateUtils.getDayName(t.day ?? -1).tr} : ${t.timeFrom ?? ''} - ${t.timeTo ?? ''}")),
           _grade(uiState.grade),
         ],
       ),
@@ -226,11 +226,9 @@ class _GroupDetailsScreenState extends LifecycleWidgetState<GroupDetailsScreen> 
     var args = EditGroupArgsModel(
         groupId: uiState?.groupId ?? "",
         groupName: uiState?.groupName ?? "",
-        groupDay: uiState?.groupDay ?? 0,
-        timeFrom: uiState?.timeFrom ?? "",
-        timeTo: uiState?.timeTo ?? "",
         gradeName: uiState?.grade ?? "",
         gradeId: uiState?.gradeId ?? 0,
+        timings: uiState?.timings ?? [],
         students: uiState?.students ?? List.empty());
 
     var result = await AppNavigator.navigateToEditGroup(args);
@@ -245,11 +243,9 @@ class _GroupDetailsScreenState extends LifecycleWidgetState<GroupDetailsScreen> 
     var args = EditGroupArgsModel(
         groupId: uiState?.groupId ?? "",
         groupName: uiState?.groupName ?? "",
-        groupDay: uiState?.groupDay ?? 0,
-        timeFrom: uiState?.timeFrom ?? "",
-        timeTo: uiState?.timeTo ?? "",
         gradeName: uiState?.grade ?? "",
         gradeId: uiState?.gradeId ?? 0,
+        timings: uiState?.timings ?? [],
         students: uiState?.students ?? List.empty());
 
     var result = await AppNavigator.navigateToUpgradeGroup(args);

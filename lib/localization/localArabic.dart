@@ -46,6 +46,15 @@ final Map<String, String> ar = {
   "Select Student to": "اختر طالبًا",
   "Group Details": "تفاصيل المجموعة",
   "Group Info": "معلومات المجموعة",
+  "Timings": "المواعيد",
+  "Timing": "موعد",
+  "Add Timing": "إضافة موعد",
+  "Next": "التالي",
+  "Previous": "السابق",
+  "Done": "تم",
+  "Skip": "تخطي",
+  "Time From": "من الساعة",
+  "Time To": "حتى الساعة",
   "No students found": "لا يوجد طلاب",
   "No Active Sessions": "لا توجد جلسات نشطة",
   "View All Sessions": "عرض جميع الجلسات",
@@ -402,6 +411,14 @@ final Map<String, String> ar = {
   "Code resent successfully": "تم إعادة إرسال الرمز بنجاح",
   "Failed to resend code": "فشل إعادة إرسال الرمز",
   "send_otp_failed": "فشل إرسال رمز التحقق. يرجى المحاولة مرة أخرى.",
+
+  // Create Group Steps
+  "Are you sure you want to save?": "هل أنت متأكد أنك تريد الحفظ؟",
+  "Data saved successfully": "تم حفظ البيانات بنجاح",
+  "No students selected": "لم يتم اختيار أي طالب",
+  "Please complete all timing entries": "يرجى استكمال جميع بيانات المواعيد",
+  "Select Students": "اختر الطلاب",
+  "Are you sure you want to delete this timing?": "هل أنت متأكد أنك تريد حذف هذا الموعد؟",
 
 };
 

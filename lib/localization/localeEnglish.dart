@@ -31,6 +31,15 @@ final Map<String, String> enUS = {
   "Select Student": "Select Student",
   "Group Details": "Group Details",
   "Group Info": "Group Info",
+  "Timings": "Timings",
+  "Timing": "Timing",
+  "Add Timing": "Add Timing",
+  "Next": "Next",
+  "Previous": "Previous",
+  "Done": "Done",
+  "Skip": "Skip",
+  "Time From": "Time From",
+  "Time To": "Time To",
   "No students found": "No students found",
   "No Active Sessions": "No Active Sessions",
   "View All Sessions": "View All Sessions",
@@ -384,5 +393,13 @@ final Map<String, String> enUS = {
   "Code resent successfully": "Code resent successfully",
   "Failed to resend code": "Failed to resend code",
   "send_otp_failed": "Failed to send verification code. Please try again.",
+
+  // Create Group Steps
+  "Are you sure you want to save?": "Are you sure you want to save?",
+  "Data saved successfully": "Data saved successfully",
+  "No students selected": "No students selected",
+  "Please complete all timing entries": "Please complete all timing entries",
+  "Select Students": "Select Students",
+  "Are you sure you want to delete this timing?": "Are you sure you want to delete this timing?",
 
 };

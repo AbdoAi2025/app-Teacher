@@ -1,13 +1,10 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:teacher_app/screens/create_group/create_group_controller.dart';
 import 'package:teacher_app/screens/group_edit/edit_group_screen.dart';
 import 'package:teacher_app/utils/message_utils.dart';
-import '../../widgets/dialog_loading_widget.dart';
-import '../create_group/create_group_controller.dart';
 import '../create_group/create_group_screen.dart';
 import '../create_group/states/create_group_state.dart';
-import '../group_edit/edit_group_controller.dart';
-import '../group_edit/states/update_group_state.dart';
 import 'upgrade_group_controller.dart';
 
 class UpgradeGroupScreen extends EditGroupScreen {
