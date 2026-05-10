@@ -331,7 +331,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
       context: context,
       onGroupSelected: (group) {
         showConfirmationMessage(
-          "${"Are you sure to add this student to this group ?".tr} ${group.groupName}",
+          sprintf("Are you sure to add this student to this group %s ?".tr, [group.groupName]),
           () {
             showDialogLoading();
             controller.addStudentToGroup(group.groupId).listen((event) {
@@ -414,7 +414,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
 
   void _onGroupRemoveClick(StudentGroupApiModel group, StudentDetailsUiState uiState) {
     showConfirmationMessage(
-      "${"Are you sure to remove ?".tr} ${group.groupName ?? ""}",
+      sprintf("Are you sure to remove this student from this group %s ?".tr, [group.groupName ?? ""]),
       () {
         showDialogLoading();
         controller.removeStudentFromGroup(group.groupId ?? "").listen((event) {

@@ -402,4 +402,13 @@ final Map<String, String> enUS = {
   "Select Students": "Select Students",
   "Are you sure you want to delete this timing?": "Are you sure you want to delete this timing?",
 
+  // Student Details
+  "Grades": "Grades",
+  "Are you sure to add this student to this group %s ?": "Are you sure to add this student to this group %s ?",
+  "Are you sure to remove this student from this group %s ?": "Are you sure to remove this student from this group %s ?",
+  "Invalid grade selected": "Invalid grade selected",
+  "Student grade updated successfully": "Student grade updated successfully",
+  "Failed to update grade": "Failed to update grade",
+  "Are you sure to update this grade from '%s' to '%s'": "Are you sure to update this grade from '%s' to '%s'",
+
 };

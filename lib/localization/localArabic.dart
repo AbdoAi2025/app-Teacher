@@ -420,6 +420,15 @@ final Map<String, String> ar = {
   "Select Students": "اختر الطلاب",
   "Are you sure you want to delete this timing?": "هل أنت متأكد أنك تريد حذف هذا الموعد؟",
 
+  // Student Details
+  "Grades": "الدرجات",
+  "Are you sure to add this student to this group %s ?": "هل أنت متأكد من إضافة هذا الطالب إلى مجموعة %s ؟",
+  "Are you sure to remove this student from this group %s ?": "هل أنت متأكد من إزالة هذا الطالب من مجموعة %s ؟",
+  "Invalid grade selected": "الدرجة المختارة غير صالحة",
+  "Student grade updated successfully": "تم تحديث درجة الطالب بنجاح",
+  "Failed to update grade": "فشل تحديث الدرجة",
+  "Are you sure to update this grade from '%s' to '%s'": "هل أنت متأكد من تغيير الدرجة من '%s' إلى '%s'",
+
 };
 
 /*

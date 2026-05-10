@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
 import 'package:teacher_app/utils/date_filter_manager.dart';
 
+import '../../data/responses/get_group_details_response.dart';
 import '../../exceptions/app_http_exception.dart';
 import '../../models/group_item_model.dart';
 import '../../screens/groups/groups_state.dart';
@@ -39,21 +40,27 @@ class GroupsManagers {
       var groups = groupsResult.data;
       groups = sortGroups(groups!);
 
+      final today = DateTime.now().weekday % 7;
       var uiStates = groups
-          .map((e) => GroupItemUiState(
-                groupId: e.id,
-                groupName: e.name,
-                studentsCount: e.studentCount,
-                dayIndex: e.day,
-                dayName: AppDateUtils.getDayName(e.day),
-                dayNameEn: AppDateUtils.getDayNameEn(e.day),
-                dayNameAr: AppDateUtils.getDayNameAr(e.day),
-                timeFrom: e.timeFrom,
-                timeTo: e.timeTo,
-                gradeName: e.grade.name,
-                gradeNameEn: e.grade.nameEn,
-                gradeNameAr: e.grade.nameAr,
-              ))
+          .map((e) {
+                final activeTiming = _pickActiveTiming(e.timings, today);
+                final activeDay = activeTiming?.day ?? 0;
+                return GroupItemUiState(
+                  groupId: e.id,
+                  groupName: e.name,
+                  studentsCount: e.studentCount,
+                  dayIndex: activeDay,
+                  timingDays: e.timings.map((t) => t.day ?? 0).toList(),
+                  dayName: AppDateUtils.getDayName(activeDay),
+                  dayNameEn: AppDateUtils.getDayNameEn(activeDay),
+                  dayNameAr: AppDateUtils.getDayNameAr(activeDay),
+                  timeFrom: activeTiming?.timeFrom ?? '',
+                  timeTo: activeTiming?.timeTo ?? '',
+                  gradeName: e.grade.name,
+                  gradeNameEn: e.grade.nameEn,
+                  gradeNameAr: e.grade.nameAr,
+                );
+              })
           .toList();
 
       _updateState(GroupsStateSuccess(uiStates: uiStates));
@@ -82,8 +89,9 @@ class GroupsManagers {
           GroupsStateSuccess(uiStates: groupByDay(state.uiStates));
 
       /*filter today groups*/
+      final today = DateTime.now().weekday % 7;
       var todayGroups = state.uiStates
-          .where((element) => element.dayIndex == (DateTime.now().weekday) % 7)
+          .where((element) => element.timingDays.contains(today))
           .toList();
       GroupsManagers.todayGroupsState.value =
           GroupsStateSuccess(uiStates: todayGroups);
@@ -94,6 +102,22 @@ class GroupsManagers {
     GroupsManagers.state.value = state;
     GroupsManagers.todayGroupsState.value = state;
     GroupsManagers.groupCategorizedState.value = state;
+  }
+
+  /// Returns the timing for today if found, otherwise the nearest upcoming timing
+  /// (wrapping around the week). Falls back to the first timing if the list is empty.
+  /// Returns the timing for today if found, otherwise the nearest upcoming timing
+  /// (wrapping around the week). Falls back to the first timing if the list is empty.
+  static GroupDetailsTiming? _pickActiveTiming(
+      List<GroupDetailsTiming> timings, int today) {
+    if (timings.isEmpty) return null;
+    final todayTiming = timings.firstWhereOrNull((t) => (t.day ?? 0) == today);
+    if (todayTiming != null) return todayTiming;
+    return timings.reduce((a, b) {
+      final daysA = ((a.day ?? 0) - today + 7) % 7;
+      final daysB = ((b.day ?? 0) - today + 7) % 7;
+      return daysA <= daysB ? a : b;
+    });
   }
 
   static List<GroupItemModel> sortGroups(List<GroupItemModel> groups) {

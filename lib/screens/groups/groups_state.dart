@@ -22,6 +22,7 @@ class GroupItemUiState {
   final int studentsCount;
   final String dayName;
   final int dayIndex;
+  final List<int> timingDays;
   final String dayNameEn;
   final String dayNameAr;
   final String gradeName;
@@ -36,6 +37,7 @@ class GroupItemUiState {
     required this.studentsCount,
     required this.dayName,
     required this.dayIndex,
+    required this.timingDays,
     required this.timeFrom,
     required this.timeTo,
     required this.gradeName,
@@ -57,6 +59,7 @@ class GroupItemTitleUiState extends GroupItemUiState {
           dayNameEn: "",
           dayNameAr: "",
           dayIndex: 0,
+          timingDays: const [],
           groupId: "",
           groupName: "",
           studentsCount: 0,

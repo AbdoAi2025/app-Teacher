@@ -66,8 +66,9 @@ class GroupItemWidget extends StatelessWidget {
                   runSpacing: 5,
                   children: [
                     StudentCountInfoChipWidget(count: uiState.studentsCount),
-                    TimeFromToInfoChipWidget(text: "${uiState.timeFrom} - ${uiState.timeTo}"),
-                    DayInfoChipWidget(text:  uiState.dayName.tr)
+                    // TimeFromToInfoChipWidget(text: "${uiState.timeFrom} - ${uiState.timeTo}"),
+                    _timing()
+
                   ],
                 ),
               ],
@@ -99,5 +100,12 @@ class GroupItemWidget extends StatelessWidget {
       color: AppColors.textSecondaryColor,
       size: 16,
     );
+  }
+
+  _timing() {
+    var count = uiState.timingDays.length;
+    if(count == 0) return Container();
+    var countText = count > 1 ? "+${count-1} ${"Timing".tr}" : "";
+    return  TimeFromToInfoChipWidget(text:  "${uiState.dayName.tr} ${uiState.timeFrom} - ${uiState.timeTo} $countText");
   }
 }

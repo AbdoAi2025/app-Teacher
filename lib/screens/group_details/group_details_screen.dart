@@ -11,6 +11,7 @@ import 'package:teacher_app/utils/day_utils.dart';
 import 'package:teacher_app/utils/message_utils.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'package:teacher_app/widgets/app_visibility_widget.dart';
+import 'package:teacher_app/widgets/day_info_chip_widget.dart';
 import 'package:teacher_app/widgets/day_with_icon_widget.dart';
 import 'package:teacher_app/widgets/delete_icon_widget.dart';
 import 'package:teacher_app/widgets/dialog_loading_widget.dart';
@@ -147,7 +148,7 @@ class _GroupDetailsScreenState extends LifecycleWidgetState<GroupDetailsScreen> 
   }
 
   _groupDay(String day) {
-    return DayWithIconWidget(day);
+    return DayInfoChipWidget(text: day);
   }
 
   _grade(String grade) {
