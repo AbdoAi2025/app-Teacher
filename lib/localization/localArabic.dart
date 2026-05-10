@@ -30,6 +30,9 @@ final Map<String, String> ar = {
   "Day": "اليوم",
   "Are you sure to delete ?": "هل أنت متأكد من الحذف؟",
   "Add to Group": "إضافة إلى المجموعة",
+  "Edit": "تعديل",
+  "Delete": "حذف",
+  "Upgrade": "ترقية",
   "Group Name is required": "اسم المجموعة مطلوب",
   "Grade": "الصف",
   "Grade is required": "الصف مطلوب",
@@ -64,6 +67,7 @@ final Map<String, String> ar = {
   "Student edited successfully": "تم تعديل بيانات الطالب بنجاح",
   "No Groups Found": "لا توجد مجموعات",
   "Running Session": "الحصة قيد التشغيل",
+  "Session in progress": "الحصة جارية",
   "No Running Sessions Found": "لا توجد جلسات قيد التشغيل حالياً.\nابدأ جلسة جديدة لتراها هنا!",
   "Today Groups": "مجموعات اليوم",
   "User Name": "اسم المستخدم",
@@ -419,6 +423,11 @@ final Map<String, String> ar = {
   "Please complete all timing entries": "يرجى استكمال جميع بيانات المواعيد",
   "Select Students": "اختر الطلاب",
   "Are you sure you want to delete this timing?": "هل أنت متأكد أنك تريد حذف هذا الموعد؟",
+
+  "No Running Sessions": "لا توجد حصص جارية",
+  "All sessions are currently inactive": "جميع الحصص غير نشطة حالياً",
+  "No Groups Today": "لا توجد مجموعات اليوم",
+  "You have no sessions scheduled for today": "ليس لديك حصص مجدولة اليوم",
 
   // Student Details
   "Grades": "الدرجات",

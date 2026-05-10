@@ -56,5 +56,5 @@ class GroupStudentItemWidget extends StatelessWidget {
 
   _arrowIcon() => ForwardArrowWidget(size: 16,);
 
-  Widget _studentName() => AppTextWidget(uiState.name, style: AppTextStyle.title , maxLines: 1, overflow: TextOverflow.ellipsis,);
+  Widget _studentName() => AppTextWidget(uiState.name, style: AppTextStyle.label , maxLines: 1, overflow: TextOverflow.ellipsis,);
 }

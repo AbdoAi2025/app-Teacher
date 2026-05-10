@@ -93,7 +93,7 @@ Future<void> showSuccessMessagePopup(String message, [Function()? onClose]) asyn
 void showConfirmationMessage(String message, Function() action, {
   bool barrierDismissible = true,
   String? positiveButtonText,
-  String? negativeButtonText,
+  String? negativeButtonText ,
   Function()? onCancel,
   Widget? subTitleWidget
 }) {
@@ -112,8 +112,8 @@ void showConfirmationMessage(String message, Function() action, {
                 subTitleWidget: subTitleWidget,
                 autoDismiss : barrierDismissible,
                 positive_button_text: positiveButtonText ?? "yes".tr,
-                negative_button_text: negativeButtonText ?? "Cancel".tr,
-                showCancelBtn : negativeButtonText != null && negativeButtonText.isNotEmpty,
+                negative_button_text: negativeButtonText ?? "No".tr,
+                showCancelBtn : true,
                 onSuccess: () {
                   action();
                 },

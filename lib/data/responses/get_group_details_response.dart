@@ -20,7 +20,8 @@ class GetGroupDetailsResponse {
       timings = timingsJson
           .whereType<Map<String, dynamic>>()
           .map(GroupDetailsTiming.fromJson)
-          .toList();
+          .toList()
+        ..sort((a, b) => (a.day ?? 0).compareTo(b.day ?? 0));
     }
 
     return GetGroupDetailsResponse(
@@ -49,18 +50,6 @@ class GetGroupDetailsResponse {
   Grade? grade;
   ActiveSessionApiModel? activeSession;
   List<Students>? students;
-
-  Map<String, dynamic> toJson() {
-    return {
-      'groupId': groupId,
-      'groupName': groupName,
-      'gradeId': gradeId,
-      'timings': timings?.map((t) => t.toJson()).toList(),
-      'activeSession': activeSession?.toJson(),
-      if (grade != null) 'grade': grade!.toJson(),
-      if (students != null) 'students': students!.map((v) => v.toJson()).toList(),
-    };
-  }
 }
 
 class GroupDetailsTiming {

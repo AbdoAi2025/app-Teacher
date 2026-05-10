@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/data/responses/get_group_details_response.dart';
+import 'package:teacher_app/domain/models/group_timing_model.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
 import 'package:teacher_app/screens/group_details/states/group_details_ui_state.dart';
 import 'package:teacher_app/screens/home/states/running_session_item_ui_state.dart';
@@ -50,9 +51,7 @@ class _GroupDetailsScreenState extends LifecycleWidgetState<GroupDetailsScreen> 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppToolbarWidget.appBar(title: "Group Details".tr, actions: [
-          _settingsIcon(),
-        ]),
+        appBar: _appBar(),
         body: Padding(
           padding: const EdgeInsets.all(20.0),
           child: RefreshIndicator(
@@ -63,6 +62,38 @@ class _GroupDetailsScreenState extends LifecycleWidgetState<GroupDetailsScreen> 
                   physics: const AlwaysScrollableScrollPhysics(),
                   child: _content())),
         ));
+  }
+
+  PreferredSizeWidget _appBar() {
+    return AppToolbarWidget.appBar(
+      title: "",
+      centerTitle: false,
+      titleWidget: Obx(() {
+        final state = controller.state.value;
+        if (state is GroupDetailsStateSuccess) {
+          final uiState = state.uiState;
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AppTextWidget(
+                uiState.groupName.isNotEmpty ? uiState.groupName : "Group Details".tr,
+                style: AppTextStyle.appToolBarTitle,
+              ),
+
+              // _grade(uiState.grade),
+              if (uiState.grade.isNotEmpty)
+                AppTextWidget(
+                  uiState.grade,
+                  style: AppTextStyle.subTitle,
+                ),
+            ],
+          );
+        }
+        return AppTextWidget("", style: AppTextStyle.appToolBarTitle);
+      }),
+      actions: [_settingsIcon()],
+    );
   }
 
   Widget _content() {
@@ -109,15 +140,13 @@ class _GroupDetailsScreenState extends LifecycleWidgetState<GroupDetailsScreen> 
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          _groupName(uiState.groupName),
-          ...uiState.timings.map((t) => _groupDay(
-              "${AppDateUtils.getDayName(t.day ?? -1).tr} : ${t.timeFrom ?? ''} - ${t.timeTo ?? ''}")),
-          _grade(uiState.grade),
+          ...uiState.timings.map((t) => _timing(t , uiState)),
+
         ],
       ),
     );
 
-    return _sectionLabelValue("Group Info".tr, content);
+    return _sectionLabelValue("Timings".tr, content);
   }
 
   Widget _studentsSection(GroupDetailsUiState uiState) {
@@ -147,8 +176,21 @@ class _GroupDetailsScreenState extends LifecycleWidgetState<GroupDetailsScreen> 
     );
   }
 
-  _groupDay(String day) {
-    return DayInfoChipWidget(text: day);
+  _timing(GroupDetailsTiming t, GroupDetailsUiState uiState) {
+    var day = "${AppDateUtils.getDayName(t.day ?? -1).tr} : ${t.timeFrom ?? ''} - ${t.timeTo ?? ''}";
+    return Row(
+      spacing: 10,
+      children: [
+        Expanded(child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            DayInfoChipWidget(text: day),
+          ],
+        )),
+        if(t.id != null && !uiState.hasActiveSession)
+        _startSession(t.id!  , uiState)
+      ],
+    );
   }
 
   _grade(String grade) {
@@ -286,14 +328,14 @@ class _GroupDetailsScreenState extends LifecycleWidgetState<GroupDetailsScreen> 
 
   _sessionSection(GroupDetailsUiState uiState) {
     var activeSession = uiState.activeSession;
+    if(activeSession == null) return SizedBox.shrink();
     appLog("GroupDetailsScreen _sessionSection activeSession:$activeSession");
     return Container(
       width: double.infinity,
-      decoration: AppBackgroundStyle.backgroundWithShadow(),
+      decoration: AppBackgroundStyle.getColoredBackgroundRounded(16, AppColors.color_008E73.withValues(alpha: .1)),
+      // decoration: AppBackgroundStyle.backgroundWithShadow(),
       padding: EdgeInsets.all(15),
-      child: activeSession != null
-          ? _activeSession(uiState, activeSession)
-          : _noActiveSession(uiState),
+      child: _activeSession(uiState, activeSession)
     );
   }
 
@@ -316,14 +358,16 @@ class _GroupDetailsScreenState extends LifecycleWidgetState<GroupDetailsScreen> 
         "No Active Sessions".tr,
         style: AppTextStyle.value,
       ),
-      _startSession(uiState)
+      // _startSession(uiState)
     ]);
   }
 
-  _startSession(GroupDetailsUiState uiState) => Center(
+  _startSession(int timingId , GroupDetailsUiState uiState) => Center(
         child: StartSessionButtonWidget(
-          groupId: uiState.groupId,
+          timingId: timingId.toString(),
           studentsCount: uiState.students.length,
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+          textStyle: AppTextStyle.value.copyWith(color: AppColors.white , fontSize: 12),
           onSessionStarted: () {
             controller.reload();
           },

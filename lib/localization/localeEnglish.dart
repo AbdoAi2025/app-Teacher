@@ -15,6 +15,9 @@ final Map<String, String> enUS = {
   "Day": "Day",
   "Are you sure to delete ?": "Are you sure to delete ?",
   "Add to Group": "Add to Group",
+  "Edit": "Edit",
+  "Delete": "Delete",
+  "Upgrade": "Upgrade",
   "Group Name is required": "Group Name is required",
   "Grade": "Grade",
   "Grade is required": "Grade is required",
@@ -49,6 +52,7 @@ final Map<String, String> enUS = {
   "Student edited successfully": "Student edited successfully",
   "No Groups Found": "No Groups Found",
   "Running Session": "Running Session",
+  "Session in progress": "Session in progress",
   "No Running Sessions Found": "No sessions are currently running.\nStart a new session to see it here!",
   "Today Groups": "Today Groups",
   "User Name": "User Name",
@@ -401,6 +405,11 @@ final Map<String, String> enUS = {
   "Please complete all timing entries": "Please complete all timing entries",
   "Select Students": "Select Students",
   "Are you sure you want to delete this timing?": "Are you sure you want to delete this timing?",
+
+  "No Running Sessions": "No Running Sessions",
+  "All sessions are currently inactive": "All sessions are currently inactive",
+  "No Groups Today": "No Groups Today",
+  "You have no sessions scheduled for today": "You have no sessions scheduled for today",
 
   // Student Details
   "Grades": "Grades",
