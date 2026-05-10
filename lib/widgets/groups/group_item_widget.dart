@@ -56,9 +56,6 @@ class GroupItemWidget extends StatelessWidget {
                     _forwardIcon(),
                   ],
                 ),
-
-                SizedBox(height: 10),
-                GradeChipWidget(gradeName : uiState.gradeName,),
                 AppDividerWidget(),
                 SizedBox(height: 0),
                 Wrap(
@@ -88,11 +85,31 @@ class GroupItemWidget extends StatelessWidget {
     AppNavigator.navigateToGroupDetails(GroupDetailsArgModel(id: uiState.groupId));
   }
 
-  _groupName() => AppTextWidget(
-    uiState.groupName,
-    style: AppTextStyle.label.copyWith(
-      color: AppColors.colorBlack,
-    ),
+  Widget _groupName() => Row(
+    children: [
+      Container(
+        width: 32,
+        height: 32,
+        decoration: BoxDecoration(
+          color: AppColors.appMainColor.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Icon(Icons.groups_2_rounded, size: 18, color: AppColors.appMainColor),
+      ),
+      const SizedBox(width: 10),
+      Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AppTextWidget(
+              uiState.groupName,
+              style: AppTextStyle.label.copyWith(color: AppColors.colorBlack),
+            ),
+            AppTextWidget(uiState.gradeName, style: AppTextStyle.value,),
+          ],
+        ),
+      ),
+    ],
   );
 
   Widget _forwardIcon() {
