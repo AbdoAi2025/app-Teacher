@@ -12,8 +12,13 @@ class StudentsSelectionController extends GetxController {
       Rx<StudentsSelectionState>(StudentsSelectionStateSelectGrade());
   final RxList<StudentSelectionItemUiState> selectedStudents =
       <StudentSelectionItemUiState>[].obs;
-
   final Rx<ItemSelectionUiState?> selectedGradeFilter = Rx(null);
+
+  final RxBool isLoadingMore = false.obs;
+  final RxBool hasMore = true.obs;
+
+  int _page = 0;
+  String _searchQuery = '';
 
   final _studentsUseCase = GetMyStudentsListUseCase();
 
@@ -39,15 +44,37 @@ class StudentsSelectionController extends GetxController {
     loadStudents();
   }
 
+  void onSearchChanged(String query) {
+    _searchQuery = query;
+    loadStudents();
+  }
+
   Future<void> loadStudents() async {
-    final gradeId = selectedGradeFilter.value?.id;
+    _page = 0;
+    hasMore.value = true;
+    isLoadingMore.value = false;
     studentsState.value = StudentsSelectionStateLoading();
+    await _fetchPage();
+  }
+
+  Future<void> loadMore() async {
+    if (!hasMore.value || isLoadingMore.value) return;
+    isLoadingMore.value = true;
+    _page++;
+    await _fetchPage();
+  }
+
+  Future<void> _fetchPage() async {
     final result = await _studentsUseCase.execute(GetMyStudentsRequest(
-      gradeId: gradeId,
+      gradeId: selectedGradeFilter.value?.id,
       hasGroups: filterNotInGroup.value ? false : null,
+      search: _searchQuery.isEmpty ? null : _searchQuery,
+      pageIndex: _page,
     ));
+
     if (result is AppResultSuccess) {
-      final items = (result.value ?? [])
+      final raw = result.value ?? [];
+      final newItems = raw
           .map((e) => StudentSelectionItemUiState(
                 studentId: e.studentId ?? '',
                 studentName: e.studentName ?? '',
@@ -56,12 +83,24 @@ class StudentsSelectionController extends GetxController {
                 isSelected: _isSelected(e.studentId ?? ''),
               ))
           .toList();
-      items.sort((a, b) => a.studentName.compareTo(b.studentName));
-      studentsState.value = StudentsSelectionStateSuccess(items);
+
+      final existing = _page == 0
+          ? <StudentSelectionItemUiState>[]
+          : (studentsState.value is StudentsSelectionStateSuccess
+              ? List<StudentSelectionItemUiState>.from(
+                  (studentsState.value as StudentsSelectionStateSuccess).students)
+              : <StudentSelectionItemUiState>[]);
+
+      hasMore.value = raw.length >= GetMyStudentsRequest().pageSize;
+      studentsState.value =
+          StudentsSelectionStateSuccess([...existing, ...newItems]);
     } else {
-      studentsState.value = StudentsSelectionStateError(
-          result.error?.toString() ?? 'Something went wrong');
+      if (_page == 0) {
+        studentsState.value = StudentsSelectionStateError(
+            result.error?.toString() ?? 'Something went wrong');
+      }
     }
+    isLoadingMore.value = false;
   }
 
   bool _isSelected(String studentId) =>

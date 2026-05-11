@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
 import 'package:teacher_app/presentation/bottom_sheets/students_list_selections_bottom_sheet.dart';
+import 'package:teacher_app/requests/get_my_students_request.dart';
 import 'package:teacher_app/screens/create_group/students_selection/states/student_selection_item_ui_state.dart';
 import 'package:teacher_app/screens/session_details/states/session_details_ui_state.dart';
 import 'package:teacher_app/utils/message_utils.dart';
@@ -302,7 +303,6 @@ class _SessionDetailsScreenState extends LifecycleWidgetState<SessionDetailsScre
   }
 
   onAddStudentToSessionClick(SessionDetailsUiState uiState) {
-    controller.onAddStudentToSessionClick(uiState);
     var bottomSheet = StudentsListSelectionsBottomSheet(
         studentsSelectionState : controller.studentsSelectionState,
         onSaveClick: (items) { onSessionStudentsSelected(uiState, items);});
