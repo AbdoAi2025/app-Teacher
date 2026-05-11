@@ -322,24 +322,20 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:get/get.dart';
-import 'package:teacher_app/screens/create_group/grades/grades_selection_state.dart';
+import 'package:teacher_app/screens/create_group/grades/select_grade_bottom_sheet.dart';
 import 'package:teacher_app/screens/student_add/add_student_controller.dart';
 import 'package:teacher_app/screens/student_add/states/add_student_state.dart';
 import 'package:teacher_app/utils/Keyboard_utils.dart';
 import 'package:teacher_app/utils/message_utils.dart';
-import 'package:teacher_app/widgets/app_txt_widget.dart';
-import 'package:teacher_app/widgets/loading_widget.dart';
 import 'package:teacher_app/widgets/primary_button_widget.dart';
 import '../../dialogs/user_not_subscribed_dialog.dart';
 import '../../presentation/app_message_dialogs.dart';
-import '../../themes/app_colors.dart';
 import '../../validations/phone_validation.dart';
 import '../../widgets/app_phone_input_text_field_widget.dart';
 import '../../widgets/app_text_field_widget.dart';
 import '../../widgets/app_toolbar_widget.dart';
 import '../../widgets/dialog_loading_widget.dart';
 import '../../widgets/dropdown_icon_widget.dart';
-import '../../widgets/item_selection_widget/student_list_selection_widget.dart';
 import '../student_edit/states/update_student_state.dart';
 import '../students_list/students_controller.dart';
 
@@ -453,34 +449,11 @@ class AddStudentScreenState extends State<AddStudentScreen> {
       );
 
   void _onSelectGradesClick() {
-
-    var bottomSheetWidget = Obx(() {
-      _controller.checkGradesState();
-      var value = getController().gradeSelectionState.value;
-      switch (value) {
-        case GradesSelectionStateError():
-          return _errorMessageView(value.message);
-        case GradesSelectionStateSuccess():
-          return SizedBox(
-              // height: Get.height * .9,
-              width: double.infinity,
-              child: ItemSelectionWidget(
-                items: value.items,
-                title: "Select Grade",
-                isSingleSelection: true,
-                onSaved: (selectedItems) =>
-                    getController().onSelectedGrade(selectedItems.firstOrNull),
-              ));
-      }
-      return LoadingWidget();
-    });
-
-    Get.bottomSheet(bottomSheetWidget,
-        backgroundColor: AppColors.white,
-        // isScrollControlled: true,
-        useRootNavigator: true,
-        // ignoreSafeArea: false,
-        enableDrag: true);
+    SelectGradeBottomSheet.show(
+      context,
+      selectedId: getController().selectedGrade.value?.id,
+      onSelected: (grade) => getController().onSelectedGrade(grade),
+    );
   }
 
   void onSaveSuccess(SaveStateSuccess result) {
@@ -510,10 +483,6 @@ class AddStudentScreenState extends State<AddStudentScreen> {
       case AddStudentStateError():
         showErrorMessagePopup(result.exception?.toString() ?? "");
     }
-  }
-
-  Widget _errorMessageView(String message) {
-    return AppTextWidget(message);
   }
 
   void onSaveGroupClick() {
