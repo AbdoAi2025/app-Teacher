@@ -12,7 +12,6 @@ class SetGroupStudentsUseCase extends BaseUseCase<dynamic> {
   Future<AppResult<dynamic>> execute(SetGroupStudentsRequest request) async {
     return call(() async {
       var result = await repository.setGroupStudents(request);
-      GroupsManagers.onGroupUpdated(request.groupId);
       return AppResult.success(result);
     });
   }

@@ -7,6 +7,7 @@ import 'package:teacher_app/screens/create_group/create_group_controller.dart';
 import 'package:teacher_app/screens/create_group/states/create_group_state.dart';
 import 'package:teacher_app/utils/day_utils.dart';
 import '../../base/AppResult.dart';
+import '../../data/responses/add_group_response.dart';
 import '../../widgets/item_selection_widget/item_selection_ui_state.dart';
 import '../create_group/students_selection/states/student_selection_item_ui_state.dart';
 import '../create_group/students_selection/states/students_selection_state.dart';
@@ -21,7 +22,6 @@ class EditGroupController extends CreateGroupController {
     final argsData = Get.arguments;
     if (argsData is EditGroupArgsModel) {
       args = argsData;
-
       createdGroupId = args!.groupId;
       submittedName = args!.groupName;
       submittedGradeId = args!.gradeId.toString();
@@ -61,75 +61,15 @@ class EditGroupController extends CreateGroupController {
     super.onInit();
   }
 
-  // ----------------------------------------------------------------
-  // Step 1: Update group info
-  // ----------------------------------------------------------------
-  // @override
-  // Future<bool> submitGroupInfo() async {
-  //   final isValid = formKey.currentState?.validate() ?? false;
-  //   if (!isValid) return false;
-  //
-  //   final groupId = args?.groupId ?? '';
-  //   if (groupId.isEmpty) {
-  //     stepError.value = 'Group not found'.tr;
-  //     return false;
-  //   }
-  //
-  //   isStepLoading.value = true;
-  //   stepError.value = '';
-  //
-  //   final result = await UpdateGroupUseCase().execute(UpdateGroupRequest(
-  //     groupId: groupId,
-  //     name: nameController.text.trim(),
-  //     gradeId: selectedGrade.value?.id,
-  //   ));
-  //
-  //   isStepLoading.value = false;
-  //
-  //   if (result is AppResultSuccess) {
-  //     createdGroupId = groupId;
-  //     currentStep.value = 1;
-  //     loadMyStudents();
-  //     return true;
-  //   } else {
-  //     stepError.value = result.error?.toString() ?? 'Something went wrong'.tr;
-  //     return false;
-  //   }
-  // }
 
-  // Legacy single-step stream kept for backward compat
-  // @override
-  // Stream<CreateGroupState> saveGroup() async* {
-  //   final isValid = formKey.currentState?.validate() ?? false;
-  //   if (!isValid) {
-  //     yield CreateGroupStateFormValidation();
-  //     return;
-  //   }
-  //
-  //   final groupId = args?.groupId ?? '';
-  //   if (groupId.isEmpty) {
-  //     yield UpdateGroupStateGroupNotFound();
-  //     return;
-  //   }
-  //
-  //   yield CreateGroupStateLoading();
-  //
-  //   final result = await UpdateGroupUseCase().execute(UpdateGroupRequest(
-  //     groupId: groupId,
-  //     name: nameController.text,
-  //     day: selectedDayRx.value,
-  //     timeFrom: getTimeFormat(selectedTimeFromRx.value),
-  //     timeTo: getTimeFormat(selectedTimeToRx.value),
-  //     studentsIds: selectedStudentsRx.value.map((e) => e.studentId).toList(),
-  //     gradeId: selectedGrade.value?.id,
-  //   ));
-  //
-  //   if (result is AppResultSuccess) {
-  //     yield SaveGroupStateSuccess();
-  //   } else {
-  //     yield CreateGroupStateError(result.error);
-  //   }
-  // }
+  @override
+  Future<AppResult<AddGroupResponse?>>  saveGroupInfo(String currentName, String? currentGradeId) async {
+    return UpdateGroupUseCase().execute(UpdateGroupRequest(
+      groupId: createdGroupId!,
+      name: currentName,
+      gradeId: currentGradeId,
+    ));
+  }
 
   List<StudentSelectionItemUiState> _studentsFromArgs() {
     return args?.students

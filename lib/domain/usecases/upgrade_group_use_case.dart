@@ -13,8 +13,6 @@ class UpgradeGroupUseCase extends BaseUseCase<AddGroupResponse?>{
   Future<AppResult<AddGroupResponse?>> execute(UpgradeGroupRequest request) async {
     return call(() async {
       var items =  await repository.upgradeGroup(request);
-      GroupsManagers.onRefresh();
-      GroupsManagers.onGroupUpdated(request.groupId);
       return AppResult.success(items);
     });
   }

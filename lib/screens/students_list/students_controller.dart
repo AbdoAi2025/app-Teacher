@@ -137,13 +137,23 @@ class StudentsController extends GetxController {
             ?.map((e) => StudentItemUiState(
                   id: e.studentId ?? "",
                   name: e.studentName ?? "",
-                  grade: LocalizedNameModel(
-                          nameEn: e.gradeNameEn ?? "",
-                          nameAr: e.gradeNameAr ?? "")
-                      .toLocalizedName(),
-                  groupName: e.groupName ?? "",
+                  groups: e.groups
+                      .map((g) => StudentGroupInfo(
+                            groupId: g.groupId ?? '',
+                            groupName: g.groupName ?? '',
+                          ))
+                      .toList(),
+                  grades: e.grades
+                      .map((g) => StudentGradeInfo(
+                            gradeId: g.gradeId ?? 0,
+                            gradeName: LocalizedNameModel(
+                              nameEn: g.gradeNameEn ?? '',
+                              nameAr: g.gradeNameAr ?? '',
+                            ).name,
+                          ))
+                      .toList(),
                   parentPhone: e.studentParentPhone ?? "",
-                  createdDate : AppDateUtils.parsStringToString(e.createdDate ,  "dd MMM, yyyy")
+                  createdDate: AppDateUtils.parsStringToString(e.createdDate, "dd MMM, yyyy"),
                 ))
             .toList() ??
         List.empty();

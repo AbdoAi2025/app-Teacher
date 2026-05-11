@@ -19,7 +19,6 @@ class UpdateGroupTimingsUseCase extends BaseUseCase<void> {
               })
           .toList();
       await _repository.updateGroupTimings(groupId, data);
-      GroupsManagers.onGroupUpdated(groupId);
       return AppResult.success(null);
     });
   }

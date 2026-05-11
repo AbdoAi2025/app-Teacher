@@ -78,8 +78,8 @@ class StudentsSelectionController extends GetxController {
           .map((e) => StudentSelectionItemUiState(
                 studentId: e.studentId ?? '',
                 studentName: e.studentName ?? '',
-                groupName: e.groupName ?? '',
-                gradeId: e.gradeId ?? 0,
+                groupName: e.groups.isNotEmpty ? e.groups.first.groupName ?? '' : '',
+                gradeId: e.grades.isNotEmpty ? e.grades.first.gradeId ?? 0 : 0,
                 isSelected: _isSelected(e.studentId ?? ''),
               ))
           .toList();

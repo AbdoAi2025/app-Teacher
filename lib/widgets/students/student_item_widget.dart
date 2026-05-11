@@ -102,7 +102,22 @@ class StudentItemWidget extends StatelessWidget {
 
   _parentPhone() => PhoneWithIconWidget(uiState.parentPhone);
 
-  _grade() => GradeChipWidget(gradeName: uiState.grade);
+  Widget _grade() {
+    final grades = uiState.grades;
+    if (grades.isEmpty) return const SizedBox.shrink();
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      spacing: 4,
+      children: [
+        GradeChipWidget(gradeName: grades.first.gradeName),
+        if (grades.length > 1)
+          InfoChipWidget(
+            text: '+${grades.length - 1}',
+            color: AppColors.color_3D5AB6,
+          ),
+      ],
+    );
+  }
 
   _arrowIcon() => ForwardArrowWidget(
         size: 16,
@@ -111,22 +126,38 @@ class StudentItemWidget extends StatelessWidget {
   Widget _studentName() =>
       AppTextWidget(uiState.name, style: AppTextStyle.title);
 
-  _group() {
-    return InfoChipWidget(
-      text: uiState.groupName.isNotEmpty ? uiState.groupName : "No Group".tr,
-      textStyle: AppTextStyle.label.copyWith(
-        fontSize: 12,
-        fontWeight: FontWeight.w500,
-        color: uiState.groupName.isNotEmpty
-            ? AppColors.appMainColor
-            : AppColors.color_9A2734,
-      ),
-      icon: Icons.people_outline,
-    );
-
-    return AppTextWidget(
-      uiState.groupName.isNotEmpty ? uiState.groupName : "No Group".tr,
-      style: AppTextStyle.value,
+  Widget _group() {
+    final groups = uiState.groups;
+    if (groups.isEmpty) {
+      return InfoChipWidget(
+        text: "No Group".tr,
+        icon: Icons.people_outline,
+        textStyle: AppTextStyle.label.copyWith(
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+          color: AppColors.color_9A2734,
+        ),
+      );
+    }
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      spacing: 4,
+      children: [
+        InfoChipWidget(
+          text: groups.first.groupName,
+          icon: Icons.people_outline,
+          textStyle: AppTextStyle.label.copyWith(
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+            color: AppColors.appMainColor,
+          ),
+        ),
+        if (groups.length > 1)
+          InfoChipWidget(
+            text: '+${groups.length - 1}',
+            color: AppColors.appMainColor,
+          ),
+      ],
     );
   }
 

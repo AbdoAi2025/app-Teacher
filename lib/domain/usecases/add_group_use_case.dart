@@ -13,7 +13,6 @@ class AddGroupUseCase  extends BaseUseCase<AddGroupResponse?>{
   Future<AppResult<AddGroupResponse?>> execute(AddGroupRequest request) async {
     return call(() async {
       var items =  await repository.addGroup(request);
-      GroupsManagers.onRefresh();
       return AppResult.success(items);
     });
   }

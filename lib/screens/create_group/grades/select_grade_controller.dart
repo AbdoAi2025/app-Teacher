@@ -6,26 +6,63 @@ import 'package:teacher_app/widgets/item_selection_widget/item_selection_ui_stat
 import 'grades_selection_state.dart';
 
 class SelectGradeController extends GetxController {
-  final Rx<GradesSelectionState> state =
+  final Rx<GradesSelectionState> gradeSelectionState =
       Rx<GradesSelectionState>(GradesSelectionStateLoading());
+
+  Function(ItemSelectionUiState?)? _onSelected;
+  bool _showClearOption = false;
+  String? _selectedId;
+  bool _loaded = false;
 
   final _useCase = GetGradesListUseCase();
 
-  Future<void> loadGrades({String? selectedId}) async {
-    state.value = GradesSelectionStateLoading();
+  void init({
+    String? selectedId,
+    bool showClearOption = false,
+    required Function(ItemSelectionUiState?) onSelected,
+  }) {
+    _selectedId = selectedId;
+    _showClearOption = showClearOption;
+    _onSelected = onSelected;
+  }
+
+  void checkGradesState() {
+    if (!_loaded) {
+      _loaded = true;
+      _loadGrades();
+    }
+  }
+
+  Future<void> _loadGrades() async {
+    gradeSelectionState.value = GradesSelectionStateLoading();
     final result = await _useCase.execute();
     if (result is AppResultSuccess) {
-      final items = (result.data ?? [])
+      var items = (result.data ?? [])
           .map((e) => ItemSelectionUiState(
                 id: e.id?.toString() ?? '',
                 name: e.localizedName?.toLocalizedName() ?? '',
-                isSelected: e.id?.toString() == selectedId,
+                isSelected: e.id?.toString() == _selectedId,
               ))
           .toList();
-      state.value = GradesSelectionStateSuccess(items);
+      if (_showClearOption) {
+        items = [
+          ItemSelectionUiState(
+            id: '',
+            name: 'All Grades'.tr,
+            isSelected: _selectedId == null || _selectedId!.isEmpty,
+          ),
+          ...items,
+        ];
+      }
+      gradeSelectionState.value = GradesSelectionStateSuccess(items);
     } else {
-      state.value =
+      gradeSelectionState.value =
           GradesSelectionStateError(result.error?.toString() ?? 'Error');
     }
+  }
+
+  void onSelectedGrade(ItemSelectionUiState? item) {
+    final isAllGrades = item == null || item.id.isEmpty;
+    _onSelected?.call(isAllGrades ? null : item);
   }
 }

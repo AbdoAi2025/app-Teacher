@@ -60,50 +60,16 @@ class CreateGroupController extends GetxController {
   // ----------------------------------------------------------------
   // Step 1: Create Group
   // ----------------------------------------------------------------
-  Future<bool> submitGroupInfo() async {
+  Future<bool> onSubmitGroupInfo() async {
     final isValid = formKey.currentState?.validate() ??
         (nameController.text.trim().isNotEmpty && selectedGrade.value != null);
     if (!isValid) return false;
 
     final currentName = nameController.text.trim();
     final currentGradeId = selectedGrade.value?.id;
-
-
-    if (createdGroupId != null) {
-      final dataChanged = currentName != submittedName || currentGradeId != submittedGradeId;
-      if (!dataChanged) {
-        currentStep.value = 1;
-        return true;
-      }
-      isStepLoading.value = true;
-      stepError.value = '';
-
-      final result = await UpdateGroupUseCase().execute(UpdateGroupRequest(
-        groupId: createdGroupId!,
-        name: currentName,
-        gradeId: currentGradeId,
-      ));
-
-      isStepLoading.value = false;
-
-      if (result is AppResultSuccess) {
-        submittedName = currentName;
-        submittedGradeId = currentGradeId;
-        currentStep.value = 1;
-        GroupsManagers.onGroupUpdated(createdGroupId);
-        return true;
-      } else {
-        stepError.value = result.error?.toString() ?? 'Something went wrong'.tr;
-        return false;
-      }
-    }
-
     isStepLoading.value = true;
     stepError.value = '';
-
-
     final result = await saveGroupInfo(currentName, currentGradeId);
-
     isStepLoading.value = false;
 
     if (result is AppResultSuccess) {
@@ -137,12 +103,7 @@ class CreateGroupController extends GetxController {
     isStepLoading.value = true;
     stepError.value = '';
 
-    final result = await _setGroupStudentsUseCase.execute(
-      SetGroupStudentsRequest(
-        groupId: groupId,
-        studentIds: currentIds,
-      ),
-    );
+    final result = await saveGroupStudents(groupId, currentIds);
     isStepLoading.value = false;
     if (result.isError) {
       stepError.value = result.error?.toString() ?? 'Something went wrong'.tr;
@@ -160,13 +121,17 @@ class CreateGroupController extends GetxController {
   bool validateGroupInfo() => formKey.currentState?.validate() ?? false;
 
   Future<bool> submitAll() async {
-    final step1Ok = await submitGroupInfo();
+    final step1Ok = await onSubmitGroupInfo();
     if (!step1Ok) return false;
 
     final step2Ok = await submitStudents();
     if (!step2Ok) return false;
 
-    return submitTimings();
+    final step3Ok = await submitTimings();
+    GroupsManagers.onGroupUpdated(createdGroupId);
+    GroupsManagers.onRefresh();
+    return step3Ok;
+
   }
 
   // ----------------------------------------------------------------
@@ -320,6 +285,15 @@ String getTimeFormat(TimeOfDay? time) {
       AddGroupRequest(
         name: currentName,
         gradeId: currentGradeId,
+      ),
+    );
+  }
+
+  Future<AppResult<dynamic>> saveGroupStudents(String groupId, List<String> currentIds) {
+    return _setGroupStudentsUseCase.execute(
+      SetGroupStudentsRequest(
+        groupId: groupId,
+        studentIds: currentIds,
       ),
     );
   }
