@@ -17,19 +17,24 @@ class StudentGroupItemWidget extends StatelessWidget {
   final StudentGroupApiModel group;
   final StudentDetailsUiState uiState;
   final VoidCallback? onRemoveTap;
+  final VoidCallback? onGroupTap;
 
   const StudentGroupItemWidget({
     super.key,
     required this.group,
     required this.uiState,
     this.onRemoveTap,
+    this.onGroupTap,
   });
 
   @override
   Widget build(BuildContext context) {
     final isCurrentGroup = group.groupId == uiState.groupId;
 
-    return Container(
+    return InkWell(
+      onTap: onGroupTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: isCurrentGroup ? AppColors.appMainColor.withOpacity(0.1) : AppColors.white,
@@ -88,6 +93,7 @@ class StudentGroupItemWidget extends StatelessWidget {
 
         ],
       ),
+    ),
     );
   }
 

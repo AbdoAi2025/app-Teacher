@@ -35,6 +35,7 @@ import '../../widgets/section_widget.dart';
 import '../../widgets/student_group_item_widget.dart';
 import '../../widgets/student_grade_item_widget.dart';
 import '../student_edit/args/edit_student_args_model.dart';
+import '../sessions_list/args/session_list_args_model.dart';
 import '../student_reports/args/student_reports_args_model.dart';
 import 'states/student_details_state.dart';
 
@@ -97,7 +98,8 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
         // _groupSection(uiState),
         _availableGroupsSection(uiState),
         if (uiState.grades.isNotEmpty) _availableGradesSection(uiState),
-        if (uiState.groupId.isNotEmpty) _viewAllSessionSection(uiState),
+        _sessionListSection(uiState),
+        _viewAllSessionSection(uiState),
       ],
     );
   }
@@ -128,6 +130,27 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
             _studentName(uiState.studentName),
             _parentPhone(uiState.parentPhone),
             if (uiState.phone.isNotEmpty) _studentPhone(uiState.phone),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _sessionListSection(StudentDetailsUiState uiState) {
+    return SectionWidget(
+      child: InkWell(
+        onTap: () => AppNavigator.navigateToSessionsList(
+          SessionListArgsModel(studentId: uiState.studentId),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: AppTextWidget(
+                "Sessions".tr,
+                style: AppTextStyle.value,
+              ),
+            ),
+            ForwardArrowWidget(),
           ],
         ),
       ),
@@ -365,6 +388,9 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
               group: group,
               uiState: uiState,
               onRemoveTap: () => _onGroupRemoveClick(group, uiState),
+              onGroupTap: () => AppNavigator.navigateToGroupDetails(
+                GroupDetailsArgModel(id: group.groupId ?? ''),
+              ),
             )),
 
             if(uiState.showAddStudentToGroup) _addStudentToGroupButton(uiState)
