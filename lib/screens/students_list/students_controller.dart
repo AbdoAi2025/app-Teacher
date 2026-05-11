@@ -6,6 +6,7 @@ import 'package:teacher_app/utils/LogUtils.dart';
 import 'package:teacher_app/utils/day_utils.dart';
 import 'package:teacher_app/utils/extensions_utils.dart';
 import 'package:teacher_app/utils/localized_name_model.dart';
+import 'package:teacher_app/widgets/item_selection_widget/item_selection_ui_state.dart';
 
 import '../../base/AppResult.dart';
 import '../../domain/events/students_events.dart';
@@ -26,7 +27,9 @@ class StudentsController extends GetxController {
   List<StudentItemUiState> studentsUiStates = [];
   List<StudentItemUiState> searchStudentsUiStates = [];
 
-  final  DateFilterManager dateFilterManager = DateFilterManager();
+  final DateFilterManager dateFilterManager = DateFilterManager();
+
+  final Rx<ItemSelectionUiState?> selectedGradeFilter = Rx(null);
 
   static const  sortByGroupType = 0;
   static const  sortByGradeType = 1;
@@ -157,6 +160,16 @@ class StudentsController extends GetxController {
                 ))
             .toList() ??
         List.empty();
+  }
+
+  void onGradeFilterSelected(ItemSelectionUiState? item) {
+    selectedGradeFilter.value = item;
+    request.gradeId = (item == null || item.id.isEmpty) ? null : item.id;
+    refreshStudents();
+  }
+
+  void resetGradeFilter() {
+    onGradeFilterSelected(null);
   }
 
   onSearchChanged(String? query) {

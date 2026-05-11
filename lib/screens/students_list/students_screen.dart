@@ -243,6 +243,7 @@ import '../../utils/Keyboard_utils.dart';
 import '../../widgets/loading_widget.dart';
 import '../../widgets/search_text_field.dart';
 import '../../widgets/sort_icon_widget.dart';
+import '../create_group/grades/select_grade_bottom_sheet.dart';
 import '../student_details/args/student_details_arg_model.dart';
 import 'states/students_state.dart';
 
@@ -350,7 +351,9 @@ class _StudentsScreenState extends LifecycleWidgetState<StudentsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _titleAndFilterRow(),
-            SizedBox(height: 16),
+            SizedBox(height: 12),
+              _filterChips(),
+            SizedBox(height: 12),
             _searchAndSortBar(),
             SizedBox(height: 16),
           ],
@@ -374,8 +377,60 @@ class _StudentsScreenState extends LifecycleWidgetState<StudentsScreen> {
     );
   }
 
+  Widget _gradeFilterChip() {
+    return Obx(() {
+      final selected = controller.selectedGradeFilter.value;
+      if (selected != null) {
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            InputChip(
+              label: Text(
+                selected.name,
+                style: TextStyle(color: AppColors.appMainColor, fontSize: 13),
+              ),
+              avatar: Icon(Icons.school_outlined, size: 16, color: AppColors.appMainColor),
+              deleteIcon: Icon(Icons.close, size: 16, color: AppColors.appMainColor),
+              onDeleted: controller.resetGradeFilter,
+              onPressed: _openGradeFilter,
+              backgroundColor: AppColors.appMainColor.withValues(alpha: 0.1),
+              side: BorderSide(color: AppColors.appMainColor),
+              padding: EdgeInsets.symmetric(horizontal: 4),
+            ),
+          ],
+        );
+      }
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ActionChip(
+            avatar: Icon(Icons.school_outlined, size: 16, color: AppColors.textSecondaryColor),
+            label: Text(
+              'Grade'.tr,
+              style: TextStyle(color: AppColors.textSecondaryColor, fontSize: 13),
+            ),
+            onPressed: _openGradeFilter,
+            backgroundColor: AppColors.colorOffWhite,
+            side: BorderSide(color: AppColors.color_DBD5CC.withValues(alpha: 0.5)),
+            padding: EdgeInsets.symmetric(horizontal: 4),
+          ),
+        ],
+      );
+    });
+  }
+
+  void _openGradeFilter() {
+    SelectGradeBottomSheet.show(
+      context,
+      selectedId: controller.selectedGradeFilter.value?.id,
+      showClearOption: true,
+      onSelected: controller.onGradeFilterSelected,
+    );
+  }
+
   Widget _titleAndFilterRow() {
     return Row(
+      spacing: 16,
       children: [
         Expanded(
           child: AppTextWidget(
@@ -387,8 +442,6 @@ class _StudentsScreenState extends LifecycleWidgetState<StudentsScreen> {
             ),
           ),
         ),
-        SizedBox(width: 16),
-        CurrentFiltersDisplayWidget(filterManager: controller.dateFilterManager,),
       ],
     );
   }
@@ -626,5 +679,15 @@ class _StudentsScreenState extends LifecycleWidgetState<StudentsScreen> {
   @override
   void onResumedNavigatedBack() {
     controller.onResume();
+  }
+
+  _filterChips() {
+    return Wrap(
+      spacing: 15,
+      children: [
+        CurrentFiltersDisplayWidget(filterManager: controller.dateFilterManager,),
+        _gradeFilterChip(),
+      ],
+    );
   }
 }
