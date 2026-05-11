@@ -33,6 +33,11 @@ class EditGroupController extends CreateGroupController {
       );
       selectedStudents = _studentsFromArgs();
       selectedStudentsRx.value = selectedStudents;
+      studentsSelectionController.setInitialStudents(_studentsFromArgs());
+      studentsSelectionController.setGradeId(
+        args!.gradeId.toString(),
+        name: args!.gradeName,
+      );
 
       // Pre-populate timings from existing group data
       timings.clear();
@@ -54,18 +59,6 @@ class EditGroupController extends CreateGroupController {
     }
 
     super.onInit();
-  }
-
-  @override
-  Future<void> loadMyStudents() async {
-    await super.loadMyStudents();
-    final state = studentsSelectionState.value;
-    if (state is StudentsSelectionStateSuccess) {
-      final students = state.students;
-      students.addAll(_studentsFromArgs());
-      students.sort((a, b) => a.studentName.compareTo(b.studentName));
-      studentsSelectionState.value = StudentsSelectionStateSuccess(students);
-    }
   }
 
   // ----------------------------------------------------------------

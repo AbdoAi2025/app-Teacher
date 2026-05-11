@@ -56,6 +56,8 @@ class CreateGroupScreenState extends State<CreateGroupScreen> {
                 ),
                 AddStudentsStep(
                   controller: getController(),
+                  studentsController:
+                      getController().studentsSelectionController,
                   onPrevious: _onPreviousToStep1,
                   onNext: _onStep2Next,
                   onAddStudent: _onAddStudent,
@@ -111,7 +113,7 @@ class CreateGroupScreenState extends State<CreateGroupScreen> {
 
   Future<void> _onAddStudent() async {
     await AppNavigator.navigateToAddStudent();
-    getController().loadMyStudents();
+    getController().studentsSelectionController.loadStudents();
   }
 
   // ----------------------------------------------------------------

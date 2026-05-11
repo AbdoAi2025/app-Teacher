@@ -427,6 +427,9 @@ final Map<String, String> ar = {
   "send_otp_failed": "فشل إرسال رمز التحقق. يرجى المحاولة مرة أخرى.",
 
   // Create Group Steps
+  "All Grades": "كل الصفوف",
+  "Not in group": "بدون مجموعة",
+  "Select Grade": "اختر الصف",
   "Are you sure you want to save?": "هل أنت متأكد أنك تريد الحفظ؟",
   "Data saved successfully": "تم حفظ البيانات بنجاح",
   "No students selected": "لم يتم اختيار أي طالب",

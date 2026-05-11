@@ -409,6 +409,9 @@ final Map<String, String> enUS = {
   "send_otp_failed": "Failed to send verification code. Please try again.",
 
   // Create Group Steps
+  "All Grades": "All Grades",
+  "Not in group": "Not in group",
+  "Select Grade": "Select Grade",
   "Are you sure you want to save?": "Are you sure you want to save?",
   "Data saved successfully": "Data saved successfully",
   "No students selected": "No students selected",

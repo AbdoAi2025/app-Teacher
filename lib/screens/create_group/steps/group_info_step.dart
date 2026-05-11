@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:get/get.dart';
-import 'package:teacher_app/screens/create_group/grades/grades_selection_state.dart';
 import 'package:teacher_app/utils/Keyboard_utils.dart';
-import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'package:teacher_app/widgets/app_text_field_widget.dart';
 import 'package:teacher_app/widgets/dropdown_icon_widget.dart';
-import 'package:teacher_app/widgets/item_selection_widget/student_list_selection_widget.dart';
-import 'package:teacher_app/widgets/loading_widget.dart';
-import '../../../themes/app_colors.dart';
 import '../create_group_controller.dart';
+import '../grades/select_grade_bottom_sheet.dart';
 
 class GroupInfoStep extends StatelessWidget {
   final CreateGroupController controller;
@@ -111,31 +107,10 @@ class GroupInfoStep extends StatelessWidget {
   }
 
   void _showGradesSheet(BuildContext context) {
-    final sheet = Obx(() {
-      final state = controller.gradeSelectionState.value;
-      switch (state) {
-        case GradesSelectionStateError():
-          return AppTextWidget(state.message);
-        case GradesSelectionStateSuccess():
-          return SizedBox(
-            width: double.infinity,
-            child: ItemSelectionWidget(
-              items: state.items,
-              title: 'Select Grade',
-              isSingleSelection: true,
-              onSaved: (items) =>
-                  controller.onSelectedGrade(items.firstOrNull),
-            ),
-          );
-      }
-      return const LoadingWidget();
-    });
-
-    Get.bottomSheet(
-      sheet,
-      backgroundColor: AppColors.white,
-      useRootNavigator: true,
-      enableDrag: true,
+    SelectGradeBottomSheet.show(
+      context,
+      selectedId: controller.selectedGrade.value?.id,
+      onSelected: (grade) => controller.onSelectedGrade(grade),
     );
   }
 }

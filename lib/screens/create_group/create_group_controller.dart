@@ -4,23 +4,19 @@ import 'package:teacher_app/apimodels/student_list_item_api_model.dart';
 import 'package:teacher_app/base/AppResult.dart';
 import 'package:teacher_app/domain/models/group_timing_model.dart';
 import 'package:teacher_app/domain/usecases/update_group_timings_use_case.dart';
-import 'package:teacher_app/requests/get_my_students_request.dart';
-import 'package:teacher_app/utils/extensions_utils.dart';
 import '../../data/responses/add_group_response.dart';
 import '../../domain/groups/groups_managers.dart';
 import '../../domain/usecases/add_group_use_case.dart';
-import '../../domain/usecases/get_grades_list_use_case.dart';
-import '../../domain/usecases/get_my_students_list_use_case.dart';
 import '../../domain/usecases/set_group_students_use_case.dart';
 import '../../domain/usecases/update_group_use_case.dart';
 import '../../requests/add_group_request.dart';
 import '../../requests/set_group_students_request.dart';
 import '../../requests/update_group_request.dart';
 import '../../widgets/item_selection_widget/item_selection_ui_state.dart';
-import 'grades/grades_selection_state.dart';
 import 'states/create_group_state.dart';
 import 'students_selection/states/student_selection_item_ui_state.dart';
 import 'students_selection/states/students_selection_state.dart';
+import 'students_selection/students_selection_controller.dart';
 
 class CreateGroupController extends GetxController {
   final formKey = GlobalKey<FormState>();
@@ -41,8 +37,10 @@ class CreateGroupController extends GetxController {
       Rx(StudentsSelectionStateLoading());
 
   final Rx<ItemSelectionUiState?> selectedGrade = Rx(null);
-  final Rx<GradesSelectionState> gradeSelectionState =
-      Rx(GradesSelectionStateLoading());
+
+  // --- Students selection controller ---
+  final StudentsSelectionController studentsSelectionController =
+      StudentsSelectionController();
 
   // --- Multi-step state ---
   final RxInt currentStep = 0.obs;
@@ -58,14 +56,6 @@ class CreateGroupController extends GetxController {
   final _addGroupUseCase = AddGroupUseCase();
   final _setGroupStudentsUseCase = SetGroupStudentsUseCase();
   final _updateGroupTimingsUseCase = UpdateGroupTimingsUseCase();
-  GetMyStudentsListUseCase getMyStudentsListUseCase = GetMyStudentsListUseCase();
-
-  @override
-  void onInit() {
-    super.onInit();
-    _loadGrades();
-    loadMyStudents();
-  }
 
   // ----------------------------------------------------------------
   // Step 1: Create Group
@@ -121,7 +111,6 @@ class CreateGroupController extends GetxController {
       submittedName = currentName;
       submittedGradeId = currentGradeId;
       currentStep.value = 1;
-      loadMyStudents();
       return true;
     } else {
       stepError.value = result.error?.toString() ?? 'Something went wrong'.tr;
@@ -136,8 +125,7 @@ class CreateGroupController extends GetxController {
     final groupId = createdGroupId;
     if (groupId == null) return false;
 
-    final selected = selectedStudentsRx.value;
-    final currentIds = selected.map((e) => e.studentId).toList()..sort();
+    final currentIds = studentsSelectionController.selectedStudentIds..sort();
     final submittedIds = [..._submittedStudentIds]..sort();
     final dataChanged = currentIds.join(',') != submittedIds.join(',');
 
@@ -155,7 +143,6 @@ class CreateGroupController extends GetxController {
         studentIds: currentIds,
       ),
     );
-    await loadMyStudents();
     isStepLoading.value = false;
     if (result.isError) {
       stepError.value = result.error?.toString() ?? 'Something went wrong'.tr;
@@ -248,49 +235,6 @@ class CreateGroupController extends GetxController {
   void onTimeFromSelected(TimeOfDay value) => selectedTimeFromRx.value = value;
   void onTimeToSelected(TimeOfDay value) => selectedTimeToRx.value = value;
 
-  Future<void> loadMyStudents() async {
-    final gradeId = selectedGrade.value?.id ?? '';
-    if (gradeId.isEmpty) {
-      studentsSelectionState.value = StudentsSelectionStateSelectGrade();
-      return;
-    }
-    studentsSelectionState.value = StudentsSelectionStateLoading();
-    final result = await getMyStudentsListUseCase
-        .execute(GetMyStudentsRequest(hasGroups: false, gradeId: gradeId));
-    if (result is AppResultSuccess) {
-      var students = result.value
-              ?.map((e) => StudentSelectionItemUiState(
-                    studentId: e.studentId ?? '',
-                    studentName: e.studentName ?? '',
-                    groupName: e.groupName ?? '',
-                    gradeId: e.gradeId ?? 0,
-                    isSelected: isSelected(e),
-                  ))
-              .toList() ??
-          [];
-      students.sort((a, b) => a.studentName.compareTo(b.studentName));
-      studentsSelectionState.value = StudentsSelectionStateSuccess(students);
-    }
-  }
-
-  Future<void> _loadGrades() async {
-    final result = await GetGradesListUseCase().execute();
-    if (result is AppResultSuccess) {
-      final items = result.data
-          ?.map((e) => ItemSelectionUiState(
-                id: e.id?.toString() ?? '',
-                name: e.localizedName?.toLocalizedName() ?? '',
-                isSelected: e.id?.toString() == selectedGrade.value?.id,
-              ))
-          .toList();
-      gradeSelectionState.value =
-          GradesSelectionStateSuccess(items ?? []);
-    } else if (result is AppResultError) {
-      gradeSelectionState.value =
-          GradesSelectionStateError(result.error.toString());
-    }
-  }
-
   bool isSelected(StudentListItemApiModel e) {
     for (final s in getSelectedStudents()) {
       if (s.studentId == e.studentId && s.isSelected) return true;
@@ -323,31 +267,14 @@ class CreateGroupController extends GetxController {
 
   void onSelectedGrade(ItemSelectionUiState? item) {
     if (item?.id == selectedGrade.value?.id) return;
-    for (final g in getGradesList()) {
-      g.isSelected = g.id == (item?.id ?? '');
-    }
     selectedGrade.value = item;
-    loadMyStudents();
     selectedStudentsRx.value = selectedStudents
         .where((e) => e.gradeId.toString() == item?.id)
         .toList();
+    studentsSelectionController.setGradeId(item?.id ?? '', name: item?.name ?? '');
   }
 
-  List<ItemSelectionUiState> getGradesList() {
-    final state = gradeSelectionState.value;
-    if (state is GradesSelectionStateSuccess) return state.items;
-    return [];
-  }
-
-  void onSelectStudentClick() {
-    final state = studentsSelectionState.value;
-    if (state is StudentsSelectionStateSuccess && state.students.isNotEmpty) {
-      return;
-    }
-    loadMyStudents();
-  }
-
-  String getTimeFormat(TimeOfDay? time) {
+String getTimeFormat(TimeOfDay? time) {
     if (time == null) return '';
     return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
   }

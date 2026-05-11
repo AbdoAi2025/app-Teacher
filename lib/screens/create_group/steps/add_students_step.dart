@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/screens/create_group/students_selection/states/students_selection_state.dart';
-import 'package:teacher_app/screens/create_group/students_selection/states/student_selection_item_ui_state.dart';
 import 'package:teacher_app/screens/create_group/students_selection/student_list_selection_widget.dart';
+import 'package:teacher_app/screens/create_group/students_selection/students_selection_controller.dart';
 import 'package:teacher_app/widgets/empty_view_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
 import '../create_group_controller.dart';
+import '../students_selection/states/student_selection_item_ui_state.dart';
 
 class AddStudentsStep extends StatefulWidget {
   final CreateGroupController controller;
+  final StudentsSelectionController studentsController;
   final VoidCallback onPrevious;
   final VoidCallback onNext;
   final VoidCallback? onAddStudent;
@@ -16,6 +18,7 @@ class AddStudentsStep extends StatefulWidget {
   const AddStudentsStep({
     super.key,
     required this.controller,
+    required this.studentsController,
     required this.onPrevious,
     required this.onNext,
     this.onAddStudent,
@@ -33,7 +36,7 @@ class _AddStudentsStepState extends State<AddStudentsStep> {
         _buildHeader(),
         Expanded(
           child: Obx(() {
-            final state = widget.controller.studentsSelectionState.value;
+            final state = widget.studentsController.studentsState.value;
             switch (state) {
               case StudentsSelectionStateError():
                 return Center(child: Text(state.message));
@@ -41,7 +44,8 @@ class _AddStudentsStepState extends State<AddStudentsStep> {
                 return Center(
                   child: Padding(
                     padding: const EdgeInsets.all(20),
-                    child: EmptyViewWidget(message: 'Please select grade first'.tr),
+                    child:
+                        EmptyViewWidget(message: 'Please select grade first'.tr),
                   ),
                 );
               case StudentsSelectionStateSuccess():
@@ -62,10 +66,11 @@ class _AddStudentsStepState extends State<AddStudentsStep> {
         children: [
           Expanded(
             child: Obx(() {
-              final selected = widget.controller.selectedStudentsRx.value;
+              final count = widget.studentsController.selectedStudents.length;
               return Text(
-                '${selected.length} ${'Selected Students'.tr}',
-                style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                '$count ${'Selected Students'.tr}',
+                style:
+                    const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
               );
             }),
           ),
@@ -74,8 +79,10 @@ class _AddStudentsStepState extends State<AddStudentsStep> {
             icon: const Icon(Icons.person_add_outlined, size: 16),
             label: Text('Add Student'.tr),
             style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
             ),
           ),
         ],
@@ -90,20 +97,19 @@ class _AddStudentsStepState extends State<AddStudentsStep> {
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
           child: OutlinedButton.icon(
-            onPressed: students.isEmpty
-                ? null
-                : () => _showSelectionBottomSheet(students),
+            onPressed:  () => _showSelectionBottomSheet(),
             icon: const Icon(Icons.checklist_outlined, size: 16),
             label: Text('Select Students'.tr),
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 12),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
             ),
           ),
         ),
         Expanded(
           child: Obx(() {
-            final selected = widget.controller.selectedStudentsRx.value;
+            final selected = widget.studentsController.selectedStudents;
             if (selected.isEmpty) {
               return Center(
                 child: EmptyViewWidget(message: 'No students selected'.tr),
@@ -120,7 +126,8 @@ class _AddStudentsStepState extends State<AddStudentsStep> {
     return ListView.separated(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       itemCount: selected.length,
-      separatorBuilder: (_, __) => Divider(height: 1, color: Colors.grey[200]),
+      separatorBuilder: (_, __) =>
+          Divider(height: 1, color: Colors.grey[200]),
       itemBuilder: (_, i) {
         final s = selected[i];
         return ListTile(
@@ -132,14 +139,15 @@ class _AddStudentsStepState extends State<AddStudentsStep> {
               : null,
           trailing: IconButton(
             icon: const Icon(Icons.close, size: 18),
-            onPressed: () => widget.controller.onRemoveStudentClick(s),
+            onPressed: () =>
+                widget.studentsController.removeStudent(s),
           ),
         );
       },
     );
   }
 
-  void _showSelectionBottomSheet(List<StudentSelectionItemUiState> students) {
+  void _showSelectionBottomSheet() {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -149,11 +157,8 @@ class _AddStudentsStepState extends State<AddStudentsStep> {
       builder: (_) => SizedBox(
         height: MediaQuery.of(context).size.height * 0.85,
         child: StudentListSelectionWidget(
-          students: students,
-          onSaved: (selected) {
-            widget.controller.onSelectedStudents(selected);
-            Navigator.pop(context);
-          },
+          controller: widget.studentsController,
+          onSaved: () => Navigator.pop(context),
         ),
       ),
     );
