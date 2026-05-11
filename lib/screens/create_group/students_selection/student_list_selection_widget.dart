@@ -3,11 +3,12 @@ import 'package:get/get.dart';
 import 'package:teacher_app/themes/app_colors.dart';
 import 'package:teacher_app/themes/txt_styles.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
+import 'package:teacher_app/widgets/filters/grade_filter_chip_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
 import 'package:teacher_app/widgets/pagination_list_widget.dart';
 import 'package:teacher_app/widgets/primary_button_widget.dart';
 import 'package:teacher_app/widgets/search_text_field.dart';
-import '../grades/select_grade_bottom_sheet.dart';
+import '../../students_list/widgets/students_empty_view_widget.dart';
 import 'states/student_selection_item_ui_state.dart';
 import 'states/students_selection_state.dart';
 import 'students_selection_controller.dart';
@@ -60,34 +61,81 @@ class _StudentListSelectionWidgetState
       );
 
   Widget _filterRow() {
-    return Obx(() {
-      final selectedGrade = widget.controller.selectedGradeFilter.value;
-      return Wrap(
-        spacing: 8,
-        children: [
-          FilterChip(
-            avatar: const Icon(Icons.school_outlined, size: 16),
-            label: Text(selectedGrade?.name ?? 'All Grades'.tr),
-            selected: selectedGrade != null,
-            onSelected: (_) => _showGradePicker(context),
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        _filterIcon(),
+        Container(
+          width: 1,
+          height: 35,
+          color: AppColors.color_DBD5CC.withValues(alpha: 0.6),
+          margin: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        ),
+        Expanded(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              spacing: 8,
+              children: [
+                GradeFilterChipWidget(
+                  selectedGrade: widget.controller.selectedGradeFilter,
+                  onSelected: widget.controller.onGradeFilterSelected,
+                  onReset: () => widget.controller.onGradeFilterSelected(null),
+                ),
+                _notInGroupChip(),
+              ],
+            ),
           ),
-          FilterChip(
-            label: Text('Not in group'.tr),
-            selected: widget.controller.filterNotInGroup.value,
-            onSelected: (_) => widget.controller.toggleFilter(),
-          ),
-        ],
-      );
-    });
+        ),
+      ],
+    );
   }
 
-  void _showGradePicker(BuildContext context) {
-    SelectGradeBottomSheet.show(
-      context,
-      selectedId: widget.controller.selectedGradeFilter.value?.id,
-      showClearOption: true,
-      onSelected: (grade) => widget.controller.onGradeFilterSelected(grade),
+  Widget _filterIcon() {
+    return Container(
+      padding: EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: AppColors.appMainColor.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Icon(
+        Icons.tune_rounded,
+        size: 18,
+        color: AppColors.appMainColor,
+      ),
     );
+  }
+
+  Widget _notInGroupChip() {
+    return Obx(() {
+      final active = widget.controller.filterNotInGroup.value;
+      if (active) {
+        return InputChip(
+          label: Text(
+            'Not in group'.tr,
+            style: TextStyle(color: AppColors.appMainColor, fontSize: 13),
+          ),
+          avatar: Icon(Icons.group_off_outlined, size: 16, color: AppColors.appMainColor),
+          deleteIcon: Icon(Icons.close, size: 16, color: AppColors.appMainColor),
+          onDeleted: widget.controller.toggleFilter,
+          onPressed: widget.controller.toggleFilter,
+          backgroundColor: AppColors.appMainColor.withValues(alpha: 0.1),
+          side: BorderSide(color: AppColors.appMainColor),
+          padding: EdgeInsets.symmetric(horizontal: 0),
+        );
+      }
+      return ActionChip(
+        avatar: Icon(Icons.group_off_outlined, size: 16, color: AppColors.textSecondaryColor),
+        label: Text(
+          'Not in group'.tr,
+          style: TextStyle(color: AppColors.textSecondaryColor, fontSize: 13),
+        ),
+        onPressed: widget.controller.toggleFilter,
+        backgroundColor: AppColors.colorOffWhite,
+        side: BorderSide(color: AppColors.color_DBD5CC.withValues(alpha: 0.5)),
+        padding: EdgeInsets.symmetric(horizontal: 0),
+      );
+    });
   }
 
   Widget _search() => SearchTextField(
@@ -107,7 +155,7 @@ class _StudentListSelectionWidgetState
       }
       if (state is StudentsSelectionStateSuccess) {
         if (state.students.isEmpty) {
-          return Center(child: Text('No students found'.tr));
+          return const Center(child: StudentsEmptyViewWidget());
         }
         return Obx(() => _StudentPaginationList(
               items: state.students,
