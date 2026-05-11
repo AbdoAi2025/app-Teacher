@@ -123,17 +123,55 @@ class _GroupsScreenState extends State<GroupsScreen> {
     );
   }
 
-  Widget _header(){
-    return Wrap(
-      spacing: 10,
+  Widget _header() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CurrentFiltersDisplayWidget(filterManager: controller.dateFilterManager,),
-        GradeFilterChipWidget(
-          selectedGrade: controller.selectedGradeFilter,
-          onSelected: controller.onGradeFilterSelected,
-          onReset: controller.resetGradeFilter,
-        )
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          child: _filterIcon(),
+        ),
+        Container(
+          width: 1,
+          height: 35,
+          color: AppColors.color_DBD5CC.withValues(alpha: 0.6),
+          padding: EdgeInsets.symmetric(horizontal: 10 , vertical: 4),
+          margin: EdgeInsets.symmetric(horizontal: 10 , vertical: 4),
+        ),
+
+        Expanded(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              spacing: 8,
+              children: [
+                CurrentFiltersDisplayWidget(filterManager: controller.dateFilterManager),
+                GradeFilterChipWidget(
+                  selectedGrade: controller.selectedGradeFilter,
+                  onSelected: controller.onGradeFilterSelected,
+                  onReset: controller.resetGradeFilter,
+                ),
+              ],
+            ),
+          ),
+        ),
       ],
+    );
+  }
+
+
+  Widget _filterIcon() {
+    return Container(
+      padding: EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: AppColors.appMainColor.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Icon(
+        Icons.tune_rounded,
+        size: 18,
+        color: AppColors.appMainColor,
+      ),
     );
   }
 
