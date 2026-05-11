@@ -20,6 +20,7 @@ class StudentsListPaginationWidget extends PaginationListWidget<StudentItemUiSta
     super.isLoading,
     super.reversed,
     super.separatorBuilder,
+    super.padding,
   });
 
   @override

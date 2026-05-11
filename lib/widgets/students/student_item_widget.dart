@@ -43,12 +43,12 @@ class StudentItemWidget extends StatelessWidget {
                 children: [
                   /*title with student name*/
                   _studentNameAndArrow(),
-                  Row(
-                    children: [
-                      Expanded(child: _group()),
-                      _createdDate(),
-                    ],
-                  ),
+                  // Row(
+                  //   children: [
+                  //     Expanded(child: _group()),
+                  //     _createdDate(),
+                  //   ],
+                  // ),
                   AppDividerWidget(),
                   Row(
                     children: [
@@ -87,7 +87,13 @@ class StudentItemWidget extends StatelessWidget {
                     spacing: 5,
                     children: [
                       _firstLetter(),
-                      Expanded(child: _studentName()),
+                      Expanded(child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _studentName(),
+                          _group()
+                        ],
+                      )),
                     ],
                   )),
                   _arrowIcon()

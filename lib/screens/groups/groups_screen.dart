@@ -218,7 +218,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
           // Sort button
           _sortButton(
             icon: Icons.sort_rounded,
-            color: AppColors.color_008E73,
+            color: AppColors.primaryButtonColor,
             onTap: onSortClick,
             tooltip: 'Sort'.tr,
           ),

@@ -490,7 +490,7 @@ class _StudentsScreenState extends LifecycleWidgetState<StudentsScreen> {
           // Sort button
           _unifiedActionButton(
             icon: Icons.sort_rounded,
-            color: AppColors.color_008E73,
+            color: AppColors.primaryButtonColor,
             onTap: onSortClick,
             tooltip: 'Sort'.tr,
           ),
@@ -624,6 +624,7 @@ class _StudentsScreenState extends LifecycleWidgetState<StudentsScreen> {
         onItemSelected: onStudentItemClick,
         isLoading: state.isLoadingMore,
         totalRecord: state.totalRecords,
+        padding: EdgeInsets.only(bottom: 15),
         separatorBuilder: (context, index) => SizedBox(height: 15),
         getMoreItems: () {
           controller.getMoreStudents();

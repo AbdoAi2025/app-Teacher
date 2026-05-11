@@ -12,6 +12,7 @@ abstract class PaginationListWidget<T> extends StatefulWidget {
   final bool isLoading;
   final Function()? getMoreItems;
   final IndexedWidgetBuilder? separatorBuilder;
+  final EdgeInsetsGeometry? padding;
 
   const PaginationListWidget(
       {super.key,
@@ -21,6 +22,7 @@ abstract class PaginationListWidget<T> extends StatefulWidget {
       this.getMoreItems,
         this.reversed = false,
         this.separatorBuilder,
+        this.padding,
       });
 
   @override
@@ -34,6 +36,7 @@ abstract class PaginationListWidget<T> extends StatefulWidget {
       return ListView.separated(
           controller: controller,
           reverse: reversed,
+          padding: padding,
           physics: const AlwaysScrollableScrollPhysics(),
           itemBuilder: (context, index) => itemBuilder(context, index , itemsCount , isPageLoading),
           separatorBuilder: separatorBuilder!,
@@ -45,6 +48,7 @@ abstract class PaginationListWidget<T> extends StatefulWidget {
         itemCount: itemsCount,
         controller: controller,
         reverse: reversed,
+        padding: padding,
         physics: const AlwaysScrollableScrollPhysics(),
         itemBuilder:(context, index) => itemBuilder(context, index , itemsCount , isPageLoading),
     );
