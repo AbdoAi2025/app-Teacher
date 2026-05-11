@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:teacher_app/utils/day_utils.dart';
 import 'package:teacher_app/utils/message_utils.dart';
 import 'package:teacher_app/widgets/app_text_field_widget.dart';
-import 'package:teacher_app/widgets/primary_button_widget.dart';
 import '../../../../bottomsheets/week_days_selection_bottom_sheet.dart';
 import '../create_group_controller.dart';
 
@@ -11,14 +10,12 @@ class AddTimingsStep extends StatelessWidget {
   final CreateGroupController controller;
   final VoidCallback onPrevious;
   final VoidCallback onDone;
-  final VoidCallback onSave;
 
   const AddTimingsStep({
     super.key,
     required this.controller,
     required this.onPrevious,
     required this.onDone,
-    required this.onSave,
   });
 
   @override
@@ -83,12 +80,7 @@ class AddTimingsStep extends StatelessWidget {
                         onPressed: onPrevious,
                         icon: const Icon(Icons.arrow_back_ios_new_rounded),
                       ),
-                      Expanded(
-                        child: PrimaryButtonWidget(
-                          text: 'Save'.tr,
-                          onClick: onSave,
-                        ),
-                      ),
+                      const Spacer(),
                       IconButton.outlined(
                         onPressed: onDone,
                         icon: const Icon(Icons.check_rounded),

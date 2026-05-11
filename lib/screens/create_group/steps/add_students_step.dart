@@ -5,14 +5,12 @@ import 'package:teacher_app/screens/create_group/students_selection/states/stude
 import 'package:teacher_app/screens/create_group/students_selection/student_list_selection_widget.dart';
 import 'package:teacher_app/widgets/empty_view_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
-import 'package:teacher_app/widgets/primary_button_widget.dart';
 import '../create_group_controller.dart';
 
 class AddStudentsStep extends StatefulWidget {
   final CreateGroupController controller;
   final VoidCallback onPrevious;
   final VoidCallback onNext;
-  final VoidCallback onSave;
   final VoidCallback? onAddStudent;
 
   const AddStudentsStep({
@@ -20,7 +18,6 @@ class AddStudentsStep extends StatefulWidget {
     required this.controller,
     required this.onPrevious,
     required this.onNext,
-    required this.onSave,
     this.onAddStudent,
   });
 
@@ -187,12 +184,7 @@ class _AddStudentsStepState extends State<AddStudentsStep> {
                         onPressed: widget.onPrevious,
                         icon: const Icon(Icons.arrow_back_ios_new_rounded),
                       ),
-                      Expanded(
-                        child: PrimaryButtonWidget(
-                          text: 'Save'.tr,
-                          onClick: widget.onSave,
-                        ),
-                      ),
+                      const Spacer(),
                       IconButton.outlined(
                         onPressed: widget.onNext,
                         icon: const Icon(Icons.arrow_forward_ios_rounded),

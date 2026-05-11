@@ -8,20 +8,17 @@ import 'package:teacher_app/widgets/app_text_field_widget.dart';
 import 'package:teacher_app/widgets/dropdown_icon_widget.dart';
 import 'package:teacher_app/widgets/item_selection_widget/student_list_selection_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
-import 'package:teacher_app/widgets/primary_button_widget.dart';
 import '../../../themes/app_colors.dart';
 import '../create_group_controller.dart';
 
 class GroupInfoStep extends StatelessWidget {
   final CreateGroupController controller;
   final VoidCallback onNext;
-  final VoidCallback onSave;
 
   const GroupInfoStep({
     super.key,
     required this.controller,
     required this.onNext,
-    required this.onSave,
   });
 
   @override
@@ -76,12 +73,7 @@ class GroupInfoStep extends StatelessWidget {
                         onPressed: null,
                         icon: const Icon(Icons.arrow_back_ios_new_rounded),
                       ),
-                      Expanded(
-                        child: PrimaryButtonWidget(
-                          text: 'Save'.tr,
-                          onClick: onSave,
-                        ),
-                      ),
+                      const Spacer(),
                       IconButton.outlined(
                         onPressed: onNext,
                         icon: const Icon(Icons.arrow_forward_ios_rounded),

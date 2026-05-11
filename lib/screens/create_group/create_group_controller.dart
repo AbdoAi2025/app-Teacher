@@ -6,6 +6,7 @@ import 'package:teacher_app/domain/models/group_timing_model.dart';
 import 'package:teacher_app/domain/usecases/update_group_timings_use_case.dart';
 import 'package:teacher_app/requests/get_my_students_request.dart';
 import 'package:teacher_app/utils/extensions_utils.dart';
+import '../../data/responses/add_group_response.dart';
 import '../../domain/groups/groups_managers.dart';
 import '../../domain/usecases/add_group_use_case.dart';
 import '../../domain/usecases/get_grades_list_use_case.dart';
@@ -70,7 +71,8 @@ class CreateGroupController extends GetxController {
   // Step 1: Create Group
   // ----------------------------------------------------------------
   Future<bool> submitGroupInfo() async {
-    final isValid = formKey.currentState?.validate() ?? false;
+    final isValid = formKey.currentState?.validate() ??
+        (nameController.text.trim().isNotEmpty && selectedGrade.value != null);
     if (!isValid) return false;
 
     final currentName = nameController.text.trim();
@@ -79,12 +81,10 @@ class CreateGroupController extends GetxController {
 
     if (createdGroupId != null) {
       final dataChanged = currentName != submittedName || currentGradeId != submittedGradeId;
-
       if (!dataChanged) {
         currentStep.value = 1;
         return true;
       }
-
       isStepLoading.value = true;
       stepError.value = '';
 
@@ -111,12 +111,8 @@ class CreateGroupController extends GetxController {
     isStepLoading.value = true;
     stepError.value = '';
 
-    final result = await _addGroupUseCase.execute(
-      AddGroupRequest(
-        name: currentName,
-        gradeId: currentGradeId,
-      ),
-    );
+
+    final result = await saveGroupInfo(currentName, currentGradeId);
 
     isStepLoading.value = false;
 
@@ -169,6 +165,21 @@ class CreateGroupController extends GetxController {
     _submittedStudentIds = currentIds;
     currentStep.value = 2;
     return true;
+  }
+
+  // ----------------------------------------------------------------
+  // All steps: validate + submit sequentially
+  // ----------------------------------------------------------------
+  bool validateGroupInfo() => formKey.currentState?.validate() ?? false;
+
+  Future<bool> submitAll() async {
+    final step1Ok = await submitGroupInfo();
+    if (!step1Ok) return false;
+
+    final step2Ok = await submitStudents();
+    if (!step2Ok) return false;
+
+    return submitTimings();
   }
 
   // ----------------------------------------------------------------
@@ -375,5 +386,14 @@ class CreateGroupController extends GetxController {
     timeToController.dispose();
     gradeController.dispose();
     super.onClose();
+  }
+
+  Future<AppResult<AddGroupResponse?>> saveGroupInfo(String currentName, String? currentGradeId) {
+    return _addGroupUseCase.execute(
+      AddGroupRequest(
+        name: currentName,
+        gradeId: currentGradeId,
+      ),
+    );
   }
 }
