@@ -382,7 +382,7 @@ class AddStudentScreenState extends State<AddStudentScreen> {
                   _nameField(),
                   _parentPhoneField(),
                   _phoneField(),
-                  _gradeField(),
+                  gradeField(),
                 ],
               ),
             ),
@@ -423,7 +423,7 @@ class AddStudentScreenState extends State<AddStudentScreen> {
         validator: MultiValidator([]).call,
       );
 
-  _gradeField() {
+  Widget gradeField() {
     return Obx(() {
       return AppTextFieldWidget(
         controller: TextEditingController(

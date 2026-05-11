@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/screens/student_add/add_student_controller.dart';
 import 'package:teacher_app/screens/student_add/add_student_screen.dart';
@@ -55,6 +56,9 @@ class _EditStudentScreenState extends AddStudentScreenState {
         showErrorMessagePopup(result.exception?.toString() ?? "");
     }
   }
+
+  @override
+  Widget gradeField() => const SizedBox.shrink();
 
   @override
   void onSaveSuccess(SaveStateSuccess result) {

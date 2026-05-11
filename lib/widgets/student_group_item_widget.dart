@@ -9,6 +9,7 @@ import 'package:teacher_app/widgets/app_divider_widget.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'package:teacher_app/widgets/date_info_chip_widget.dart';
 import 'package:teacher_app/widgets/day_info_chip_widget.dart';
+import 'package:teacher_app/widgets/groups/group_icon_widget.dart';
 import 'package:teacher_app/widgets/info_chip_widget.dart';
 import 'package:teacher_app/widgets/time_from_to_info_chip_widget.dart';
 
@@ -51,26 +52,36 @@ class StudentGroupItemWidget extends StatelessWidget {
                     Expanded(
                       child: _groupName(),
                     ),
-                    if (group.archive == true)...{
-                      _upgradedInfo(),
-                    }else ...{
-                      _removeIcon(),
-                    }
+
+                    Wrap(
+                      spacing: 5,
+                      children: [
+                        DateInfoChipWidget(date: _formatYear(group.groupCreatedAt!)),
+                        if(group.groupDay != null)
+                          DayInfoChipWidget(text: AppDateUtils.getDayName(group.groupDay!).tr),
+                        if(group.groupTimeFrom != null && group.groupTimeTo != null)
+                          TimeFromToInfoChipWidget(text: "${group.groupTimeFrom} - ${group.groupTimeTo}"),
+                      ],
+                    ),
+
                   ],
                 ),
 
                 AppDividerWidget(),
-                
-                Wrap(
-                  spacing: 5,
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    DateInfoChipWidget(date: _formatYear(group.groupCreatedAt!)),
-                    if(group.groupDay != null)
-                    DayInfoChipWidget(text: AppDateUtils.getDayName(group.groupDay!).tr),
-                    if(group.groupTimeFrom != null && group.groupTimeTo != null)
-                    TimeFromToInfoChipWidget(text: "${group.groupTimeFrom} - ${group.groupTimeTo}"),
+                    if (group.archive == true)...{
+                      _upgradedInfo(),
+                    }else ...{
+                      _removeIcon(),
+                    },
                   ],
-                ),
+                )
+
+
+
               ],
             ),
           ),
@@ -105,20 +116,31 @@ class StudentGroupItemWidget extends StatelessWidget {
     return InkWell(
       onTap: onRemoveTap,
       child: InfoChipWidget(
+        text: "Remove From Group".tr,
         color: AppColors.colorRed,
-        icon:   Icons.delete_outline,
+        icon:   Icons.remove_circle_outline,
         size: 20,
       ),
     );
   }
 
-  _groupName() =>AppTextWidget(
-    group.groupName ?? "Unknown Group".tr,
-    maxLines: 1,
-    overflow: TextOverflow.ellipsis,
-    style: AppTextStyle.label.copyWith(
-      fontWeight:  FontWeight.normal,
-      color:  AppColors.colorBlack,
-    ),
-  );
+  Widget _groupName() {
+    return Row(
+      spacing: 6,
+      children: [
+        GroupIconWidget(),
+        Expanded(
+          child: AppTextWidget(
+            group.groupName ?? "Unknown Group".tr,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTextStyle.label.copyWith(
+              fontWeight: FontWeight.w500,
+              color: AppColors.colorBlack,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 }

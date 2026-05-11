@@ -118,42 +118,16 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
   _studentInfoSection(StudentDetailsUiState uiState) {
     return SectionWidget(
       title: "Student Info".tr,
-      child: Column(
-        spacing: 10,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _studentName(uiState.studentName),
-          _parentPhone(uiState.parentPhone),
-          if (uiState.phone.isNotEmpty) _studentPhone(uiState.phone),
-          _grade(uiState.gradeName),
-        ],
-      ),
-    );
-  }
-
-  _groupSection(StudentDetailsUiState uiState) {
-    return SectionWidget(
-      title: "Group Info".tr,
-      child: InkWell(
-        onTap: () {
-          onGroupClick(uiState);
-        },
-        child: Row(
+      child: SizedBox(
+        width: double.infinity,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          spacing: 10,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: Column(
-                spacing: 10,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _groupName(uiState),
-                  if (uiState.groupId.isNotEmpty) ...{
-                    _groupDateTime(uiState),
-                  }
-                  // _groupDay(""),
-                ],
-              ),
-            ),
-            if (uiState.groupId.isNotEmpty) ForwardArrowWidget()
+            _studentName(uiState.studentName),
+            _parentPhone(uiState.parentPhone),
+            if (uiState.phone.isNotEmpty) _studentPhone(uiState.phone),
           ],
         ),
       ),
@@ -188,10 +162,15 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
   _parentPhone(String name) {
     return LabelValueRowWidget(
       label: "Parent Phone".tr,
-      valueWidget: PhoneWithIconWidget(
-        name,
-        hideIcon: true,
-        showCallIcon: true,
+      valueWidget: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          PhoneWithIconWidget(
+            name,
+            hideIcon: true,
+            showCallIcon: true,
+          ),
+        ],
       ),
     );
   }
@@ -199,17 +178,19 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
   _studentPhone(String name) {
     return LabelValueRowWidget(
       label: "Student Phone".tr,
-      valueWidget: PhoneWithIconWidget(
-        name,
-        hideIcon: true,
-        showCallIcon: true,
+      valueWidget: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          PhoneWithIconWidget(
+            name,
+            hideIcon: true,
+            showCallIcon: true,
+          ),
+        ],
       ),
     );
   }
 
-  _grade(String value) {
-    return LabelValueRowWidget(label: "Grade Name".tr, value: value);
-  }
 
   _groupName(StudentDetailsUiState uiState) {
 
