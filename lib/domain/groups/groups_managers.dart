@@ -29,12 +29,14 @@ class GroupsManagers {
     },
   );
 
+  static String? gradeId;
 
   static Future<void> loadGroups() async {
     final dateFilter = dateFilterManager.currentDateFilter;
     var groupsResult = await _getGroupsListUseCase.execute(
       dateFrom: dateFilter.dateFromFormatted,
       dateTo: dateFilter.dateToFormatted,
+      gradeId: gradeId,
     );
     if (groupsResult.isSuccess) {
       var groups = groupsResult.data;

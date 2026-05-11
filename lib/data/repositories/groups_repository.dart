@@ -88,7 +88,7 @@ class GroupsRepository {
         .put(EndPoints.groupTimings(groupId), data: timings);
   }
 
-  Future<List<GroupItemModel>> fetchGroups({String? dateFrom, String? dateTo}) async {
+  Future<List<GroupItemModel>> fetchGroups({String? dateFrom, String? dateTo, String? gradeId}) async {
     Map<String, dynamic> queryParameters = {};
 
     if (dateFrom != null) {
@@ -97,6 +97,10 @@ class GroupsRepository {
 
     if (dateTo != null) {
       queryParameters['dateTo'] = dateTo;
+    }
+
+    if (gradeId != null && gradeId.isNotEmpty) {
+      queryParameters['gradeId'] = gradeId;
     }
 
     Response response = await ApiService.getInstance().get(

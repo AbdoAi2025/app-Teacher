@@ -243,7 +243,9 @@ import '../../utils/Keyboard_utils.dart';
 import '../../widgets/loading_widget.dart';
 import '../../widgets/search_text_field.dart';
 import '../../widgets/sort_icon_widget.dart';
-import '../create_group/grades/select_grade_bottom_sheet.dart';
+import '../../widgets/filters/grade_filter_chip_widget.dart';
+import '../../widgets/filters/has_group_filter_chip_widget.dart';
+import 'widgets/students_empty_view_widget.dart';
 import '../student_details/args/student_details_arg_model.dart';
 import 'states/students_state.dart';
 
@@ -350,9 +352,9 @@ class _StudentsScreenState extends LifecycleWidgetState<StudentsScreen> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _titleAndFilterRow(),
+            _title(),
             SizedBox(height: 12),
-              _filterChips(),
+            _header(),
             SizedBox(height: 12),
             _searchAndSortBar(),
             SizedBox(height: 16),
@@ -377,72 +379,74 @@ class _StudentsScreenState extends LifecycleWidgetState<StudentsScreen> {
     );
   }
 
-  Widget _gradeFilterChip() {
-    return Obx(() {
-      final selected = controller.selectedGradeFilter.value;
-      if (selected != null) {
-        return Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            InputChip(
-              label: Text(
-                selected.name,
-                style: TextStyle(color: AppColors.appMainColor, fontSize: 13),
-              ),
-              avatar: Icon(Icons.school_outlined, size: 16, color: AppColors.appMainColor),
-              deleteIcon: Icon(Icons.close, size: 16, color: AppColors.appMainColor),
-              onDeleted: controller.resetGradeFilter,
-              onPressed: _openGradeFilter,
-              backgroundColor: AppColors.appMainColor.withValues(alpha: 0.1),
-              side: BorderSide(color: AppColors.appMainColor),
-              padding: EdgeInsets.symmetric(horizontal: 4),
-            ),
-          ],
-        );
-      }
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ActionChip(
-            avatar: Icon(Icons.school_outlined, size: 16, color: AppColors.textSecondaryColor),
-            label: Text(
-              'Grade'.tr,
-              style: TextStyle(color: AppColors.textSecondaryColor, fontSize: 13),
-            ),
-            onPressed: _openGradeFilter,
-            backgroundColor: AppColors.colorOffWhite,
-            side: BorderSide(color: AppColors.color_DBD5CC.withValues(alpha: 0.5)),
-            padding: EdgeInsets.symmetric(horizontal: 4),
-          ),
-        ],
-      );
-    });
-  }
 
-  void _openGradeFilter() {
-    SelectGradeBottomSheet.show(
-      context,
-      selectedId: controller.selectedGradeFilter.value?.id,
-      showClearOption: true,
-      onSelected: controller.onGradeFilterSelected,
-    );
-  }
-
-  Widget _titleAndFilterRow() {
+  Widget _header() {
     return Row(
-      spacing: 16,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          child: _filterIcon(),
+        ),
+        Container(
+          width: 1,
+          height: 35,
+          color: AppColors.color_DBD5CC.withValues(alpha: 0.6),
+          padding: EdgeInsets.symmetric(horizontal: 10 , vertical: 4),
+          margin: EdgeInsets.symmetric(horizontal: 10 , vertical: 4),
+        ),
+
         Expanded(
-          child: AppTextWidget(
-            "Students".tr,
-            style: AppTextStyle.title.copyWith(
-              fontSize: 24,
-              fontWeight: FontWeight.w700,
-              color: AppColors.colorBlack,
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              spacing: 8,
+              children: [
+                CurrentFiltersDisplayWidget(filterManager: controller.dateFilterManager),
+                _gradeFilterChip(),
+                _hasGroupFilterChip(),
+              ],
             ),
           ),
         ),
       ],
+    );
+  }
+
+  _title() {
+    return AppTextWidget(
+      "Students".tr,
+      style: AppTextStyle.title.copyWith(
+        fontSize: 24,
+        fontWeight: FontWeight.w700,
+        color: AppColors.colorBlack,
+      ),
+    );
+  }
+
+  _filterChips() {
+    return Wrap(
+      spacing: 15,
+      children: [
+        CurrentFiltersDisplayWidget(filterManager: controller.dateFilterManager,),
+        _gradeFilterChip(),
+      ],
+    );
+  }
+
+  Widget _gradeFilterChip() {
+    return GradeFilterChipWidget(
+      selectedGrade: controller.selectedGradeFilter,
+      onSelected: controller.onGradeFilterSelected,
+      onReset: controller.resetGradeFilter,
+    );
+  }
+
+  Widget _hasGroupFilterChip() {
+    return HasGroupFilterChipWidget(
+      hasGroupFilter: controller.hasGroupFilter,
+      onCycle: controller.onHasGroupFilterCycle,
+      onReset: controller.resetHasGroupFilter,
     );
   }
 
@@ -596,11 +600,7 @@ class _StudentsScreenState extends LifecycleWidgetState<StudentsScreen> {
 
   Widget _emptyView() {
     return Center(
-      child: EmptyViewWidget(
-        message: "No students found".tr,
-        onRetry: refresh,
-        retryText: "Refresh".tr,
-      ),
+      child: StudentsEmptyViewWidget(onRetry: refresh),
     );
   }
 
@@ -681,13 +681,22 @@ class _StudentsScreenState extends LifecycleWidgetState<StudentsScreen> {
     controller.onResume();
   }
 
-  _filterChips() {
-    return Wrap(
-      spacing: 15,
-      children: [
-        CurrentFiltersDisplayWidget(filterManager: controller.dateFilterManager,),
-        _gradeFilterChip(),
-      ],
+  Widget _filterIcon() {
+    return Container(
+      padding: EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: AppColors.appMainColor.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Icon(
+        Icons.tune_rounded,
+        size: 18,
+        color: AppColors.appMainColor,
+      ),
     );
   }
+
+
+
+
 }

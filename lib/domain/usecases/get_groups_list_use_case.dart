@@ -10,9 +10,9 @@ class GetGroupsListUseCase extends BaseUseCase<List<GroupItemModel>>{
 
   GroupsRepository repository = GroupsRepository();
 
-  Future<AppResult<List<GroupItemModel>>> execute({String? dateFrom, String? dateTo}) async {
+  Future<AppResult<List<GroupItemModel>>> execute({String? dateFrom, String? dateTo, String? gradeId}) async {
     return call(() async {
-      var items =  await repository.fetchGroups(dateFrom: dateFrom, dateTo: dateTo);
+      var items = await repository.fetchGroups(dateFrom: dateFrom, dateTo: dateTo, gradeId: gradeId);
       return AppResult.success(items);
     });
   }

@@ -10,6 +10,7 @@ import 'package:teacher_app/widgets/empty_view_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
 import '../../widgets/error_view_widget.dart';
 import '../../widgets/filters/current_filters_display_widget.dart';
+import '../../widgets/filters/grade_filter_chip_widget.dart';
 import '../../widgets/groups/group_item_widget.dart';
 import '../../widgets/info_chip_widget.dart';
 import 'groups_controller.dart';
@@ -101,32 +102,41 @@ class _GroupsScreenState extends State<GroupsScreen> {
 
   Widget _controlsSection() {
     return Column(
+      spacing: 10,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _titleAndFilterRow(),
-        SizedBox(height: 16),
+         _title(),
+        _header(),
         _searchAndSortBar(),
       ],
     );
   }
 
-  Widget _titleAndFilterRow() {
-    return Row(
+  Widget _title() {
+   return AppTextWidget(
+      "Groups".tr,
+      style: AppTextStyle.title.copyWith(
+        fontSize: 24,
+        fontWeight: FontWeight.w700,
+        color: AppColors.colorBlack,
+      ),
+    );
+  }
+
+  Widget _header(){
+    return Wrap(
+      spacing: 10,
       children: [
-        Expanded(
-          child: AppTextWidget(
-            "Groups".tr,
-            style: AppTextStyle.title.copyWith(
-              fontSize: 24,
-              fontWeight: FontWeight.w700,
-              color: AppColors.colorBlack,
-            ),
-          ),
-        ),
-        SizedBox(width: 16),
         CurrentFiltersDisplayWidget(filterManager: controller.dateFilterManager,),
+        GradeFilterChipWidget(
+          selectedGrade: controller.selectedGradeFilter,
+          onSelected: controller.onGradeFilterSelected,
+          onReset: controller.resetGradeFilter,
+        )
       ],
     );
   }
+
 
 
   Widget _searchAndSortBar() {

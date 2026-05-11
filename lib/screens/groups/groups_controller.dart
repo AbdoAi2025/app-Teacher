@@ -5,6 +5,7 @@ import 'package:teacher_app/domain/usecases/groups_sort_useCase.dart';
 import 'package:teacher_app/enums/sort_enum.dart';
 import 'package:teacher_app/utils/date_filter_manager.dart';
 import 'package:teacher_app/utils/day_utils.dart';
+import 'package:teacher_app/widgets/item_selection_widget/item_selection_ui_state.dart';
 
 import '../../base/AppResult.dart';
 import '../../domain/usecases/get_groups_list_use_case.dart';
@@ -23,6 +24,8 @@ class GroupsController extends GetxController{
 
   final DateFilterManager dateFilterManager = GroupsManagers.dateFilterManager;
 
+  final Rx<ItemSelectionUiState?> selectedGradeFilter = Rx(null);
+
   @override
   void onInit() {
     super.onInit();
@@ -31,6 +34,16 @@ class GroupsController extends GetxController{
 
   void refreshGroups() {
     GroupsManagers.onRefresh();
+  }
+
+  void onGradeFilterSelected(ItemSelectionUiState? item) {
+    selectedGradeFilter.value = item;
+    GroupsManagers.gradeId = (item == null || item.id.isEmpty) ? null : item.id;
+    GroupsManagers.onRefresh();
+  }
+
+  void resetGradeFilter() {
+    onGradeFilterSelected(null);
   }
 
   void _initLoadGroups() {

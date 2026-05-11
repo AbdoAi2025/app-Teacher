@@ -30,6 +30,7 @@ class StudentsController extends GetxController {
   final DateFilterManager dateFilterManager = DateFilterManager();
 
   final Rx<ItemSelectionUiState?> selectedGradeFilter = Rx(null);
+  final Rx<bool?> hasGroupFilter = Rx(null);
 
   static const  sortByGroupType = 0;
   static const  sortByGradeType = 1;
@@ -170,6 +171,25 @@ class StudentsController extends GetxController {
 
   void resetGradeFilter() {
     onGradeFilterSelected(null);
+  }
+
+  void onHasGroupFilterCycle() {
+    // cycles: null → true → false → null
+    if (hasGroupFilter.value == null) {
+      hasGroupFilter.value = true;
+    } else if (hasGroupFilter.value == true) {
+      hasGroupFilter.value = false;
+    } else {
+      hasGroupFilter.value = null;
+    }
+    request.hasGroups = hasGroupFilter.value;
+    refreshStudents();
+  }
+
+  void resetHasGroupFilter() {
+    hasGroupFilter.value = null;
+    request.hasGroups = null;
+    refreshStudents();
   }
 
   onSearchChanged(String? query) {
