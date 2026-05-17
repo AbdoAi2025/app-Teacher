@@ -23,6 +23,7 @@ import '../../widgets/back_icon_widget.dart';
 import '../../themes/txt_styles.dart';
 import '../../utils/LogUtils.dart';
 import '../../widgets/groups/states/group_student_item_ui_state.dart';
+import '../../widgets/sessions/sessions_empty_widget.dart';
 import '../../widgets/students/students_group_list_search_widget.dart';
 import '../group_edit/args/edit_group_args_model.dart';
 import 'group_details_controller.dart';
@@ -257,7 +258,7 @@ class _GroupDetailsScreenState extends LifecycleWidgetState<GroupDetailsScreen> 
         return const Center(child: LoadingWidget());
       }
       final sessions = controller.sessions;
-      if (sessions.isEmpty) return _sessionsEmptyView();
+      if (sessions.isEmpty) return const SessionsEmptyWidget();
 
       return RefreshIndicator(
         onRefresh: controller.loadSessions,
@@ -274,40 +275,6 @@ class _GroupDetailsScreenState extends LifecycleWidgetState<GroupDetailsScreen> 
         ),
       );
     });
-  }
-
-  Widget _sessionsEmptyView() {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 64,
-            height: 64,
-            decoration: BoxDecoration(
-              color: AppColors.appMainColor.withValues(alpha: 0.08),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.history_edu_outlined,
-              size: 32,
-              color: AppColors.appMainColor,
-            ),
-          ),
-          const SizedBox(height: 12),
-          AppTextWidget(
-            "No Sessions Found".tr,
-            style: AppTextStyle.title.copyWith(fontSize: 15),
-          ),
-          const SizedBox(height: 4),
-          AppTextWidget(
-            "No sessions have been held for this group yet".tr,
-            style: AppTextStyle.value.copyWith(color: AppColors.textSecondaryColor),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
   }
 
   // ─── Settings ─────────────────────────────────────────────────────────────

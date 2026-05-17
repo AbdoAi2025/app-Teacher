@@ -8,6 +8,7 @@ import 'package:teacher_app/widgets/lifecycle_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
 import 'package:teacher_app/widgets/sessions/session_item/session_item_widget.dart';
 import '../../widgets/app_toolbar_widget.dart';
+import '../../widgets/sessions/sessions_empty_widget.dart';
 import 'session_lisit_controller.dart';
 import 'states/session_item_ui_state.dart';
 import 'states/session_lisit_state.dart';
@@ -75,6 +76,19 @@ class _SessionListScreenState extends LifecycleWidgetState<SessionListScreen> {
   }
 
   _showDetails(List<SessionItemUiState> uiState) {
+    if (uiState.isEmpty) {
+      return ConstrainedBox(
+        constraints: BoxConstraints(
+          minHeight: MediaQuery.of(context).size.height
+              - kToolbarHeight
+              - MediaQuery.of(context).padding.top,
+        ),
+        child: SessionsEmptyWidget(
+          title: "No Sessions Found".tr,
+          subtitle: "No Active Sessions".tr,
+        ),
+      );
+    }
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
