@@ -7,15 +7,16 @@ import '../app_txt_widget.dart';
 class StudentFirstLetterWidget  extends StatelessWidget{
 
   final String name;
-  const StudentFirstLetterWidget({super.key, required this.name});
+  final double size;
+  const StudentFirstLetterWidget({super.key, required this.name, this.size = 40});
 
   @override
   Widget build(BuildContext context) {
     if (name.isEmpty) return Container();
     var color = _getBackgroundColor(name);
     return Container(
-      width: 40,
-      height: 40,
+      width: size,
+      height: size,
       alignment: Alignment.center,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
@@ -23,7 +24,7 @@ class StudentFirstLetterWidget  extends StatelessWidget{
       ),
       child: AppTextWidget(
         name[0].toUpperCase(),
-        style: AppTextStyle.title,
+        style: AppTextStyle.title.copyWith(fontSize: size * 0.4),
         color: color,
       ),
     );

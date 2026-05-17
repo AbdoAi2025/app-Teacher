@@ -14,20 +14,22 @@ class PhoneWithIconWidget extends StatelessWidget {
   final bool showCallIcon;
   final MainAxisSize? mainAxisSize;
   final bool canCall;
+  final Color? color;
 
   const PhoneWithIconWidget(this.phone,
       {super.key,
       this.hideIcon = false,
       this.showCallIcon = false,
       this.mainAxisSize,
-      this.canCall = true
+      this.canCall = true,
+      this.color,
       });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
         onTap: onClick,
-        child: InfoChipWidget(text: phone , icon: showCallIcon ? Icons.phone : null , color: AppColors.appMainColor));
+        child: InfoChipWidget(text: phone , icon: showCallIcon ? Icons.phone : null , color: color));
 
     return InkWell(
       onTap: onClick,

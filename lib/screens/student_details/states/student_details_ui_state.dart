@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import '../../../data/responses/get_student_details_response.dart';
 
 class StudentDetailsUiState {
@@ -36,4 +37,10 @@ class StudentDetailsUiState {
 
   get showAddStudentToGroup => groups.isEmpty;
 
+  String get activeGradeName {
+    final active = grades.firstWhereOrNull((g) => g.archive != true);
+    return active?.localizedName?.name ?? gradeName;
+  }
+
+  String get firstLetter => studentName.isNotEmpty ? studentName[0].toUpperCase() : '';
 }

@@ -16,7 +16,6 @@ import 'package:teacher_app/widgets/delete_icon_widget.dart';
 import 'package:teacher_app/widgets/dialog_loading_widget.dart';
 import 'package:teacher_app/widgets/edit_icon_widget.dart';
 import 'package:teacher_app/widgets/forward_arrow_widget.dart';
-import 'package:teacher_app/widgets/key_value_row_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
 import 'package:teacher_app/widgets/phone_with_icon_widget.dart';
 import 'package:teacher_app/widgets/select_group_bottom_sheet.dart';
@@ -32,10 +31,11 @@ import '../../utils/localized_name_model.dart';
 import '../../widgets/app_toolbar_widget.dart';
 import '../../widgets/primary_button_widget.dart';
 import '../../widgets/section_widget.dart';
+import '../../widgets/info_chip_widget.dart';
 import '../../widgets/student_group_item_widget.dart';
+import '../../widgets/students/student_first_letter_widget.dart';
 import '../../widgets/student_grade_item_widget.dart';
 import '../student_edit/args/edit_student_args_model.dart';
-import '../sessions_list/args/session_list_args_model.dart';
 import '../student_reports/args/student_reports_args_model.dart';
 import 'states/student_details_state.dart';
 
@@ -94,12 +94,35 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
       spacing: 20,
       mainAxisSize: MainAxisSize.min,
       children: [
-        _studentInfoSection(uiState),
+        _profileHeader(uiState),
+        _contactInfoSection(uiState),
         // _groupSection(uiState),
         _availableGroupsSection(uiState),
         if (uiState.grades.isNotEmpty) _availableGradesSection(uiState),
         _sessionListSection(uiState),
         _viewAllSessionSection(uiState),
+      ],
+    );
+  }
+
+  Widget _profileHeader(StudentDetailsUiState uiState) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        StudentFirstLetterWidget(name: uiState.studentName, size: 80),
+        const SizedBox(height: 10),
+        AppTextWidget(
+          uiState.studentName,
+          style: AppTextStyle.title.copyWith(fontSize: 18),
+        ),
+        if (uiState.activeGradeName.isNotEmpty) ...[
+          const SizedBox(height: 6),
+          InfoChipWidget(
+            text: uiState.activeGradeName,
+            icon: Icons.school_outlined,
+            color: AppColors.appMainColor,
+          ),
+        ],
       ],
     );
   }
@@ -117,9 +140,9 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
     });
   }
 
-  _studentInfoSection(StudentDetailsUiState uiState) {
+  Widget _contactInfoSection(StudentDetailsUiState uiState) {
     return SectionWidget(
-      title: "Student Info".tr,
+      title: "Contact Info".tr,
       child: SizedBox(
         width: double.infinity,
         child: Column(
@@ -127,9 +150,11 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
           spacing: 10,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _studentName(uiState.studentName),
             _parentPhone(uiState.parentPhone),
-            if (uiState.phone.isNotEmpty) _studentPhone(uiState.phone),
+            if (uiState.phone.isNotEmpty) ...[
+              const Divider(),
+              _studentPhone(uiState.phone),
+            ],
           ],
         ),
       ),
@@ -178,39 +203,30 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
     );
   }
 
-  _studentName(String name) {
-    return LabelValueRowWidget(label: "Student Name".tr, value: name);
-  }
+  Widget _parentPhone(String phone) => _contactItem(
+        label: "Parent Phone".tr,
+        phone: phone,
+      );
 
-  _parentPhone(String name) {
-    return LabelValueRowWidget(
-      label: "Parent Phone".tr,
-      valueWidget: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          PhoneWithIconWidget(
-            name,
-            hideIcon: true,
-            showCallIcon: true,
-          ),
-        ],
-      ),
-    );
-  }
+  Widget _studentPhone(String phone) => _contactItem(
+        label: "Student Phone".tr,
+        phone: phone,
+      );
 
-  _studentPhone(String name) {
-    return LabelValueRowWidget(
-      label: "Student Phone".tr,
-      valueWidget: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          PhoneWithIconWidget(
-            name,
-            hideIcon: true,
-            showCallIcon: true,
-          ),
-        ],
-      ),
+  Widget _contactItem({required String label, required String phone}) {
+    return Row(
+      children: [
+        Icon(Icons.phone_android_outlined, size: 20, color: AppColors.appMainColor),
+        const SizedBox(width: 10),
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AppTextWidget(label, style: AppTextStyle.value.copyWith(color: AppColors.textSecondaryColor)),
+            PhoneWithIconWidget(phone, hideIcon: true, showCallIcon: true),
+          ],
+        ),
+      ],
     );
   }
 
