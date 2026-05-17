@@ -79,6 +79,7 @@ class GroupItemModel {
   final String id;
   final String name;
   final int studentCount;
+  final int sessionsCount;
   final List<GroupDetailsTiming> timings;
   final GradeModel grade;
 
@@ -86,6 +87,7 @@ class GroupItemModel {
     required this.id,
     required this.name,
     required this.studentCount,
+    required this.sessionsCount,
     required this.timings,
     required this.grade,
   });

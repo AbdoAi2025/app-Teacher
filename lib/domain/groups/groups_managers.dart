@@ -51,6 +51,7 @@ class GroupsManagers {
                   groupId: e.id,
                   groupName: e.name,
                   studentsCount: e.studentCount,
+                  sessionsCount: e.sessionsCount,
                   dayIndex: activeDay,
                   timingDays: e.timings.map((t) => t.day ?? 0).toList(),
                   dayName: AppDateUtils.getDayName(activeDay),

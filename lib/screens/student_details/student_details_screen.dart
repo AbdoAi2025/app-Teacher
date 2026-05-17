@@ -214,65 +214,6 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
     );
   }
 
-
-  _groupName(StudentDetailsUiState uiState) {
-
-    var groupId = uiState.groupId;
-    var groupName = uiState.groupName;
-     groupName = groupId.isEmpty ? "No Group".tr : groupName ;
-
-    return LabelValueRowWidget(
-        label: "Group Name".tr,
-        mainAxisSize: MainAxisSize.max,
-        valueWidget:  Row(
-          children: [
-            Expanded(child: AppTextWidget(groupName , style: AppTextStyle.value,)),
-            // if(groupId.isEmpty)
-            //   _addToGroup(uiState)
-          ],
-        ));
-  }
-
-  _groupDateTime(StudentDetailsUiState uiState) {
-    var day = AppDateUtils.getDayName(uiState.groupDay).tr;
-    return LabelValueRowWidget(
-        label: "Day".tr,
-        value: "$day , ${uiState.groupTimeFrom} - ${uiState.groupTimeTo}");
-  }
-
-  _label(String text) => AppTextWidget(text, style: AppTextStyle.label);
-
-  _value(String text) => AppTextWidget(text, style: AppTextStyle.value);
-
-  Widget _sectionLabelValue(String label, Widget content) {
-    return Container(
-      width: double.infinity,
-      decoration: AppBackgroundStyle.getColoredBackgroundRounded(
-          15, AppColors.color_E8E5E0),
-      padding: EdgeInsets.all(10),
-      child: Column(
-        spacing: 10,
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _label(label),
-          Padding(
-            padding: const EdgeInsets.all(0.0),
-            child: SizedBox(width: double.infinity, child: content),
-          ),
-        ],
-      ),
-    );
-  }
-
-  _editIcon() {
-    return EditIconWidget(onClick: onEditClick);
-  }
-
-  _deleteIcon() {
-    return DeleteIconWidget(onClick: onDeleteClick);
-  }
-
   onEditClick() async {
     var uiState = controller.getStudentDetailsUiState();
     var args = EditStudentArgsModel(

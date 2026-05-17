@@ -114,6 +114,7 @@ class GroupsRepository {
                 id: e.groupId ?? "",
                 name: e.groupName ?? "",
                 studentCount: e.studentCount ?? 0,
+                sessionsCount: e.sessionsCount ?? 0,
                 timings: e.timings ?? [],
                 grade: GradeModel(
                   id: e.gradeId,

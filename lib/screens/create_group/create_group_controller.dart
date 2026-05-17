@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/apimodels/student_list_item_api_model.dart';
 import 'package:teacher_app/base/AppResult.dart';
+import 'package:teacher_app/domain/events/students_events.dart';
 import 'package:teacher_app/domain/models/group_timing_model.dart';
 import 'package:teacher_app/domain/usecases/update_group_timings_use_case.dart';
 import '../../data/responses/add_group_response.dart';
@@ -129,6 +130,12 @@ class CreateGroupController extends GetxController {
 
     final step3Ok = await submitTimings();
     GroupsManagers.onGroupUpdated(createdGroupId);
+    final currentIds = studentsSelectionController.selectedStudentIds..sort();
+    for (var id in currentIds) {
+      StudentsEvents.onStudentUpdated(id);
+    }
+
+    StudentsEvents.onStudentAdded();
     GroupsManagers.onRefresh();
     return step3Ok;
 
@@ -253,22 +260,6 @@ String getTimeFormat(TimeOfDay? time) {
       studentsIds: selectedStudentsRx.value.map((e) => e.studentId).toList(),
       gradeId: selectedGrade.value?.id,
     );
-  }
-
-  // Legacy single-step stream (used by EditGroupController)
-  Stream<CreateGroupState> saveGroup() async* {
-    final isValid = formKey.currentState?.validate() ?? false;
-    if (!isValid) {
-      yield CreateGroupStateFormValidation();
-      return;
-    }
-    yield CreateGroupStateLoading();
-    final result = await _addGroupUseCase.execute(getRequest());
-    if (result is AppResultSuccess) {
-      yield SaveGroupStateSuccess();
-    } else {
-      yield CreateGroupStateError(result.error);
-    }
   }
 
   @override

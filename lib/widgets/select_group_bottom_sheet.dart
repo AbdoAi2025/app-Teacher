@@ -242,9 +242,16 @@ class _SelectGroupBottomSheetState extends State<SelectGroupBottomSheet> {
                   ),
                   if (group.gradeName.isNotEmpty)
                     AppTextWidget(
-                      '${group.dayName} • ${group.timeFrom} - ${group.timeTo}',
-                      style: AppTextStyle.value.copyWith(color: AppColors.textSecondaryColor),
+                      group.gradeName,
+                      style: AppTextStyle.small.copyWith(
+                        color: AppColors.appMainColor,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
+                  AppTextWidget(
+                    '${group.dayName} • ${group.timeFrom} - ${group.timeTo}',
+                    style: AppTextStyle.value.copyWith(color: AppColors.textSecondaryColor),
+                  ),
                 ],
               ),
             ),

@@ -12,7 +12,7 @@ import 'package:teacher_app/widgets/forward_arrow_widget.dart';
 import '../../navigation/app_navigator.dart';
 import '../../screens/group_details/args/group_details_arg_model.dart';
 import '../grade_chip_widget.dart';
-import '../info_chip_widget.dart';
+import '../sessions_count_info_chip_widget.dart';
 import '../student_count_info_chip_widget.dart';
 import '../time_from_to_info_chip_widget.dart';
 
@@ -63,6 +63,7 @@ class GroupItemWidget extends StatelessWidget {
                   runSpacing: 5,
                   children: [
                     StudentCountInfoChipWidget(count: uiState.studentsCount),
+                    SessionsCountInfoChipWidget(count: uiState.sessionsCount),
                     // TimeFromToInfoChipWidget(text: "${uiState.timeFrom} - ${uiState.timeTo}"),
                     _timing()
 

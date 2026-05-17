@@ -34,6 +34,6 @@ class StudentDetailsUiState {
   });
 
 
-  get showAddStudentToGroup => groups.isEmpty || !(groups.any((element) => element.archive == true));
+  get showAddStudentToGroup => groups.isEmpty;
 
 }

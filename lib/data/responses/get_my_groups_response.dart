@@ -25,6 +25,7 @@ class GroupData {
     this.groupId,
     this.groupName,
     this.studentCount,
+    this.sessionsCount,
     this.gradeId,
     this.gradeNameEn,
     this.gradeNameAr,
@@ -36,6 +37,7 @@ class GroupData {
       groupId: json.tryString('groupId'),
       groupName: json.tryString('groupName'),
       studentCount: json.tryInt('studentCount'),
+      sessionsCount: json.tryInt('sessionsCount'),
       gradeId: json.tryInt('gradeId'),
       gradeNameEn: json.tryString('gradeNameEn'),
       gradeNameAr: json.tryString('gradeNameAr'),
@@ -49,6 +51,7 @@ class GroupData {
   String? groupId;
   String? groupName;
   int? studentCount;
+  int? sessionsCount;
   int? gradeId;
   String? gradeNameEn;
   String? gradeNameAr;
@@ -60,6 +63,7 @@ class GroupData {
         'groupId': groupId,
         'groupName': groupName,
         'studentCount': studentCount,
+        'sessionsCount': sessionsCount,
         'gradeId': gradeId,
         'gradeNameEn': gradeNameEn,
         'gradeNameAr': gradeNameAr,
