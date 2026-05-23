@@ -17,6 +17,7 @@ class StudentDetailsUiState {
   final String gradeName;
   final List<StudentGroupApiModel> groups;
   final List<StudentGradeApiModel> grades;
+  final int sessionCount;
 
   StudentDetailsUiState({
     required this.studentId,
@@ -32,6 +33,7 @@ class StudentDetailsUiState {
     required this.gradeId,
     required this.groups,
     required this.grades,
+    this.sessionCount = 0,
   });
 
 

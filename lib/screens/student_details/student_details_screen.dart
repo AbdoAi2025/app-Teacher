@@ -15,11 +15,9 @@ import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'package:teacher_app/widgets/delete_icon_widget.dart';
 import 'package:teacher_app/widgets/dialog_loading_widget.dart';
 import 'package:teacher_app/widgets/edit_icon_widget.dart';
-import 'package:teacher_app/widgets/forward_arrow_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
 import 'package:teacher_app/widgets/phone_with_icon_widget.dart';
 import 'package:teacher_app/widgets/select_group_bottom_sheet.dart';
-import 'package:teacher_app/widgets/time_with_icon_widget.dart';
 import 'package:teacher_app/widgets/grades_selection_bottom_sheet.dart';
 import 'package:teacher_app/domain/usecases/upgrade_student_use_case.dart';
 import 'package:teacher_app/requests/upgrade_student_request.dart';
@@ -27,7 +25,6 @@ import '../../bottomsheets/setting_bottom_sheet.dart';
 import '../../data/responses/get_student_details_response.dart';
 import '../../themes/app_colors.dart';
 import '../../themes/txt_styles.dart';
-import '../../utils/localized_name_model.dart';
 import '../../widgets/app_toolbar_widget.dart';
 import '../../widgets/primary_button_widget.dart';
 import '../../widgets/section_widget.dart';
@@ -55,16 +52,24 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
     return Scaffold(
         appBar: AppToolbarWidget.appBar(title: "Student Details".tr,
             actions: [_settingsIcon()]),
-        body: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: RefreshIndicator(
-            onRefresh: () async {
-              onRefresh();
-            },
-            child: SingleChildScrollView(
-                physics: AlwaysScrollableScrollPhysics(),
-                child: _contentState()),
-          ),
+        body: Column(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: RefreshIndicator(
+                  onRefresh: () async {
+                    onRefresh();
+                  },
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.only(bottom: 30),
+                      physics: AlwaysScrollableScrollPhysics(),
+                      child: _contentState()),
+                ),
+              ),
+            ),
+            _bottomActionBarState(),
+          ],
         ));
   }
 
@@ -99,9 +104,65 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
         // _groupSection(uiState),
         _availableGroupsSection(uiState),
         if (uiState.grades.isNotEmpty) _availableGradesSection(uiState),
-        _sessionListSection(uiState),
-        _viewAllSessionSection(uiState),
       ],
+    );
+  }
+
+  Widget _bottomActionBarState() {
+    return Obx(() {
+      var state = controller.state.value;
+      if (state is StudentDetailsStateSuccess) {
+        return _bottomActionBar(state.uiState);
+      }
+      return const SizedBox.shrink();
+    });
+  }
+
+  Widget _bottomActionBar(StudentDetailsUiState uiState) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      decoration: BoxDecoration(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.08),
+            blurRadius: 8,
+            offset: const Offset(0, -2),
+          ),
+        ],
+      ),
+      child: Row(
+        spacing: 12,
+        children: [
+          Expanded(child: _sessionsButton(uiState)),
+          Expanded(child: _viewFullReportButton(uiState)),
+        ],
+      ),
+    );
+  }
+
+  Widget _sessionsButton(StudentDetailsUiState uiState) {
+    final label = uiState.sessionCount > 0
+        ? "${"Sessions".tr} (${uiState.sessionCount})"
+        : "Sessions".tr;
+    return OutlinedButton.icon(
+      onPressed: () => AppNavigator.navigateToSessionsList(
+        SessionListArgsModel(studentId: uiState.studentId),
+      ),
+      icon: const Icon(Icons.event_note_outlined),
+      label: Text(label),
+    );
+  }
+
+  Widget _viewFullReportButton(StudentDetailsUiState uiState) {
+    return ElevatedButton.icon(
+      onPressed: () => onViewAllSessionsClick(uiState),
+      icon: const Icon(Icons.bar_chart_outlined),
+      label: Text("View Full Report".tr),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.appMainColor,
+        foregroundColor: Colors.white,
+      ),
     );
   }
 
@@ -155,48 +216,6 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
               const Divider(),
               _studentPhone(uiState.phone),
             ],
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _sessionListSection(StudentDetailsUiState uiState) {
-    return SectionWidget(
-      child: InkWell(
-        onTap: () => AppNavigator.navigateToSessionsList(
-          SessionListArgsModel(studentId: uiState.studentId),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: AppTextWidget(
-                "Sessions".tr,
-                style: AppTextStyle.value,
-              ),
-            ),
-            ForwardArrowWidget(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  _viewAllSessionSection(StudentDetailsUiState uiState) {
-    return SectionWidget(
-      child: InkWell(
-        onTap: () {
-          onViewAllSessionsClick(uiState);
-        },
-        child: Row(
-          children: [
-            Expanded(
-              child: AppTextWidget(
-                "View Full Report".tr,
-                style: AppTextStyle.value,
-              ),
-            ),
-            if (uiState.groupId.isNotEmpty) ForwardArrowWidget()
           ],
         ),
       ),

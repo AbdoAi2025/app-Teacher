@@ -35,65 +35,62 @@ class StudentGroupItemWidget extends StatelessWidget {
       onTap: onGroupTap,
       borderRadius: BorderRadius.circular(8),
       child: Container(
-      padding: EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: isCurrentGroup ? AppColors.appMainColor.withOpacity(0.1) : AppColors.white,
-        border: Border.all(
-          color: isCurrentGroup ? AppColors.appMainColor : AppColors.color_DBD5CC,
-          width: isCurrentGroup ? 2 : 1,
-        ),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 4,
-              children: [
-                Row(
-                  spacing : 8,
-                  children: [
-                    Expanded(
-                      child: _groupName(),
-                    ),
-
-                    Wrap(
-                      spacing: 5,
-                      children: [
-                        DateInfoChipWidget(date: _formatYear(group.groupCreatedAt!)),
-                        if(group.groupDay != null)
-                          DayInfoChipWidget(text: AppDateUtils.getDayName(group.groupDay!).tr),
-                        if(group.groupTimeFrom != null && group.groupTimeTo != null)
-                          TimeFromToInfoChipWidget(text: "${group.groupTimeFrom} - ${group.groupTimeTo}"),
-                      ],
-                    ),
-
-                  ],
-                ),
-
-                AppDividerWidget(),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    if (group.archive == true)...{
-                      _upgradedInfo(),
-                    }else ...{
-                      _removeIcon(),
-                    },
-                  ],
-                )
-
-
-
-              ],
-            ),
+        padding: EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: isCurrentGroup
+              ? AppColors.appMainColor.withOpacity(0.1)
+              : AppColors.white,
+          border: Border.all(
+            color: isCurrentGroup
+                ? AppColors.appMainColor
+                : AppColors.color_DBD5CC,
+            width: isCurrentGroup ? 2 : 1,
           ),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 4,
+                children: [
+                  Row(
+                    spacing: 8,
+                    children: [
+                      Expanded(
+                        child: _groupNameAndDate(),
+                      ),
 
-        ],
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          if (group.archive == true) ...{
+                            _upgradedInfo(),
+                          } else ...{
+                            _removeIcon(),
+                          },
+                        ],
+                      ),
+
+                      // Wrap(
+                      //   spacing: 5,
+                      //   children: [
+                      //     if(group.groupDay != null)
+                      //       DayInfoChipWidget(text: AppDateUtils.getDayName(group.groupDay!).tr),
+                      //     if(group.groupTimeFrom != null && group.groupTimeTo != null)
+                      //       TimeFromToInfoChipWidget(text: "${group.groupTimeFrom} - ${group.groupTimeTo}"),
+                      //   ],
+                      // ),
+                    ],
+                  ),
+                  // AppDividerWidget(),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
-    ),
     );
   }
 
@@ -107,16 +104,16 @@ class StudentGroupItemWidget extends StatelessWidget {
   }
 
   _upgradedInfo() => Container(
-    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-    decoration: BoxDecoration(
-      color: AppColors.colorGrey,
-      borderRadius: BorderRadius.circular(12),
-    ),
-    child: AppTextWidget(
-      "Upgraded".tr,
-      style: AppTextStyle.small.copyWith(color: AppColors.white),
-    ),
-  );
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+        decoration: BoxDecoration(
+          color: AppColors.colorGrey,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: AppTextWidget(
+          "Upgraded".tr,
+          style: AppTextStyle.small.copyWith(color: AppColors.white),
+        ),
+      );
 
   _removeIcon() {
     return InkWell(
@@ -124,26 +121,38 @@ class StudentGroupItemWidget extends StatelessWidget {
       child: InfoChipWidget(
         text: "Remove From Group".tr,
         color: AppColors.colorRed,
-        icon:   Icons.remove_circle_outline,
+        icon: Icons.remove_circle_outline,
         size: 20,
       ),
     );
   }
 
-  Widget _groupName() {
+  Widget _groupNameAndDate() {
     return Row(
       spacing: 6,
       children: [
         GroupIconWidget(),
         Expanded(
-          child: AppTextWidget(
-            group.groupName ?? "Unknown Group".tr,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: AppTextStyle.label.copyWith(
-              fontWeight: FontWeight.w500,
-              color: AppColors.colorBlack,
-            ),
+          child: Column(
+            spacing: 5,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AppTextWidget(
+                group.groupName ?? "Unknown Group".tr,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTextStyle.label.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.colorBlack,
+                ),
+              ),
+              DateInfoChipWidget(
+                date: _formatYear(group.groupCreatedAt!),
+                fontSize: 9,
+                size: 12,
+                padding: EdgeInsets.symmetric(vertical: 2, horizontal: 5),
+              ),
+            ],
           ),
         ),
       ],
