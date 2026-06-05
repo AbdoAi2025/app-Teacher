@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:teacher_app/bottomsheets/select_students/select_students_bottom_sheet.dart';
 import 'package:teacher_app/screens/create_group/students_selection/states/students_selection_state.dart';
-import 'package:teacher_app/screens/create_group/students_selection/student_list_selection_widget.dart';
 import 'package:teacher_app/screens/create_group/students_selection/students_selection_controller.dart';
 import 'package:teacher_app/widgets/empty_view_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
@@ -97,7 +97,10 @@ class _AddStudentsStepState extends State<AddStudentsStep> {
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
           child: OutlinedButton.icon(
-            onPressed:  () => _showSelectionBottomSheet(),
+            onPressed: () => SelectStudentsBottomSheet.show(
+              context: context,
+              controller: widget.studentsController,
+            ),
             icon: const Icon(Icons.checklist_outlined, size: 16),
             label: Text('Select Students'.tr),
             style: OutlinedButton.styleFrom(
@@ -144,23 +147,6 @@ class _AddStudentsStepState extends State<AddStudentsStep> {
           ),
         );
       },
-    );
-  }
-
-  void _showSelectionBottomSheet() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (_) => SizedBox(
-        height: MediaQuery.of(context).size.height * 0.85,
-        child: StudentListSelectionWidget(
-          controller: widget.studentsController,
-          onSaved: () => Navigator.pop(context),
-        ),
-      ),
     );
   }
 

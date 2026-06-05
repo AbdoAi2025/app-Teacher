@@ -20,6 +20,7 @@ class StudentsSelectionController extends GetxController {
   int _page = 0;
   String _searchQuery = '';
 
+
   final _studentsUseCase = GetMyStudentsListUseCase();
 
   void setGradeId(String gradeId, {String name = ''}) {
@@ -107,7 +108,14 @@ class StudentsSelectionController extends GetxController {
       selectedStudents.any((s) => s.studentId == studentId);
 
   void onSaveSelection(List<StudentSelectionItemUiState> saved) {
-    selectedStudents.value = saved;
+    final state = studentsState.value;
+    if (state is StudentsSelectionStateSuccess) {
+      final visibleIds = state.students.map((e) => e.studentId).toSet();
+      final preserved = selectedStudents.where((e) => !visibleIds.contains(e.studentId)).toList();
+      selectedStudents.value = [...preserved, ...saved];
+    } else {
+      selectedStudents.value = saved;
+    }
   }
 
   void removeStudent(StudentSelectionItemUiState item) {
@@ -128,4 +136,9 @@ class StudentsSelectionController extends GetxController {
 
   List<String> get selectedStudentIds =>
       selectedStudents.map((s) => s.studentId).toList();
+
+  bool isStudentLoadedSuccess() {
+    var stateValue = studentsState.value;
+    return stateValue is  StudentsSelectionStateSuccess &&  stateValue.students.isNotEmpty;
+  }
 }

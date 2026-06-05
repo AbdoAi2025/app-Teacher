@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:teacher_app/domain/managers/grade_manager.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
-import 'package:teacher_app/presentation/bottom_sheets/students_list_selections_bottom_sheet.dart';
-import 'package:teacher_app/requests/get_my_students_request.dart';
+import 'package:teacher_app/bottomsheets/select_students/select_students_bottom_sheet.dart';
 import 'package:teacher_app/screens/create_group/students_selection/states/student_selection_item_ui_state.dart';
+import 'package:teacher_app/screens/create_group/students_selection/students_selection_controller.dart';
 import 'package:teacher_app/screens/session_details/states/session_details_ui_state.dart';
+import 'package:teacher_app/themes/app_colors.dart';
+import 'package:teacher_app/utils/app_background_styles.dart';
 import 'package:teacher_app/utils/message_utils.dart';
+import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'package:teacher_app/widgets/app_visibility_widget.dart';
 import 'package:teacher_app/widgets/cancel_icon_widget.dart';
 import 'package:teacher_app/widgets/delete_icon_widget.dart';
@@ -40,6 +44,7 @@ class _SessionDetailsScreenState extends LifecycleWidgetState<SessionDetailsScre
   bool isEditable = false;
 
   final SessionDetailsController controller = Get.put(SessionDetailsController());
+  final StudentsSelectionController studentsController = Get.put(StudentsSelectionController());
 
   @override
   void initState() {
@@ -234,13 +239,30 @@ class _SessionDetailsScreenState extends LifecycleWidgetState<SessionDetailsScre
   }
 
   _enSessionButton(SessionDetailsUiState uiState) {
-    return SizedBox(
-      width: double.infinity,
-      child: EndSessionButtonWidget(
-        sessionId: uiState.id,
-        onSessionEnded: () {
-          onRefresh();
-        },
+    return InkWell(
+      onTap: () {
+        onRefresh();
+      },
+      child: Container(
+        decoration: AppBackgroundStyle.getColoredBackgroundRoundedBorder(radius: 20, borderColor : AppColors.appMainColor , bgColor: AppColors.white),
+        width: double.infinity,
+        child: Row(
+          spacing: 4,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: EndSessionButtonWidget(
+                sessionId: uiState.id,
+                onSessionEnded: () {
+                  onRefresh();
+                },
+              ),
+            ),
+            AppTextWidget("End Session".tr),
+
+          ],
+        ),
       ),
     );
   }
@@ -303,10 +325,26 @@ class _SessionDetailsScreenState extends LifecycleWidgetState<SessionDetailsScre
   }
 
   onAddStudentToSessionClick(SessionDetailsUiState uiState) {
-    var bottomSheet = StudentsListSelectionsBottomSheet(
-        studentsSelectionState : controller.studentsSelectionState,
-        onSaveClick: (items) { onSessionStudentsSelected(uiState, items);});
-    bottomSheet.show(context);
+    appLog("onAddStudentToSessionClick uiState.gradeId.toString() : ${uiState.gradeId.toString()}");
+    // studentsController.setGradeId(
+    //   uiState.gradeId.toString(),
+    // );
+
+    //load student if first time
+    if(!studentsController.isStudentLoadedSuccess()) {
+      studentsController.loadStudents();
+    }
+
+    appLog("onAddStudentToSessionClick studentsController.selectedGradeFilter.value: ${studentsController.selectedGradeFilter.value?.id}");
+
+    SelectStudentsBottomSheet.show(
+      context: context,
+      controller: studentsController,
+      onAfterSaved: () => onSessionStudentsSelected(
+        uiState,
+        studentsController.selectedStudents.toList(),
+      ),
+    );
   }
 
   void onSessionStudentsSelected(SessionDetailsUiState uiState , List<StudentSelectionItemUiState> items) {

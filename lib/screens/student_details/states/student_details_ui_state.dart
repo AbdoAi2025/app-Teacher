@@ -37,7 +37,7 @@ class StudentDetailsUiState {
   });
 
 
-  get showAddStudentToGroup => groups.isEmpty;
+  get showAddStudentToGroup => groups.isEmpty || groups.where((element) => element.archive == true).length == groups.length;
 
   String get activeGradeName {
     final active = grades.firstWhereOrNull((g) => g.archive != true);

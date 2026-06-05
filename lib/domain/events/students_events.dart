@@ -11,6 +11,8 @@ class StudentsEventsState{
 
 }
 
+class StudentsEventsStateRefresh extends StudentsEventsState{}
+
 class StudentsEventsStateAdded extends StudentsEventsState{}
 
 class StudentsEventsStateUpdated extends StudentsEventsState{
@@ -40,6 +42,9 @@ class StudentsEvents {
 
   static void onStudentAdded() {
     _notifyListeners(StudentsEventsStateAdded());
+  }
+  static void onStudentRefresh() {
+    _notifyListeners(StudentsEventsStateRefresh());
   }
 
   static void onStudentDeleted() {

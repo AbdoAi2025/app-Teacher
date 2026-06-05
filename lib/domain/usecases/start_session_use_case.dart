@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:teacher_app/base/AppResult.dart';
 import 'package:teacher_app/data/repositories/sessions/sessions_repository_impl.dart';
 import 'package:teacher_app/data/responses/error_response.dart';
+import 'package:teacher_app/domain/groups/groups_managers.dart';
 import 'package:teacher_app/domain/running_sessions/running_session_manager.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
 
@@ -17,6 +18,7 @@ class StartSessionUseCase {
     try{
        var items =  await _repository.startSession(request);
        RunningSessionManager.onRefresh();
+       GroupsManagers.onRefresh();
        return AppResult.success(items);
     }
     catch(ex){

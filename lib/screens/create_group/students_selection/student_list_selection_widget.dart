@@ -166,7 +166,10 @@ class _StudentListSelectionWidgetState
               getMoreItems: widget.controller.loadMore,
               separatorBuilder: (_, __) =>
                   Container(color: AppColors.colorSeparator, height: .5),
-              onToggle: (item) => item.isSelected = !item.isSelected,
+              onToggle: (item) {
+                item.isSelected = !item.isSelected;
+                widget.controller.studentsState.refresh();
+              },
             ));
       }
       return const SizedBox.shrink();
