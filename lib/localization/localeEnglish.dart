@@ -111,6 +111,8 @@ final Map<String, String> enUS = {
   "Session Name (Optional)": "Session Name (Optional)",
   "Start": "Start",
   "please enter valid quiz grade": "please enter valid quiz grade",
+  "grade_less_than_zero": "Grade can't be less than zero",
+  "grade_exceeds_max": "Grade cannot exceed the session quiz grade (@s)",
   "Update Student Activity": "Update Student Activity",
   "Sunday": "Sunday",
   "Monday": "Monday",

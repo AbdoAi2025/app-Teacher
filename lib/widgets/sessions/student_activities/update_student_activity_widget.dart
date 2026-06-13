@@ -8,6 +8,7 @@ import 'package:teacher_app/widgets/key_value_row_widget.dart';
 import '../../../enums/student_behavior_enum.dart';
 import '../../../screens/session_details/states/session_details_ui_state.dart';
 import '../../../utils/grade_utils.dart';
+import '../../../utils/message_utils.dart';
 import '../../app_radio_widget.dart';
 import '../../app_text_field_widget.dart';
 import '../../app_txt_widget.dart';
@@ -194,18 +195,7 @@ class _UpdateStudentActivityWidgetState extends State<UpdateStudentActivityWidge
   _saveButton() {
     return SizedBox(
       width: double.infinity,
-      child: PrimaryButtonWidget(text: 'Save'.tr, onClick: (){
-        widget.onSaveClick(
-          uiState.copyWith(
-            attended: attended,
-            quizGrade: quizGrade,
-            behaviorStatus: behaviorStatus,
-            homeworkStatus: homeworkStatus,
-            behaviorNotes: _behaviorNotesEditTextController.text,
-            homeworkNotes: _homeworkNotesEditTextController.text
-          )
-        );
-      },),
+      child: PrimaryButtonWidget(text: 'Save'.tr, onClick: onSaveClick,),
     );
   }
 
@@ -247,4 +237,26 @@ class _UpdateStudentActivityWidgetState extends State<UpdateStudentActivityWidge
   }
 
   _suTitle() => Center(child: AppTextWidget(uiState.studentName , style: AppTextStyle.value,));
+
+  onSaveClick() {
+    if (quizGrade != null && quizGrade! < 0) {
+      showErrorMessage('grade_less_than_zero'.tr);
+      return;
+    }
+    final maxGrade = uiState.sessionQuizGrade;
+    if (quizGrade != null && maxGrade != null && quizGrade! > maxGrade) {
+      showErrorMessage('grade_exceeds_max'.trParams({'s': maxGrade.toString()}));
+      return;
+    }
+    widget.onSaveClick(
+        uiState.copyWith(
+            attended: attended,
+            quizGrade: quizGrade,
+            behaviorStatus: behaviorStatus,
+            homeworkStatus: homeworkStatus,
+            behaviorNotes: _behaviorNotesEditTextController.text,
+            homeworkNotes: _homeworkNotesEditTextController.text
+        )
+    );
+  }
 }

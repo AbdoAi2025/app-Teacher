@@ -127,6 +127,8 @@ final Map<String, String> ar = {
   "Session Name (Optional)": "اسم الحصة (اختياري)",
   "Start": "بدء",
   "please enter valid quiz grade": "الرجاء إدخال درجة اختبار صالحة",
+  "grade_less_than_zero": "لا يمكن أن تكون الدرجة أقل من صفر",
+  "grade_exceeds_max": "لا يمكن أن تتجاوز الدرجة درجة اختبار الحصة (@s)",
   "Update Student Activity": "تحديث نشاط الطالب",
   "Sunday": "الأحد",
   "Monday": "الاثنين",
