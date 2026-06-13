@@ -74,7 +74,7 @@ class AppTextFieldWidget extends StatelessWidget {
       maxLength: maxLength,
       keyboardType: keyboardType,
       decoration: InputDecoration(
-        prefixIcon: prefixIcon,
+        prefixIcon: prefixIconWidget(),
         hintTextDirection: textDirection,
         hintText: hint,
         hintStyle: hintTextStyle,
@@ -105,6 +105,7 @@ class AppTextFieldWidget extends StatelessWidget {
   }
 
   Widget? suffixIconWidget() => suffixIcon;
+  Widget? prefixIconWidget() => prefixIcon;
 
 
 }
