@@ -8,3 +8,11 @@ extension NameLocalizedExtension on LocalizedNameModel {
     return LocalizationUtils.isArabic() ? nameAr ?? ""  : nameEn ?? "";
   }
 }
+
+extension StringExtension on String {
+  String ifEmpty(String fallback) => isEmpty ? fallback : this;
+}
+
+extension NullableStringExtension on String? {
+  String ifNullOrEmpty(String fallback) => (this == null || this!.isEmpty) ? fallback : this!;
+}

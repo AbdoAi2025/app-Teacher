@@ -492,7 +492,7 @@ class AddStudentScreenState extends State<AddStudentScreen> {
 
         if(event is AddStudentStateStudentLimitExceeded){
           hideDialogLoading();
-          UserNotSubscribedDialog.showUserNotSubscribedDialog(true);
+          UserNotSubscribedDialog.showUserNotSubscribedDialog(message : event.message ?? "", barrierDismissible: true);
         }else {
           onSaveStudentResult(event);
         }

@@ -40,8 +40,9 @@ class AddStudentController extends GetxController{
       yield SaveStateSuccess();
     } else {
 
-      if(result.data is AddStudentResultStudentLimitExceeded){
-        yield AddStudentStateStudentLimitExceeded();
+      var data = result.data;
+      if(data is AddStudentResultStudentLimitExceeded){
+        yield AddStudentStateStudentLimitExceeded(data.message);
         return;
       }
 

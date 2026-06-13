@@ -2,7 +2,11 @@
 
 class AddStudentResultLoading extends AddStudentResult{}
 
-class AddStudentResultStudentLimitExceeded extends AddStudentResult{}
+class AddStudentResultStudentLimitExceeded extends AddStudentResult{
+  final String? message;
+  AddStudentResultStudentLimitExceeded(this.message);
+
+}
 
 class AddStudentResultSuccess extends AddStudentResult{
   AddStudentResultSuccess();

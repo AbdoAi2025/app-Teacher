@@ -24,6 +24,6 @@ class AddStudentUseCase extends BaseUseCase<AddStudentResult?> {
   AppResult<AddStudentResult?> onErrorResponse(ErrorResponse errorResponse , DioException ex) {
     appLog("AddStudentUseCase errorResponse.errorType:${errorResponse.errorType}");
     appLog("AddStudentUseCase errorResponse.message:${errorResponse.message}");
-    return AppResult.error(ex, errorResponse.errorType == 1 ? AddStudentResultStudentLimitExceeded() : null);
+    return AppResult.error(ex, errorResponse.errorType == 1 ? AddStudentResultStudentLimitExceeded(errorResponse.message) : null);
   }
 }

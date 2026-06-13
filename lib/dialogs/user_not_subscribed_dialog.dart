@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:teacher_app/domain/states/current_subscription_plan_state.dart';
 import 'package:teacher_app/enums/subscription_plan_enum.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
+import 'package:teacher_app/utils/extensions_utils.dart';
 import 'package:teacher_app/utils/open_insta_pay_utils.dart';
 import '../data/responses/current_subscription_plan_response.dart';
 import '../themes/app_colors.dart';
@@ -16,12 +17,12 @@ class UserNotSubscribedDialog {
 
   static bool _isDialogShown = false;
 
-  static void showUserNotSubscribedDialog([bool barrierDismissible = false]) {
+  static void showUserNotSubscribedDialog({String message = "" ,bool barrierDismissible = false}) {
     if (_isDialogShown) return;
 
     _isDialogShown = true;
     showConfirmationMessage(
-        AppStringsKeys.subscriptionMessage.tr,
+       message.ifEmpty( AppStringsKeys.subscriptionMessage.tr),
         () {
           _onRenewClick();
         },
@@ -121,14 +122,14 @@ class UserNotSubscribedDialog {
     // Check if user is not subscribed
     if (!subscription.isSubscribed) {
       appLog("UserNotSubscribedDialog: User is not subscribed - showing dialog");
-      showUserNotSubscribedDialog(false);
+      showUserNotSubscribedDialog(barrierDismissible: false);
       return;
     }
 
     // Check if subscription is expired
     if (subscription.isExpired) {
       appLog("UserNotSubscribedDialog: Subscription is expired - showing dialog");
-      showUserNotSubscribedDialog(false);
+      showUserNotSubscribedDialog(barrierDismissible:false);
       return;
     }
 
