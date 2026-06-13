@@ -6,7 +6,7 @@ import 'package:teacher_app/themes/txt_styles.dart';
 import 'package:teacher_app/utils/Keyboard_utils.dart';
 import 'package:teacher_app/utils/date_filter_manager.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
-import 'package:teacher_app/widgets/empty_view_widget.dart';
+import '../../widgets/groups/groups_empty_data_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
 import '../../widgets/error_view_widget.dart';
 import '../../widgets/filters/current_filters_display_widget.dart';
@@ -309,12 +309,9 @@ class _GroupsScreenState extends State<GroupsScreen> {
 
 
   _emptyView() {
-    return Center(
-        child: EmptyViewWidget(
-      message: AppStringsKeys.noGroupsFound.tr,
-      onRetry: refresh,
-      retryText: AppStringsKeys.refresh.tr,
-    ));
+    return GroupsEmptyDataWidget(
+      onCreateGroup: () => AppNavigator.navigateToCreateGroup(),
+    );
   }
 
   void onSortClick() {
