@@ -338,6 +338,7 @@ import '../../widgets/dialog_loading_widget.dart';
 import '../../widgets/dropdown_icon_widget.dart';
 import '../student_edit/states/update_student_state.dart';
 import '../students_list/students_controller.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class AddStudentScreen extends StatefulWidget {
   const AddStudentScreen({super.key});
@@ -394,29 +395,29 @@ class AddStudentScreenState extends State<AddStudentScreen> {
 
   _nameField() => AppTextFieldWidget(
         controller: getController().nameController,
-        label: "Student Name".tr,
-        hint: "Student Name".tr,
+        label: AppStringsKeys.studentName.tr,
+        hint: AppStringsKeys.studentName.tr,
         validator: MultiValidator([
-          RequiredValidator(errorText: "Student Name is required".tr),
+          RequiredValidator(errorText: AppStringsKeys.studentNameIsRequired.tr),
         ]).call,
       );
 
   _parentPhoneField() => AppPhoneInputTextFieldWidget(
         controller: getController().parentPhoneController,
-        label: "Parent Phone".tr,
+        label: AppStringsKeys.parentPhone.tr,
         onContactSelected: (phoneNumber, name) {
           _controller.parentPhoneController.text = phoneNumber;
           _controller.nameController.text = name;
         },
         validator: MultiValidator([
-          RequiredValidator(errorText: "Parent Phone is required".tr),
+          RequiredValidator(errorText: AppStringsKeys.parentPhoneIsRequired.tr),
           PhoneValidation(errorText: "Please enter valid phone number".tr),
         ]).call,
       );
 
   _phoneField() => AppPhoneInputTextFieldWidget(
         controller: getController().phoneController,
-        label: "Phone".tr,
+        label: AppStringsKeys.phone.tr,
         onContactSelected: (phoneNumber, name) {
           _controller.phoneController.text = phoneNumber;
         },
@@ -428,12 +429,12 @@ class AddStudentScreenState extends State<AddStudentScreen> {
       return AppTextFieldWidget(
         controller: TextEditingController(
             text: getController().selectedGrade.value?.name),
-        label: "Grade".tr,
-        hint: "Grade".tr,
+        label: AppStringsKeys.grade.tr,
+        hint: AppStringsKeys.grade.tr,
         readOnly: true,
         suffixIcon: DropdownIconWidget(),
         validator: MultiValidator([
-          RequiredValidator(errorText: "Grade is required".tr),
+          RequiredValidator(errorText: AppStringsKeys.gradeIsRequired.tr),
         ]).call,
         onTap: _onSelectGradesClick,
       );
@@ -461,11 +462,11 @@ class AddStudentScreenState extends State<AddStudentScreen> {
   }
 
   String getScreenTitle() {
-    return "Add Student".tr;
+    return AppStringsKeys.addStudent.tr;
   }
 
   String getSubmitButtonText() {
-    return "Add Student".tr;
+    return AppStringsKeys.addStudent.tr;
   }
 
   void onSaveStudentResult(AddStudentState event) {

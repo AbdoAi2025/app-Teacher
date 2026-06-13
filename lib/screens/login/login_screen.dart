@@ -19,6 +19,7 @@ import '../../widgets/app_toolbar_widget.dart';
 import '../../widgets/environment_display_widget.dart';
 import '../../widgets/complete_profile_bottom_sheet.dart';
 import '../../widgets/forgot_password_bottom_sheet.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -36,7 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppToolbarWidget.appBar(
-        title: "Login".tr,
+        title: AppStringsKeys.login.tr,
         leading: Container(),
         actions: [_languageToggleButton()],
       ),
@@ -70,15 +71,15 @@ class _LoginScreenState extends State<LoginScreen> {
 
   _userNameField() => AppTextFieldWidget(
         controller: usernameController,
-        label: "User Name".tr,
-        hint: "User Name".tr,
+        label: AppStringsKeys.userName.tr,
+        hint: AppStringsKeys.userName.tr,
         prefixIcon: Icon(Icons.person),
       );
 
   _passwordField() => AppPasswordFieldWidget(
         controller: passwordController,
-        label: "Password".tr,
-        hint: "Password".tr,
+        label: AppStringsKeys.password.tr,
+        hint: AppStringsKeys.password.tr,
         prefixIcon: Icon(Icons.lock_outline),
       );
 
@@ -90,7 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
           context,
           initialIdentifier: usernameController.text.trim(),
         ),
-        child: Text('Forgot Password'.tr),
+        child: Text(AppStringsKeys.forgotPassword.tr),
       ),
     );
   }
@@ -99,7 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return SizedBox(
       width: double.infinity,
       child: PrimaryButtonWidget(
-        text: "Login".tr,
+        text: AppStringsKeys.login.tr,
         onClick: () {
           onLoginClick();
         },
@@ -111,10 +112,10 @@ class _LoginScreenState extends State<LoginScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text("Don't have an account?".tr),
+        Text(AppStringsKeys.key244044482.tr),
         TextButton(
           onPressed: () => AppNavigator.navigateToRegister(),
-          child: Text("Register".tr),
+          child: Text(AppStringsKeys.register.tr),
         ),
       ],
     );

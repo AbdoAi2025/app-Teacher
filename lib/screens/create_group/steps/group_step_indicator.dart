@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../create_group_controller.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class GroupStepIndicator extends StatelessWidget {
   final CreateGroupController controller;
@@ -15,11 +16,11 @@ class GroupStepIndicator extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
         child: Row(
           children: [
-            _stepCircle(context, 0, 'Group Info'.tr, step),
+            _stepCircle(context, 0, AppStringsKeys.groupInfo.tr, step),
             _stepLine(context, step > 0),
-            _stepCircle(context, 1, 'Students'.tr, step),
+            _stepCircle(context, 1, AppStringsKeys.students.tr, step),
             _stepLine(context, step > 1),
-            _stepCircle(context, 2, 'Timings'.tr, step),
+            _stepCircle(context, 2, AppStringsKeys.timings.tr, step),
           ],
         ),
       );

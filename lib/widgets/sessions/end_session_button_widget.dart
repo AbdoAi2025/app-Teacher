@@ -10,6 +10,7 @@ import '../../themes/txt_styles.dart';
 import '../../utils/message_utils.dart';
 import '../dialog_loading_widget.dart';
 import '../primary_button_widget.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class EndSessionButtonWidget extends StatelessWidget {
 
@@ -36,7 +37,7 @@ class EndSessionButtonWidget extends StatelessWidget {
     );
 
     return PrimaryButtonWidget(
-      text: "End Session".tr,
+      text: AppStringsKeys.endSession.tr,
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
       textStyle: AppTextStyle.value.copyWith(color: AppColors.white , fontSize: 12),
       onClick: () {

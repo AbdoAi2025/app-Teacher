@@ -10,6 +10,7 @@ import 'package:teacher_app/widgets/app_toolbar_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
 import 'package:teacher_app/widgets/change_password_bottom_sheet.dart';
 import 'package:teacher_app/widgets/otp_verification_bottom_sheet.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -19,7 +20,7 @@ class ProfileScreen extends StatelessWidget {
     final controller = Get.put(ProfileController());
     return Scaffold(
       appBar: AppToolbarWidget.appBar(
-        title: 'Profile'.tr,
+        title: AppStringsKeys.profile.tr,
         actions: [
           Obx(() {
             final profile = controller.profile.value;
@@ -27,7 +28,7 @@ class ProfileScreen extends StatelessWidget {
             return IconButton(
               icon: Icon(Icons.edit_outlined,
                   color: Theme.of(context).primaryColor),
-              tooltip: 'Edit Profile'.tr,
+              tooltip: AppStringsKeys.editProfile.tr,
               onPressed: () async {
                 final result =
                     await AppNavigator.navigateToEditProfile(profile);
@@ -80,7 +81,7 @@ class ProfileScreen extends StatelessWidget {
       child: ListTile(
         leading: Icon(Icons.lock_outline, color: Theme.of(context).primaryColor),
         title: Text(
-          'Change Password'.tr,
+          AppStringsKeys.changePassword.tr,
           style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
         ),
         trailing: Icon(Icons.chevron_right, color: Colors.grey[400]),
@@ -130,21 +131,21 @@ class ProfileScreen extends StatelessWidget {
           _infoTile(
             context,
             icon: Icons.email_outlined,
-            label: 'Email'.tr,
+            label: AppStringsKeys.email.tr,
             value: profile.email ?? '-',
           ),
           _divider(),
           _infoTile(
             context,
             icon: Icons.phone_outlined,
-            label: 'Phone Number'.tr,
+            label: AppStringsKeys.phoneNumber.tr,
             value: profile.phone ?? '-',
           ),
           _divider(),
           _infoTile(
             context,
             icon: Icons.person_search_outlined,
-            label: 'Gender'.tr,
+            label: AppStringsKeys.gender.tr,
             value: profile.gender != null
                 ? GenderEnum.fromJson(profile.gender!).displayName
                 : '-',
@@ -153,7 +154,7 @@ class ProfileScreen extends StatelessWidget {
           _infoTile(
             context,
             icon: Icons.menu_book_outlined,
-            label: 'Subject'.tr,
+            label: AppStringsKeys.subject.tr,
             value: profile.subject?.name ?? '-',
           ),
         ],
@@ -171,7 +172,7 @@ class ProfileScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
             child: Text(
-              'Verification Status'.tr,
+              AppStringsKeys.verificationStatus.tr,
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
@@ -187,7 +188,7 @@ class ProfileScreen extends StatelessWidget {
                 _verificationTile(
                   context,
                   icon: Icons.email_outlined,
-                  label: 'Email'.tr,
+                  label: AppStringsKeys.email.tr,
                   verified: profile.emailVerified,
                   isSending: isSending,
                   onVerify: isSending
@@ -198,7 +199,7 @@ class ProfileScreen extends StatelessWidget {
                 // _verificationTile(
                 //   context,
                 //   icon: Icons.phone_outlined,
-                //   label: 'Phone Number'.tr,
+                //   label: AppStringsKeys.phoneNumber.tr,
                 //   verified: profile.phoneVerified,
                 //   isSending: isSending,
                 //   onVerify: isSending
@@ -223,7 +224,7 @@ class ProfileScreen extends StatelessWidget {
     if (!context.mounted) return;
     if (!sent) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('send_otp_failed'.tr)),
+        SnackBar(content: Text(AppStringsKeys.sendOtpFailed.tr)),
       );
       return;
     }
@@ -301,7 +302,7 @@ class ProfileScreen extends StatelessWidget {
                   const Icon(Icons.check_circle, size: 14, color: Colors.green),
                   const SizedBox(width: 4),
                   Text(
-                    'Verified'.tr,
+                    AppStringsKeys.verified.tr,
                     style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
@@ -332,7 +333,7 @@ class ProfileScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20)),
               ),
               child: Text(
-                'Verify'.tr,
+                AppStringsKeys.verify.tr,
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,

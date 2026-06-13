@@ -5,6 +5,7 @@ import 'package:teacher_app/themes/txt_styles.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'package:teacher_app/widgets/primary_button_widget.dart';
 import '../models/date_filter_model.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class DateFilterBottomSheet extends StatefulWidget {
   final DateFilter currentFilter;
@@ -118,7 +119,7 @@ class _DateFilterBottomSheetState extends State<DateFilterBottomSheet> {
       children: [
         Expanded(
           child: AppTextWidget(
-            'Filter by Date'.tr,
+            AppStringsKeys.filterByDate.tr,
             style: AppTextStyle.title.copyWith(fontSize: 18),
           ),
         ),
@@ -135,14 +136,14 @@ class _DateFilterBottomSheetState extends State<DateFilterBottomSheet> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         AppTextWidget(
-          'Filter Type'.tr,
+          AppStringsKeys.filterType.tr,
           style: AppTextStyle.label.copyWith(fontWeight: FontWeight.w600),
         ),
         SizedBox(height: 12),
-        _buildFilterTypeOption(DateFilterType.all, 'All'.tr),
-        _buildFilterTypeOption(DateFilterType.teachingYear, 'Teaching Year'.tr),
-        _buildFilterTypeOption(DateFilterType.term, 'Term'.tr),
-        _buildFilterTypeOption(DateFilterType.customRange, 'Custom Range'.tr),
+        _buildFilterTypeOption(DateFilterType.all, AppStringsKeys.all.tr),
+        _buildFilterTypeOption(DateFilterType.teachingYear, AppStringsKeys.teachingYear.tr),
+        _buildFilterTypeOption(DateFilterType.term, AppStringsKeys.term.tr),
+        _buildFilterTypeOption(DateFilterType.customRange, AppStringsKeys.customRange.tr),
       ],
     );
   }
@@ -176,7 +177,7 @@ class _DateFilterBottomSheetState extends State<DateFilterBottomSheet> {
       children: [
         SizedBox(height: 16),
         AppTextWidget(
-          'Select Teaching Year'.tr,
+          AppStringsKeys.selectTeachingYear.tr,
           style: AppTextStyle.label.copyWith(fontWeight: FontWeight.w600),
         ),
         SizedBox(height: 12),
@@ -190,7 +191,7 @@ class _DateFilterBottomSheetState extends State<DateFilterBottomSheet> {
           child: DropdownButtonHideUnderline(
             child: DropdownButton<TeachingYear>(
               value: selectedTeachingYear,
-              hint: AppTextWidget('Select Year'.tr, style: AppTextStyle.label),
+              hint: AppTextWidget(AppStringsKeys.selectYear.tr, style: AppTextStyle.label),
               items: availableYears.map((year) {
                 return DropdownMenuItem<TeachingYear>(
                   value: year,
@@ -215,18 +216,18 @@ class _DateFilterBottomSheetState extends State<DateFilterBottomSheet> {
       children: [
         SizedBox(height: 16),
         AppTextWidget(
-          'Select Term'.tr,
+          AppStringsKeys.selectTerm.tr,
           style: AppTextStyle.label.copyWith(fontWeight: FontWeight.w600),
         ),
         SizedBox(height: 12),
         Row(
           children: [
             Expanded(
-              child: _buildTermOption(Term.first, 'First Term'.tr, 'Aug - Jan'.tr),
+              child: _buildTermOption(Term.first, AppStringsKeys.firstTerm.tr, AppStringsKeys.augJan.tr),
             ),
             SizedBox(width: 12),
             Expanded(
-              child: _buildTermOption(Term.second, 'Second Term'.tr, 'Feb - Jul'.tr),
+              child: _buildTermOption(Term.second, AppStringsKeys.secondTerm.tr, AppStringsKeys.febJul.tr),
             ),
           ],
         ),
@@ -279,19 +280,19 @@ class _DateFilterBottomSheetState extends State<DateFilterBottomSheet> {
       children: [
         SizedBox(height: 16),
         AppTextWidget(
-          'Custom Date Range'.tr,
+          AppStringsKeys.customDateRange.tr,
           style: AppTextStyle.label.copyWith(fontWeight: FontWeight.w600),
         ),
         SizedBox(height: 12),
         Row(
           children: [
-            Expanded(child: _buildDatePicker('From Date'.tr, customStartDate, (date) {
+            Expanded(child: _buildDatePicker(AppStringsKeys.fromDate.tr, customStartDate, (date) {
               setState(() {
                 customStartDate = date;
               });
             })),
             SizedBox(width: 12),
-            Expanded(child: _buildDatePicker('To Date'.tr, customEndDate, (date) {
+            Expanded(child: _buildDatePicker(AppStringsKeys.toDate.tr, customEndDate, (date) {
               setState(() {
                 customEndDate = date;
               });
@@ -303,7 +304,7 @@ class _DateFilterBottomSheetState extends State<DateFilterBottomSheet> {
           Padding(
             padding: const EdgeInsets.only(top: 8),
             child: AppTextWidget(
-              'End date must be after start date'.tr,
+              AppStringsKeys.endDateMustBeAfterStartDate.tr,
               style: AppTextStyle.teshrinArLtRegular.copyWith(color: AppColors.colorNo),
             ),
           ),
@@ -342,7 +343,7 @@ class _DateFilterBottomSheetState extends State<DateFilterBottomSheet> {
                   child: AppTextWidget(
                     selectedDate != null
                         ? '${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}'
-                        : 'Select Date'.tr,
+                        : AppStringsKeys.selectDate.tr,
                     style: AppTextStyle.label.copyWith(
                       color: selectedDate != null ? AppColors.colorBlack : AppColors.textSecondaryColor,
                     ),
@@ -363,7 +364,7 @@ class _DateFilterBottomSheetState extends State<DateFilterBottomSheet> {
       children: [
         Expanded(
           child: PrimaryButtonWidget(
-            text: 'Apply Filter'.tr,
+            text: AppStringsKeys.applyFilter.tr,
             onClick: _applyFilter,
             enabled: _isFilterValid(),
           ),
@@ -372,7 +373,7 @@ class _DateFilterBottomSheetState extends State<DateFilterBottomSheet> {
         TextButton(
           onPressed: _clearFilter,
           child: AppTextWidget(
-            'Clear Filter'.tr,
+            AppStringsKeys.clearFilter.tr,
             style: AppTextStyle.teshrinArLtRegular.copyWith(color: AppColors.textSecondaryColor),
           ),
         ),

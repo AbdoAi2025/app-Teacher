@@ -10,6 +10,7 @@ import '../themes/app_colors.dart';
 import '../utils/LogUtils.dart';
 import '../utils/message_utils.dart';
 import '../utils/whatsapp_utils.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class UserNotSubscribedDialog {
 
@@ -20,12 +21,12 @@ class UserNotSubscribedDialog {
 
     _isDialogShown = true;
     showConfirmationMessage(
-        "subscription_message".tr,
+        AppStringsKeys.subscriptionMessage.tr,
         () {
           _onRenewClick();
         },
         barrierDismissible: barrierDismissible,
-        positiveButtonText: "Renew".tr,
+        positiveButtonText: AppStringsKeys.renew.tr,
         negativeButtonText: null,
         subTitleWidget: _buildContactWidget(),
         onCancel: () {
@@ -37,8 +38,8 @@ class UserNotSubscribedDialog {
     if (_isDialogShown) return;
 
     final message = remainingDays == 0
-        ? "subscription_expiring_today_message".tr
-        : "subscription_expiring_message".tr.replaceAll("{days}", remainingDays.toString());
+        ? AppStringsKeys.subscriptionExpiringTodayMessage.tr
+        : AppStringsKeys.subscriptionExpiringMessage.tr.replaceAll("{days}", remainingDays.toString());
 
     appLog("showSubscriptionExpiringDialog message:$message");
 
@@ -49,8 +50,8 @@ class UserNotSubscribedDialog {
         _onRenewClick();
       },
       barrierDismissible: false,
-      positiveButtonText: "Renew".tr,
-      negativeButtonText: "Got It".tr,
+      positiveButtonText: AppStringsKeys.renew.tr,
+      negativeButtonText: AppStringsKeys.gotIt.tr,
       subTitleWidget: _buildContactWidget(),
       onCancel: () {
         _isDialogShown = false;
@@ -65,7 +66,7 @@ class UserNotSubscribedDialog {
         style: Theme.of(Get.context!).textTheme.bodySmall,
         children: [
           TextSpan(
-            text: "Do you want to contact now?".tr,
+            text: AppStringsKeys.doYouWantToContactNow.tr,
             style: TextStyle(
               color: AppColors.appMainColor,
               decoration: TextDecoration.underline,
@@ -165,12 +166,12 @@ class UserNotSubscribedDialog {
   static void showTransferByInstaPayDialog() {
 
     showConfirmationMessage(
-      "Cash Payment Instruction".tr, () {
+      AppStringsKeys.cashPaymentInstruction.tr, () {
         OpenInstaPayUtils.openUrl();
       },
       barrierDismissible: false,
-      positiveButtonText: "Renew".tr,
-      negativeButtonText: "Got It".tr,
+      positiveButtonText: AppStringsKeys.renew.tr,
+      negativeButtonText: AppStringsKeys.gotIt.tr,
       subTitleWidget: _buildContactWidget(),
       onCancel: () {},
     );

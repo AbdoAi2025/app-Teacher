@@ -6,6 +6,7 @@ import 'package:teacher_app/widgets/item_selection_widget/student_list_selection
 import 'package:teacher_app/widgets/loading_widget.dart';
 import 'grades_selection_state.dart';
 import 'select_grade_controller.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class SelectGradeBottomSheet {
 
@@ -33,7 +34,7 @@ class SelectGradeBottomSheet {
             width: double.infinity,
             child: ItemSelectionWidget(
               items: value.items,
-              title: 'Select Grade'.tr,
+              title: AppStringsKeys.selectGrade.tr,
               isSingleSelection: true,
               onSaved: (selectedItems) =>
                   ctrl.onSelectedGrade(selectedItems.firstOrNull),

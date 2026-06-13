@@ -10,6 +10,7 @@ import '../../utils/app_background_styles.dart';
 import '../app_txt_widget.dart';
 import '../groups/states/group_student_item_ui_state.dart';
 import 'students_group_list_widget.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class StudentsGroupListSearchWidget extends StatefulWidget {
   final String query;
@@ -75,7 +76,7 @@ class _StudentsGroupListSearchWidgetState
         textInputAction: TextInputAction.search,
         style: AppTextStyle.value,
         decoration: InputDecoration(
-          hintText: "Search".tr,
+          hintText: AppStringsKeys.search.tr,
           hintStyle: AppTextStyle.value.copyWith(color: AppColors.textSecondaryColor),
           prefixIcon: Icon(
             Icons.search_rounded,
@@ -101,8 +102,8 @@ class _StudentsGroupListSearchWidgetState
     final count = filteredItems.length;
     final total = students.length;
     final label = _controller.text.isEmpty
-        ? "$count ${"Students".tr}"
-        : "$count / $total ${"Students".tr}";
+        ? "$count ${AppStringsKeys.students.tr}"
+        : "$count / $total ${AppStringsKeys.students.tr}";
     return AppTextWidget(label, style: AppTextStyle.small);
   }
 

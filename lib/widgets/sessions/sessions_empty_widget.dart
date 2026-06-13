@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:teacher_app/themes/app_colors.dart';
 import 'package:teacher_app/themes/txt_styles.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class SessionsEmptyWidget extends StatelessWidget {
   final String? title;
@@ -31,12 +32,12 @@ class SessionsEmptyWidget extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           AppTextWidget(
-            title ?? "No Sessions Found".tr,
+            title ?? AppStringsKeys.noSessionsFound.tr,
             style: AppTextStyle.title.copyWith(fontSize: 15),
           ),
           const SizedBox(height: 4),
           AppTextWidget(
-            subtitle ?? "No sessions have been held for this group yet".tr,
+            subtitle ?? AppStringsKeys.noSessionsHaveBeenHeldForThisGroupYet.tr,
             style: AppTextStyle.value.copyWith(color: AppColors.textSecondaryColor),
             textAlign: TextAlign.center,
           ),

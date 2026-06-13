@@ -7,6 +7,7 @@ import 'package:teacher_app/widgets/empty_view_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
 import '../create_group_controller.dart';
 import '../students_selection/states/student_selection_item_ui_state.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class AddStudentsStep extends StatefulWidget {
   final CreateGroupController controller;
@@ -45,7 +46,7 @@ class _AddStudentsStepState extends State<AddStudentsStep> {
                   child: Padding(
                     padding: const EdgeInsets.all(20),
                     child:
-                        EmptyViewWidget(message: 'Please select grade first'.tr),
+                        EmptyViewWidget(message: AppStringsKeys.pleaseSelectGradeFirst.tr),
                   ),
                 );
               case StudentsSelectionStateSuccess():
@@ -68,7 +69,7 @@ class _AddStudentsStepState extends State<AddStudentsStep> {
             child: Obx(() {
               final count = widget.studentsController.selectedStudents.length;
               return Text(
-                '$count ${'Selected Students'.tr}',
+                '$count ${AppStringsKeys.selectedStudents.tr}',
                 style:
                     const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
               );
@@ -77,7 +78,7 @@ class _AddStudentsStepState extends State<AddStudentsStep> {
           OutlinedButton.icon(
             onPressed: widget.onAddStudent,
             icon: const Icon(Icons.person_add_outlined, size: 16),
-            label: Text('Add Student'.tr),
+            label: Text(AppStringsKeys.addStudent.tr),
             style: OutlinedButton.styleFrom(
               padding:
                   const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -102,7 +103,7 @@ class _AddStudentsStepState extends State<AddStudentsStep> {
               controller: widget.studentsController,
             ),
             icon: const Icon(Icons.checklist_outlined, size: 16),
-            label: Text('Select Students'.tr),
+            label: Text(AppStringsKeys.selectStudents.tr),
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 12),
               shape: RoundedRectangleBorder(
@@ -115,7 +116,7 @@ class _AddStudentsStepState extends State<AddStudentsStep> {
             final selected = widget.studentsController.selectedStudents;
             if (selected.isEmpty) {
               return Center(
-                child: EmptyViewWidget(message: 'No students selected'.tr),
+                child: EmptyViewWidget(message: AppStringsKeys.noStudentsSelected2.tr),
               );
             }
             return _buildSelectedList(selected);

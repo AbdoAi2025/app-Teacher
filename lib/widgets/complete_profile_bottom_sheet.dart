@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/screens/edit_profile/edit_profile_screen.dart';
 import 'package:teacher_app/utils/message_utils.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class CompleteProfileBottomSheet {
   CompleteProfileBottomSheet._();
@@ -11,10 +12,10 @@ class CompleteProfileBottomSheet {
     required VoidCallback onSuccess,
   }) async {
     showConfirmationMessage(
-      'complete_profile_message'.tr,
+      AppStringsKeys.completeProfileMessage.tr,
       () => _openSheet(context, onSuccess: onSuccess),
       barrierDismissible: false,
-      positiveButtonText: 'Complete Now'.tr,
+      positiveButtonText: AppStringsKeys.completeNow.tr,
     );
   }
 

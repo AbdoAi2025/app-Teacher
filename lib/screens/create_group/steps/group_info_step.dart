@@ -6,6 +6,7 @@ import 'package:teacher_app/widgets/app_text_field_widget.dart';
 import 'package:teacher_app/widgets/dropdown_icon_widget.dart';
 import '../create_group_controller.dart';
 import '../grades/select_grade_bottom_sheet.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class GroupInfoStep extends StatelessWidget {
   final CreateGroupController controller;
@@ -84,10 +85,10 @@ class GroupInfoStep extends StatelessWidget {
 
   Widget _nameField() => AppTextFieldWidget(
         controller: controller.nameController,
-        label: 'Group Name'.tr,
-        hint: 'Group Name'.tr,
+        label: AppStringsKeys.groupName.tr,
+        hint: AppStringsKeys.groupName.tr,
         validator: MultiValidator([
-          RequiredValidator(errorText: 'Group Name is required'.tr),
+          RequiredValidator(errorText: AppStringsKeys.groupNameIsRequired.tr),
         ]).call,
       );
 
@@ -95,12 +96,12 @@ class GroupInfoStep extends StatelessWidget {
     return Obx(() => AppTextFieldWidget(
           controller: TextEditingController(
               text: controller.selectedGrade.value?.name),
-          label: 'Grade'.tr,
-          hint: 'Grade'.tr,
+          label: AppStringsKeys.grade.tr,
+          hint: AppStringsKeys.grade.tr,
           readOnly: true,
           suffixIcon: DropdownIconWidget(),
           validator: MultiValidator([
-            RequiredValidator(errorText: 'Grade is required'.tr),
+            RequiredValidator(errorText: AppStringsKeys.gradeIsRequired.tr),
           ]).call,
           onTap: () => _showGradesSheet(context),
         ));

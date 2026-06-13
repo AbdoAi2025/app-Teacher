@@ -21,6 +21,7 @@ import '../../widgets/complete_profile_bottom_sheet.dart';
 import '../../widgets/otp_verification_bottom_sheet.dart';
 import '../login/login_controller.dart';
 import '../login/login_state.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -44,7 +45,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppToolbarWidget.appBar(title: "Create Account".tr),
+      appBar: AppToolbarWidget.appBar(title: AppStringsKeys.createAccount.tr),
       body: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: SingleChildScrollView(
@@ -80,24 +81,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Widget _nameField() => AppTextFieldWidget(
         controller: nameController,
-        label: "Full Name".tr,
-        hint: "Enter your full name".tr,
+        label: AppStringsKeys.fullName.tr,
+        hint: AppStringsKeys.enterYourFullName.tr,
         prefixIcon: const Icon(Icons.person_outline),
         validator: controller.validateName,
       );
 
   Widget _userNameField() => AppTextFieldWidget(
         controller: usernameController,
-        label: "User Name".tr,
-        hint: "Choose a username".tr,
+        label: AppStringsKeys.userName.tr,
+        hint: AppStringsKeys.chooseAUsername.tr,
         prefixIcon: const Icon(Icons.account_circle_outlined),
         validator: controller.validateUsername,
       );
 
   Widget _emailField() => AppTextFieldWidget(
         controller: emailController,
-        label: "Email".tr,
-        hint: "Enter your email".tr,
+        label: AppStringsKeys.email.tr,
+        hint: AppStringsKeys.enterYourEmail.tr,
         prefixIcon: const Icon(Icons.email_outlined),
         keyboardType: TextInputType.emailAddress,
         validator: controller.validateEmail,
@@ -105,8 +106,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Widget _phoneField() => AppTextFieldWidget(
         controller: phoneController,
-        label: "Phone Number".tr,
-        hint: "Enter your phone number".tr,
+        label: AppStringsKeys.phoneNumber.tr,
+        hint: AppStringsKeys.enterYourPhoneNumber.tr,
         prefixIcon: const Icon(Icons.phone_outlined),
         keyboardType: TextInputType.phone,
         validator: controller.validatePhone,
@@ -120,15 +121,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
       );
       return AppTextFieldWidget(
         controller: displayController,
-        label: "Gender".tr,
-        hint: "Select your gender".tr,
+        label: AppStringsKeys.gender.tr,
+        hint: AppStringsKeys.selectYourGender.tr,
         prefixIcon: const Icon(Icons.person_search_outlined),
         suffixIcon: const Icon(Icons.arrow_drop_down),
         readOnly: true,
         onTap: () => _showGenderSheet(),
         validator: (_) =>
             controller.selectedGender.value == null
-                ? "Please select your gender".tr
+                ? AppStringsKeys.pleaseSelectYourGender.tr
                 : null,
       );
     });
@@ -166,7 +167,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         color: Theme.of(context).primaryColor),
                     const SizedBox(width: 12),
                     Text(
-                      "Select Gender".tr,
+                      AppStringsKeys.selectGender.tr,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -231,8 +232,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       );
       return AppTextFieldWidget(
         controller: displayController,
-        label: "Subject".tr,
-        hint: "Select your subject".tr,
+        label: AppStringsKeys.subject.tr,
+        hint: AppStringsKeys.selectYourSubject.tr,
         prefixIcon: const Icon(Icons.menu_book_outlined),
         suffixIcon: const Icon(Icons.arrow_drop_down),
         readOnly: true,
@@ -247,7 +248,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         },
         validator: (_) =>
             controller.selectedSubject.value == null
-                ? "Please select your subject".tr
+                ? AppStringsKeys.pleaseSelectYourSubject.tr
                 : null,
       );
     });
@@ -255,16 +256,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Widget _passwordField() => AppPasswordFieldWidget(
         controller: passwordController,
-        label: "Password".tr,
-        hint: "Enter password".tr,
+        label: AppStringsKeys.password.tr,
+        hint: AppStringsKeys.enterPassword.tr,
         prefixIcon: const Icon(Icons.lock_outline),
         validator: controller.validatePassword,
       );
 
   Widget _confirmPasswordField() => AppPasswordFieldWidget(
         controller: confirmPasswordController,
-        label: "Confirm Password".tr,
-        hint: "Confirm your password".tr,
+        label: AppStringsKeys.confirmPassword.tr,
+        hint: AppStringsKeys.confirmYourPassword.tr,
         prefixIcon: const Icon(Icons.lock_outline),
         validator: controller.validateConfirmPassword,
       );
@@ -273,7 +274,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return SizedBox(
       width: double.infinity,
       child: PrimaryButtonWidget(
-        text: "Register".tr,
+        text: AppStringsKeys.register.tr,
         onClick: () => onRegisterClick(),
       ),
     );
@@ -283,10 +284,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text("Already have an account?".tr),
+        Text(AppStringsKeys.alreadyHaveAnAccount.tr),
         TextButton(
           onPressed: () => AppNavigator.navigateToLogin(),
-          child: Text("Login".tr),
+          child: Text(AppStringsKeys.login.tr),
         ),
       ],
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'info_chip_widget.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class SessionsCountInfoChipWidget extends StatelessWidget {
   final int count;
@@ -10,7 +11,7 @@ class SessionsCountInfoChipWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InfoChipWidget(
-      text: "$count ${'Sessions'.tr}",
+      text: "$count ${AppStringsKeys.sessions.tr}",
       icon: Icons.menu_book_outlined,
     );
   }

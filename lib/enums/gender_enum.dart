@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 enum GenderEnum {
   MALE("MALE"),
@@ -20,9 +21,9 @@ enum GenderEnum {
   String get displayName {
     switch (this) {
       case GenderEnum.MALE:
-        return 'Male'.tr;
+        return AppStringsKeys.male.tr;
       case GenderEnum.FEMALE:
-        return 'Female'.tr;
+        return AppStringsKeys.female.tr;
     }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 enum DateFilterType {
   all,
@@ -91,9 +92,9 @@ class DateFilter {
   String get displayName {
     switch (type) {
       case DateFilterType.all:
-        return 'All'.tr;
+        return AppStringsKeys.all.tr;
       case DateFilterType.teachingYear:
-        return '${'Teaching Year'.tr}: ${teachingYear?.displayName}';
+        return '${AppStringsKeys.teachingYear.tr}: ${teachingYear?.displayName}';
       case DateFilterType.term:
         return '${teachingYear?.displayName} - ${"${term == Term.first ? 'First' : 'Second'} Term".tr}';
       case DateFilterType.customRange:

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../themes/app_colors.dart';
 import 'info_chip_widget.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class StudentCountInfoChipWidget extends StatelessWidget{
 
@@ -12,7 +13,7 @@ class StudentCountInfoChipWidget extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
    return InfoChipWidget(
-     text: "$count ${'Students'.tr}",
+     text: "$count ${AppStringsKeys.students.tr}",
      color: null,
      icon: Icons.people_outline,
    );

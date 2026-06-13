@@ -8,6 +8,7 @@ import 'package:teacher_app/widgets/app_radio_widget.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
 import 'package:teacher_app/widgets/primary_button_widget.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class PaymentMethodsBottomSheet extends StatefulWidget {
 
@@ -104,7 +105,7 @@ class _PaymentMethodsBottomSheetState extends State<PaymentMethodsBottomSheet> {
                   ),
                   SizedBox(width: 12),
                   Text(
-                    'Payment Methods'.tr,
+                    AppStringsKeys.paymentMethods.tr,
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -156,7 +157,7 @@ class _PaymentMethodsBottomSheetState extends State<PaymentMethodsBottomSheet> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Select Payment Method'.tr,
+                  AppStringsKeys.selectPaymentMethod.tr,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -195,18 +196,18 @@ class _PaymentMethodsBottomSheetState extends State<PaymentMethodsBottomSheet> {
 
     switch (methodEnum) {
       case PaymentMethodEnum.CASH:
-        description = 'Cash Payment Description'.tr;
+        description = AppStringsKeys.cashPaymentDescription.tr;
         icon = Icons.money;
         color = Colors.orange;
         break;
       case PaymentMethodEnum.ONLINE:
       case PaymentMethodEnum.WALLET:
-        description = 'Online Payment Description'.tr;
+        description = AppStringsKeys.onlinePaymentDescription.tr;
         icon = Icons.credit_card;
         color = Colors.green;
         break;
       default:
-        description = 'Payment Description'.tr;
+        description = AppStringsKeys.paymentDescription.tr;
     }
 
     return GestureDetector(
@@ -278,7 +279,7 @@ class _PaymentMethodsBottomSheetState extends State<PaymentMethodsBottomSheet> {
           ),
           SizedBox(height: 16),
           Text(
-            'No Payment Methods Available'.tr,
+            AppStringsKeys.noPaymentMethodsAvailable.tr,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w600,
@@ -288,7 +289,7 @@ class _PaymentMethodsBottomSheetState extends State<PaymentMethodsBottomSheet> {
           ),
           SizedBox(height: 8),
           Text(
-            'No payment methods are currently available. Please try again later or contact support.'.tr,
+            AppStringsKeys.noPaymentMethodsAreCurrentlyAvailablePleaseTryAgainLaterOrContactSupport.tr,
             style: TextStyle(
               fontSize: 14,
               color: Colors.grey[500],
@@ -308,7 +309,7 @@ class _PaymentMethodsBottomSheetState extends State<PaymentMethodsBottomSheet> {
   }
 
   _activeContinueButton() => PrimaryButtonWidget(
-    text: 'Continue'.tr,
+    text: AppStringsKeys.keyContinue.tr,
     onClick: () {
       Navigator.pop(context, selectedPaymentMethod);
     },
@@ -322,7 +323,7 @@ class _PaymentMethodsBottomSheetState extends State<PaymentMethodsBottomSheet> {
       ),
     ),
     child: AppTextWidget(
-      'Continue'.tr,
+      AppStringsKeys.keyContinue.tr,
       style: TextStyle(fontSize: 18),
     ),
   );

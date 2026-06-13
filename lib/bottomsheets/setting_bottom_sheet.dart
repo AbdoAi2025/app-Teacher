@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../themes/app_colors.dart'; // Ensure correct path
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 
 class SettingItemModel{
@@ -10,10 +11,10 @@ class SettingItemModel{
   final VoidCallback onTap;
   SettingItemModel({required this.title, required this.icon, required this.onTap});
 
-  factory SettingItemModel.editItem(VoidCallback onTap) => SettingItemModel(title: "Edit".tr, icon: Icons.edit, onTap: onTap);
-  factory SettingItemModel.upgradeItem(VoidCallback onTap) => SettingItemModel(title: "Upgrade".tr, icon: Icons.upgrade, onTap: onTap);
-  factory SettingItemModel.deleteItem(VoidCallback onTap) => SettingItemModel(title: "Delete".tr, icon: Icons.delete, onTap: onTap);
-  factory SettingItemModel.addStudentToGroup(VoidCallback onTap) => SettingItemModel(title: "Add to Group".tr, icon: Icons.people_outline, onTap: onTap);
+  factory SettingItemModel.editItem(VoidCallback onTap) => SettingItemModel(title: AppStringsKeys.edit.tr, icon: Icons.edit, onTap: onTap);
+  factory SettingItemModel.upgradeItem(VoidCallback onTap) => SettingItemModel(title: AppStringsKeys.upgrade.tr, icon: Icons.upgrade, onTap: onTap);
+  factory SettingItemModel.deleteItem(VoidCallback onTap) => SettingItemModel(title: AppStringsKeys.delete.tr, icon: Icons.delete, onTap: onTap);
+  factory SettingItemModel.addStudentToGroup(VoidCallback onTap) => SettingItemModel(title: AppStringsKeys.addToGroup.tr, icon: Icons.people_outline, onTap: onTap);
 
 }
 

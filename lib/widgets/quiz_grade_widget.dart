@@ -5,6 +5,7 @@ import 'package:teacher_app/themes/txt_styles.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
 
 import '../themes/app_colors.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class QuizGradeWidget extends StatelessWidget {
 
@@ -20,7 +21,7 @@ class QuizGradeWidget extends StatelessWidget {
     var color = (score ?? 0) < total/2 ? AppColors.colorNo : AppColors.colorYes;
 
     return AppTextWidget(
-      score == null ? "Not Determined".tr : "${getGradeFormat(score)} / $total" ,
+      score == null ? AppStringsKeys.notDetermined.tr : "${getGradeFormat(score)} / $total" ,
       color: score == null ? AppColors.inactiveColor : color,
       overflow: TextOverflow.ellipsis,
       fontSize: fontSize,

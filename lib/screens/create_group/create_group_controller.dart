@@ -18,6 +18,7 @@ import 'states/create_group_state.dart';
 import 'students_selection/states/student_selection_item_ui_state.dart';
 import 'students_selection/states/students_selection_state.dart';
 import 'students_selection/students_selection_controller.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class CreateGroupController extends GetxController {
   final formKey = GlobalKey<FormState>();
@@ -80,7 +81,7 @@ class CreateGroupController extends GetxController {
       currentStep.value = 1;
       return true;
     } else {
-      stepError.value = result.error?.toString() ?? 'Something went wrong'.tr;
+      stepError.value = result.error?.toString() ?? AppStringsKeys.somethingWentWrong.tr;
       return false;
     }
   }
@@ -107,7 +108,7 @@ class CreateGroupController extends GetxController {
     final result = await saveGroupStudents(groupId, currentIds);
     isStepLoading.value = false;
     if (result.isError) {
-      stepError.value = result.error?.toString() ?? 'Something went wrong'.tr;
+      stepError.value = result.error?.toString() ?? AppStringsKeys.somethingWentWrong.tr;
       return false;
     }
 
@@ -150,7 +151,7 @@ class CreateGroupController extends GetxController {
 
     final incomplete = timings.where((t) => !t.isComplete).toList();
     if (incomplete.isNotEmpty) {
-      stepError.value = 'Please complete all timing entries'.tr;
+      stepError.value = AppStringsKeys.pleaseCompleteAllTimingEntries.tr;
       return false;
     }
 
@@ -168,7 +169,7 @@ class CreateGroupController extends GetxController {
       _submittedTimingsKey = currentKey;
       return true;
     } else {
-      stepError.value = result.error?.toString() ?? 'Something went wrong'.tr;
+      stepError.value = result.error?.toString() ?? AppStringsKeys.somethingWentWrong.tr;
       return false;
     }
   }

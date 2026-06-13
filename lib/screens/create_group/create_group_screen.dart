@@ -10,6 +10,7 @@ import 'steps/add_students_step.dart';
 import 'steps/add_timings_step.dart';
 import 'steps/group_info_step.dart';
 import 'steps/group_step_indicator.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class CreateGroupScreen extends StatefulWidget {
   const CreateGroupScreen({super.key});
@@ -102,7 +103,7 @@ class CreateGroupScreenState extends State<CreateGroupScreen> {
 
   Future<void> _onStep3Done() async {
     showConfirmationMessage(
-      'Are you sure you want to save?'.tr,
+      AppStringsKeys.areYouSureYouWantToSave.tr,
       () async {
         final ok = await getController().submitAll();
         if (!mounted) return;
@@ -119,8 +120,8 @@ class CreateGroupScreenState extends State<CreateGroupScreen> {
   // ----------------------------------------------------------------
   // Hooks for subclasses (EditGroupScreen legacy compatibility)
   // ----------------------------------------------------------------
-  String getScreenTitle() => 'Create Group'.tr;
-  String getSubmitButtonText() => 'Create Group'.tr;
+  String getScreenTitle() => AppStringsKeys.createGroup.tr;
+  String getSubmitButtonText() => AppStringsKeys.createGroup.tr;
 
   void showError(CreateGroupStateError result) {
     Get.snackbar('Error', result.exception.toString());

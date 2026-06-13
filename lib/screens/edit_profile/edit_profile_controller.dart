@@ -5,6 +5,7 @@ import 'package:teacher_app/domain/models/subject_model.dart';
 import 'package:teacher_app/domain/usecases/get_teacher_profile_use_case.dart';
 import 'package:teacher_app/domain/usecases/update_teacher_profile_use_case.dart';
 import 'package:teacher_app/enums/gender_enum.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class EditProfileController extends GetxController {
   final TeacherProfileData? initialProfile;
@@ -81,29 +82,29 @@ class EditProfileController extends GetxController {
       _populateFields(result.value!);
     } else {
       errorMessage.value =
-          result.error?.toString() ?? 'Something went wrong'.tr;
+          result.error?.toString() ?? AppStringsKeys.somethingWentWrong.tr;
     }
   }
 
   String? validateName(String? v) {
-    if (v == null || v.trim().isEmpty) return 'Full name is required'.tr;
-    if (v.trim().length < 3) return 'Name must be at least 3 characters'.tr;
+    if (v == null || v.trim().isEmpty) return AppStringsKeys.fullNameIsRequired.tr;
+    if (v.trim().length < 3) return AppStringsKeys.nameMustBeAtLeast3Characters.tr;
     return null;
   }
 
   String? validateEmail(String? v) {
-    if (v == null || v.trim().isEmpty) return 'Email is required'.tr;
+    if (v == null || v.trim().isEmpty) return AppStringsKeys.emailIsRequired.tr;
     if (!RegExp(r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(v.trim())) {
-      return 'Enter a valid email address'.tr;
+      return AppStringsKeys.enterAValidEmailAddress.tr;
     }
     return null;
   }
 
   String? validatePhone(String? v) {
-    if (v == null || v.trim().isEmpty) return 'Phone number is required'.tr;
+    if (v == null || v.trim().isEmpty) return AppStringsKeys.phoneNumberIsRequired.tr;
     final clean = v.trim().replaceAll(RegExp(r'[^\d]'), '');
-    if (clean.length < 10) return 'Phone number must be at least 10 digits'.tr;
-    if (clean.length > 15) return 'Phone number must not exceed 15 digits'.tr;
+    if (clean.length < 10) return AppStringsKeys.phoneNumberMustBeAtLeast10Digits.tr;
+    if (clean.length > 15) return AppStringsKeys.phoneNumberMustNotExceed15Digits.tr;
     return null;
   }
 
@@ -127,7 +128,7 @@ class EditProfileController extends GetxController {
 
     if (result.isError) {
       errorMessage.value =
-          result.error?.toString() ?? 'Something went wrong'.tr;
+          result.error?.toString() ?? AppStringsKeys.somethingWentWrong.tr;
       return false;
     }
 

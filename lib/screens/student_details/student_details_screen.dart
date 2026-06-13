@@ -35,6 +35,7 @@ import '../../widgets/student_grade_item_widget.dart';
 import '../student_edit/args/edit_student_args_model.dart';
 import '../student_reports/args/student_reports_args_model.dart';
 import 'states/student_details_state.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class StudentDetailsScreen extends StatefulWidget {
   const StudentDetailsScreen({super.key});
@@ -50,7 +51,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppToolbarWidget.appBar(title: "Student Details".tr,
+        appBar: AppToolbarWidget.appBar(title: AppStringsKeys.studentDetails.tr,
             actions: [_settingsIcon()]),
         body: Column(
           children: [
@@ -143,8 +144,8 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
 
   Widget _sessionsButton(StudentDetailsUiState uiState) {
     final label = uiState.sessionCount > 0
-        ? "${"Sessions".tr} (${uiState.sessionCount})"
-        : "Sessions".tr;
+        ? "${AppStringsKeys.sessions.tr} (${uiState.sessionCount})"
+        : AppStringsKeys.sessions.tr;
     return OutlinedButton.icon(
       onPressed: () => AppNavigator.navigateToSessionsList(
         SessionListArgsModel(studentId: uiState.studentId),
@@ -158,7 +159,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
     return ElevatedButton.icon(
       onPressed: () => onViewAllSessionsClick(uiState),
       icon: const Icon(Icons.bar_chart_outlined),
-      label: Text("View Full Report".tr),
+      label: Text(AppStringsKeys.viewFullReport.tr),
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.appMainColor,
         foregroundColor: Colors.white,
@@ -203,7 +204,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
 
   Widget _contactInfoSection(StudentDetailsUiState uiState) {
     return SectionWidget(
-      title: "Contact Info".tr,
+      title: AppStringsKeys.contactInfo.tr,
       child: SizedBox(
         width: double.infinity,
         child: Column(
@@ -223,12 +224,12 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
   }
 
   Widget _parentPhone(String phone) => _contactItem(
-        label: "Parent Phone".tr,
+        label: AppStringsKeys.parentPhone.tr,
         phone: phone,
       );
 
   Widget _studentPhone(String phone) => _contactItem(
-        label: "Student Phone".tr,
+        label: AppStringsKeys.studentPhone.tr,
         phone: phone,
       );
 
@@ -267,7 +268,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
 
   onDeleteClick() {
 
-    showConfirmationMessage("${"Are you sure to delete ?".tr} ${controller.getStudentDetailsUiState()?.studentName ?? ""}", (){
+    showConfirmationMessage("${AppStringsKeys.areYouSureToDelete.tr} ${controller.getStudentDetailsUiState()?.studentName ?? ""}", (){
       showDialogLoading();
       controller.deleteStudent().listen((event) {
         hideDialogLoading();
@@ -311,7 +312,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
       context: context,
       onGroupSelected: (group) {
         showConfirmationMessage(
-          sprintf("Are you sure to add this student to this group %s ?".tr, [group.groupName]),
+          sprintf(AppStringsKeys.areYouSureToAddThisStudentToThisGroupS.tr, [group.groupName]),
           () {
             showDialogLoading();
             controller.addStudentToGroup(group.groupId).listen((event) {
@@ -354,7 +355,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
     return SizedBox(
       width: double.infinity,
       child: SectionWidget(
-        title: "Groups".tr,
+        title: AppStringsKeys.groups.tr,
         isCard: false,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -380,7 +381,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
 
   Widget _availableGradesSection(StudentDetailsUiState uiState) {
     return SectionWidget(
-      title: "Grades".tr,
+      title: AppStringsKeys.grades.tr,
       isCard: false,
       child: Column(
         spacing: 10,
@@ -397,7 +398,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
 
   void _onGroupRemoveClick(StudentGroupApiModel group, StudentDetailsUiState uiState) {
     showConfirmationMessage(
-      sprintf("Are you sure to remove this student from this group %s ?".tr, [group.groupName ?? ""]),
+      sprintf(AppStringsKeys.areYouSureToRemoveThisStudentFromThisGroupS.tr, [group.groupName ?? ""]),
       () {
         showDialogLoading();
         controller.removeStudentFromGroup(group.groupId ?? "").listen((event) {
@@ -429,7 +430,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
 
   Future<void> _upgradeStudentGrade(StudentDetailsUiState uiState, int newGradeId) async {
     if (newGradeId <= 0) {
-      showErrorMessage('Invalid grade selected'.tr);
+      showErrorMessage(AppStringsKeys.invalidGradeSelected.tr);
       return;
     }
 
@@ -447,10 +448,10 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
       hideDialogLoading();
 
       if (result.isSuccess) {
-        showSuccessMessage('Student grade updated successfully'.tr);
+        showSuccessMessage(AppStringsKeys.studentGradeUpdatedSuccessfully.tr);
         controller.reload(); // Reload to show updated grade
       } else {
-        showErrorMessage(result.error?.toString() ?? 'Failed to update grade'.tr);
+        showErrorMessage(result.error?.toString() ?? AppStringsKeys.failedToUpdateGrade.tr);
       }
     } catch (e) {
       hideDialogLoading();
@@ -464,7 +465,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
       currentGradeId: grade.gradeId.toString(),
       onGradeSelected: (selectedGrade) {
 
-        var message = sprintf( "Are you sure to update this grade from '%s' to '%s'".tr , [grade.localizedName?.name ?? "" , selectedGrade.localizedName?.name ?? ""]);
+        var message = sprintf( AppStringsKeys.key196566752.tr , [grade.localizedName?.name ?? "" , selectedGrade.localizedName?.name ?? ""]);
 
         showConfirmationMessage(
           message,
@@ -489,7 +490,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
   _addStudentToGroupButton(StudentDetailsUiState uiState) {
     return Center(
       child: PrimaryButtonWidget(
-        text: "Add to Group".tr,
+        text: AppStringsKeys.addToGroup.tr,
         onClick: () {
           onAddToGroupClick(uiState);
         },

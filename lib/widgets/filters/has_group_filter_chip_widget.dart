@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/themes/app_colors.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class HasGroupFilterChipWidget extends StatelessWidget {
   final Rx<bool?> hasGroupFilter;
@@ -21,14 +22,14 @@ class HasGroupFilterChipWidget extends StatelessWidget {
 
       if (value == true) {
         return _activeChip(
-          label: 'Has Group'.tr,
+          label: AppStringsKeys.hasGroup.tr,
           color: AppColors.appMainColor,
         );
       }
 
       if (value == false) {
         return _activeChip(
-          label: 'No Group'.tr,
+          label: AppStringsKeys.noGroup.tr,
           color: AppColors.orange ?? Colors.orange,
         );
       }
@@ -36,7 +37,7 @@ class HasGroupFilterChipWidget extends StatelessWidget {
       return ActionChip(
         avatar: Icon(Icons.people_outline, size: 16, color: AppColors.textSecondaryColor),
         label: Text(
-          'Has Group'.tr,
+          AppStringsKeys.hasGroup.tr,
           style: TextStyle(color: AppColors.textSecondaryColor, fontSize: 13),
         ),
         onPressed: onCycle,

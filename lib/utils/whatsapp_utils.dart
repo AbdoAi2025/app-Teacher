@@ -9,6 +9,7 @@ import 'package:teacher_app/utils/message_utils.dart';
 import 'package:teacher_app/data/dataSource/whatsapp_share_preferences.dart';
 import 'package:teacher_app/widgets/confirm_dailog_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 final MethodChannel _whatsappChannel = MethodChannel('whatsapp_share');
 
@@ -65,8 +66,8 @@ class WhatsappUtils {
 
         // Show toast that phone number has been copied
         Get.snackbar(
-          'Copied'.tr,
-          'Parent phone number copied to clipboard'.tr,
+          AppStringsKeys.copied.tr,
+          AppStringsKeys.parentPhoneNumberCopiedToClipboard.tr,
           duration: Duration(seconds: 3),
           backgroundColor: Colors.grey[800],
           colorText: Colors.white,
@@ -157,7 +158,7 @@ class WhatsappUtils {
               children: [
                 Icon(Icons.send, color: Colors.green),
                 SizedBox(width: 8),
-                Text("Send Report".tr),
+                Text(AppStringsKeys.sendReport.tr),
               ],
             ),
             content: Column(
@@ -275,7 +276,7 @@ class WhatsappUtils {
               const SizedBox(height: 16),
 
               Text(
-                "Share via".tr,
+                AppStringsKeys.shareVia.tr,
                 style: Theme.of(context).textTheme.titleLarge,
                 textAlign: TextAlign.center,
               ),
@@ -292,7 +293,7 @@ class WhatsappUtils {
                     });
                   },
                 ),
-                title: Text("WhatsApp".tr),
+                title: Text(AppStringsKeys.whatsapp.tr),
                 onTap: () {
                   setState(() {
                     selectedOption = WhatsAppShareOption.whatsapp;
@@ -311,7 +312,7 @@ class WhatsappUtils {
                     });
                   },
                 ),
-                title: Text("WhatsApp Business".tr),
+                title: Text(AppStringsKeys.whatsappBusiness.tr),
                 onTap: () {
                   setState(() {
                     selectedOption = WhatsAppShareOption.whatsappBusiness;
@@ -330,7 +331,7 @@ class WhatsappUtils {
                     });
                   },
                 ),
-                title: Text("Other".tr),
+                title: Text(AppStringsKeys.other.tr),
                 onTap: () {
                   setState(() {
                     selectedOption = WhatsAppShareOption.other;
@@ -348,7 +349,7 @@ class WhatsappUtils {
                     dontAskAgain = value ?? false;
                   });
                 },
-                title: Text("Don't ask me again".tr),
+                title: Text(AppStringsKeys.key325666021.tr),
                 controlAffinity: ListTileControlAffinity.leading,
               ),
 
@@ -362,7 +363,7 @@ class WhatsappUtils {
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: Text("Cancel".tr),
+                    child: Text(AppStringsKeys.cancel.tr),
                   ),
                   ElevatedButton(
                     onPressed: selectedOption == null ? null : () async {
@@ -377,7 +378,7 @@ class WhatsappUtils {
                       // Share the file with selected option
                       await _shareFileWithOption(file, phoneNumber, selectedOption!);
                     },
-                    child: Text("Share".tr),
+                    child: Text(AppStringsKeys.share.tr),
                   ),
                 ],
               ),
@@ -422,7 +423,7 @@ class WhatsappUtils {
       );
     } catch (e) {
       appLog("shareWithOther ex: ${e.toString()}");
-      showErrorMessage('Could not share file'.tr);
+      showErrorMessage(AppStringsKeys.couldNotShareFile.tr);
     }
   }
 

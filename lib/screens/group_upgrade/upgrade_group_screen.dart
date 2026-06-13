@@ -6,6 +6,7 @@ import 'package:teacher_app/utils/message_utils.dart';
 import '../create_group/create_group_screen.dart';
 import '../create_group/states/create_group_state.dart';
 import 'upgrade_group_controller.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class UpgradeGroupScreen extends EditGroupScreen {
 
@@ -26,17 +27,17 @@ class _UpgradeGroupScreenState extends EditGroupScreenState {
 
   @override
   String getScreenTitle() {
-    return "Upgrade Group".tr;
+    return AppStringsKeys.upgradeGroup.tr;
   }
 
   @override
   String getSubmitButtonText() {
-    return "Upgrade".tr;
+    return AppStringsKeys.upgrade.tr;
   }
 
   @override
   void onCreateGroupSuccess(SaveGroupStateSuccess result) {
-    showSuccessMessage("Group upgraded successfully".tr);
+    showSuccessMessage(AppStringsKeys.groupUpgradedSuccessfully.tr);
     super.onCreateGroupSuccess(result);
   }
 }

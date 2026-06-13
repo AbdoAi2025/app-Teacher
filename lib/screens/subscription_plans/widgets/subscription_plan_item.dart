@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:teacher_app/screens/subscription_plans/states/subscription_plan_item_ui_state.dart';
 import 'package:teacher_app/themes/txt_styles.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class SubscriptionPlanItem extends StatelessWidget {
   final SubscriptionPlanItemUiState planUiModel;
@@ -104,7 +105,7 @@ class SubscriptionPlanItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Text(
-        'Current Plan'.tr,
+        AppStringsKeys.currentPlan.tr,
         style: TextStyle(
           color: Colors.white,
           fontSize: 12,
@@ -122,7 +123,7 @@ class SubscriptionPlanItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Text(
-        'Most Popular'.tr,
+        AppStringsKeys.mostPopular.tr,
         style: TextStyle(
           color: Colors.white,
           fontSize: 12,
@@ -157,7 +158,7 @@ class SubscriptionPlanItem extends StatelessWidget {
             child: _buildFeatureItem(
               context,
               Icons.person_outline,
-              '${"Total".tr}: $totalStudentCount ${'students'.tr}',
+              '${AppStringsKeys.total.tr}: $totalStudentCount ${AppStringsKeys.students2.tr}',
             ),
           ),
         ],
@@ -188,7 +189,7 @@ class SubscriptionPlanItem extends StatelessWidget {
               ),
               SizedBox(width: 8),
               Text(
-                'Expires on'.tr,
+                AppStringsKeys.expiresOn.tr,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: _getExpirationTextColor(),
                   fontWeight: FontWeight.w600,
@@ -227,7 +228,7 @@ class SubscriptionPlanItem extends StatelessWidget {
           ),
           SizedBox(width: 8),
           Text(
-            'Renew'.tr,
+            AppStringsKeys.renew.tr,
             style: TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: 16,
@@ -295,7 +296,7 @@ class SubscriptionPlanItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Monthly'.tr,
+                AppStringsKeys.monthly.tr,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.w500,
@@ -350,7 +351,7 @@ class SubscriptionPlanItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Annual'.tr,
+                AppStringsKeys.annual.tr,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: Colors.grey[600],
                   fontWeight: FontWeight.w500,
@@ -389,7 +390,7 @@ class SubscriptionPlanItem extends StatelessWidget {
           padding: EdgeInsets.symmetric(vertical: 12),
         ),
         child: Text(
-          isCurrentPlan ? 'Currently Active'.tr : 'Choose Plan'.tr,
+          isCurrentPlan ? AppStringsKeys.currentlyActive.tr : AppStringsKeys.choosePlan.tr,
           style: TextStyle(
             color: isCurrentPlan || planUiModel.isPopular ? Colors.white : null,
             fontWeight: FontWeight.w600,
@@ -428,16 +429,16 @@ class SubscriptionPlanItem extends StatelessWidget {
     if (daysRemaining < 0) {
       final daysExpired = daysRemaining.abs();
       if (daysExpired == 1) {
-        return '${'Expired'.tr} 1 ${'day ago'.tr}';
+        return '${AppStringsKeys.expired.tr} 1 ${AppStringsKeys.dayAgo.tr}';
       } else {
-        return '${'Expired'.tr} $daysExpired ${'days ago'.tr}';
+        return '${AppStringsKeys.expired.tr} $daysExpired ${AppStringsKeys.daysAgo.tr}';
       }
     } else if (daysRemaining == 0) {
-      return 'Expires today'.tr;
+      return AppStringsKeys.expiresToday.tr;
     } else if (daysRemaining == 1) {
-      return '${'Remaining Days'.tr}: 1 ${'day'.tr}';
+      return '${AppStringsKeys.remainingDays.tr}: 1 ${AppStringsKeys.day2.tr}';
     } else {
-      return '${'Remaining Days'.tr}: $daysRemaining ${'days'.tr}';
+      return '${AppStringsKeys.remainingDays.tr}: $daysRemaining ${AppStringsKeys.days.tr}';
     }
   }
 

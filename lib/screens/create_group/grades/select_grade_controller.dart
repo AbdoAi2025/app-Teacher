@@ -4,6 +4,7 @@ import 'package:teacher_app/domain/usecases/get_grades_list_use_case.dart';
 import 'package:teacher_app/utils/extensions_utils.dart';
 import 'package:teacher_app/widgets/item_selection_widget/item_selection_ui_state.dart';
 import 'grades_selection_state.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class SelectGradeController extends GetxController {
   final Rx<GradesSelectionState> gradeSelectionState =
@@ -48,7 +49,7 @@ class SelectGradeController extends GetxController {
         items = [
           ItemSelectionUiState(
             id: '',
-            name: 'All Grades'.tr,
+            name: AppStringsKeys.allGrades.tr,
             isSelected: _selectedId == null || _selectedId!.isEmpty,
           ),
           ...items,

@@ -15,6 +15,7 @@ import '../grade_chip_widget.dart';
 import '../sessions_count_info_chip_widget.dart';
 import '../student_count_info_chip_widget.dart';
 import '../time_from_to_info_chip_widget.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class GroupItemWidget extends StatelessWidget {
   final GroupItemUiState uiState;
@@ -123,7 +124,7 @@ class GroupItemWidget extends StatelessWidget {
   _timing() {
     var count = uiState.timingDays.length;
     if(count == 0) return Container();
-    var countText = count > 1 ? "+${count-1} ${"Timing".tr}" : "";
+    var countText = count > 1 ? "+${count-1} ${AppStringsKeys.timing.tr}" : "";
     return  TimeFromToInfoChipWidget(text:  "${uiState.dayName.tr} ${uiState.timeFrom} - ${uiState.timeTo} $countText");
   }
 }

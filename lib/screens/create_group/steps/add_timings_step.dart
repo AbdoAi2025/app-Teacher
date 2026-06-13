@@ -5,6 +5,7 @@ import 'package:teacher_app/utils/message_utils.dart';
 import 'package:teacher_app/widgets/app_text_field_widget.dart';
 import '../../../../bottomsheets/week_days_selection_bottom_sheet.dart';
 import '../create_group_controller.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class AddTimingsStep extends StatelessWidget {
   final CreateGroupController controller;
@@ -53,7 +54,7 @@ class AddTimingsStep extends StatelessWidget {
               child: OutlinedButton.icon(
                 onPressed: controller.addTiming,
                 icon: const Icon(Icons.add),
-                label: Text('Add Timing'.tr),
+                label: Text(AppStringsKeys.addTiming.tr),
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   shape: RoundedRectangleBorder(
@@ -124,14 +125,14 @@ class _TimingCard extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  '${'Timing'.tr} ${index + 1}',
+                  '${AppStringsKeys.timing.tr} ${index + 1}',
                   style: const TextStyle(
                       fontWeight: FontWeight.w600, fontSize: 15),
                 ),
                 const Spacer(),
                 IconButton(
                   onPressed: () => showConfirmationMessage(
-                    'Are you sure you want to delete this timing?'.tr,
+                    AppStringsKeys.areYouSureYouWantToDeleteThisTiming.tr,
                     () => controller.removeTiming(index),
                   ),
                   icon: const Icon(Icons.delete_outline, color: Colors.red),
@@ -145,8 +146,8 @@ class _TimingCard extends StatelessWidget {
                   text: timing.day != null
                       ? AppDateUtils.getDayName(timing.day!).tr
                       : ''),
-              label: 'Select Day'.tr,
-              hint: 'Select Day'.tr,
+              label: AppStringsKeys.selectDay.tr,
+              hint: AppStringsKeys.selectDay.tr,
               readOnly: true,
               prefixIcon: const Icon(Icons.calendar_today_outlined),
               suffixIcon: const Icon(Icons.arrow_drop_down),
@@ -155,8 +156,8 @@ class _TimingCard extends StatelessWidget {
             AppTextFieldWidget(
               controller: TextEditingController(
                   text: controller.getTimeFormat(timing.timeFrom)),
-              label: 'Time From'.tr,
-              hint: 'Select Time From'.tr,
+              label: AppStringsKeys.timeFrom.tr,
+              hint: AppStringsKeys.selectTimeFrom.tr,
               readOnly: true,
               prefixIcon: const Icon(Icons.access_time),
               onTap: () => _pickTimeFrom(context),
@@ -164,8 +165,8 @@ class _TimingCard extends StatelessWidget {
             AppTextFieldWidget(
               controller: TextEditingController(
                   text: controller.getTimeFormat(timing.timeTo)),
-              label: 'Time To'.tr,
-              hint: 'Select Time To'.tr,
+              label: AppStringsKeys.timeTo.tr,
+              hint: AppStringsKeys.selectTimeTo.tr,
               readOnly: true,
               prefixIcon: const Icon(Icons.access_time_outlined),
               onTap: () => _pickTimeTo(context),

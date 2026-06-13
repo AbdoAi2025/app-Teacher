@@ -4,6 +4,7 @@ import 'package:teacher_app/themes/txt_styles.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
 
 import '../themes/app_colors.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class YesNoValueWidget extends StatelessWidget {
   final bool? value;
@@ -14,7 +15,7 @@ class YesNoValueWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppTextWidget(
-      value == null ? "Not Determined".tr : (value == true ? "Yes" : "No"),
+      value == null ? AppStringsKeys.notDetermined.tr : (value == true ? "Yes" : "No"),
       overflow: TextOverflow.ellipsis,
       fontSize: fontSize,
       color: value == null

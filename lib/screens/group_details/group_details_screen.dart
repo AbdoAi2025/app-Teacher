@@ -28,6 +28,7 @@ import '../../widgets/students/students_group_list_search_widget.dart';
 import '../group_edit/args/edit_group_args_model.dart';
 import 'group_details_controller.dart';
 import 'states/group_details_state.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class GroupDetailsScreen extends StatefulWidget {
   const GroupDetailsScreen({super.key});
@@ -95,7 +96,7 @@ class _GroupDetailsScreenState extends LifecycleWidgetState<GroupDetailsScreen> 
                             AppTextWidget(
                               uiState.groupName.isNotEmpty
                                   ? uiState.groupName
-                                  : "Group Details".tr,
+                                  : AppStringsKeys.groupDetails.tr,
                               style: AppTextStyle.appToolBarTitle,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -104,7 +105,7 @@ class _GroupDetailsScreenState extends LifecycleWidgetState<GroupDetailsScreen> 
                               AppTextWidget(uiState.grade, style: AppTextStyle.subTitle),
                           ],
                         )
-                      : AppTextWidget("Group Details".tr, style: AppTextStyle.appToolBarTitle),
+                      : AppTextWidget(AppStringsKeys.groupDetails.tr, style: AppTextStyle.appToolBarTitle),
                 ),
                 if (uiState != null) _settingsIconButton(uiState),
               ],
@@ -172,8 +173,8 @@ class _GroupDetailsScreenState extends LifecycleWidgetState<GroupDetailsScreen> 
             fontWeight: FontWeight.w400,
           ),
           tabs: [
-            Tab(text: "${"Students".tr} (${uiState.students.length})"),
-            Obx(() => Tab(text: "${"Sessions".tr} (${controller.sessions.length})")),
+            Tab(text: "${AppStringsKeys.students.tr} (${uiState.students.length})"),
+            Obx(() => Tab(text: "${AppStringsKeys.sessions.tr} (${controller.sessions.length})")),
           ],
         ),
         Expanded(
@@ -328,7 +329,7 @@ class _GroupDetailsScreenState extends LifecycleWidgetState<GroupDetailsScreen> 
 
   onDeleteClick(GroupDetailsUiState uiState) {
     showConfirmationMessage(
-      "${"Are you sure to delete ?".tr} ${uiState.groupName}",
+      "${AppStringsKeys.areYouSureToDelete.tr} ${uiState.groupName}",
       () {
         showDialogLoading();
         controller.deleteGroup(uiState).listen((event) {

@@ -19,6 +19,7 @@ import '../subscription_plans/states/subscription_plans_state.dart';
 import '../subscription_plans/subscription_plans_controller.dart';
 import 'widgets/current_subscription_plan_bottom_sheet.dart';
 import '../profile/profile_controller.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class SettingsScreen extends StatefulWidget{
 
@@ -37,7 +38,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     appLog("SettingsScreen build");
     return Scaffold(
-      appBar: AppToolbarWidget.appBar(title: "Settings".tr, hasLeading: false),
+      appBar: AppToolbarWidget.appBar(title: AppStringsKeys.settings.tr, hasLeading: false),
       body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(20.0),
@@ -108,7 +109,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     AppTextWidget(
                       isLoading
                           ? '...'
-                          : profile?.name ?? 'Profile'.tr,
+                          : profile?.name ?? AppStringsKeys.profile.tr,
                     ),
                     if (!isLoading && profile?.email != null)
                       Text(
@@ -160,7 +161,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           spacing: 5,
           children: [
             Icon(Icons.language),
-            Expanded(child: AppTextWidget("Language".tr)),
+            Expanded(child: AppTextWidget(AppStringsKeys.language.tr)),
             _selectedLanguage()
           ],
         ),
@@ -185,23 +186,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   _privacyPolicy() {
-    return  _cell("Privacy Policy".tr , Icons.privacy_tip_outlined ,onPrivacyPolicyClick );
+    return  _cell(AppStringsKeys.privacyPolicy.tr , Icons.privacy_tip_outlined ,onPrivacyPolicyClick );
   }
 
   _contactUs() {
-    return  _cell("Contact Us".tr , Icons.support_agent ,onContactUsClick );
+    return  _cell(AppStringsKeys.contactUs.tr , Icons.support_agent ,onContactUsClick );
   }
 
   _mySubscription() {
-    return _cell("My Subscription".tr , Icons.subscriptions_outlined , onMySubscriptionClick );
+    return _cell(AppStringsKeys.mySubscription.tr , Icons.subscriptions_outlined , onMySubscriptionClick );
   }
 
   _logout() {
-    return _cell("Logout".tr, Icons.logout, onLogout, color: Colors.red);
+    return _cell(AppStringsKeys.logout.tr, Icons.logout, onLogout, color: Colors.red);
   }
 
   _deleteAccount() {
-    return  _cell("Delete Account".tr , Icons.person_off ,onDeleteAccount );
+    return  _cell(AppStringsKeys.deleteAccount.tr , Icons.person_off ,onDeleteAccount );
   }
 
   Future<void> onPrivacyPolicyClick() async {
@@ -244,14 +245,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void onLogout() {
-    showConfirmationMessage("Are you sure to logout".tr, () {
+    showConfirmationMessage(AppStringsKeys.areYouSureToLogout.tr, () {
       LogoutUseCase().execute();
       AppNavigator.navigateToLogin();
     });
   }
 
   void onDeleteAccount() {
-    showConfirmationMessage("delete_account_confirm_message".tr, (){
+    showConfirmationMessage(AppStringsKeys.deleteAccountConfirmMessage.tr, (){
       LogoutUseCase().execute();
       AppNavigator.navigateToLogin();
     });

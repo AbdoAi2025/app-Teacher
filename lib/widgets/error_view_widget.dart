@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:teacher_app/themes/txt_styles.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'package:teacher_app/widgets/primary_button_widget.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class ErrorViewWidget extends StatelessWidget {
 
@@ -26,7 +27,7 @@ class ErrorViewWidget extends StatelessWidget {
      messageView(),
       if (onRetry != null)
         PrimaryButtonWidget(
-          text: retryText ?? "Retry".tr,
+          text: retryText ?? AppStringsKeys.retry.tr,
           onClick: () {
             onRetry?.call();
           },

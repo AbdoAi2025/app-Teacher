@@ -8,6 +8,7 @@ import '../../subscription_plans/states/subscription_plan_item_ui_state.dart';
 import '../../subscription_plans/states/subscription_plans_state.dart';
 import '../../subscription_plans/subscription_plans_controller.dart';
 import '../../subscription_plans/widgets/subscription_plan_item.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class CurrentSubscriptionPlanBottomSheet extends StatelessWidget {
   final SubscriptionPlansController subscriptionPlansController;
@@ -70,7 +71,7 @@ class CurrentSubscriptionPlanBottomSheet extends StatelessWidget {
                   ),
                   SizedBox(width: 12),
                   Text(
-                    'My Subscription'.tr,
+                    AppStringsKeys.mySubscription.tr,
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -228,7 +229,7 @@ class CurrentSubscriptionPlanBottomSheet extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
-                  'Current Plan'.tr,
+                  AppStringsKeys.currentPlan.tr,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 12,
@@ -287,7 +288,7 @@ class CurrentSubscriptionPlanBottomSheet extends StatelessWidget {
         ),
         _buildDetailItem(
           context,
-          'Student Limit'.tr,
+          AppStringsKeys.studentLimit.tr,
           currentPlan.formattedStudentLimit ?? 'N/A',
           Icons.group_outlined,
         ),
@@ -301,7 +302,7 @@ class CurrentSubscriptionPlanBottomSheet extends StatelessWidget {
           ),
         _buildDetailItem(
           context,
-          'Status'.tr,
+          AppStringsKeys.status.tr,
           _getSubscriptionStatus(currentPlan),
           Icons.info_outline,
           valueColor: _getStatusColor(currentPlan),
@@ -427,11 +428,11 @@ class CurrentSubscriptionPlanBottomSheet extends StatelessWidget {
     final daysRemaining = expirationDate.difference(now).inDays;
 
     if (daysRemaining < 0) {
-      return 'Expired'.tr;
+      return AppStringsKeys.expired.tr;
     } else if (daysRemaining <= 5) {
       return 'Expiring Soon'.tr;
     } else {
-      return 'Active'.tr;
+      return AppStringsKeys.active.tr;
     }
   }
 }

@@ -8,6 +8,7 @@ import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
 import 'package:teacher_app/widgets/primary_button_widget.dart';
 import 'package:teacher_app/widgets/item_selection_widget/item_selection_ui_state.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class GradesSelectionBottomSheet extends StatefulWidget {
   final Function(GradeApiModel) onGradeSelected;
@@ -121,7 +122,7 @@ class _GradesSelectionBottomSheetState extends State<GradesSelectionBottomSheet>
       children: [
         Expanded(
           child: AppTextWidget(
-            'Select Grade'.tr,
+            AppStringsKeys.selectGrade.tr,
             style: AppTextStyle.title.copyWith(fontSize: 18),
           ),
         ),
@@ -167,7 +168,7 @@ class _GradesSelectionBottomSheetState extends State<GradesSelectionBottomSheet>
           SizedBox(height: 16),
           ElevatedButton(
             onPressed: () => _gradeManager.refresh(),
-            child: AppTextWidget('Retry'.tr, style: AppTextStyle.label),
+            child: AppTextWidget(AppStringsKeys.retry.tr, style: AppTextStyle.label),
           ),
         ],
       ),
@@ -269,7 +270,7 @@ class _GradesSelectionBottomSheetState extends State<GradesSelectionBottomSheet>
     return SizedBox(
       width: double.infinity,
       child: PrimaryButtonWidget(
-        text: 'Select'.tr,
+        text: AppStringsKeys.select.tr,
         onClick: _onSelectButtonTap,
         enabled: _items.any((item) => item.isSelected),
       ),

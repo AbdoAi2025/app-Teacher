@@ -7,6 +7,7 @@ import '../../widgets/dialog_loading_widget.dart';
 import '../create_group/create_group_screen.dart';
 import 'edit_group_controller.dart';
 import 'states/update_group_state.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class EditGroupScreen extends CreateGroupScreen {
 
@@ -27,12 +28,12 @@ class EditGroupScreenState extends CreateGroupScreenState {
 
   @override
   String getScreenTitle() {
-    return "Edit Group".tr;
+    return AppStringsKeys.editGroup.tr;
   }
 
   @override
   String getSubmitButtonText() {
-    return "Update".tr;
+    return AppStringsKeys.update.tr;
   }
 
   @override
@@ -44,7 +45,7 @@ class EditGroupScreenState extends CreateGroupScreenState {
         showDialogLoading();
         break;
       case UpdateGroupStateGroupNotFound():
-        showErrorMessagePopup("Group not found".tr);
+        showErrorMessagePopup(AppStringsKeys.groupNotFound.tr);
         break;
       case SaveGroupStateSuccess():
         onCreateGroupSuccess(result);
@@ -58,7 +59,7 @@ class EditGroupScreenState extends CreateGroupScreenState {
 
   @override
   void onCreateGroupSuccess(SaveGroupStateSuccess result) {
-    showSuccessMessage("Group edited successfully".tr);
+    showSuccessMessage(AppStringsKeys.groupEditedSuccessfully.tr);
     super.onCreateGroupSuccess(result);
   }
 }

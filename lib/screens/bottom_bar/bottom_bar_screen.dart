@@ -13,6 +13,7 @@ import '../settings/settings_screen.dart';
 import '../students_list/students_screen.dart';
 import 'bottom_bar_controller.dart';
 import '../../domain/states/current_subscription_plan_state.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class BottomBarScreen extends StatefulWidget {
 
@@ -64,10 +65,10 @@ class _BottomBarScreenState extends LifecycleWidgetState<BottomBarScreen> {
             selectedItemColor: AppColors.appMainColor,
             unselectedItemColor: Colors.grey,
             items: [
-              BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home".tr),
-              BottomNavigationBarItem(icon: Icon(Icons.group), label: "Groups".tr),
-              BottomNavigationBarItem(icon: Icon(Icons.person), label: "Students".tr),
-              BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Settings".tr),
+              BottomNavigationBarItem(icon: Icon(Icons.home), label: AppStringsKeys.home.tr),
+              BottomNavigationBarItem(icon: Icon(Icons.group), label: AppStringsKeys.groups.tr),
+              BottomNavigationBarItem(icon: Icon(Icons.person), label: AppStringsKeys.students.tr),
+              BottomNavigationBarItem(icon: Icon(Icons.settings), label: AppStringsKeys.settings.tr),
             ],
           ),
         );

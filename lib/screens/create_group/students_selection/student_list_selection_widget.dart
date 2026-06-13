@@ -12,6 +12,7 @@ import '../../students_list/widgets/students_empty_view_widget.dart';
 import 'states/student_selection_item_ui_state.dart';
 import 'states/students_selection_state.dart';
 import 'students_selection_controller.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class StudentListSelectionWidget extends StatefulWidget {
   final StudentsSelectionController controller;
@@ -56,7 +57,7 @@ class _StudentListSelectionWidgetState
   }
 
   Widget _title() => AppTextWidget(
-        'Select Students'.tr,
+        AppStringsKeys.selectStudents.tr,
         style: AppTextStyle.appToolBarTitle,
       );
 
@@ -112,7 +113,7 @@ class _StudentListSelectionWidgetState
       if (active) {
         return InputChip(
           label: Text(
-            'Not in group'.tr,
+            AppStringsKeys.notInGroup.tr,
             style: TextStyle(color: AppColors.appMainColor, fontSize: 13),
           ),
           avatar: Icon(Icons.group_off_outlined, size: 16, color: AppColors.appMainColor),
@@ -127,7 +128,7 @@ class _StudentListSelectionWidgetState
       return ActionChip(
         avatar: Icon(Icons.group_off_outlined, size: 16, color: AppColors.textSecondaryColor),
         label: Text(
-          'Not in group'.tr,
+          AppStringsKeys.notInGroup.tr,
           style: TextStyle(color: AppColors.textSecondaryColor, fontSize: 13),
         ),
         onPressed: widget.controller.toggleFilter,
@@ -179,7 +180,7 @@ class _StudentListSelectionWidgetState
   Widget _saveButton() => SizedBox(
         width: double.infinity,
         child: PrimaryButtonWidget(
-          text: 'Save'.tr,
+          text: AppStringsKeys.save.tr,
           onClick: _onSave,
         ),
       );

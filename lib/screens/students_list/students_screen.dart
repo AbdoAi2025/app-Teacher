@@ -248,6 +248,7 @@ import '../../widgets/filters/has_group_filter_chip_widget.dart';
 import 'widgets/students_empty_view_widget.dart';
 import '../student_details/args/student_details_arg_model.dart';
 import 'states/students_state.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class StudentsScreen extends StatefulWidget {
   const StudentsScreen({super.key});
@@ -415,7 +416,7 @@ class _StudentsScreenState extends LifecycleWidgetState<StudentsScreen> {
 
   _title() {
     return AppTextWidget(
-      "Students".tr,
+      AppStringsKeys.students.tr,
       style: AppTextStyle.title.copyWith(
         fontSize: 24,
         fontWeight: FontWeight.w700,
@@ -492,7 +493,7 @@ class _StudentsScreenState extends LifecycleWidgetState<StudentsScreen> {
             icon: Icons.sort_rounded,
             color: AppColors.primaryButtonColor,
             onTap: onSortClick,
-            tooltip: 'Sort'.tr,
+            tooltip: AppStringsKeys.sort.tr,
           ),
         ],
       ),
@@ -539,7 +540,7 @@ class _StudentsScreenState extends LifecycleWidgetState<StudentsScreen> {
         color: AppColors.colorBlack,
       ),
       decoration: InputDecoration(
-        hintText: 'Search students...'.tr,
+        hintText: AppStringsKeys.searchStudents.tr,
         hintStyle: AppTextStyle.label.copyWith(
           color: AppColors.textSecondaryColor,
           fontSize: 14,
@@ -642,7 +643,7 @@ class _StudentsScreenState extends LifecycleWidgetState<StudentsScreen> {
           spacing: 10,
           mainAxisSize: MainAxisSize.min,
           children: [
-            AppTextWidget("Sort".tr),
+            AppTextWidget(AppStringsKeys.sort.tr),
             Divider(),
             Padding(
               padding: const EdgeInsets.only(bottom: 30.0),
@@ -650,9 +651,9 @@ class _StudentsScreenState extends LifecycleWidgetState<StudentsScreen> {
                 mainAxisSize: MainAxisSize.min,
                 spacing: 20,
                 children: [
-                  InkWell(onTap: onSortByGroupClick , child: AppTextWidget("By group".tr)),
-                  InkWell(onTap: onSortByGradeClick ,  child: AppTextWidget("By grade".tr)),
-                  InkWell(onTap: onSortResetClick ,  child: AppTextWidget("Reset".tr)),
+                  InkWell(onTap: onSortByGroupClick , child: AppTextWidget(AppStringsKeys.byGroup.tr)),
+                  InkWell(onTap: onSortByGradeClick ,  child: AppTextWidget(AppStringsKeys.byGrade2.tr)),
+                  InkWell(onTap: onSortResetClick ,  child: AppTextWidget(AppStringsKeys.reset.tr)),
                 ],
               ),
             ),

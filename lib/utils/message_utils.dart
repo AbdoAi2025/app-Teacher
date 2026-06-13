@@ -6,6 +6,7 @@ import '../exceptions/app_http_exception.dart';
 import '../exceptions/app_no_internet_exception.dart';
 import '../widgets/confirm_dailog_widget.dart';
 import 'Keyboard_utils.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -34,7 +35,7 @@ void showErrorMessageEx(Exception? ex  ,  {String? buttonText, Function()? onClo
       message = ex.message ?? "";
       break;
     case AppNoInternetException():
-      message = "no_internet_connection".tr;
+      message = AppStringsKeys.noInternetConnection.tr;
       break;
     case AppException():
       message = ex.message ?? "";
@@ -60,8 +61,8 @@ void showErrorMessagePopup(String message ,  {String? buttonText, Function()? on
           mainAxisSize: MainAxisSize.min,
           children: [
             ConfirmDailogWidget(
-                title: message.isNotEmpty ? message : "Unknown error".tr,
-                positive_button_text: buttonText ?? "Ok".tr,
+                title: message.isNotEmpty ? message : AppStringsKeys.unknownError.tr,
+                positive_button_text: buttonText ?? AppStringsKeys.ok.tr,
                 showCancelBtn: false,
                 onSuccess: () {onClose?.call();},
               ),
@@ -79,7 +80,7 @@ Future<void> showSuccessMessagePopup(String message, [Function()? onClose]) asyn
           children: [
             ConfirmDailogWidget(
               title: message,
-              positive_button_text: "ok_well".tr,
+              positive_button_text: AppStringsKeys.okWell.tr,
               showCancelBtn: false,
               onSuccess: () {
                 onClose?.call();
@@ -111,8 +112,8 @@ void showConfirmationMessage(String message, Function() action, {
                 title: message,
                 subTitleWidget: subTitleWidget,
                 autoDismiss : barrierDismissible,
-                positive_button_text: positiveButtonText ?? "yes".tr,
-                negative_button_text: negativeButtonText ?? "No".tr,
+                positive_button_text: positiveButtonText ?? AppStringsKeys.yes2.tr,
+                negative_button_text: negativeButtonText ?? AppStringsKeys.no.tr,
                 showCancelBtn : true,
                 onSuccess: () {
                   action();

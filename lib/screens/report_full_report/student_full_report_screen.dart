@@ -9,6 +9,7 @@ import 'package:teacher_app/widgets/app_txt_widget.dart';
 import '../../widgets/quiz_grade_widget.dart';
 import '../report/student_report_controller.dart';
 import 'student_full_report_controller.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class StudentFullReportScreen extends StudentReportScreen {
   const StudentFullReportScreen({super.key});
@@ -29,7 +30,7 @@ class _StudentFullReportScreen extends StudentReportScreenState {
     return Obx(() {
       var state = _controller.fullReportState.value;
       if (state != null) {
-        return reportData("Full Report".tr,  state.state.phoneNumber, _reportContent(state.state));
+        return reportData(AppStringsKeys.fullReport.tr,  state.state.phoneNumber, _reportContent(state.state));
       }
       return ErrorWidget("Invalid data".tr);
     });
@@ -67,7 +68,7 @@ class _StudentFullReportScreen extends StudentReportScreenState {
           children: [
             //We would like to inform you that the student /...... attended the class on
             // Day: Saturday — Date: 14/6/2025
-            reportText("${'fulReportInfoText'.tr}: \n"),
+            reportText("${AppStringsKeys.fulReportInfoText.tr}: \n"),
             reportValue("${state.studentName} \n" , getReportTextValueStyle().copyWith(fontWeight: FontWeight.bold)),
           ],
         ),
@@ -79,9 +80,9 @@ class _StudentFullReportScreen extends StudentReportScreenState {
         text: TextSpan(
           style: TextStyle(fontSize: 16, color: Colors.black),
           children: [
-            reportText('Total Attendance'.tr),
+            reportText(AppStringsKeys.totalAttendance.tr),
             reportValue(" ($attendance/$totalAttendance) " , getReportTextValueStyle().copyWith(color: attendance < (totalAttendance/2) ? AppColors.colorNo : AppColors.colorYes)),
-            reportText('marks on the quiz'.tr),
+            reportText(AppStringsKeys.marksOnTheQuiz.tr),
           ],
         ),
       ),
@@ -93,7 +94,7 @@ class _StudentFullReportScreen extends StudentReportScreenState {
         text: TextSpan(
           style: TextStyle(fontSize: 16, color: Colors.black),
           children: [
-            reportText('Average Grade'.tr),
+            reportText(AppStringsKeys.averageGrade.tr),
             reportValue(" (${QuizGradeWidget.getGradeFormat(totalGrades)}/$totalSessionGrades)   $gradesPercentage%" , quizGradeStyle(totalGrades, totalSessionGrades)),
           ],
         ),
@@ -111,7 +112,7 @@ class _StudentFullReportScreen extends StudentReportScreenState {
           children: [
             //We would like to inform you that the student /...... attended the class on
             // Day: Saturday — Date: 14/6/2025
-            reportText("${'fulReportInfoText'.tr}: \n"),
+            reportText("${AppStringsKeys.fulReportInfoText.tr}: \n"),
             reportValue("${state.studentName} \n" , getReportTextValueStyle().copyWith(fontWeight: FontWeight.bold)),
           ],
         ),
@@ -138,11 +139,11 @@ class _StudentFullReportScreen extends StudentReportScreenState {
           text: TextSpan(
             style: TextStyle(fontSize: 16, color: Colors.black),
             children: [
-              reportText('${'Report Period'.tr}: '),
+              reportText('${AppStringsKeys.reportPeriod.tr}: '),
               reportValue(dateFilter.displayName),
 
               // TextSpan(
-              //   text: '${'Report Period'.tr}: ',
+              //   text: '${AppStringsKeys.reportPeriod.tr}: ',
               //   style: TextStyle(fontWeight: FontWeight.w600),
               // ),
               // TextSpan(

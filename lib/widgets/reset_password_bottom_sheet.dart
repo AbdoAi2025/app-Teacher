@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/domain/usecases/reset_password_use_case.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class ResetPasswordBottomSheet extends StatefulWidget {
   final String resetToken;
@@ -46,15 +47,15 @@ class _ResetPasswordBottomSheetState extends State<ResetPasswordBottomSheet> {
     final confirmPassword = _confirmPasswordController.text.trim();
 
     if (newPassword.isEmpty) {
-      setState(() => _errorMessage = 'New password is required'.tr);
+      setState(() => _errorMessage = AppStringsKeys.newPasswordIsRequired.tr);
       return;
     }
     if (newPassword.length < 6) {
-      setState(() => _errorMessage = 'Password must be at least 6 characters'.tr);
+      setState(() => _errorMessage = AppStringsKeys.passwordMustBeAtLeast6Characters.tr);
       return;
     }
     if (newPassword != confirmPassword) {
-      setState(() => _errorMessage = 'Passwords do not match'.tr);
+      setState(() => _errorMessage = AppStringsKeys.passwordsDoNotMatch.tr);
       return;
     }
 
@@ -75,11 +76,11 @@ class _ResetPasswordBottomSheetState extends State<ResetPasswordBottomSheet> {
     if (result.isSuccess) {
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Password reset successfully'.tr)),
+        SnackBar(content: Text(AppStringsKeys.passwordResetSuccessfully.tr)),
       );
     } else {
       final ex = result.error;
-      setState(() => _errorMessage = ex?.toString() ?? 'Something went wrong'.tr);
+      setState(() => _errorMessage = ex?.toString() ?? AppStringsKeys.somethingWentWrong.tr);
     }
   }
 
@@ -102,16 +103,16 @@ class _ResetPasswordBottomSheetState extends State<ResetPasswordBottomSheet> {
                   children: [
                     _buildPasswordField(
                       controller: _newPasswordController,
-                      label: 'New Password'.tr,
-                      hint: 'Enter new password'.tr,
+                      label: AppStringsKeys.newPassword.tr,
+                      hint: AppStringsKeys.enterNewPassword.tr,
                       obscure: _obscureNew,
                       onToggle: () => setState(() => _obscureNew = !_obscureNew),
                     ),
                     const SizedBox(height: 16),
                     _buildPasswordField(
                       controller: _confirmPasswordController,
-                      label: 'Confirm New Password'.tr,
-                      hint: 'Confirm your new password'.tr,
+                      label: AppStringsKeys.confirmNewPassword.tr,
+                      hint: AppStringsKeys.confirmYourNewPassword.tr,
                       obscure: _obscureConfirm,
                       onToggle: () =>
                           setState(() => _obscureConfirm = !_obscureConfirm),
@@ -144,7 +145,7 @@ class _ResetPasswordBottomSheetState extends State<ResetPasswordBottomSheet> {
           Icon(Icons.lock_reset, color: Theme.of(context).primaryColor, size: 24),
           const SizedBox(width: 12),
           Text(
-            'Reset Password'.tr,
+            AppStringsKeys.resetPassword.tr,
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -215,7 +216,7 @@ class _ResetPasswordBottomSheetState extends State<ResetPasswordBottomSheet> {
                     strokeWidth: 2, color: Colors.white),
               )
             : Text(
-                'Reset Password'.tr,
+                AppStringsKeys.resetPassword.tr,
                 style: const TextStyle(
                     fontSize: 16, fontWeight: FontWeight.w600),
               ),

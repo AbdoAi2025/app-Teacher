@@ -16,6 +16,7 @@ import '../app_txt_widget.dart';
 import '../date_info_chip_widget.dart';
 import '../forward_arrow_widget.dart';
 import '../grade_chip_widget.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class StudentItemWidget extends StatelessWidget {
   final StudentItemUiState uiState;
@@ -136,7 +137,7 @@ class StudentItemWidget extends StatelessWidget {
     final groups = uiState.groups;
     if (groups.isEmpty) {
       return InfoChipWidget(
-        text: "No Group".tr,
+        text: AppStringsKeys.noGroup.tr,
         icon: Icons.people_outline,
         textStyle: AppTextStyle.label.copyWith(
           fontSize: 12,

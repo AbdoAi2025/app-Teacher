@@ -15,6 +15,7 @@ import '../../widgets/groups/group_item_widget.dart';
 import '../../widgets/info_chip_widget.dart';
 import 'groups_controller.dart';
 import 'groups_state.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class GroupsScreen extends StatefulWidget {
   const GroupsScreen({super.key});
@@ -114,7 +115,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
 
   Widget _title() {
    return AppTextWidget(
-      "Groups".tr,
+      AppStringsKeys.groups.tr,
       style: AppTextStyle.title.copyWith(
         fontSize: 24,
         fontWeight: FontWeight.w700,
@@ -220,7 +221,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
             icon: Icons.sort_rounded,
             color: AppColors.primaryButtonColor,
             onTap: onSortClick,
-            tooltip: 'Sort'.tr,
+            tooltip: AppStringsKeys.sort.tr,
           ),
         ],
       ),
@@ -288,7 +289,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
 
                   InfoChipWidget(
                     icon: Icons.group,
-                    text: "${uiState.count} ${'Groups'.tr}",
+                    text: "${uiState.count} ${AppStringsKeys.groups.tr}",
                     color : AppColors.orange,
                   ),
 
@@ -310,9 +311,9 @@ class _GroupsScreenState extends State<GroupsScreen> {
   _emptyView() {
     return Center(
         child: EmptyViewWidget(
-      message: "No Groups Found".tr,
+      message: AppStringsKeys.noGroupsFound.tr,
       onRetry: refresh,
-      retryText: "Refresh".tr,
+      retryText: AppStringsKeys.refresh.tr,
     ));
   }
 
@@ -346,7 +347,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
               Row(
                 children: [
                   AppTextWidget(
-                    "Sort Groups".tr,
+                    AppStringsKeys.sortGroups.tr,
                     style: AppTextStyle.title.copyWith(
                       fontSize: 20,
                       fontWeight: FontWeight.w600,
@@ -360,11 +361,11 @@ class _GroupsScreenState extends State<GroupsScreen> {
                 ],
               ),
               SizedBox(height: 24),
-              _sortOption(Icons.calendar_today, "By Day".tr, onSortByDayClick),
+              _sortOption(Icons.calendar_today, AppStringsKeys.byDay.tr, onSortByDayClick),
               SizedBox(height: 12),
-              _sortOption(Icons.school, "By Grade".tr, onSortByGradeClick),
+              _sortOption(Icons.school, AppStringsKeys.byGrade.tr, onSortByGradeClick),
               SizedBox(height: 12),
-              _sortOption(Icons.refresh, "Reset".tr, onSortResetClick),
+              _sortOption(Icons.refresh, AppStringsKeys.reset.tr, onSortResetClick),
               SizedBox(height: 24),
             ],
           ),
@@ -461,7 +462,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
           size: 24,
         ),
         label: AppTextWidget(
-          'New Group'.tr,
+          AppStringsKeys.newGroup.tr,
           style: AppTextStyle.label.copyWith(
             color: Colors.white,
             fontWeight: FontWeight.w600,
@@ -486,7 +487,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
         color: AppColors.colorBlack,
       ),
       decoration: InputDecoration(
-        hintText: 'Search groups...'.tr,
+        hintText: AppStringsKeys.searchGroups2.tr,
         hintStyle: AppTextStyle.label.copyWith(
           color: AppColors.textSecondaryColor,
           fontSize: 14,

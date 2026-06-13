@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 import 'package:teacher_app/data/requests/get_my_sessions_request.dart';
 import 'package:teacher_app/domain/usecases/get_my_sessions_use_case.dart';
 import 'package:teacher_app/enums/session_status_enum.dart';
-import 'package:teacher_app/localization/localArabic.dart';
 import 'package:teacher_app/screens/session_details/states/session_details_ui_state.dart';
 import 'package:teacher_app/screens/sessions_list/args/session_list_args_model.dart';
 import 'package:teacher_app/screens/sessions_list/states/session_item_ui_state.dart';

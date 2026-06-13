@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:teacher_app/screens/create_group/grades/select_grade_bottom_sheet.dart';
 import 'package:teacher_app/themes/app_colors.dart';
 import 'package:teacher_app/widgets/item_selection_widget/item_selection_ui_state.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class GradeFilterChipWidget extends StatelessWidget {
   final Rx<ItemSelectionUiState?> selectedGrade;
@@ -46,7 +47,7 @@ class GradeFilterChipWidget extends StatelessWidget {
           ActionChip(
             avatar: Icon(Icons.school_outlined, size: 16, color: AppColors.textSecondaryColor),
             label: Text(
-              'Grade'.tr,
+              AppStringsKeys.grade.tr,
               style: TextStyle(color: AppColors.textSecondaryColor, fontSize: 13),
             ),
             onPressed: () => _openGradeFilter(context),

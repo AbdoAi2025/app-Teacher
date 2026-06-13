@@ -4,6 +4,7 @@ import 'package:teacher_app/domain/models/subject_model.dart';
 import 'package:teacher_app/domain/usecases/get_subjects_use_case.dart';
 import 'package:teacher_app/widgets/app_error_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class SubjectSelectionBottomSheet extends StatefulWidget {
   final SubjectModel? selected;
@@ -90,7 +91,7 @@ class _SubjectSelectionBottomSheetState
                       color: Theme.of(context).primaryColor, size: 24),
                   const SizedBox(width: 12),
                   Text(
-                    'Select Subject'.tr,
+                    AppStringsKeys.selectSubject.tr,
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -121,7 +122,7 @@ class _SubjectSelectionBottomSheetState
     if (_subjects.isEmpty) {
       return Center(
         child: Text(
-          'No subjects available'.tr,
+          AppStringsKeys.noSubjectsAvailable.tr,
           style: TextStyle(color: Colors.grey[600]),
         ),
       );

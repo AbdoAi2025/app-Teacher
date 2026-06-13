@@ -10,6 +10,7 @@ import 'package:teacher_app/widgets/dialog_loading_widget.dart';
 import 'package:teacher_app/widgets/otp_verification_bottom_sheet.dart';
 import 'package:teacher_app/widgets/primary_button_widget.dart';
 import 'package:teacher_app/widgets/subject_selection_bottom_sheet.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final VoidCallback? onSaved;
@@ -36,7 +37,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppToolbarWidget.appBar(title: 'Edit Profile'.tr),
+      appBar: AppToolbarWidget.appBar(title: AppStringsKeys.editProfile.tr),
       body: Obx(() {
         if (controller.isLoading.value) {
           return const Center(child: CircularProgressIndicator());
@@ -82,16 +83,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Widget _nameField() => AppTextFieldWidget(
         controller: controller.nameController,
-        label: 'Full Name'.tr,
-        hint: 'Enter your full name'.tr,
+        label: AppStringsKeys.fullName.tr,
+        hint: AppStringsKeys.enterYourFullName.tr,
         prefixIcon: const Icon(Icons.person_outline),
         validator: controller.validateName,
       );
 
   Widget _emailField() => AppTextFieldWidget(
         controller: controller.emailController,
-        label: 'Email'.tr,
-        hint: 'Enter your email'.tr,
+        label: AppStringsKeys.email.tr,
+        hint: AppStringsKeys.enterYourEmail.tr,
         prefixIcon: const Icon(Icons.email_outlined),
         keyboardType: TextInputType.emailAddress,
         validator: controller.validateEmail,
@@ -99,8 +100,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Widget _phoneField() => AppTextFieldWidget(
         controller: controller.phoneController,
-        label: 'Phone Number'.tr,
-        hint: 'Enter your phone number'.tr,
+        label: AppStringsKeys.phoneNumber.tr,
+        hint: AppStringsKeys.enterYourPhoneNumber.tr,
         prefixIcon: const Icon(Icons.phone_outlined),
         keyboardType: TextInputType.phone,
         validator: controller.validatePhone,
@@ -111,14 +112,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       final gender = controller.selectedGender.value;
       return AppTextFieldWidget(
         controller: TextEditingController(text: gender?.displayName ?? ''),
-        label: 'Gender'.tr,
-        hint: 'Select your gender'.tr,
+        label: AppStringsKeys.gender.tr,
+        hint: AppStringsKeys.selectYourGender.tr,
         prefixIcon: const Icon(Icons.person_search_outlined),
         suffixIcon: const Icon(Icons.arrow_drop_down),
         readOnly: true,
         onTap: _showGenderSheet,
         validator: (_) => controller.selectedGender.value == null
-            ? 'Please select your gender'.tr
+            ? AppStringsKeys.pleaseSelectYourGender.tr
             : null,
       );
     });
@@ -156,7 +157,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         color: Theme.of(context).primaryColor),
                     const SizedBox(width: 12),
                     Text(
-                      'Select Gender'.tr,
+                      AppStringsKeys.selectGender.tr,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -217,8 +218,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       final subject = controller.selectedSubject.value;
       return AppTextFieldWidget(
         controller: TextEditingController(text: subject?.name ?? ''),
-        label: 'Subject'.tr,
-        hint: 'Select your subject'.tr,
+        label: AppStringsKeys.subject.tr,
+        hint: AppStringsKeys.selectYourSubject.tr,
         prefixIcon: const Icon(Icons.menu_book_outlined),
         suffixIcon: const Icon(Icons.arrow_drop_down),
         readOnly: true,
@@ -230,7 +231,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           if (result != null) controller.selectedSubject.value = result;
         },
         validator: (_) => controller.selectedSubject.value == null
-            ? 'Please select your subject'.tr
+            ? AppStringsKeys.pleaseSelectYourSubject.tr
             : null,
       );
     });
@@ -255,7 +256,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                 )
               : PrimaryButtonWidget(
-                  text: 'Save Changes'.tr,
+                  text: AppStringsKeys.saveChanges.tr,
                   onClick: _onSave,
                 ),
         ));
@@ -268,13 +269,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     if (!_formKey.currentState!.validate()) return;
     if (controller.selectedGender.value == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please select your gender'.tr)),
+        SnackBar(content: Text(AppStringsKeys.pleaseSelectYourGender.tr)),
       );
       return;
     }
     if (controller.selectedSubject.value == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please select your subject'.tr)),
+        SnackBar(content: Text(AppStringsKeys.pleaseSelectYourSubject.tr)),
       );
       return;
     }
@@ -291,7 +292,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       if (!context.mounted) return;
       if (!sent) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('send_otp_failed'.tr)),
+          SnackBar(content: Text(AppStringsKeys.sendOtpFailed.tr)),
         );
         return;
       }
@@ -308,7 +309,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     if (success) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Profile updated successfully'.tr)),
+        SnackBar(content: Text(AppStringsKeys.profileUpdatedSuccessfully.tr)),
       );
       if (widget.onSaved != null) {
         widget.onSaved!();

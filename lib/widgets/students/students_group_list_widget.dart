@@ -8,6 +8,7 @@ import '../../themes/txt_styles.dart';
 import '../app_txt_widget.dart';
 import '../groups/group_student_item_widget.dart';
 import '../groups/states/group_student_item_ui_state.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class StudentsGroupListWidget extends StatelessWidget {
 
@@ -72,12 +73,12 @@ class StudentsGroupListWidget extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           AppTextWidget(
-            "No Students Found".tr,
+            AppStringsKeys.noStudentsFound.tr,
             style: AppTextStyle.title.copyWith(fontSize: 15),
           ),
           const SizedBox(height: 4),
           AppTextWidget(
-            "No students have been added to this group yet".tr,
+            AppStringsKeys.noStudentsHaveBeenAddedToThisGroupYet.tr,
             style: AppTextStyle.value.copyWith(color: AppColors.textSecondaryColor),
             textAlign: TextAlign.center,
           ),
@@ -86,7 +87,7 @@ class StudentsGroupListWidget extends StatelessWidget {
             ElevatedButton.icon(
               onPressed: onAddStudents,
               icon: const Icon(Icons.person_add_alt_1_rounded, size: 18),
-              label: Text("Add Students".tr),
+              label: Text(AppStringsKeys.addStudents.tr),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.appMainColor,
                 foregroundColor: AppColors.white,

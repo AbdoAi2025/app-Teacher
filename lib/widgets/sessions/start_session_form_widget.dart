@@ -8,6 +8,7 @@ import '../../utils/app_background_styles.dart';
 import '../app_text_field_widget.dart';
 import '../app_txt_widget.dart';
 import 'start_session/start_session_form_model.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class StartSessionFormWidget extends StatelessWidget {
   final TextEditingController controller = TextEditingController();
@@ -30,7 +31,7 @@ class StartSessionFormWidget extends StatelessWidget {
   _quizGradeField() {
     return AppTextFieldWidget(
       controller: controller,
-      hint: "Quiz Grade if found".tr,
+      hint: AppStringsKeys.quizGradeIfFound.tr,
       keyboardType: TextInputType.number,
     );
   }
@@ -38,7 +39,7 @@ class StartSessionFormWidget extends StatelessWidget {
   _nameField() {
     return AppTextFieldWidget(
       controller: nameController,
-      hint: "Session Name (Optional)".tr,
+      hint: AppStringsKeys.sessionNameOptional.tr,
     );
   }
 
@@ -53,7 +54,7 @@ class StartSessionFormWidget extends StatelessWidget {
         decoration: AppBackgroundStyle.getColoredBackgroundRounded(
             20, AppColors.appMainColor),
         child: AppTextWidget(
-          "Start".tr,
+          AppStringsKeys.start.tr,
           textAlign: TextAlign.center,
           color: AppColors.white,
         ),
@@ -67,7 +68,7 @@ class StartSessionFormWidget extends StatelessWidget {
         Expanded(
             child: Center(
                 child: AppTextWidget(
-          "Start session".tr,
+          AppStringsKeys.startSession.tr,
           style: AppTextStyle.title,
         ))),
         _closeIcon()
@@ -85,7 +86,7 @@ class StartSessionFormWidget extends StatelessWidget {
     if(inputQuizGrade.isNotEmpty){
       quizGradeValue = int.tryParse(inputQuizGrade) ?? 0;
       if (quizGradeValue <= 0) {
-        showErrorMessage("please enter valid quiz grade".tr);
+        showErrorMessage(AppStringsKeys.pleaseEnterValidQuizGrade.tr);
         return;
       }
     }

@@ -25,6 +25,7 @@ import 'models/date_filter_model.dart';
 import 'states/session_item_ui_state.dart';
 import 'student_reports_controller.dart';
 import 'widgets/date_filter_bottom_sheet.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class StudentsReportsScreen extends StatefulWidget {
   const StudentsReportsScreen({super.key});
@@ -49,7 +50,7 @@ class _StudentsReportsScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppToolbarWidget.appBar(title: "Student Report".tr),
+        appBar: AppToolbarWidget.appBar(title: AppStringsKeys.studentReport.tr),
         body: RefreshIndicator(
           onRefresh: () async {
             onRefresh();
@@ -86,7 +87,7 @@ class _StudentsReportsScreenState
   }
 
   _showInvalidArgs() {
-    return ErrorWidget("Invalid Args".tr);
+    return ErrorWidget(AppStringsKeys.invalidArgs.tr);
   }
 
   _showError(StudentReportsStateError state) {
@@ -232,10 +233,10 @@ class _StudentsReportsScreenState
             topRight: radius,
             topLeft: radius),
         child: _row([
-          _titleCell("Date".tr),
-          _titleCell("Attendance".tr),
-          _titleCell("Homework".tr),
-          _titleCell("Quiz Grade".tr),
+          _titleCell(AppStringsKeys.date.tr),
+          _titleCell(AppStringsKeys.attendance.tr),
+          _titleCell(AppStringsKeys.homework.tr),
+          _titleCell(AppStringsKeys.quizGrade.tr),
         ]),
       );
 
@@ -271,19 +272,19 @@ class _StudentsReportsScreenState
   }
 
   _studentName(String studentName) {
-    return LabelValueRowWidget(label: "Student Name".tr, value: studentName);
+    return LabelValueRowWidget(label: AppStringsKeys.studentName.tr, value: studentName);
   }
 
   _totalAttendance(String totalAttendance) {
     return LabelValueRowWidget(
-        label: "Total Attendance".tr, value: totalAttendance);
+        label: AppStringsKeys.totalAttendance.tr, value: totalAttendance);
   }
 
   _averageGrade(StudentReportsStateSuccess state) {
     var gradesPercentage = state.gradesPercentage;
 
     return LabelValueRowWidget(
-      label: "Average Grade".tr,
+      label: AppStringsKeys.averageGrade.tr,
       valueWidget: Row(spacing: 10, mainAxisSize: MainAxisSize.min, children: [
         QuizGradeWidget(
           total: state.totalSessionGrades,
@@ -322,12 +323,12 @@ class _StudentsReportsScreenState
       );
 
   _emptyTable() {
-    return Center(child: EmptyViewWidget(message: "No Reports Found".tr));
+    return Center(child: EmptyViewWidget(message: AppStringsKeys.noReportsFound.tr));
   }
 
 
   _creteReport(StudentReportsStateSuccess state) {
-    return PrimaryButtonWidget(text: "Send Report".tr, onClick: () {
+    return PrimaryButtonWidget(text: AppStringsKeys.sendReport.tr, onClick: () {
       AppNavigator.navigateToStudentFullReportScreen(
           StudentFullReportArgs(
               state: state,
@@ -356,7 +357,7 @@ class _StudentsReportsScreenState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     AppTextWidget(
-                      'Filter by Date'.tr,
+                      AppStringsKeys.filterByDate.tr,
                       style: AppTextStyle.label.copyWith(
                         // color: AppColors.lightGrey,
                         fontSize: 12,

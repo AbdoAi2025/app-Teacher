@@ -7,6 +7,7 @@ import 'package:teacher_app/screens/group_edit/edit_group_controller.dart';
 
 import '../../base/AppResult.dart';
 import '../../data/responses/add_group_response.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class UpgradeGroupController extends EditGroupController {
 
@@ -49,6 +50,6 @@ class UpgradeGroupController extends EditGroupController {
       }
       return super.saveGroupStudents(groupId, currentIds);
     }
-    return AppResult.error(Exception("No students selected".tr));
+    return AppResult.error(Exception(AppStringsKeys.noStudentsSelected2.tr));
   }
 }

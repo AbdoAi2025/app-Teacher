@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../states/subscription_plan_item_ui_state.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class PurchaseConfirmationBottomSheet extends StatelessWidget {
   final SubscriptionPlanItemUiState planUiModel;
@@ -92,7 +93,7 @@ class PurchaseConfirmationBottomSheet extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Confirm Purchase'.tr,
+                        AppStringsKeys.confirmPurchase.tr,
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -100,7 +101,7 @@ class PurchaseConfirmationBottomSheet extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        'Review your subscription details'.tr,
+                        AppStringsKeys.reviewYourSubscriptionDetails.tr,
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.grey[600],
@@ -187,7 +188,7 @@ class PurchaseConfirmationBottomSheet extends StatelessWidget {
                       ),
                       SizedBox(width: 8),
                       Text(
-                        '/ ${isMonthly ? 'month'.tr : 'year'.tr}',
+                        '/ ${isMonthly ? AppStringsKeys.month.tr : AppStringsKeys.year.tr}',
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.grey[600],
@@ -203,7 +204,7 @@ class PurchaseConfirmationBottomSheet extends StatelessWidget {
                     _buildFeatureItem(
                       context,
                       Icons.group,
-                      'Student Limit'.tr,
+                      AppStringsKeys.studentLimit.tr,
                       planUiModel.formattedStudentLimit,
                     ),
                 ],
@@ -233,7 +234,7 @@ class PurchaseConfirmationBottomSheet extends StatelessWidget {
                   SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      'Are you sure you want to purchase this subscription?'.tr,
+                      AppStringsKeys.areYouSureYouWantToPurchaseThisSubscription.tr,
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
                         color: Colors.orange.shade700,
@@ -265,7 +266,7 @@ class PurchaseConfirmationBottomSheet extends StatelessWidget {
                       ),
                     ),
                     child: Text(
-                      'Cancel'.tr,
+                      AppStringsKeys.cancel.tr,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -294,7 +295,7 @@ class PurchaseConfirmationBottomSheet extends StatelessWidget {
                         Icon(Icons.payment, size: 20),
                         SizedBox(width: 8),
                         Text(
-                          'Confirm Purchase'.tr,
+                          AppStringsKeys.confirmPurchase.tr,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,

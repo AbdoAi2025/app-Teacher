@@ -11,6 +11,7 @@ import '../../screens/create_group/students_selection/states/students_selection_
 import '../../themes/app_colors.dart';
 import '../../widgets/empty_view_widget.dart';
 import '../../widgets/loading_widget.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class StudentsListSelectionsBottomSheet {
   final Rx<StudentsSelectionState> studentsSelectionState;
@@ -68,7 +69,7 @@ class StudentsListSelectionsBottomSheet {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          EmptyViewWidget(message: "Please select grade first".tr),
+          EmptyViewWidget(message: AppStringsKeys.pleaseSelectGradeFirst.tr),
         ],
       ),
     );
@@ -115,7 +116,7 @@ class _InlineStudentListState extends State<_InlineStudentList> {
       child: Column(
         spacing: 12,
         children: [
-          AppTextWidget('Select Student'.tr, style: AppTextStyle.appToolBarTitle),
+          AppTextWidget(AppStringsKeys.selectStudent.tr, style: AppTextStyle.appToolBarTitle),
           SearchTextField(
             controller: _search,
             onChanged: (v) => setState(() => _query = v ?? ''),
@@ -147,7 +148,7 @@ class _InlineStudentListState extends State<_InlineStudentList> {
           SizedBox(
             width: double.infinity,
             child: PrimaryButtonWidget(
-              text: 'Save'.tr,
+              text: AppStringsKeys.save.tr,
               onClick: () => widget.onSaved(
                   _students.where((e) => e.isSelected).toList()),
             ),

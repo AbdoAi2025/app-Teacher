@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:teacher_app/themes/app_colors.dart';
 import 'package:teacher_app/themes/txt_styles.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class StudentsEmptyViewWidget extends StatelessWidget {
   final VoidCallback? onRetry;
@@ -67,7 +68,7 @@ class StudentsEmptyViewWidget extends StatelessWidget {
 
   Widget _title() {
     return AppTextWidget(
-      'No Students Found'.tr,
+      AppStringsKeys.noStudentsFound.tr,
       style: AppTextStyle.title.copyWith(
         fontSize: 18,
         fontWeight: FontWeight.w600,
@@ -80,7 +81,7 @@ class StudentsEmptyViewWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 48),
       child: AppTextWidget(
-        'No students match your current filters.'.tr,
+        AppStringsKeys.noStudentsMatchYourCurrentFilters.tr,
         textAlign: TextAlign.center,
         style: AppTextStyle.label.copyWith(
           fontSize: 14,
@@ -96,7 +97,7 @@ class StudentsEmptyViewWidget extends StatelessWidget {
       onPressed: onRetry,
       icon: Icon(Icons.refresh_rounded, size: 18, color: AppColors.appMainColor),
       label: Text(
-        'Refresh'.tr,
+        AppStringsKeys.refresh.tr,
         style: TextStyle(
           color: AppColors.appMainColor,
           fontWeight: FontWeight.w500,

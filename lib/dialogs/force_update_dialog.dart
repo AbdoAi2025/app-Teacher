@@ -2,18 +2,19 @@ import 'package:get/get.dart';
 
 import '../utils/message_utils.dart';
 import '../utils/open_store_utils.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class ForceUpdateDialog {
   
 
   static void show() {
     showConfirmationMessage(
-      "force_update_message".tr,
+      AppStringsKeys.forceUpdateMessage.tr,
           () async {
         await OpenStoreUtils.openStore();
       },
       barrierDismissible: false,
-      positiveButtonText: "Update".tr,
+      positiveButtonText: AppStringsKeys.update.tr,
     );
   }
 }

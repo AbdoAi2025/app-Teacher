@@ -4,6 +4,7 @@ import 'package:teacher_app/domain/models/subscription_plan_model.dart';
 import 'package:teacher_app/enums/subscription_plan_enum.dart';
 
 import '../../../models/subscription_date_model.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class SubscriptionPlanItemUiState {
   final String planCode;
@@ -59,9 +60,9 @@ class SubscriptionPlanItemUiState {
     // Check if this is an unlimited plan (PREMIUM or UNLIMITED)
     final planEnum = SubscriptionPlanEnum.fromValue(planCode);
     if (planEnum == SubscriptionPlanEnum.UNLIMITED) {
-      return "Unlimited".tr;
+      return AppStringsKeys.unlimited.tr;
     }
-    return "${'Up to'.tr} $studentLimit ${'students'.tr}";
+    return "${AppStringsKeys.upTo.tr} $studentLimit ${AppStringsKeys.students2.tr}";
   }
 
   // Get monthly and annual pricing from API

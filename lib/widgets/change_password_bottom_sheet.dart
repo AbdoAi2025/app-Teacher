@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/domain/usecases/change_password_use_case.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class ChangePasswordBottomSheet extends StatefulWidget {
   const ChangePasswordBottomSheet({super.key});
@@ -48,19 +49,19 @@ class _ChangePasswordBottomSheetState extends State<ChangePasswordBottomSheet> {
     final confirm = _confirmPasswordController.text.trim();
 
     if (current.isEmpty) {
-      setState(() => _errorMessage = 'Current password is required'.tr);
+      setState(() => _errorMessage = AppStringsKeys.currentPasswordIsRequired.tr);
       return;
     }
     if (newPass.isEmpty) {
-      setState(() => _errorMessage = 'New password is required'.tr);
+      setState(() => _errorMessage = AppStringsKeys.newPasswordIsRequired.tr);
       return;
     }
     if (newPass.length < 6) {
-      setState(() => _errorMessage = 'Password must be at least 6 characters'.tr);
+      setState(() => _errorMessage = AppStringsKeys.passwordMustBeAtLeast6Characters.tr);
       return;
     }
     if (newPass != confirm) {
-      setState(() => _errorMessage = 'Passwords do not match'.tr);
+      setState(() => _errorMessage = AppStringsKeys.passwordsDoNotMatch.tr);
       return;
     }
 
@@ -81,11 +82,11 @@ class _ChangePasswordBottomSheetState extends State<ChangePasswordBottomSheet> {
     if (result.isSuccess) {
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Password changed successfully'.tr)),
+        SnackBar(content: Text(AppStringsKeys.passwordChangedSuccessfully.tr)),
       );
     } else {
       setState(() =>
-          _errorMessage = result.error?.toString() ?? 'Something went wrong'.tr);
+          _errorMessage = result.error?.toString() ?? AppStringsKeys.somethingWentWrong.tr);
     }
   }
 
@@ -109,8 +110,8 @@ class _ChangePasswordBottomSheetState extends State<ChangePasswordBottomSheet> {
                   children: [
                     _buildPasswordField(
                       controller: _currentPasswordController,
-                      label: 'Current Password'.tr,
-                      hint: 'Enter current password'.tr,
+                      label: AppStringsKeys.currentPassword.tr,
+                      hint: AppStringsKeys.enterCurrentPassword.tr,
                       obscure: _obscureCurrent,
                       onToggle: () =>
                           setState(() => _obscureCurrent = !_obscureCurrent),
@@ -118,8 +119,8 @@ class _ChangePasswordBottomSheetState extends State<ChangePasswordBottomSheet> {
                     const SizedBox(height: 16),
                     _buildPasswordField(
                       controller: _newPasswordController,
-                      label: 'New Password'.tr,
-                      hint: 'Enter new password'.tr,
+                      label: AppStringsKeys.newPassword.tr,
+                      hint: AppStringsKeys.enterNewPassword.tr,
                       obscure: _obscureNew,
                       onToggle: () =>
                           setState(() => _obscureNew = !_obscureNew),
@@ -127,8 +128,8 @@ class _ChangePasswordBottomSheetState extends State<ChangePasswordBottomSheet> {
                     const SizedBox(height: 16),
                     _buildPasswordField(
                       controller: _confirmPasswordController,
-                      label: 'Confirm New Password'.tr,
-                      hint: 'Confirm your new password'.tr,
+                      label: AppStringsKeys.confirmNewPassword.tr,
+                      hint: AppStringsKeys.confirmYourNewPassword.tr,
                       obscure: _obscureConfirm,
                       onToggle: () =>
                           setState(() => _obscureConfirm = !_obscureConfirm),
@@ -163,7 +164,7 @@ class _ChangePasswordBottomSheetState extends State<ChangePasswordBottomSheet> {
               color: Theme.of(context).primaryColor, size: 24),
           const SizedBox(width: 12),
           Text(
-            'Change Password'.tr,
+            AppStringsKeys.changePassword.tr,
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -234,7 +235,7 @@ class _ChangePasswordBottomSheetState extends State<ChangePasswordBottomSheet> {
                     strokeWidth: 2, color: Colors.white),
               )
             : Text(
-                'Change Password'.tr,
+                AppStringsKeys.changePassword.tr,
                 style: const TextStyle(
                     fontSize: 16, fontWeight: FontWeight.w600),
               ),

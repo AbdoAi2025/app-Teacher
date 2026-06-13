@@ -9,6 +9,7 @@ import '../../screens/session_details/args/session_details_args_model.dart';
 import '../../themes/app_colors.dart';
 import '../../themes/txt_styles.dart';
 import '../app_txt_widget.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class RunningSessionItemWidget extends StatefulWidget {
   final RunningSessionItemUiState item;
@@ -94,7 +95,7 @@ class _RunningSessionItemWidgetState extends State<RunningSessionItemWidget> {
         onTap: () {
           onViewSessionDetails(uiState);
         },
-        child: AppTextWidget("View Details".tr,
+        child: AppTextWidget(AppStringsKeys.viewDetails.tr,
             style: AppTextStyle.title.copyWith(
                 color: AppColors.appMainColor,
                 decoration: TextDecoration.underline)),
@@ -121,7 +122,7 @@ class _RunningSessionItemWidgetState extends State<RunningSessionItemWidget> {
 
   Widget _title() {
     return AppTextWidget(
-      "Session in progress".tr,
+      AppStringsKeys.sessionInProgress.tr,
       style: AppTextStyle.title.copyWith(color: AppColors.green),
     );
   }

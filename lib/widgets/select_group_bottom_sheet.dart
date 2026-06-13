@@ -7,6 +7,7 @@ import 'package:teacher_app/themes/txt_styles.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
 import 'package:teacher_app/widgets/primary_button_widget.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class SelectGroupBottomSheet extends StatefulWidget {
   final Function(GroupItemUiState) onGroupSelected;
@@ -114,7 +115,7 @@ class _SelectGroupBottomSheetState extends State<SelectGroupBottomSheet> {
       children: [
         Expanded(
           child: AppTextWidget(
-            'Select Group'.tr,
+            AppStringsKeys.selectGroup.tr,
             style: AppTextStyle.title.copyWith(fontSize: 18),
           ),
         ),
@@ -130,7 +131,7 @@ class _SelectGroupBottomSheetState extends State<SelectGroupBottomSheet> {
     return TextField(
       controller: _searchController,
       decoration: InputDecoration(
-        hintText: 'Search groups'.tr,
+        hintText: AppStringsKeys.searchGroups.tr,
         prefixIcon: Icon(Icons.search, color: AppColors.textSecondaryColor),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -167,14 +168,14 @@ class _SelectGroupBottomSheetState extends State<SelectGroupBottomSheet> {
           Icon(Icons.error_outline, size: 64, color: AppColors.textSecondaryColor),
           SizedBox(height: 16),
           AppTextWidget(
-            state.message ?? 'Failed to load groups'.tr,
+            state.message ?? AppStringsKeys.failedToLoadGroups.tr,
             style: AppTextStyle.label.copyWith(color: AppColors.textSecondaryColor),
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 16),
           ElevatedButton(
             onPressed: () => GroupsManagers.onRefresh(),
-            child: AppTextWidget('Retry'.tr, style: AppTextStyle.label),
+            child: AppTextWidget(AppStringsKeys.retry.tr, style: AppTextStyle.label),
           ),
         ],
       ),
@@ -187,7 +188,7 @@ class _SelectGroupBottomSheetState extends State<SelectGroupBottomSheet> {
     if (filtered.isEmpty) {
       return Center(
         child: AppTextWidget(
-          'No groups found'.tr,
+          AppStringsKeys.noGroupsFound2.tr,
           style: AppTextStyle.label.copyWith(color: AppColors.textSecondaryColor),
         ),
       );
@@ -210,7 +211,7 @@ class _SelectGroupBottomSheetState extends State<SelectGroupBottomSheet> {
         SizedBox(
           width: double.infinity,
           child: PrimaryButtonWidget(
-            text: 'Select'.tr,
+            text: AppStringsKeys.select.tr,
             onClick: _onSelectTap,
             enabled: _selectedGroup != null,
           ),

@@ -7,6 +7,7 @@ import 'package:teacher_app/utils/message_utils.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'package:teacher_app/widgets/info_chip_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class PhoneWithIconWidget extends StatelessWidget {
   final String phone;
@@ -65,7 +66,7 @@ class PhoneWithIconWidget extends StatelessWidget {
 
   void onClick() {
     if (canCall) {
-      showConfirmationMessage( sprintf("Are you sure to call".tr, [phone]) , (){
+      showConfirmationMessage( sprintf(AppStringsKeys.areYouSureToCall.tr, [phone]) , (){
         launchUrl(Uri.parse('tel:$phone'));
       });
     }

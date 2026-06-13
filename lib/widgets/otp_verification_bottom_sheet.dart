@@ -10,6 +10,7 @@ import 'package:teacher_app/enums/otp_channel_enum.dart';
 import 'package:teacher_app/utils/message_utils.dart';
 import 'package:teacher_app/widgets/dialog_loading_widget.dart';
 import 'package:teacher_app/widgets/reset_password_bottom_sheet.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class OtpVerificationBottomSheet extends StatefulWidget {
   final String userId;
@@ -59,10 +60,10 @@ class OtpVerificationBottomSheet extends StatefulWidget {
     required VoidCallback onSuccess,
   }) {
     showConfirmationMessage(
-      'require_verify_message'.tr,
+      AppStringsKeys.requireVerifyMessage.tr,
       () => _resendAndVerify(context, userId: userId, onSuccess: onSuccess),
       barrierDismissible: false,
-      positiveButtonText: 'Verify Now'.tr,
+      positiveButtonText: AppStringsKeys.verifyNow.tr,
     );
   }
 
@@ -183,7 +184,7 @@ class _OtpVerificationBottomSheetState
       } else {
         setState(() {
           _isVerifying = false;
-          _errorMessage = 'Invalid or expired code. Please try again.'.tr;
+          _errorMessage = AppStringsKeys.invalidOrExpiredCodePleaseTryAgain.tr;
         });
       }
     } else {
@@ -198,7 +199,7 @@ class _OtpVerificationBottomSheetState
       } else {
         setState(() {
           _isVerifying = false;
-          _errorMessage = 'Invalid or expired code. Please try again.'.tr;
+          _errorMessage = AppStringsKeys.invalidOrExpiredCodePleaseTryAgain.tr;
         });
       }
     }
@@ -227,11 +228,11 @@ class _OtpVerificationBottomSheetState
       _focusNodes.first.requestFocus();
       _startCountdown();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Code resent successfully'.tr)),
+        SnackBar(content: Text(AppStringsKeys.codeResentSuccessfully.tr)),
       );
     } else {
       setState(
-          () => _errorMessage = 'Failed to resend code'.tr);
+          () => _errorMessage = AppStringsKeys.failedToResendCode.tr);
     }
   }
 
@@ -307,7 +308,7 @@ class _OtpVerificationBottomSheetState
               color: Theme.of(context).primaryColor, size: 24),
           const SizedBox(width: 12),
           Text(
-            'OTP Verification'.tr,
+            AppStringsKeys.otpVerification.tr,
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -425,7 +426,7 @@ class _OtpVerificationBottomSheetState
                     strokeWidth: 2, color: Colors.white),
               )
             : Text(
-                'Verify'.tr,
+                AppStringsKeys.verify.tr,
                 style: const TextStyle(
                     fontSize: 16, fontWeight: FontWeight.w600),
               ),
@@ -440,7 +441,7 @@ class _OtpVerificationBottomSheetState
       children: [
         if (!canResend) ...[
           Text(
-            '${'Resend in'.tr} ',
+            '${AppStringsKeys.resendIn.tr} ',
             style: TextStyle(color: Colors.grey[600], fontSize: 14),
           ),
           Text(
@@ -464,7 +465,7 @@ class _OtpVerificationBottomSheetState
                     ),
                   )
                 : Text(
-                    'Resend Code'.tr,
+                    AppStringsKeys.resendCode.tr,
                     style: const TextStyle(
                         fontSize: 14, fontWeight: FontWeight.w600),
                   ),

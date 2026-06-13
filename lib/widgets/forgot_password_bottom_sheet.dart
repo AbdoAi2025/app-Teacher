@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:teacher_app/domain/usecases/forgot_password_use_case.dart';
 import 'package:teacher_app/enums/otp_channel_enum.dart';
 import 'package:teacher_app/widgets/otp_verification_bottom_sheet.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class ForgotPasswordBottomSheet extends StatefulWidget {
   final String initialIdentifier;
@@ -48,7 +49,7 @@ class _ForgotPasswordBottomSheetState extends State<ForgotPasswordBottomSheet> {
   Future<void> _onSend() async {
     final identifier = _identifierController.text.trim();
     if (identifier.isEmpty) {
-      setState(() => _errorMessage = 'Identifier is required'.tr);
+      setState(() => _errorMessage = AppStringsKeys.identifierIsRequired.tr);
       return;
     }
 
@@ -77,7 +78,7 @@ class _ForgotPasswordBottomSheetState extends State<ForgotPasswordBottomSheet> {
       }
     } else {
       final ex = result.error;
-      setState(() => _errorMessage = ex?.toString() ?? 'Something went wrong'.tr);
+      setState(() => _errorMessage = ex?.toString() ?? AppStringsKeys.somethingWentWrong.tr);
     }
   }
 
@@ -99,7 +100,7 @@ class _ForgotPasswordBottomSheetState extends State<ForgotPasswordBottomSheet> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                      'Enter your email or username'.tr,
+                      AppStringsKeys.enterYourEmailOrUsername.tr,
                       style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                     ),
                     const SizedBox(height: 16),
@@ -131,7 +132,7 @@ class _ForgotPasswordBottomSheetState extends State<ForgotPasswordBottomSheet> {
           Icon(Icons.lock_reset, color: Theme.of(context).primaryColor, size: 24),
           const SizedBox(width: 12),
           Text(
-            'Forgot Password'.tr,
+            AppStringsKeys.forgotPassword.tr,
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -155,8 +156,8 @@ class _ForgotPasswordBottomSheetState extends State<ForgotPasswordBottomSheet> {
       textInputAction: TextInputAction.done,
       onSubmitted: (_) => _onSend(),
       decoration: InputDecoration(
-        labelText: 'Email or Username'.tr,
-        hintText: 'Enter your email or username'.tr,
+        labelText: AppStringsKeys.emailOrUsername.tr,
+        hintText: AppStringsKeys.enterYourEmailOrUsername.tr,
         prefixIcon: const Icon(Icons.person_outline),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
         enabledBorder: OutlineInputBorder(
@@ -187,7 +188,7 @@ class _ForgotPasswordBottomSheetState extends State<ForgotPasswordBottomSheet> {
                 child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
               )
             : Text(
-                'Send Reset Code'.tr,
+                AppStringsKeys.sendResetCode.tr,
                 style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               ),
       ),

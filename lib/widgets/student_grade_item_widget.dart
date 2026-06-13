@@ -13,6 +13,7 @@ import 'package:teacher_app/widgets/primary_button_widget.dart';
 
 import 'date_info_chip_widget.dart';
 import 'delete_info_chip_widget.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class StudentGradeItemWidget extends StatelessWidget {
   final StudentGradeApiModel grade;
@@ -94,7 +95,7 @@ class StudentGradeItemWidget extends StatelessWidget {
 
   _upgraded() {
     return InfoChipWidget(
-      text: "Upgraded".tr,
+      text: AppStringsKeys.upgraded.tr,
       color: AppColors.colorGrey,
     );
   }
@@ -102,7 +103,7 @@ class StudentGradeItemWidget extends StatelessWidget {
     return PrimaryButtonWidget(
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       textStyle: AppTextStyle.label.copyWith(color: AppColors.white),
-      text: "Upgrade".tr, onClick: () => onUpgradeTap?.call(),
+      text: AppStringsKeys.upgrade.tr, onClick: () => onUpgradeTap?.call(),
     );
   }
 }

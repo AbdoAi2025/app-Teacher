@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 enum SubscriptionPlanEnum {
   FREE("FREE", "Free Plan"),
@@ -14,13 +15,13 @@ enum SubscriptionPlanEnum {
   String get localizedName {
     switch (this) {
       case SubscriptionPlanEnum.FREE:
-        return "Free Plan".tr;
+        return AppStringsKeys.freePlan.tr;
       case SubscriptionPlanEnum.BASIC:
-        return "Basic Plan".tr;
+        return AppStringsKeys.basicPlan.tr;
       case SubscriptionPlanEnum.PREMIUM:
-        return "Premium Plan".tr;
+        return AppStringsKeys.premiumPlan.tr;
       case SubscriptionPlanEnum.UNLIMITED:
-        return "Unlimited Plan".tr;
+        return AppStringsKeys.unlimitedPlan.tr;
     }
   }
 

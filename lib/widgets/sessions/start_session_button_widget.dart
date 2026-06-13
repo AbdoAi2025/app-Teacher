@@ -17,6 +17,7 @@ import '../../utils/message_utils.dart';
 import '../dialog_loading_widget.dart';
 import '../primary_button_widget.dart';
 import 'start_session_form_widget.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class StartSessionButtonWidget extends StatelessWidget {
   final String timingId;
@@ -43,19 +44,19 @@ class StartSessionButtonWidget extends StatelessWidget {
         onStartSessionClick();
       },
       child: InfoChipWidget(
-        text: "Start session".tr,
+        text: AppStringsKeys.startSession.tr,
         icon: Icons.play_circle_outline,
         color: AppColors.green,
       ),
     );
 
    return AppTextWidget(
-      "Start session".tr,
+      AppStringsKeys.startSession.tr,
       style: AppTextStyle.value.copyWith(color: AppColors.primaryButtonColor, fontSize: 12 ,),
     );
 
     return PrimaryButtonWidget(
-      text: "Start session".tr,
+      text: AppStringsKeys.startSession.tr,
       padding: padding,
       textStyle: textStyle,
       onClick: () {
@@ -67,7 +68,7 @@ class StartSessionButtonWidget extends StatelessWidget {
   void onStartSessionClick() {
     /*check if group has students*/
     if (studentsCount == 0) {
-      showErrorMessage("Group has no students".tr);
+      showErrorMessage(AppStringsKeys.groupHasNoStudents.tr);
       return;
     }
 

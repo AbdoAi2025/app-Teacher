@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../app_mode.dart';
 import '../services/environment_service.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class EnvironmentDisplayWidget extends StatelessWidget {
   const EnvironmentDisplayWidget({super.key});
@@ -170,7 +171,7 @@ class EnvironmentDisplayWidget extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text("Cancel".tr),
+            child: Text(AppStringsKeys.cancel.tr),
           ),
         ],
       ),

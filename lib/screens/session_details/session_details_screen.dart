@@ -30,6 +30,7 @@ import 'session_details_controller.dart';
 import 'states/session_details_state.dart';
 import 'states/update_session_activities_state.dart';
 import 'widgets/student_activity_item_widget.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class SessionDetailsScreen extends StatefulWidget {
   const SessionDetailsScreen({super.key});
@@ -103,11 +104,11 @@ class _SessionDetailsScreenState extends LifecycleWidgetState<SessionDetailsScre
   }
 
   _showNotFound() {
-    return ErrorWidget("Session Not Found".tr);
+    return ErrorWidget(AppStringsKeys.sessionNotFound.tr);
   }
 
   _showInvalidArgs() {
-    return ErrorWidget("Invalid Args".tr);
+    return ErrorWidget(AppStringsKeys.invalidArgs.tr);
   }
 
   _showError(SessionDetailsStateError state) {
@@ -259,7 +260,7 @@ class _SessionDetailsScreenState extends LifecycleWidgetState<SessionDetailsScre
                 },
               ),
             ),
-            AppTextWidget("End Session".tr),
+            AppTextWidget(AppStringsKeys.endSession.tr),
 
           ],
         ),
@@ -279,7 +280,7 @@ class _SessionDetailsScreenState extends LifecycleWidgetState<SessionDetailsScre
           actions: [_closeIcon()]);
     }
     return AppToolbarWidget.appBar(
-        title: "Session Details".tr, actions: [
+        title: AppStringsKeys.sessionDetails.tr, actions: [
           _deleteIcon(),
           _searchIcon()]);
   }
@@ -348,7 +349,7 @@ class _SessionDetailsScreenState extends LifecycleWidgetState<SessionDetailsScre
   }
 
   void onSessionStudentsSelected(SessionDetailsUiState uiState , List<StudentSelectionItemUiState> items) {
-      showConfirmationMessage("Are you sure you want to add students to this session?".tr, (){
+      showConfirmationMessage(AppStringsKeys.areYouSureYouWantToAddStudentsToThisSession.tr, (){
         showDialogLoading();
         controller.addStudentToSession(uiState ,  items )
         .listen((result){
@@ -360,7 +361,7 @@ class _SessionDetailsScreenState extends LifecycleWidgetState<SessionDetailsScre
   }
 
   _deleteIcon() => DeleteIconWidget(onClick: () {
-     showConfirmationMessage("Are you sure you want to delete the session".tr, (){
+     showConfirmationMessage(AppStringsKeys.areYouSureYouWantToDeleteTheSession.tr, (){
        showDialogLoading();
        controller.deleteSession().listen((result){
          appLog("_deleteIcon result : ${result.toString()}");

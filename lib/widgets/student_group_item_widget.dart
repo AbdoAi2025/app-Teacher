@@ -12,6 +12,7 @@ import 'package:teacher_app/widgets/day_info_chip_widget.dart';
 import 'package:teacher_app/widgets/groups/group_icon_widget.dart';
 import 'package:teacher_app/widgets/info_chip_widget.dart';
 import 'package:teacher_app/widgets/time_from_to_info_chip_widget.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class StudentGroupItemWidget extends StatelessWidget {
   final StudentGroupApiModel group;
@@ -110,7 +111,7 @@ class StudentGroupItemWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
         ),
         child: AppTextWidget(
-          "Upgraded".tr,
+          AppStringsKeys.upgraded.tr,
           style: AppTextStyle.small.copyWith(color: AppColors.white),
         ),
       );
@@ -119,7 +120,7 @@ class StudentGroupItemWidget extends StatelessWidget {
     return InkWell(
       onTap: onRemoveTap,
       child: InfoChipWidget(
-        text: "Remove From Group".tr,
+        text: AppStringsKeys.removeFromGroup.tr,
         color: AppColors.colorRed,
         icon: Icons.remove_circle_outline,
         size: 20,
@@ -138,7 +139,7 @@ class StudentGroupItemWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AppTextWidget(
-                group.groupName ?? "Unknown Group".tr,
+                group.groupName ?? AppStringsKeys.unknownGroup.tr,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: AppTextStyle.label.copyWith(

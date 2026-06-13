@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 
 import '../utils/LogUtils.dart';
 import 'app_text_field_widget.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class SearchTextField extends StatefulWidget {
   final String? hint;
@@ -50,7 +51,7 @@ class _SearchTextFieldState extends State<SearchTextField> {
   @override
   Widget build(BuildContext context) {
     return AppTextFieldWidget(
-      hint: widget.hint ?? 'Search'.tr,
+      hint: widget.hint ?? AppStringsKeys.search.tr,
       onChanged: _onSearchChanged,
       controller: widget.controller,
       textInputAction: TextInputAction.search,

@@ -18,6 +18,7 @@ import '../../presentation/app_message_dialogs.dart';
 import '../../services/environment_service.dart';
 import '../../utils/whatsapp_utils.dart';
 import '../../widgets/environment_display_widget.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -76,7 +77,7 @@ class _SplashscreenState extends State<SplashScreen> {
 
         switch (callback) {
           case SplashError():
-            showErrorMessageEx(callback.ex , buttonText: "Retry".tr, onClose:  (){splashController.retry();});
+            showErrorMessageEx(callback.ex , buttonText: AppStringsKeys.retry.tr, onClose:  (){splashController.retry();});
             break;
           case SplashEventGoToLogin():
             AppNavigator.navigateToLogin();

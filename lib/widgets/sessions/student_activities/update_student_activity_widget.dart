@@ -16,6 +16,7 @@ import '../../label_widget.dart';
 import '../../primary_button_widget.dart';
 import '../../switch_button_widget.dart';
 import '../../title_widget.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class UpdateStudentActivityWidget extends StatefulWidget {
 
@@ -90,7 +91,7 @@ class _UpdateStudentActivityWidgetState extends State<UpdateStudentActivityWidge
   _title() {
     return Row(
       children: [
-        Expanded(child: Center(child: TitleWidget("Update Student Activity".tr , textAlign: TextAlign.center))),
+        Expanded(child: Center(child: TitleWidget(AppStringsKeys.updateStudentActivity.tr , textAlign: TextAlign.center))),
         _closeIcon()
       ],
     );
@@ -98,7 +99,7 @@ class _UpdateStudentActivityWidgetState extends State<UpdateStudentActivityWidge
 
   _attendance() {
     return LabelValueRowWidget(
-        label: "Attendance".tr,
+        label: AppStringsKeys.attendance.tr,
         mainAxisSize: MainAxisSize.min,
         valueWidget: SizedBox(
           child: SwitchButtonWidget(
@@ -118,7 +119,7 @@ class _UpdateStudentActivityWidgetState extends State<UpdateStudentActivityWidge
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 10,
       children: [
-        LabelWidget("Behavior".tr),
+        LabelWidget(AppStringsKeys.behavior.tr),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Column(
@@ -152,7 +153,7 @@ class _UpdateStudentActivityWidgetState extends State<UpdateStudentActivityWidge
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 10,
       children: [
-        LabelWidget("Homework".tr),
+        LabelWidget(AppStringsKeys.homework.tr),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Column(
@@ -186,7 +187,7 @@ class _UpdateStudentActivityWidgetState extends State<UpdateStudentActivityWidge
      spacing: 5,
       mainAxisSize: MainAxisSize.min,
       children: [
-        LabelWidget("Grade".tr),
+        LabelWidget(AppStringsKeys.score.tr),
         _gradeNotes()
       ],
     );
@@ -195,25 +196,25 @@ class _UpdateStudentActivityWidgetState extends State<UpdateStudentActivityWidge
   _saveButton() {
     return SizedBox(
       width: double.infinity,
-      child: PrimaryButtonWidget(text: 'Save'.tr, onClick: onSaveClick,),
+      child: PrimaryButtonWidget(text: AppStringsKeys.save.tr, onClick: onSaveClick,),
     );
   }
 
   _behaviorNotes() {
     return AppTextFieldWidget(
-        hint: "Behavior Notes".tr,
+        hint: AppStringsKeys.behaviorNotes.tr,
         controller: _behaviorNotesEditTextController);
   }
 
   _homeworkNotes() {
     return AppTextFieldWidget(
-        hint: "Homework Notes".tr,
+        hint: AppStringsKeys.homeworkNotes.tr,
         controller: _homeworkNotesEditTextController);
   }
 
   _gradeNotes() {
     return AppTextFieldWidget(
-      hint: "Enter Grade".tr,
+      hint: AppStringsKeys.enterGrade.tr,
       controller: TextEditingController(text: GradeUtils.getGradeFormat(quizGrade)),
       keyboardType: TextInputType.number,
       onChanged: (value) {
@@ -240,12 +241,12 @@ class _UpdateStudentActivityWidgetState extends State<UpdateStudentActivityWidge
 
   onSaveClick() {
     if (quizGrade != null && quizGrade! < 0) {
-      showErrorMessage('grade_less_than_zero'.tr);
+      showErrorMessage(AppStringsKeys.gradeLessThanZero.tr);
       return;
     }
     final maxGrade = uiState.sessionQuizGrade;
     if (quizGrade != null && maxGrade != null && quizGrade! > maxGrade) {
-      showErrorMessage('grade_exceeds_max'.trParams({'s': maxGrade.toString()}));
+      showErrorMessage(AppStringsKeys.gradeExceedsMax.trParams({'s': maxGrade.toString()}));
       return;
     }
     widget.onSaveClick(

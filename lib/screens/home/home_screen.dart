@@ -20,6 +20,7 @@ import '../groups/groups_state.dart';
 import 'states/home_state.dart';
 import 'states/running_session_item_ui_state.dart';
 import 'states/running_sessions_state.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -62,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       },
       child: Scaffold(
-        // appBar: AppToolbarWidget.appBar(title: "Home".tr, hasLeading: false),
+        // appBar: AppToolbarWidget.appBar(title: AppStringsKeys.home.tr, hasLeading: false),
         body: SafeArea(
             child: Column(
           children: [
@@ -142,7 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _runningTitle() => AppTextWidget(
-        "Running Session".tr,
+        AppStringsKeys.runningSession.tr,
         style: AppTextStyle.title,
       );
 
@@ -225,12 +226,12 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           AppTextWidget(
-            "No Running Sessions".tr,
+            AppStringsKeys.noRunningSessions.tr,
             style: AppTextStyle.title.copyWith(color: AppColors.appMainColor),
             textAlign: TextAlign.center,
           ),
           AppTextWidget(
-            "All sessions are currently inactive".tr,
+            AppStringsKeys.allSessionsAreCurrentlyInactive.tr,
             style: AppTextStyle.subTitle,
             textAlign: TextAlign.center,
           ),
@@ -251,7 +252,7 @@ class _HomeScreenState extends State<HomeScreen> {
         spacing: 15,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AppTextWidget("Today Groups".tr , style: AppTextStyle.title,),
+          AppTextWidget(AppStringsKeys.todayGroups.tr , style: AppTextStyle.title,),
           ...uiStates.map((e) => GroupItemWidget(uiState: e,))
         ],
       ),
@@ -296,19 +297,19 @@ class _HomeScreenState extends State<HomeScreen> {
             spacing: 6,
             children: [
               AppTextWidget(
-                "No Groups Today".tr,
+                AppStringsKeys.noGroupsToday.tr,
                 style: AppTextStyle.title.copyWith(color: AppColors.appMainColor),
                 textAlign: TextAlign.center,
               ),
               AppTextWidget(
-                "You have no sessions scheduled for today".tr,
+                AppStringsKeys.youHaveNoSessionsScheduledForToday.tr,
                 style: AppTextStyle.subTitle,
                 textAlign: TextAlign.center,
               ),
             ],
           ),
           PrimaryButtonWidget(
-            text: "Create New Groups".tr,
+            text: AppStringsKeys.createNewGroups.tr,
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
             onClick: () => AppNavigator.navigateToCreateGroup(),
           ),
@@ -327,7 +328,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Expanded(
                 child: AppTextWidget(
-              "${"Hey, Mr.".tr} ${state?.name ?? ""}" ,
+              "${AppStringsKeys.heyMr.tr} ${state?.name ?? ""}" ,
               style: AppTextStyle.title.copyWith(color: AppColors.appMainColor),
             )),
             InkWell(
@@ -343,7 +344,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void onLogout() {
 
-    showConfirmationMessage("Are you sure to logout".tr, (){
+    showConfirmationMessage(AppStringsKeys.areYouSureToLogout.tr, (){
       controller.logout();
       AppNavigator.navigateToLogin();
     });
