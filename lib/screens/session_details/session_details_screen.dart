@@ -6,6 +6,7 @@ import 'package:teacher_app/bottomsheets/select_students/select_students_bottom_
 import 'package:teacher_app/screens/create_group/students_selection/states/student_selection_item_ui_state.dart';
 import 'package:teacher_app/screens/create_group/students_selection/students_selection_controller.dart';
 import 'package:teacher_app/screens/session_details/states/session_details_ui_state.dart';
+import 'package:teacher_app/screens/session_details/widgets/end_session_widget.dart';
 import 'package:teacher_app/themes/app_colors.dart';
 import 'package:teacher_app/utils/app_background_styles.dart';
 import 'package:teacher_app/utils/message_utils.dart';
@@ -240,31 +241,12 @@ class _SessionDetailsScreenState extends LifecycleWidgetState<SessionDetailsScre
   }
 
   _enSessionButton(SessionDetailsUiState uiState) {
-    return InkWell(
-      onTap: () {
+    return EndSessionWidget(
+      sessionId: uiState.id,
+      groupId: uiState.groupId,
+      onSessionEnded: () {
         onRefresh();
       },
-      child: Container(
-        decoration: AppBackgroundStyle.getColoredBackgroundRoundedBorder(radius: 20, borderColor : AppColors.appMainColor , bgColor: AppColors.white),
-        width: double.infinity,
-        child: Row(
-          spacing: 4,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: EndSessionButtonWidget(
-                sessionId: uiState.id,
-                onSessionEnded: () {
-                  onRefresh();
-                },
-              ),
-            ),
-            AppTextWidget(AppStringsKeys.endSession.tr),
-
-          ],
-        ),
-      ),
     );
   }
 

@@ -52,13 +52,13 @@ class _GroupDetailsScreenState extends LifecycleWidgetState<GroupDetailsScreen> 
             final state = controller.state.value;
             switch (state) {
               case GroupDetailsStateLoading():
-                return Column(children: [_header(null), const Expanded(child: Center(child: LoadingWidget()))]);
+                return const Center(child: LoadingWidget());
               case GroupDetailsStateInvalidArgs():
-                return Column(children: [_header(null), const Expanded(child: Center(child: Text("Invalid Args")))]);
+                return const Center(child: Text("Invalid Args"));
               case GroupDetailsStateSuccess():
                 return _successBody(state);
               case GroupDetailsStateError():
-                return Column(children: [_header(null), Expanded(child: Center(child: Text(state.exception.toString())))]);
+                return Center(child: Text(state.exception.toString()));
             }
           }),
         ),
@@ -206,6 +206,7 @@ class _GroupDetailsScreenState extends LifecycleWidgetState<GroupDetailsScreen> 
         item: RunningSessionItemUiState(
           id: activeSession.sessionId ?? "",
           date: AppDateUtils.parseStringToDateTime(activeSession.startDate ?? ""),
+          groupId: uiState.groupId,
         ),
         onSessionEnded: () => controller.reload(),
       ),
@@ -243,11 +244,14 @@ class _GroupDetailsScreenState extends LifecycleWidgetState<GroupDetailsScreen> 
   // ─── Students Tab ─────────────────────────────────────────────────────────
 
   Widget _studentsTab(GroupDetailsUiState uiState) {
-    return StudentsGroupListSearchWidget(
-      query: "",
-      students: uiState.students,
-      onStudentItemClick: onStudentItemClick,
-      onAddStudents: onEditClick,
+    return RefreshIndicator(
+      onRefresh: () async => controller.reload(),
+      child: StudentsGroupListSearchWidget(
+        query: "",
+        students: uiState.students,
+        onStudentItemClick: onStudentItemClick,
+        onAddStudents: onEditClick,
+      ),
     );
   }
 

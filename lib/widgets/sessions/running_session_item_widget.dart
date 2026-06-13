@@ -86,6 +86,7 @@ class _RunningSessionItemWidgetState extends State<RunningSessionItemWidget> {
 
   _endSession(RunningSessionItemUiState item) => EndSessionButtonWidget(
         sessionId: item.id,
+        groupId: item.groupId ?? "",
         onSessionEnded: () {
           widget.onSessionEnded();
         },

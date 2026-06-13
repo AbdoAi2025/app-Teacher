@@ -15,19 +15,16 @@ import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 class EndSessionButtonWidget extends StatelessWidget {
 
   final String sessionId;
+  final String groupId;
   final Function() onSessionEnded;
 
-  const EndSessionButtonWidget({super.key, required this.sessionId, required this.onSessionEnded});
+  const EndSessionButtonWidget({super.key, required this.sessionId, required this.groupId, required this.onSessionEnded});
 
   @override
   Widget build(BuildContext context) {
-
     return InkWell(
       onTap: () =>   onEndSession(),
-      child: CircleAvatar(
-        backgroundColor: AppColors.color_E75260.withValues(alpha: .1),
-        child: Icon(Icons.stop , color: AppColors.color_E75260),
-      ),
+      child: content(context),
     );
 
     return InfoChipWidget(
@@ -65,11 +62,18 @@ class EndSessionButtonWidget extends StatelessWidget {
 
   Stream<EndSessionState> endSession(String sessionId) async* {
     yield EndSessionStateLoading();
-    var result = await EndSessionUseCase().execute(sessionId);
+    var result = await EndSessionUseCase().execute(sessionId, groupId);
     if(result.isSuccess){
       yield EndSessionStateSuccess(result.data ?? "");
     }else{
       yield EndSessionStateError(result.error);
     }
+  }
+
+  content(BuildContext context) {
+    return CircleAvatar(
+      backgroundColor: AppColors.color_E75260.withValues(alpha: .1),
+      child: Icon(Icons.stop , color: AppColors.color_E75260),
+    );
   }
 }
