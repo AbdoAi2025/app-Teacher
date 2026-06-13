@@ -7,7 +7,7 @@
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 LOCAL_PROPS="$PROJECT_ROOT/android/local.properties"
-CREDENTIALS="$PROJECT_ROOT/.playstore.env"
+CREDENTIALS="$PROJECT_ROOT/tools/.playstore.env"
 
 # ── Colors & helpers ──────────────────────────────────────────────────────────
 RED='\033[0;31m'
@@ -53,6 +53,27 @@ info "Package: $PLAY_PACKAGE_NAME"
 info "Track:   internal"
 success "Credentials loaded"
 
+# ── Version Bump ─────────────────────────────────────────────────────────────
+section "Bumping version"
+
+VERSION_PROPS="$PROJECT_ROOT/android/version.properties"
+[[ ! -f "$VERSION_PROPS" ]] && error "android/version.properties not found"
+
+CURRENT_CODE=$(grep "^versionCode=" "$VERSION_PROPS" | cut -d'=' -f2)
+CURRENT_NAME=$(grep "^versionName=" "$VERSION_PROPS" | cut -d'=' -f2)
+
+NEW_CODE=$((CURRENT_CODE + 1))
+VN_MAJOR=$(echo "$CURRENT_NAME" | cut -d'.' -f1)
+VN_MINOR=$(echo "$CURRENT_NAME" | cut -d'.' -f2)
+NEW_NAME="$VN_MAJOR.$((VN_MINOR + 1))"
+
+sed -i '' "s/^versionCode=.*/versionCode=$NEW_CODE/" "$VERSION_PROPS"
+sed -i '' "s/^versionName=.*/versionName=$NEW_NAME/" "$VERSION_PROPS"
+
+info "versionCode: $CURRENT_CODE → $NEW_CODE"
+info "versionName: $CURRENT_NAME → $NEW_NAME"
+success "Version bumped"
+
 # ── Build AAB ─────────────────────────────────────────────────────────────────
 section "Building Android App Bundle (dev)"
 
@@ -80,6 +101,20 @@ python3 "$PROJECT_ROOT/tools/play_upload.py" \
 
 if [[ $? -eq 0 ]]; then
   success "Upload successful — build available to internal testers"
+
+  # ── Git commit ───────────────────────────────────────────────────────────────
+  section "Committing version bump"
+
+  git -C "$PROJECT_ROOT" add android/version.properties
+  git -C "$PROJECT_ROOT" commit -m "chore: bump android version to $NEW_NAME ($NEW_CODE) [dev deploy]"
+
+  if [[ $? -eq 0 ]]; then
+    success "Version bump committed"
+    git -C "$PROJECT_ROOT" push
+    [[ $? -eq 0 ]] && success "Pushed to remote" || warn "Git push failed"
+  else
+    warn "Git commit failed — version.properties was updated but not committed"
+  fi
 else
   error "Google Play upload failed"
 fi

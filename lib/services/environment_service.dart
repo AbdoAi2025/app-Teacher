@@ -2,6 +2,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
+import '../utils/LogUtils.dart';
+
 
 const String prodBaseUrl = "https://assistant-app-2136afb92d95.herokuapp.com";
 const String devBaseUrl = "https://assistant-app-backend-dev-dc445a76bc87.herokuapp.com/";
@@ -14,8 +16,18 @@ class AppMode {
   static const int dev = 0;
   static const int prod = 1;
   static const int local = 2;
+  static const int stage = 3;
 
-  static const int defaultMode = kDebugMode ? local : prod;
+  static const _buildEnv = String.fromEnvironment('APP_ENV', defaultValue: 'prod');
+
+  static final defaultMode = switch (_buildEnv) {
+    'dev'   => dev,
+    'local' => local,
+    'stage' => stage,
+    _       => prod,
+  };
+
+  // static const int defaultMode = defaultEnv;//kDebugMode ? local : dev;
 
   static final RxInt _currentMode = (defaultMode).obs;
 
@@ -44,10 +56,26 @@ class EnvironmentService {
     _ => prodBaseUrl
   };
 
+
+
+  /*Called in main*/
+  static Future<void> initAppEnvironment() async {
+    try {
+      final savedEnvironment = await EnvironmentService.getEnvironment();
+      AppMode.mode = savedEnvironment;
+      await EnvironmentService.loadCustomLocalUrl();
+      appLog("App environment initialized: ${EnvironmentService.getEnvironmentName(savedEnvironment)}");
+      appLog("Custom local URL: ${EnvironmentService.currentCustomLocalUrl}");
+    } catch (e) {
+      appLog("Error initializing app environment: $e");
+      AppMode.mode = AppMode.defaultMode; // Default fallback
+    }
+  }
+
   static Future<int> getEnvironment() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      return prefs.getInt(_environmentKey) ?? (kDebugMode ? AppMode.local : AppMode.prod);
+      return prefs.getInt(_environmentKey) ??  AppMode.defaultMode;
     } catch (e) {
       return AppMode.defaultMode;
     }

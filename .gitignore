@@ -30,3 +30,5 @@ app.*.symbols
 app.*.map.json
 migrate_working_dir/
 /android/app/.cxx/*
+/tools/.playstore.env
+/tools/.appstore.env

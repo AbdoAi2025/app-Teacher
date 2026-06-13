@@ -38,7 +38,7 @@ void main() async {
 
   _initSystemUi();
   initAppLocale();
-  await initAppEnvironment();
+  await EnvironmentService.initAppEnvironment();
   await AppSetting.initAppVersion();
   ApiService.startApiLoggerIfNeeded();
 
@@ -232,18 +232,6 @@ Future<void> initializeFirebase() async {
   }
 }
 
-Future<void> initAppEnvironment() async {
-  try {
-    final savedEnvironment = await EnvironmentService.getEnvironment();
-    AppMode.mode = savedEnvironment;
-    await EnvironmentService.loadCustomLocalUrl();
-    appLog("App environment initialized: ${EnvironmentService.getEnvironmentName(savedEnvironment)}");
-    appLog("Custom local URL: ${EnvironmentService.currentCustomLocalUrl}");
-  } catch (e) {
-    appLog("Error initializing app environment: $e");
-    AppMode.mode = AppMode.defaultMode; // Default fallback
-  }
-}
 
 NavigatorObserver _getFirebaseObserver() {
   try {
