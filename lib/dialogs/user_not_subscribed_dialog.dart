@@ -17,11 +17,10 @@ class UserNotSubscribedDialog {
 
   static bool _isDialogShown = false;
 
-  static void showUserNotSubscribedDialog({String message = "" ,bool barrierDismissible = false}) {
+  static Future<void> showUserNotSubscribedDialog({String message = "" ,bool barrierDismissible = false}) async {
     if (_isDialogShown) return;
-
     _isDialogShown = true;
-    showConfirmationMessage(
+    await showConfirmationMessage(
        message.ifEmpty( AppStringsKeys.subscriptionMessage.tr),
         () {
           _onRenewClick();
@@ -30,9 +29,11 @@ class UserNotSubscribedDialog {
         positiveButtonText: AppStringsKeys.renew.tr,
         negativeButtonText: null,
         subTitleWidget: _buildContactWidget(),
+
         onCancel: () {
           _isDialogShown = false;
         });
+    _isDialogShown = false;
   }
 
   static void showSubscriptionExpiringDialog({required int remainingDays}) {

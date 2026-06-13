@@ -181,9 +181,6 @@ class AppStringsKeys {
   /// Key: "Confirm Password"
   static const String confirmPassword = "Confirm Password";
 
-  /// Key: "Confirm Purchase"
-  static const String confirmPurchase = "Confirm Purchase";
-
   /// Key: "Confirm your new password"
   static const String confirmYourNewPassword = "Confirm your new password";
 
@@ -1179,6 +1176,9 @@ class AppStringsKeys {
 
   /// Key: "complete_profile_message"
   static const String completeProfileMessage = "complete_profile_message";
+
+  /// Key: "confirm_subscription"
+  static const String confirmSubscription = "confirm_subscription";
 
   /// Key: "day"
   static const String day2 = "day";

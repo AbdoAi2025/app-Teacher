@@ -326,6 +326,7 @@ import 'package:teacher_app/screens/create_group/grades/select_grade_bottom_shee
 import 'package:teacher_app/screens/student_add/add_student_controller.dart';
 import 'package:teacher_app/screens/student_add/states/add_student_state.dart';
 import 'package:teacher_app/utils/Keyboard_utils.dart';
+import 'package:teacher_app/utils/LogUtils.dart';
 import 'package:teacher_app/utils/message_utils.dart';
 import 'package:teacher_app/widgets/primary_button_widget.dart';
 import '../../dialogs/user_not_subscribed_dialog.dart';
@@ -444,7 +445,7 @@ class AddStudentScreenState extends State<AddStudentScreen> {
   Widget _saveButton() => Padding(
         padding: const EdgeInsets.all(16.0),
         child: PrimaryButtonWidget(
-          onClick: onSaveGroupClick,
+          onClick: onSaveClick,
           text: getSubmitButtonText(),
         ),
       );
@@ -486,10 +487,10 @@ class AddStudentScreenState extends State<AddStudentScreen> {
     }
   }
 
-  void onSaveGroupClick() {
+  void onSaveClick() {
     getController().onSave().listen(
       (event) {
-
+        appLog("onSaveClick :event :$event");
         if(event is AddStudentStateStudentLimitExceeded){
           hideDialogLoading();
           UserNotSubscribedDialog.showUserNotSubscribedDialog(message : event.message ?? "", barrierDismissible: true);

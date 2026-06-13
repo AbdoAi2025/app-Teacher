@@ -301,7 +301,7 @@ final Map<String, TranslationModel> translationsMap = {
   "Failed to restore purchases": TranslationModel(en: "Failed to restore purchases", ar: "فشل في استعادة المشتريات"),
   "Monthly Plan": TranslationModel(en: "Monthly Plan", ar: "خطة شهرية"),
   "Annual Plan": TranslationModel(en: "Annual Plan", ar: "خطة سنوية"),
-  "Confirm Purchase": TranslationModel(en: "Confirm Purchase", ar: "تأكيد الشراء"),
+  "confirm_subscription": TranslationModel(en: "Confirm Subscription", ar: "تأكيد الإشتراك"),
   "Plan": TranslationModel(en: "Plan", ar: "الخطة"),
   "Type": TranslationModel(en: "Type", ar: "النوع"),
   "Price": TranslationModel(en: "Price", ar: "السعر"),

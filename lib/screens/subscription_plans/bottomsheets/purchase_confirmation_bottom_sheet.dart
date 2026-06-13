@@ -93,7 +93,7 @@ class PurchaseConfirmationBottomSheet extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        AppStringsKeys.confirmPurchase.tr,
+                        AppStringsKeys.confirmSubscription.tr,
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -172,12 +172,6 @@ class PurchaseConfirmationBottomSheet extends StatelessWidget {
                   // Price display
                   Row(
                     children: [
-                      Icon(
-                        Icons.attach_money,
-                        size: 20,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                      SizedBox(width: 8),
                       Text(
                         price,
                         style: TextStyle(
@@ -295,7 +289,7 @@ class PurchaseConfirmationBottomSheet extends StatelessWidget {
                         Icon(Icons.payment, size: 20),
                         SizedBox(width: 8),
                         Text(
-                          AppStringsKeys.confirmPurchase.tr,
+                          AppStringsKeys.confirmSubscription.tr,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,

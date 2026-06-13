@@ -91,15 +91,15 @@ Future<void> showSuccessMessagePopup(String message, [Function()? onClose]) asyn
       ));
 }
 
-void showConfirmationMessage(String message, Function() action, {
+Future<dynamic> showConfirmationMessage(String message, Function() action, {
   bool barrierDismissible = true,
   String? positiveButtonText,
   String? negativeButtonText ,
   Function()? onCancel,
   Widget? subTitleWidget
-}) {
+}) async {
 
-  showDailog(
+  return showDailog(
       Get.context,
     barrierDismissible: barrierDismissible,
       WillPopScope(
