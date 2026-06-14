@@ -67,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
         body: SafeArea(
             child: Column(
           children: [
-            _nameAndLogout(),
+            _name(),
             Expanded(child: _content()),
           ],
         )),
@@ -318,7 +318,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  _nameAndLogout() {
+  _name() {
    return Obx(() {
       var state = controller.profileInfo.value;
 
@@ -328,14 +328,9 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Expanded(
                 child: AppTextWidget(
-              "${AppStringsKeys.heyMr.tr} ${state?.name ?? ""}" ,
+              "${state?.gender.isFemale == true ? AppStringsKeys.heyMs.tr : AppStringsKeys.heyMr.tr} ${state?.name ?? ""}" ,
               style: AppTextStyle.title.copyWith(color: AppColors.appMainColor),
             )),
-            InkWell(
-                onTap: () {
-                  onLogout();
-                },
-                child: Icon(Icons.logout))
           ],
         ),
       );

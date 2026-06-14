@@ -460,6 +460,9 @@ class AppStringsKeys {
   /// Key: "Hey, Mr."
   static const String heyMr = "Hey, Mr.";
 
+  /// Key: "Hey, Ms."
+  static const String heyMs = "Hey, Ms.";
+
   /// Key: "Home"
   static const String home = "Home";
 

@@ -189,6 +189,7 @@ final Map<String, TranslationModel> translationsMap = {
   "Group has no students": TranslationModel(en: "Group has no students", ar: "لا يوجد طلبة في المجموعة"),
   "Under the supervision of": TranslationModel(en: "Supervision of Mr.", ar: "تحت إشراف أ/"),
   "Hey, Mr.": TranslationModel(en: "Hey, Mr.", ar: "أهلاً أ/"),
+  "Hey, Ms.": TranslationModel(en: "Hey, Ms.", ar: "أهلاً أ/"),
   "Search": TranslationModel(en: "Search", ar: "بحث"),
   "All Students": TranslationModel(en: "All Students", ar: "كل الطلبة"),
   "Sort": TranslationModel(en: "Sort", ar: "ترتيب"),
