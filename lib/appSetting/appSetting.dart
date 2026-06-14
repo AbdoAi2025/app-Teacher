@@ -74,11 +74,8 @@ class AppSetting{
     String buildNumber = info.buildNumber;  // e.g. "42"
     print("App Version: $versionName ($buildNumber)");
 
-    if(Platform.isIOS){
-      String majorMinor = versionName.split(".").take(2).join(".");
-      return double.tryParse(majorMinor);
-    }
-    return double.tryParse(versionName);
+    String majorMinor = versionName.split(".").take(2).join(".");
+    return double.tryParse(majorMinor);
   }
 
 }

@@ -14,7 +14,7 @@ class SplashController extends GetxController{
 
   final GetUserAuthUseCase _getUserAuthUseCase = GetUserAuthUseCase();
   final CheckUserSessionUseCase _checkUserSessionUseCase = CheckUserSessionUseCase();
-  final ChangeAppVersionUseCase _changeAppVersionUseCase = ChangeAppVersionUseCase();
+  final CheckAppVersionUseCase _changeAppVersionUseCase = CheckAppVersionUseCase();
   final UpdateFcmTokenUseCase _updateFcmTokenUseCase = UpdateFcmTokenUseCase();
 
   Rx<SplashEvent> splashEvent = Rx(SplashEventLoading());

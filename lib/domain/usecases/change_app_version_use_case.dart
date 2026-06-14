@@ -10,7 +10,7 @@ import 'package:teacher_app/models/check_app_version_model.dart';
 
 import '../../requests/check_app_version_request.dart';
 
-class ChangeAppVersionUseCase extends BaseUseCase<CheckAppVersionModel>{
+class CheckAppVersionUseCase extends BaseUseCase<CheckAppVersionModel>{
 
   final AppConfigRepository _repository = AppConfigRepository();
 
