@@ -14,19 +14,17 @@ prompt_android_version_bump() {
   CURRENT_CODE=$(grep "^versionCode=" "$props" | cut -d'=' -f2)
   CURRENT_NAME=$(grep "^versionName=" "$props" | cut -d'=' -f2)
 
-  local MAJOR MINOR PATCH
+  local MAJOR MINOR
   MAJOR=$(echo "$CURRENT_NAME" | cut -d'.' -f1)
   MINOR=$(echo "$CURRENT_NAME" | cut -d'.' -f2)
-  PATCH=$(echo "$CURRENT_NAME" | cut -d'.' -f3)
-  PATCH=${PATCH:-0}
 
   echo ""
   echo "  ${BOLD}Current:${NC} versionName=${YELLOW}$CURRENT_NAME${NC}  versionCode=${YELLOW}$CURRENT_CODE${NC}"
   echo ""
   echo "  What would you like to bump?"
-  echo "  1) versionName only  ($CURRENT_NAME → $MAJOR.$MINOR.$((PATCH + 1)))"
-  echo "  2) versionCode only  ($CURRENT_CODE → $((CURRENT_CODE + 1)))"
-  echo "  3) Both (auto)"
+  echo "  1) Both (auto)       ($CURRENT_NAME → $MAJOR.$((MINOR + 1)))  ($CURRENT_CODE → $((CURRENT_CODE + 1)))"
+  echo "  2) versionName only  ($CURRENT_NAME → $MAJOR.$((MINOR + 1)))"
+  echo "  3) versionCode only  ($CURRENT_CODE → $((CURRENT_CODE + 1)))"
   echo "  4) Enter custom"
   echo "  5) Skip"
   echo ""
@@ -37,15 +35,15 @@ prompt_android_version_bump() {
 
   case "$_choice" in
     1)
-      NEW_NAME="$MAJOR.$MINOR.$((PATCH + 1))"
-      NEW_CODE=$CURRENT_CODE
-      ;;
-    2)
-      NEW_NAME=$CURRENT_NAME
+      NEW_NAME="$MAJOR.$((MINOR + 1))"
       NEW_CODE=$((CURRENT_CODE + 1))
       ;;
+    2)
+      NEW_NAME="$MAJOR.$((MINOR + 1))"
+      NEW_CODE=$CURRENT_CODE
+      ;;
     3)
-      NEW_NAME="$MAJOR.$MINOR.$((PATCH + 1))"
+      NEW_NAME=$CURRENT_NAME
       NEW_CODE=$((CURRENT_CODE + 1))
       ;;
     4)
@@ -98,9 +96,9 @@ prompt_ios_version_bump() {
   echo "  ${BOLD}Current:${NC} shortVersion=${YELLOW}$SHORT_VERSION${NC}  bundleVersion=${YELLOW}$BUNDLE_VERSION${NC}"
   echo ""
   echo "  What would you like to bump?"
-  echo "  1) Short version only  ($SHORT_VERSION → $MAJOR.$MINOR.$((PATCH + 1)))"
-  echo "  2) Bundle version only ($BUNDLE_VERSION → $((BUNDLE_VERSION + 1)))"
-  echo "  3) Both (auto)"
+  echo "  1) Both (auto)         ($SHORT_VERSION → $MAJOR.$MINOR.$((PATCH + 1)))  ($BUNDLE_VERSION → $((BUNDLE_VERSION + 1)))"
+  echo "  2) Short version only  ($SHORT_VERSION → $MAJOR.$MINOR.$((PATCH + 1)))"
+  echo "  3) Bundle version only ($BUNDLE_VERSION → $((BUNDLE_VERSION + 1)))"
   echo "  4) Enter custom"
   echo "  5) Skip"
   echo ""
@@ -112,14 +110,14 @@ prompt_ios_version_bump() {
   case "$_choice" in
     1)
       NEW_SHORT_VERSION="$MAJOR.$MINOR.$((PATCH + 1))"
-      NEW_BUNDLE_VERSION=$BUNDLE_VERSION
-      ;;
-    2)
-      NEW_SHORT_VERSION=$SHORT_VERSION
       NEW_BUNDLE_VERSION=$((BUNDLE_VERSION + 1))
       ;;
-    3)
+    2)
       NEW_SHORT_VERSION="$MAJOR.$MINOR.$((PATCH + 1))"
+      NEW_BUNDLE_VERSION=$BUNDLE_VERSION
+      ;;
+    3)
+      NEW_SHORT_VERSION=$SHORT_VERSION
       NEW_BUNDLE_VERSION=$((BUNDLE_VERSION + 1))
       ;;
     4)
