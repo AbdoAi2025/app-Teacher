@@ -5,9 +5,9 @@ import 'package:teacher_app/domain/states/add_student_result.dart';
 class AddStudentState {}
 class AddStudentStateLoading extends AddStudentState {}
 class AddStudentStateFormValidation extends AddStudentState {}
-class AddStudentStateStudentLimitExceeded extends AddStudentState {
+class AddStudentStateSubscriptionIssue extends AddStudentState {
   final String? message;
-  AddStudentStateStudentLimitExceeded(this.message);
+  AddStudentStateSubscriptionIssue(this.message);
 
 }
 class SaveStateSuccess extends AddStudentState {}

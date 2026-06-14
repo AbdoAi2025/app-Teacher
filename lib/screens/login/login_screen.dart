@@ -156,10 +156,6 @@ class _LoginScreenState extends State<LoginScreen> {
           case LoginStateInvalidSession():
             UserNotActiveDialog.showUserNotActive();
             break;
-          case LoginStateNotSubscribed():
-            AppNavigator.navigateToHome();
-            UserNotSubscribedDialog.showUserNotSubscribedDialog();
-            break;
           case LoginStateNotActive():
             UserNotActiveDialog.showUserNotActive();
             break;

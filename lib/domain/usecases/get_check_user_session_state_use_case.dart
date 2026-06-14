@@ -13,7 +13,6 @@ class UserSessionStateError extends UserSessionState{
   UserSessionStateError(this.ex);
 }
 class UserSessionStateInvalidSession extends UserSessionState{}
-class UserSessionStateNotSubscribed extends UserSessionState{}
 class UserSessionStateNotActive extends UserSessionState{}
 class UserSessionStateSuccess extends UserSessionState{}
 class UserSessionStateMustCompleteProfile extends UserSessionState{}
@@ -53,10 +52,6 @@ class GetCheckUserSessionStateUseCase  {
 
     if(checkUserSession != null && checkUserSession.mustCompleteProfile){
       return UserSessionStateMustCompleteProfile();
-    }
-
-    if(checkUserSession != null && !checkUserSession.isSubscribed){
-      return UserSessionStateNotSubscribed();
     }
 
     if(checkUserSession != null && checkUserSession.isSubscribed == true){

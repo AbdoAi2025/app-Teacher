@@ -99,15 +99,6 @@ class SplashController extends GetxController{
       return;
     }
 
-    // Check if subscription is about to expire (5 or fewer days remaining)
-    if(checkUserSession != null && checkUserSession.isSubscribed == true && checkUserSession.warningLimitExceed ){
-      final remainingDays = checkUserSession.getRemainingDays();
-      if(remainingDays != null && checkUserSession.warningLimitExceed && remainingDays >= 0){
-        updateEvent(SplashEventShowRemainingDays(remainingDays: remainingDays));
-        return;
-      }
-    }
-
     // Update FCM token with server (for authenticated users)
     await _updateFcmTokenIfAvailable();
 

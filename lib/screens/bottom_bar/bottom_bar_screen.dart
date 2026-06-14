@@ -107,9 +107,6 @@ class _BottomBarScreenState extends LifecycleWidgetState<BottomBarScreen> {
   @override
   Future<void> onResumedNavigatedBack() async {
     appLog("BottomBarScreen: onResumedNavigatedBack");
-    WidgetsFlutterBinding.ensureInitialized().addPostFrameCallback((timeStamp) async {
-      _handleSubscriptionState();
-    },);
   }
 
   @override
@@ -122,7 +119,6 @@ class _BottomBarScreenState extends LifecycleWidgetState<BottomBarScreen> {
   @override
   void onPausedNavigatedAway() {
     appLog("BottomBarScreen: onPausedNavigatedAway");
-
   }
 
   Future<void> _handleSubscriptionState() async {

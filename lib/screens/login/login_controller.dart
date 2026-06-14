@@ -50,11 +50,6 @@ class LoginController extends GetxController{
       return;
     }
 
-    if(getCheckUserSessionResult is UserSessionStateNotSubscribed){
-      yield LoginStateNotSubscribed();
-      return;
-    }
-
     if(getCheckUserSessionResult is UserSessionStateNotActive){
       yield LoginStateNotActive();
       return;

@@ -42,10 +42,13 @@ class AddStudentController extends GetxController{
 
       var data = result.data;
       if(data is AddStudentResultStudentLimitExceeded){
-        yield AddStudentStateStudentLimitExceeded(data.message);
+        yield AddStudentStateSubscriptionIssue(data.message);
         return;
       }
-
+      if(data is AddStudentResultInActiveSubscription){
+        yield AddStudentStateSubscriptionIssue(data.message);
+        return;
+      }
       yield AddStudentStateError(result.error);
     }
   }

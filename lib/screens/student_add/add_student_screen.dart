@@ -491,7 +491,7 @@ class AddStudentScreenState extends State<AddStudentScreen> {
     getController().onSave().listen(
       (event) {
         appLog("onSaveClick :event :$event");
-        if(event is AddStudentStateStudentLimitExceeded){
+        if(event is AddStudentStateSubscriptionIssue){
           hideDialogLoading();
           UserNotSubscribedDialog.showUserNotSubscribedDialog(message : event.message ?? "", barrierDismissible: true);
         }else {

@@ -11,6 +11,7 @@ import 'package:teacher_app/widgets/info_chip_widget.dart';
 import 'package:teacher_app/widgets/sessions/start_session/start_session_form_model.dart';
 
 import '../../data/requests/start_session_request.dart';
+import '../../dialogs/user_not_subscribed_dialog.dart';
 import '../../domain/states/start_session_state.dart';
 import '../../domain/usecases/start_session_use_case.dart';
 import '../../utils/message_utils.dart';
@@ -85,6 +86,9 @@ class StartSessionButtonWidget extends StatelessWidget {
         case StartSessionStateSuccess():
           onSessionStarted();
           break;
+        case StartSessionStateNotSubscribed():
+          UserNotSubscribedDialog.showUserNotSubscribedDialog(message: event.message ?? "", barrierDismissible: true);
+          break;
         case StartSessionStateError():
           showErrorMessage(event.exception.toString());
           break;
@@ -101,7 +105,7 @@ class StartSessionButtonWidget extends StatelessWidget {
         quizGrade: formModel.quizGrade);
     var result = await StartSessionUseCase().execute(request);
     if (result.isSuccess) {
-      yield StartSessionStateSuccess(result.data ?? "");
+      yield result.data!;
     } else {
       yield StartSessionStateError(result.error);
     }

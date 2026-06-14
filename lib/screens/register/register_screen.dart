@@ -327,10 +327,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
           case LoginStateInvalidSession():
             UserNotActiveDialog.showUserNotActive();
             break;
-          case LoginStateNotSubscribed():
-            AppNavigator.navigateToHome();
-            UserNotSubscribedDialog.showUserNotSubscribedDialog();
-            break;
           case LoginStateNotActive():
             UserNotActiveDialog.showUserNotActive();
             break;
