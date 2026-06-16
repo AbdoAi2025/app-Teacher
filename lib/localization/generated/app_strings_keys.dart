@@ -259,6 +259,9 @@ class AppStringsKeys {
   /// Key: "Done"
   static const String done = "Done";
 
+  /// Key: "EGP"
+  static const String egp = "EGP";
+
   /// Key: "Edit"
   static const String edit = "Edit";
 
@@ -1167,6 +1170,9 @@ class AppStringsKeys {
 
   /// Key: "You have no sessions scheduled for today"
   static const String youHaveNoSessionsScheduledForToday = "You have no sessions scheduled for today";
+
+  /// Key: "appName"
+  static const String appName = "appName";
 
   /// Key: "attended"
   static const String attended2 = "attended";

@@ -41,6 +41,12 @@ class PaymobHandler: PaymobSDKDelegate {
     // Function to call native PaymobSDK
     private func callNativeSDK(arguments: [String: Any], VC: FlutterViewController) {
 
+        // Override app language so the SDK renders in the requested locale
+        if let language = arguments["language"] as? String {
+            UserDefaults.standard.set([language], forKey: "AppleLanguages")
+            UserDefaults.standard.synchronize()
+        }
+
         // Initialize Paymob SDK
         let paymob = PaymobSDK()
         paymob.delegate = self

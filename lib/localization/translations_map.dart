@@ -313,7 +313,7 @@ final Map<String, TranslationModel> translationsMap = {
   "failed to complete payment process": TranslationModel(en: "Failed to complete payment process", ar: "فشل في إتمام عملية الدفع"),
   "Subscription process completed successfully": TranslationModel(en: "Subscription process completed successfully", ar: "تم إتمام عملية الاشتراك بنجاح"),
   "Review your subscription details": TranslationModel(en: "Review your subscription details", ar: "راجع تفاصيل اشتراكك"),
-  "Student Limit": TranslationModel(en: "Student Limit", ar: "حد عدد الطلاب"),
+  "Student Limit": TranslationModel(en: "Student Limit", ar: "أقصي حد لعدد الطلاب"),
 
   // Payment Methods
   "Payment Methods": TranslationModel(en: "Payment Methods", ar: "طرق الدفع"),
@@ -454,4 +454,6 @@ final Map<String, TranslationModel> translationsMap = {
   "Failed to update grade": TranslationModel(en: "Failed to update grade", ar: "فشل تحديث الدرجة"),
   "Are you sure to update this grade from '%s' to '%s'": TranslationModel(en: "Are you sure to update this grade from '%s' to '%s'", ar: "هل أنت متأكد من تغيير الدرجة من '%s' إلى '%s'"),
   "Score": TranslationModel(en: "Score", ar: "الدرجة"),
+  "appName": TranslationModel(en: "Teacher Assistant", ar: "مساعد المدرس"),
+  "EGP": TranslationModel(en: "EGP", ar: "ج.م"),
 };

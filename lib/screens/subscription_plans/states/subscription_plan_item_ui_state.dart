@@ -71,10 +71,10 @@ class SubscriptionPlanItemUiState {
   double get annualPriceValue => yearlyPrice ?? 0.0;
 
   String get formattedMonthlyPrice =>
-      "${monthlyPriceValue.toStringAsFixed(0)} EGP";
+      "${monthlyPriceValue.toStringAsFixed(0)} $currency";
 
   String get formattedAnnualPrice =>
-      "${annualPriceValue.toStringAsFixed(0)} EGP";
+      "${annualPriceValue.toStringAsFixed(0)} $currency";
 
   String? get formattedExpirationDate {
     if (expirationDate == null) return null;
@@ -99,6 +99,8 @@ class SubscriptionPlanItemUiState {
   }
 
   String get planName =>_planName.tr;
+
+  get currency => AppStringsKeys.egp.tr;
 
 
   Map<String, dynamic> toJson() {
