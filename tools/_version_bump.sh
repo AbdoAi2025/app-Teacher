@@ -86,18 +86,16 @@ prompt_ios_version_bump() {
   SHORT_VERSION=$("$pb" -c "Print :CFBundleShortVersionString" "$plist")
   BUNDLE_VERSION=$("$pb" -c "Print :CFBundleVersion" "$plist")
 
-  local MAJOR MINOR PATCH
+  local MAJOR MINOR
   MAJOR=$(echo "$SHORT_VERSION" | cut -d'.' -f1)
   MINOR=$(echo "$SHORT_VERSION" | cut -d'.' -f2)
-  PATCH=$(echo "$SHORT_VERSION" | cut -d'.' -f3)
-  PATCH=${PATCH:-0}
 
   echo ""
   echo "  ${BOLD}Current:${NC} shortVersion=${YELLOW}$SHORT_VERSION${NC}  bundleVersion=${YELLOW}$BUNDLE_VERSION${NC}"
   echo ""
   echo "  What would you like to bump?"
-  echo "  1) Both (auto)         ($SHORT_VERSION → $MAJOR.$MINOR.$((PATCH + 1)))  ($BUNDLE_VERSION → $((BUNDLE_VERSION + 1)))"
-  echo "  2) Short version only  ($SHORT_VERSION → $MAJOR.$MINOR.$((PATCH + 1)))"
+  echo "  1) Both (auto)         ($SHORT_VERSION → $MAJOR.$((MINOR + 1)))  ($BUNDLE_VERSION → $((BUNDLE_VERSION + 1)))"
+  echo "  2) Short version only  ($SHORT_VERSION → $MAJOR.$((MINOR + 1)))"
   echo "  3) Bundle version only ($BUNDLE_VERSION → $((BUNDLE_VERSION + 1)))"
   echo "  4) Enter custom"
   echo "  5) Skip"
@@ -109,11 +107,11 @@ prompt_ios_version_bump() {
 
   case "$_choice" in
     1)
-      NEW_SHORT_VERSION="$MAJOR.$MINOR.$((PATCH + 1))"
+      NEW_SHORT_VERSION="$MAJOR.$((MINOR + 1))"
       NEW_BUNDLE_VERSION=$((BUNDLE_VERSION + 1))
       ;;
     2)
-      NEW_SHORT_VERSION="$MAJOR.$MINOR.$((PATCH + 1))"
+      NEW_SHORT_VERSION="$MAJOR.$((MINOR + 1))"
       NEW_BUNDLE_VERSION=$BUNDLE_VERSION
       ;;
     3)
@@ -121,7 +119,7 @@ prompt_ios_version_bump() {
       NEW_BUNDLE_VERSION=$((BUNDLE_VERSION + 1))
       ;;
     4)
-      printf "  Short version (e.g. 5.2.1): "
+      printf "  Short version (e.g. 1.10): "
       read -r NEW_SHORT_VERSION
       printf "  Bundle version (integer):   "
       read -r NEW_BUNDLE_VERSION
