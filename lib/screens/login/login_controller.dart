@@ -31,6 +31,23 @@ class LoginController extends GetxController{
       return;
     }
 
+    if (result.value?.requiresVerification == true) {
+      yield LoginStateRequiresVerification(
+        userId: result.value!.id,
+        otpSentTo: result.value!.otpSentTo,
+      );
+      return;
+    }
+
+    yield* _checkSession();
+  }
+
+  Stream<LoginState> continueAfterVerification() async* {
+    yield LoginStateLoading();
+    yield* _checkSession();
+  }
+
+  Stream<LoginState> _checkSession() async* {
     GetCheckUserSessionStateUseCase getCheckUserSessionStateUseCase =  GetCheckUserSessionStateUseCase();
 
     var getCheckUserSessionResult  =  await getCheckUserSessionStateUseCase.execute();
@@ -61,7 +78,6 @@ class LoginController extends GetxController{
     }
 
     yield LoginStateSuccess();
-
   }
 
 

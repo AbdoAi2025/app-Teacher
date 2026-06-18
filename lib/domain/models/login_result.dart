@@ -4,6 +4,8 @@ class LoginResult {
   final String accessToken;
   final String refreshToken;
   final bool mustCompleteProfile;
+  final bool requiresVerification;
+  final String? otpSentTo;
 
   LoginResult({
     required this.id,
@@ -11,6 +13,8 @@ class LoginResult {
     required this.accessToken,
     required this.refreshToken,
     this.mustCompleteProfile = false,
+    this.requiresVerification = false,
+    this.otpSentTo,
   });
 
   toJson() {
@@ -20,6 +24,8 @@ class LoginResult {
       "accessToken": accessToken,
       "refreshToken": refreshToken,
       "mustCompleteProfile": mustCompleteProfile,
+      "requiresVerification": requiresVerification,
+      "otpSentTo": otpSentTo,
     };
   }
 }

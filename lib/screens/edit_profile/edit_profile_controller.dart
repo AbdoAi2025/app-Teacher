@@ -30,7 +30,8 @@ class EditProfileController extends GetxController {
   String? _initialEmail;
 
   bool get hasEmailChanged =>
-      _initialEmail != null &&
+      _initialEmail == null ||
+      _initialEmail!.trim().isEmpty ||
       emailController.text.trim() != _initialEmail!.trim();
 
   @override

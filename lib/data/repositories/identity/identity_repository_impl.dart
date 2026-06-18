@@ -52,6 +52,8 @@ class IdentityRepositoryImpl extends IdentityRepository {
       name: response.name ?? "",
       refreshToken: "",
       mustCompleteProfile: response.mustCompleteProfile ?? false,
+      requiresVerification: response.requiresVerification ?? false,
+      otpSentTo: response.otpSentTo,
     );
   }
 
