@@ -59,19 +59,6 @@ INFO_PLIST="$PROJECT_ROOT/ios/Runner/Info.plist"
 source "$SCRIPT_DIR/_version_bump.sh"
 prompt_ios_version_bump "$INFO_PLIST"
 
-if [[ "$VERSION_BUMPED" == "true" ]]; then
-  section "Committing version bump"
-  git -C "$PROJECT_ROOT" add ios/Runner/Info.plist
-  git -C "$PROJECT_ROOT" commit -m "chore: bump iOS version to $NEW_SHORT_VERSION ($NEW_BUNDLE_VERSION) [prod deploy]"
-  if [[ $? -eq 0 ]]; then
-    success "Version bump committed"
-    git -C "$PROJECT_ROOT" push
-    [[ $? -eq 0 ]] && success "Pushed to remote" || warn "Git push failed"
-  else
-    warn "Git commit failed — Info.plist was updated but not committed"
-  fi
-fi
-
 # ── Build ─────────────────────────────────────────────────────────────────────
 section "Building iOS Archive (prod)"
 
@@ -107,6 +94,19 @@ xcrun altool --upload-app \
 
 if [[ $? -eq 0 ]]; then
   success "Upload successful — build available on TestFlight"
+
+  if [[ "$VERSION_BUMPED" == "true" ]]; then
+    section "Committing version bump"
+    git -C "$PROJECT_ROOT" add ios/Runner/Info.plist
+    git -C "$PROJECT_ROOT" commit -m "chore: bump iOS version to $NEW_SHORT_VERSION ($NEW_BUNDLE_VERSION) [prod deploy]"
+    if [[ $? -eq 0 ]]; then
+      success "Version bump committed"
+      git -C "$PROJECT_ROOT" push
+      [[ $? -eq 0 ]] && success "Pushed to remote" || warn "Git push failed"
+    else
+      warn "Git commit failed — Info.plist was updated but not committed"
+    fi
+  fi
 else
   error "TestFlight upload failed"
 fi
