@@ -21,7 +21,8 @@ class RunningSessionManager {
           ?.map((e) => RunningSessionItemUiState(
           id: e.id ?? "",
           date: AppDateUtils.parseStringToDateTime(e.startDate ?? ""),
-          groupName: e.groupName
+          groupName: e.groupName,
+          groupId: e.groupId,
       )
       )
           .toList() ??

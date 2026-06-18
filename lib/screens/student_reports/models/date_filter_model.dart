@@ -1,6 +1,9 @@
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 enum DateFilterType {
+  all,
   teachingYear,
   term,
   customRange
@@ -52,6 +55,7 @@ class DateFilter {
     this.endDate,
   });
 
+
   DateFilter.teachingYear(TeachingYear year)
       : this(
           type: DateFilterType.teachingYear,
@@ -80,10 +84,17 @@ class DateFilter {
           endDate: end,
         );
 
+  DateFilter.all()
+      : this(
+          type: DateFilterType.all,
+        );
+
   String get displayName {
     switch (type) {
+      case DateFilterType.all:
+        return AppStringsKeys.all.tr;
       case DateFilterType.teachingYear:
-        return '${'Teaching Year'.tr}: ${teachingYear?.displayName}';
+        return '${AppStringsKeys.teachingYear.tr}: ${teachingYear?.displayName}';
       case DateFilterType.term:
         return '${teachingYear?.displayName} - ${"${term == Term.first ? 'First' : 'Second'} Term".tr}';
       case DateFilterType.customRange:
@@ -92,6 +103,9 @@ class DateFilter {
         return '$startStr - $endStr';
     }
   }
+
+  String? get dateFromFormatted => startDate != null && type != DateFilterType.all ? DateFormat('yyyy-MM-dd').format(startDate!) : null;
+  String? get dateToFormatted => endDate != null && type != DateFilterType.all ? DateFormat('yyyy-MM-dd').format(endDate!) : null;
 
   bool get hasDateRange => startDate != null && endDate != null;
 

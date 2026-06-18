@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 import '../utils/LogUtils.dart';
 import 'environment_service.dart';
@@ -31,21 +32,22 @@ class PaymobNativeService {
   //            showSaveCard: true,
   static Future<PaymobPaymentResult> payWithPaymob({
     required String clientSecret,
-    String appName = 'Teacher App',
     int? buttonBackgroundColor = 0xFF1976D2,
     int? buttonTextColor = 0xFFFFFFFF,
     bool saveCardDefault = false,
     bool showSaveCard = true,
+    String? language,
   }) async {
     try {
       final Map<String, dynamic> arguments = {
         'publicKey': _getPublicKey(),
         'clientSecret': clientSecret,
-        'appName': appName.tr,
+        'appName': AppStringsKeys.appName.tr,
         'buttonBackgroundColor': buttonBackgroundColor,
         'buttonTextColor': buttonTextColor,
         'saveCardDefault': saveCardDefault,
         'showSaveCard': showSaveCard,
+        'language': language ?? Get.locale?.languageCode ?? 'en',
       };
 
       final String result = await _channel.invokeMethod('payWithPaymob', arguments);

@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/screens/student_add/add_student_controller.dart';
 import 'package:teacher_app/screens/student_add/add_student_screen.dart';
@@ -7,6 +8,7 @@ import 'package:teacher_app/utils/message_utils.dart';
 import '../../widgets/dialog_loading_widget.dart';
 import '../student_add/states/add_student_state.dart';
 import 'states/update_student_state.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class EditStudentScreen extends AddStudentScreen {
 
@@ -27,12 +29,12 @@ class _EditStudentScreenState extends AddStudentScreenState {
 
   @override
   String getScreenTitle() {
-    return "Edit Student".tr;
+    return AppStringsKeys.editStudent.tr;
   }
 
   @override
   String getSubmitButtonText() {
-    return "Update".tr;
+    return AppStringsKeys.update.tr;
   }
 
   @override
@@ -44,7 +46,7 @@ class _EditStudentScreenState extends AddStudentScreenState {
         showDialogLoading();
         break;
       case UpdateStudentStateStudentNotFound():
-        showErrorMessagePopup("Student not found".tr);
+        showErrorMessagePopup(AppStringsKeys.studentNotFound.tr);
         break;
       case SaveStateSuccess():
         onSaveSuccess(result);
@@ -57,8 +59,11 @@ class _EditStudentScreenState extends AddStudentScreenState {
   }
 
   @override
+  Widget gradeField() => const SizedBox.shrink();
+
+  @override
   void onSaveSuccess(SaveStateSuccess result) {
-    showSuccessMessage("Student edited successfully".tr);
+    showSuccessMessage(AppStringsKeys.studentEditedSuccessfully.tr);
     super.onSaveSuccess(result);
   }
 }

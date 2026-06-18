@@ -5,17 +5,15 @@ import 'package:teacher_app/generated/assets.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
 import 'package:teacher_app/screens/splash/SplashController.dart';
 import 'package:teacher_app/screens/splash/SplashEvent.dart';
-import 'package:teacher_app/themes/app_colors.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
 import 'package:teacher_app/utils/message_utils.dart';
-import 'package:teacher_app/utils/open_store_utils.dart';
 
 import '../../dialogs/user_not_active_dialog.dart';
-import '../../dialogs/user_not_subscribed_dialog.dart';
-import '../../presentation/app_message_dialogs.dart';
+import '../../widgets/complete_profile_bottom_sheet.dart';
+import '../../widgets/otp_verification_bottom_sheet.dart';
 import '../../services/environment_service.dart';
-import '../../utils/whatsapp_utils.dart';
 import '../../widgets/environment_display_widget.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -74,7 +72,7 @@ class _SplashscreenState extends State<SplashScreen> {
 
         switch (callback) {
           case SplashError():
-            showErrorMessageEx(callback.ex , buttonText: "Retry".tr, onClose:  (){splashController.retry();});
+            showErrorMessageEx(callback.ex , buttonText: AppStringsKeys.retry.tr, onClose:  (){splashController.retry();});
             break;
           case SplashEventGoToLogin():
             AppNavigator.navigateToLogin();
@@ -94,11 +92,19 @@ class _SplashscreenState extends State<SplashScreen> {
               AppNavigator.navigateToHome();
             }
             break;
-          case SplashEventShowRemainingDays():
-            {
-              AppNavigator.navigateToHome();
-              UserNotSubscribedDialog.showSubscriptionExpiringDialog(remainingDays: callback.remainingDays,);
-            }
+          case SplashEventRequireVerify():
+            OtpVerificationBottomSheet.showRequireVerify(
+              context,
+              userId: callback.userId,
+              onSuccess: splashController.retry,
+            );
+            break;
+          case SplashEventMustCompleteProfile():
+            CompleteProfileBottomSheet.show(
+              context,
+              onSuccess: splashController.retry,
+            );
+            break;
         }
       },
     );

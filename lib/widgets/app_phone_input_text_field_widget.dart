@@ -12,7 +12,7 @@ class AppPhoneInputTextFieldWidget extends AppTextFieldWidget {
 
   final Function(String phoneNumber , String name) onContactSelected;
 
-  AppPhoneInputTextFieldWidget({
+  const AppPhoneInputTextFieldWidget({
     super.key,
     required super.controller,
     super.label,
@@ -40,16 +40,27 @@ class AppPhoneInputTextFieldWidget extends AppTextFieldWidget {
   );
 
   @override
+  Widget? prefixIconWidget() => Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 10),
+    child: Row(
+      spacing: 5,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        InkWell(
+            onTap: _onContactIconTapped,
+            child: Icon(Icons.phone_android)
+        ),
+      ],
+    ),
+  );
+
+
+  @override
   Widget? suffixIconWidget() => Row(
     spacing: 5,
     mainAxisSize: MainAxisSize.min,
     children: [
       AppTextWidget("+20" ,style:  textStyle ?? AppTextStyle.textFieldStyle,),
-      InkWell(
-          onTap: _onContactIconTapped,
-          child: Icon(Icons.phone_android)
-      ),
-      SizedBox(width: 5,)
     ],
   );
 

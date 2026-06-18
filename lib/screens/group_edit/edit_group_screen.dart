@@ -1,22 +1,23 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:teacher_app/screens/create_group/create_group_screen.dart';
+import 'package:teacher_app/screens/create_group/create_group_controller.dart';
+import 'package:teacher_app/screens/create_group/states/create_group_state.dart';
 import 'package:teacher_app/utils/message_utils.dart';
 import '../../widgets/dialog_loading_widget.dart';
-import '../create_group/create_group_controller.dart';
-import '../create_group/states/create_group_state.dart';
+import '../create_group/create_group_screen.dart';
 import 'edit_group_controller.dart';
 import 'states/update_group_state.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class EditGroupScreen extends CreateGroupScreen {
 
   const EditGroupScreen({super.key});
 
   @override
-  State<CreateGroupScreen> createState() => _EditGroupScreenState();
+  State<CreateGroupScreen> createState() => EditGroupScreenState();
 }
 
-class _EditGroupScreenState extends CreateGroupScreenState {
+class EditGroupScreenState extends CreateGroupScreenState {
 
   final EditGroupController _controller = Get.put(EditGroupController());
 
@@ -27,12 +28,12 @@ class _EditGroupScreenState extends CreateGroupScreenState {
 
   @override
   String getScreenTitle() {
-    return "Edit Group".tr;
+    return AppStringsKeys.editGroup.tr;
   }
 
   @override
   String getSubmitButtonText() {
-    return "Update".tr;
+    return AppStringsKeys.update.tr;
   }
 
   @override
@@ -44,7 +45,7 @@ class _EditGroupScreenState extends CreateGroupScreenState {
         showDialogLoading();
         break;
       case UpdateGroupStateGroupNotFound():
-        showErrorMessagePopup("Group not found".tr);
+        showErrorMessagePopup(AppStringsKeys.groupNotFound.tr);
         break;
       case SaveGroupStateSuccess():
         onCreateGroupSuccess(result);
@@ -58,7 +59,7 @@ class _EditGroupScreenState extends CreateGroupScreenState {
 
   @override
   void onCreateGroupSuccess(SaveGroupStateSuccess result) {
-    showSuccessMessage("Group edited successfully".tr);
+    showSuccessMessage(AppStringsKeys.groupEditedSuccessfully.tr);
     super.onCreateGroupSuccess(result);
   }
 }

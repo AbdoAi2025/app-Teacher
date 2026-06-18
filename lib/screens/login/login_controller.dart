@@ -33,7 +33,6 @@ class LoginController extends GetxController{
 
     GetCheckUserSessionStateUseCase getCheckUserSessionStateUseCase =  GetCheckUserSessionStateUseCase();
 
-
     var getCheckUserSessionResult  =  await getCheckUserSessionStateUseCase.execute();
 
     if(getCheckUserSessionResult is UserSessionStateError){
@@ -46,8 +45,8 @@ class LoginController extends GetxController{
       return;
     }
 
-    if(getCheckUserSessionResult is UserSessionStateNotSubscribed){
-      yield LoginStateNotSubscribed();
+    if(getCheckUserSessionResult is UserSessionStateMustCompleteProfile){
+      yield LoginStateMustCompleteProfile();
       return;
     }
 

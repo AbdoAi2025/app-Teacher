@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Run Release local" type="FlutterRunConfigurationType" factoryName="Flutter">
+    <option name="additionalArgs" value="--release --dart-define=APP_ENV=local" />
+    <option name="filePath" value="$PROJECT_DIR$/lib/main.dart" />
+    <method v="2" />
+  </configuration>
+</component>

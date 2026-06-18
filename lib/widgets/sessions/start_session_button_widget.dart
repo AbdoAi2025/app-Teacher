@@ -7,31 +7,59 @@ import 'package:teacher_app/utils/LogUtils.dart';
 import 'package:teacher_app/utils/app_background_styles.dart';
 import 'package:teacher_app/widgets/app_text_field_widget.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
+import 'package:teacher_app/widgets/info_chip_widget.dart';
 import 'package:teacher_app/widgets/sessions/start_session/start_session_form_model.dart';
 
 import '../../data/requests/start_session_request.dart';
+import '../../dialogs/user_not_subscribed_dialog.dart';
 import '../../domain/states/start_session_state.dart';
 import '../../domain/usecases/start_session_use_case.dart';
 import '../../utils/message_utils.dart';
 import '../dialog_loading_widget.dart';
 import '../primary_button_widget.dart';
 import 'start_session_form_widget.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class StartSessionButtonWidget extends StatelessWidget {
-  final String groupId;
+  final String timingId;
   final int studentsCount;
   final Function() onSessionStarted;
+  final EdgeInsetsGeometry? padding;
+  final TextStyle? textStyle;
 
   const StartSessionButtonWidget(
       {super.key,
-        required this.groupId,
-        required this.studentsCount,
-        required this.onSessionStarted});
+      required this.timingId,
+      required this.studentsCount,
+      required this.onSessionStarted,
+      this.padding,
+      this.textStyle,
+      });
 
   @override
   Widget build(BuildContext context) {
+
+
+    return InkWell(
+      onTap: () {
+        onStartSessionClick();
+      },
+      child: InfoChipWidget(
+        text: AppStringsKeys.startSession.tr,
+        icon: Icons.play_circle_outline,
+        color: AppColors.green,
+      ),
+    );
+
+   return AppTextWidget(
+      AppStringsKeys.startSession.tr,
+      style: AppTextStyle.value.copyWith(color: AppColors.primaryButtonColor, fontSize: 12 ,),
+    );
+
     return PrimaryButtonWidget(
-      text: "Start session".tr,
+      text: AppStringsKeys.startSession.tr,
+      padding: padding,
+      textStyle: textStyle,
       onClick: () {
         onStartSessionClick();
       },
@@ -39,10 +67,9 @@ class StartSessionButtonWidget extends StatelessWidget {
   }
 
   void onStartSessionClick() {
-
     /*check if group has students*/
-    if(studentsCount == 0){
-      showErrorMessage("Group has no students".tr);
+    if (studentsCount == 0) {
+      showErrorMessage(AppStringsKeys.groupHasNoStudents.tr);
       return;
     }
 
@@ -59,6 +86,9 @@ class StartSessionButtonWidget extends StatelessWidget {
         case StartSessionStateSuccess():
           onSessionStarted();
           break;
+        case StartSessionStateNotSubscribed():
+          UserNotSubscribedDialog.showUserNotSubscribedDialog(message: event.message ?? "", barrierDismissible: true);
+          break;
         case StartSessionStateError():
           showErrorMessage(event.exception.toString());
           break;
@@ -66,13 +96,16 @@ class StartSessionButtonWidget extends StatelessWidget {
     });
   }
 
-  Stream<StartSessionState> startSession(StartSessionFormModel formModel) async* {
+  Stream<StartSessionState> startSession(
+      StartSessionFormModel formModel) async* {
     yield StartSessionStateLoading();
     StartSessionRequest request = StartSessionRequest(
-        name: formModel.name, groupId: groupId, quizGrade: formModel.quizGrade);
+        name: formModel.name,
+        timingId: timingId,
+        quizGrade: formModel.quizGrade);
     var result = await StartSessionUseCase().execute(request);
     if (result.isSuccess) {
-      yield StartSessionStateSuccess(result.data ?? "");
+      yield result.data!;
     } else {
       yield StartSessionStateError(result.error);
     }

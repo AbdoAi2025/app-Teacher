@@ -4,7 +4,11 @@ sealed class RegisterState {}
 
 class RegisterStateLoading extends RegisterState {}
 
-class RegisterStateSuccess extends RegisterState {}
+class RegisterStateSuccess extends RegisterState {
+  final String userId;
+  final String email;
+  RegisterStateSuccess({required this.userId, required this.email});
+}
 
 class RegisterStateError extends RegisterState {
   final Exception? exception;

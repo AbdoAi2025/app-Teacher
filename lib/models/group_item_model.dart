@@ -71,27 +71,31 @@ class Group {
 }
 */
 
-import 'package:teacher_app/apimodels/student_list_item_api_model.dart';
+import 'package:teacher_app/data/responses/get_group_details_response.dart';
 
 import 'grade_model.dart';
 
 class GroupItemModel {
-
   final String id;
   final String name;
   final int studentCount;
-  final int day;
-  final String timeFrom;
-  final String timeTo;
+  final int sessionsCount;
+  final List<GroupDetailsTiming> timings;
   final GradeModel grade;
 
-  GroupItemModel(
-      {required this.id,
-      required this.name,
-      required this.studentCount,
-      required this.day,
-      required this.timeFrom,
-      required this.timeTo,
-      required this.grade,
-        required List<StudentListItemApiModel> studentsIds});
+  GroupItemModel({
+    required this.id,
+    required this.name,
+    required this.studentCount,
+    required this.sessionsCount,
+    required this.timings,
+    required this.grade,
+  });
+
+  GroupDetailsTiming? get firstTiming =>
+      timings.isNotEmpty ? timings.first : null;
+
+  int get day => firstTiming?.day ?? 0;
+  String get timeFrom => firstTiming?.timeFrom ?? '';
+  String get timeTo => firstTiming?.timeTo ?? '';
 }

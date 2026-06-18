@@ -13,6 +13,7 @@ class AppRoutes {
   /*Groups*/
   static const String createGroup = "/createGroup";
   static const String editGroup = "/editGroup";
+  static const String upgradeGroup = "/upgradeGroup";
   static const String groupDetails = "/groupDetails";
 
   static const String addGroup = "/addGroup";
@@ -32,6 +33,10 @@ class AppRoutes {
 
   /*Subscription*/
   static const String subscriptionPlans = "/subscriptionPlans";
+
+  /*Profile*/
+  static const String profile = "/profile";
+  static const String editProfile = "/editProfile";
 
 
 

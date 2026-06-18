@@ -4,6 +4,7 @@ import 'package:teacher_app/base/AppResult.dart';
 import 'package:teacher_app/requests/add_student_request.dart';
 import 'package:teacher_app/requests/get_my_students_request.dart';
 import 'package:teacher_app/requests/update_student_request.dart';
+import 'package:teacher_app/requests/upgrade_student_request.dart';
 import 'package:teacher_app/services/api_service.dart';
 import 'package:teacher_app/services/endpoints.dart';
 
@@ -40,10 +41,29 @@ class StudentsRepository {
       return responseResult.data;
   }
 
+  Future<dynamic> upgradeStudents(List<UpgradeStudentRequest> students) async {
+    List<Map<String, dynamic>> data = students.map((student) => student.toJson()).toList();
+    Response response = await ApiService.getInstance().post(EndPoints.upgradeStudents, data: data);
+    return response.data;
+  }
+
   Future<dynamic>  deleteStudent(String id , String gradeId) async {
     var url = "${EndPoints.deleteStudent}/$id";
     var params = {"gradeId":gradeId};
     Response response = await ApiService.getInstance().delete(url , queryParameters: params);
+    return response.data;
+  }
+
+  Future<dynamic> removeStudentGrade(String id) async {
+    var url = "${EndPoints.removeStudentGrade}/$id";
+    Response response = await ApiService.getInstance().delete(url);
+    return response.data;
+  }
+
+  Future<dynamic> updateStudentGrade(String id, String gradeId) async {
+    var url = "${EndPoints.updateStudentGrade}/$id/update-student-grade";
+    var params = {"gradeId": gradeId};
+    Response response = await ApiService.getInstance().put(url, queryParameters: params);
     return response.data;
   }
 }

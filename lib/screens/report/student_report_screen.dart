@@ -25,6 +25,7 @@ import 'dart:ui' as ui;
 import '../../utils/whatsapp_utils.dart';
 import '../../widgets/app_toolbar_widget.dart';
 import '../session_details/states/session_details_ui_state.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class StudentReportScreen extends StatefulWidget {
   const StudentReportScreen({super.key});
@@ -47,7 +48,7 @@ class StudentReportScreenState extends State<StudentReportScreen> {
     WidgetsBinding.instance.addPostFrameCallback(addPostFrameCallback);
 
     return Scaffold(
-        appBar: AppToolbarWidget.appBar(title: "Student Report".tr),
+        appBar: AppToolbarWidget.appBar(title: AppStringsKeys.studentReport.tr),
         // resizeToAvoidBottomInset: false,
         body: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -136,7 +137,7 @@ class StudentReportScreenState extends State<StudentReportScreen> {
     return SizedBox(
       width: double.infinity,
       child: PrimaryButtonWidget(
-          text: "View".tr,
+          text: AppStringsKeys.view.tr,
           onClick: () {
             onViewButtonClick(parentPhone);
           }),
@@ -147,7 +148,7 @@ class StudentReportScreenState extends State<StudentReportScreen> {
     return SizedBox(
       width: double.infinity,
       child: PrimaryButtonWidget(
-          text: "Send".tr,
+          text: AppStringsKeys.send.tr,
           onClick: () {
             onSendReport(parentPhone, file);
           }),
@@ -165,7 +166,7 @@ class StudentReportScreenState extends State<StudentReportScreen> {
             if (_isShowNotes()) ...{
               Expanded(
                 child: AppTextWidget(
-                  "Notes".tr,
+                  AppStringsKeys.notes.tr,
                   style: AppTextStyle.title,
                 ),
               ),
@@ -188,7 +189,7 @@ class StudentReportScreenState extends State<StudentReportScreen> {
             maxLength: 100,
             textStyle: _getReportTextStyle(),
             controller: noteEditTextController,
-            hint: "No Notes".tr,
+            hint: AppStringsKeys.noNotes.tr,
             readOnly: !notesEditable,
             enabled: notesEditable,
             border: InputBorder.none,
@@ -199,7 +200,7 @@ class StudentReportScreenState extends State<StudentReportScreen> {
             AppTextWidget(
               noteEditTextController.text.isNotEmpty
                   ? noteEditTextController.text
-                  : "No note".tr,
+                  : AppStringsKeys.noNote.tr,
               style: _getReportTextStyle(),
             ),
         }
@@ -215,7 +216,7 @@ class StudentReportScreenState extends State<StudentReportScreen> {
 
     return SizedBox(
       width: double.infinity,
-      child: AppTextWidget("${"Under the supervision of".tr} $teacherName" , style: getReportTextValueStyle()),
+      child: AppTextWidget("${AppStringsKeys.underTheSupervisionOf.tr} $teacherName" , style: getReportTextValueStyle()),
     );
   }
 
@@ -249,13 +250,13 @@ The student got (... / ...) marks on the quiz.
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             AppTextWidget(
-              "report_parent_title".tr,
+              AppStringsKeys.reportParentTitle.tr,
               style: AppTextStyle.title.copyWith(color: AppColors.appMainColor , fontSize: 24 , fontStyle: FontStyle.italic),
               textAlign: TextAlign.center,
             ),
             if (sessionName.isNotEmpty)...{
               AppTextWidget(
-                // "${"Session".tr}:$sessionName",
+                // "${AppStringsKeys.session.tr}:$sessionName",
                 sessionName,
                 style: AppTextStyle.title.copyWith(color: AppColors.color_3D3D3D80 , fontSize: 20, fontStyle: FontStyle.italic),
               ),
@@ -277,17 +278,17 @@ The student got (... / ...) marks on the quiz.
           children: [
             //We would like to inform you that the student /...... attended the class on
             // Day: Saturday — Date: 14/6/2025
-            reportText("${'infoText'.tr}: \n"),
+            reportText("${AppStringsKeys.infoText.tr}: \n"),
             reportValue("${state.studentName} \n" , getReportTextValueStyle().copyWith(fontWeight: FontWeight.bold)),
             if (state.attended == true) ...{
-              reportText("${'attended'.tr} " , _getReportTextStylePositive()),
+              reportText("${AppStringsKeys.attended2.tr} " , _getReportTextStylePositive()),
             } else ...{
-              reportText("${"didn't attend".tr} ", _getReportTextStyleNegative()),
+              reportText("${AppStringsKeys.key986069872.tr} ", _getReportTextStyleNegative()),
             },
             reportText("\n"),
-            reportText("${'Session Day'.tr}: \n"),
+            reportText("${AppStringsKeys.sessionDay.tr}: \n"),
             reportValue("${state.day.tr} - ${state.sessionStartDate}"),
-            // _text("${'withDate'.tr} : "),
+            // _text("${AppStringsKeys.withDate.tr} : "),
             // _value("${state.sessionStartDate}."),
           ],
         ),
@@ -300,7 +301,7 @@ The student got (... / ...) marks on the quiz.
           text: TextSpan(
             style: TextStyle(fontSize: 16, color: Colors.black),
             children: [
-              reportText("${"The student's behavior during the class was".tr}: "),
+              reportText("${AppStringsKeys.key193612770.tr}: "),
               reportValue("${state.behaviorStatus.getString().tr}." , getReportTextValueStyle().copyWith(color: state.behaviorStatus.getColor())),
               if (state.behaviorNotes.isNotEmpty)
                 reportText(" (${state.behaviorNotes})."),
@@ -317,7 +318,7 @@ The student got (... / ...) marks on the quiz.
           text: TextSpan(
             style: TextStyle(fontSize: 16, color: Colors.black),
             children: [
-              reportText("${'The status of the previous homework was'.tr}: "),
+              reportText("${AppStringsKeys.theStatusOfThePreviousHomeworkWas.tr}: "),
               reportValue("${state.homeworkStatus.getString().tr}." , getReportTextValueStyle().copyWith(color: state.homeworkStatus.getColor())),
               if (state.homeworkNotes.isNotEmpty)
                 reportText(" (${state.homeworkNotes})."),
@@ -330,9 +331,9 @@ The student got (... / ...) marks on the quiz.
           text: TextSpan(
             style: TextStyle(fontSize: 16, color: Colors.black),
             children: [
-              reportText('The student got'.tr),
+              reportText(AppStringsKeys.theStudentGot.tr),
               reportValue(" (${state.quizGrade}/${state.sessionQuizGrade}) " , quizGradeStyle(state.uiState.quizGrade, state.uiState.sessionQuizGrade)),
-              reportText('marks on the quiz'.tr),
+              reportText(AppStringsKeys.marksOnTheQuiz.tr),
             ],
           ),
         ),

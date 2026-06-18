@@ -20,8 +20,10 @@ class GroupItemUiState {
   final String groupId;
   final String groupName;
   final int studentsCount;
+  final int sessionsCount;
   final String dayName;
   final int dayIndex;
+  final List<int> timingDays;
   final String dayNameEn;
   final String dayNameAr;
   final String gradeName;
@@ -34,8 +36,10 @@ class GroupItemUiState {
     required this.groupId,
     required this.groupName,
     required this.studentsCount,
+    required this.sessionsCount,
     required this.dayName,
     required this.dayIndex,
+    required this.timingDays,
     required this.timeFrom,
     required this.timeTo,
     required this.gradeName,
@@ -48,16 +52,20 @@ class GroupItemUiState {
 
 class GroupItemTitleUiState extends GroupItemUiState {
   final String title;
+  final int count;
 
-  GroupItemTitleUiState({required this.title})
+
+  GroupItemTitleUiState({required this.title , required this.count})
       : super(
           dayName: "",
           dayNameEn: "",
           dayNameAr: "",
           dayIndex: 0,
+          timingDays: const [],
           groupId: "",
           groupName: "",
           studentsCount: 0,
+          sessionsCount: 0,
           timeFrom: "",
           timeTo: "",
           gradeName: "",

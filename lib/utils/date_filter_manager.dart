@@ -1,8 +1,12 @@
 import 'package:get/get.dart';
 import '../screens/student_reports/models/date_filter_model.dart';
+import '../domain/groups/groups_managers.dart';
 
-class DateFilterManager extends GetxService {
-  static DateFilterManager get instance => Get.find<DateFilterManager>();
+class DateFilterManager {
+
+  Function()? onFilterChanged;
+
+  DateFilterManager({this.onFilterChanged});
 
   final Rx<DateFilter> _currentDateFilter = Rx<DateFilter>(
     DateFilter.teachingYear(DateFilterHelper.getCurrentTeachingYear())
@@ -17,10 +21,12 @@ class DateFilterManager extends GetxService {
 
   void applyDateFilter(DateFilter filter) {
     _currentDateFilter.value = filter;
+    _onDateFilterChanged();
   }
 
   void resetToCurrentTeachingYear() {
     _currentDateFilter.value = DateFilter.teachingYear(DateFilterHelper.getCurrentTeachingYear());
+    _onDateFilterChanged();
   }
 
   bool get hasCustomFilter {
@@ -33,5 +39,11 @@ class DateFilterManager extends GetxService {
     }
 
     return true;
+  }
+
+  void _onDateFilterChanged() {
+    if (onFilterChanged != null) {
+      onFilterChanged!();
+    }
   }
 }

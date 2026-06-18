@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../themes/app_colors.dart';
 import '../utils/day_utils.dart';
 import '../widgets/app_txt_widget.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class WeekDaysSelectionBottomSheet {
 
@@ -15,7 +16,7 @@ class WeekDaysSelectionBottomSheet {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              AppTextWidget("Select Day".tr),
+              AppTextWidget(AppStringsKeys.selectDay.tr),
               ...List.generate(7, (index) {
                 return ListTile(
                   title: AppTextWidget(AppDateUtils.getDayName(index).tr),

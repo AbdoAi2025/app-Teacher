@@ -4,58 +4,62 @@ import 'package:get/get.dart';
 import 'package:teacher_app/domain/states/current_subscription_plan_state.dart';
 import 'package:teacher_app/enums/subscription_plan_enum.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
+import 'package:teacher_app/utils/extensions_utils.dart';
 import 'package:teacher_app/utils/open_insta_pay_utils.dart';
 import '../data/responses/current_subscription_plan_response.dart';
 import '../themes/app_colors.dart';
 import '../utils/LogUtils.dart';
 import '../utils/message_utils.dart';
 import '../utils/whatsapp_utils.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class UserNotSubscribedDialog {
 
   static bool _isDialogShown = false;
 
-  static void showUserNotSubscribedDialog([bool barrierDismissible = false]) {
+  static Future<void> showUserNotSubscribedDialog({String message = "" ,bool barrierDismissible = false}) async {
     if (_isDialogShown) return;
-
     _isDialogShown = true;
-    showConfirmationMessage(
-        "subscription_message".tr,
+    await showConfirmationMessage(
+       message.ifEmpty( AppStringsKeys.subscriptionMessage.tr),
         () {
           _onRenewClick();
         },
         barrierDismissible: barrierDismissible,
-        positiveButtonText: "Renew".tr,
+        positiveButtonText: AppStringsKeys.renew.tr,
         negativeButtonText: null,
         subTitleWidget: _buildContactWidget(),
         onCancel: () {
           _isDialogShown = false;
         });
+    _isDialogShown = false;
   }
 
-  static void showSubscriptionExpiringDialog({required int remainingDays}) {
+  static Future<void> showSubscriptionExpiringDialog({required int remainingDays}) async {
     if (_isDialogShown) return;
 
     final message = remainingDays == 0
-        ? "subscription_expiring_today_message".tr
-        : "subscription_expiring_message".tr.replaceAll("{days}", remainingDays.toString());
+        ? AppStringsKeys.subscriptionExpiringTodayMessage.tr
+        : AppStringsKeys.subscriptionExpiringMessage.tr.replaceAll("{days}", remainingDays.toString());
 
     appLog("showSubscriptionExpiringDialog message:$message");
 
     _isDialogShown = true;
-    showConfirmationMessage(
+    await showConfirmationMessage(
       message,
       () {
+        Get.back();
         _onRenewClick();
       },
       barrierDismissible: false,
-      positiveButtonText: "Renew".tr,
-      negativeButtonText: "Got It".tr,
+      positiveButtonText: AppStringsKeys.renew.tr,
+      negativeButtonText: AppStringsKeys.gotIt.tr,
       subTitleWidget: _buildContactWidget(),
       onCancel: () {
         _isDialogShown = false;
       },
     );
+    _isDialogShown = false;
   }
 
   static Widget _buildContactWidget() {
@@ -65,7 +69,7 @@ class UserNotSubscribedDialog {
         style: Theme.of(Get.context!).textTheme.bodySmall,
         children: [
           TextSpan(
-            text: "Do you want to contact now?".tr,
+            text: AppStringsKeys.doYouWantToContactNow.tr,
             style: TextStyle(
               color: AppColors.appMainColor,
               decoration: TextDecoration.underline,
@@ -82,73 +86,32 @@ class UserNotSubscribedDialog {
 
 
   static _onRenewClick() {
-     _dismissDialog();
     AppNavigator.navigateToSubscriptionPlans();
   }
 
   static void handleSubscriptionState(CurrentSubscriptionPlanSuccess state) {
-
-    appLog("UserNotSubscribedDialog: handleSubscriptionState _isDialogShown:$_isDialogShown");
+    appLog(
+        "UserNotSubscribedDialog: handleSubscriptionState _isDialogShown:$_isDialogShown");
 
     final subscription = state.data;
 
     // Check if subscription is valid (subscribed, not expired, not expiring soon)
-    final isValidSubscription = subscription.isSubscribed &&
-                               !subscription.isExpired &&
-                               !_isSubscriptionExpiringSoon(subscription);
-
-    // If subscription is valid and dialog is shown, dismiss it
-    if (isValidSubscription && _isDialogShown) {
-      appLog("UserNotSubscribedDialog: Subscription is now valid - dismissing dialog");
-      // Dismiss the current dialog
-      _dismissDialog();
-      return;
-    }
-
-    // If subscription is invalid but dialog is already shown, do nothing
-    if (!isValidSubscription && _isDialogShown) {
-      appLog("UserNotSubscribedDialog: Subscription invalid but dialog already shown - doing nothing");
-      return;
-    }
+    final isValidSubscription = subscription.isSubscribed && !subscription.isExpired;
 
     //if plan is free return
-    if(subscription.subscriptionPlanEnum == SubscriptionPlanEnum.FREE) return;
-
-    appLog("UserNotSubscribedDialog: handleSubscriptionState Get.currentRoute:${Get.currentRoute}");
-
-
-    // Check if user is not subscribed
-    if (!subscription.isSubscribed) {
-      appLog("UserNotSubscribedDialog: User is not subscribed - showing dialog");
-      showUserNotSubscribedDialog(false);
+    if (isValidSubscription || subscription.subscriptionPlanEnum == SubscriptionPlanEnum.FREE) {
       return;
     }
 
-    // Check if subscription is expired
-    if (subscription.isExpired) {
-      appLog("UserNotSubscribedDialog: Subscription is expired - showing dialog");
-      showUserNotSubscribedDialog(false);
+    // Check if subscription is expiring soon (within 5 days)
+    if (_isSubscriptionExpiringSoon(subscription)) {
+      final remainingDays = subscription.subscriptionExpireDate.remainingDays;
+      appLog(
+          "UserNotSubscribedDialog: Subscription expiring in $remainingDays days - showing expiring dialog");
+      showSubscriptionExpiringDialog(remainingDays: remainingDays);
       return;
     }
 
-    // // Check if subscription is expiring soon
-    // final expireDate = subscription.subscriptionExpireDate;
-    // if (expireDate != null) {
-    //   final now = DateTime.now();
-    //   final daysUntilExpiry = expireDate.difference(now).inDays;
-    //
-    //   // Show warning if expiring within 7 days
-    //   if (daysUntilExpiry <= 7 && daysUntilExpiry >= 0) {
-    //     appLog("UserNotSubscribedDialog: Subscription expiring in $daysUntilExpiry days - showing expiring dialog");
-    //     showSubscriptionExpiringDialog(
-    //       remainingDays: daysUntilExpiry,
-    //     );
-    //     return;
-    //   }
-    // }
-
-    // Subscription is active and not expiring soon
-    appLog("UserNotSubscribedDialog: Subscription is active - ${subscription.planName} (expires: ${subscription.subscriptionExpireDate})");
   }
 
   static bool _isSubscriptionExpiringSoon(CurrentSubscriptionPlanResponse? subscription) {
@@ -165,12 +128,12 @@ class UserNotSubscribedDialog {
   static void showTransferByInstaPayDialog() {
 
     showConfirmationMessage(
-      "Cash Payment Instruction".tr, () {
+      AppStringsKeys.cashPaymentInstruction.tr, () {
         OpenInstaPayUtils.openUrl();
       },
       barrierDismissible: false,
-      positiveButtonText: "Renew".tr,
-      negativeButtonText: "Got It".tr,
+      positiveButtonText: AppStringsKeys.renew.tr,
+      negativeButtonText: AppStringsKeys.gotIt.tr,
       subTitleWidget: _buildContactWidget(),
       onCancel: () {},
     );

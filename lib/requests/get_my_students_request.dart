@@ -6,6 +6,8 @@ class GetMyStudentsRequest {
   int pageIndex;
   String? search;
   String? noInGroupId;
+  String? dateFrom;
+  String? dateTo;
 
   GetMyStudentsRequest({
     this.hasGroups,
@@ -14,6 +16,8 @@ class GetMyStudentsRequest {
     this.pageIndex = 0,
     this.search,
     this.noInGroupId,
+    this.dateFrom,
+    this.dateTo
   });
 
   Map<String, dynamic> toJson() {
@@ -34,9 +38,39 @@ class GetMyStudentsRequest {
       map['noInGroupId'] = noInGroupId;
     }
 
+    if (dateFrom != null) {
+      map['dateFrom'] = dateFrom;
+    }
+
+    if (dateTo != null) {
+      map['dateTo'] = dateTo;
+    }
+
     map['pageSize'] = pageSize;
     map['pageIndex'] = pageIndex;
 
     return map;
+  }
+
+  GetMyStudentsRequest copyWith({
+    bool? hasGroups,
+    String? gradeId,
+    int? pageSize,
+    int? pageIndex,
+    String? search,
+    String? noInGroupId,
+    String? dateFrom,
+    String? dateTo
+  }) {
+    return GetMyStudentsRequest(
+      hasGroups: hasGroups ?? this.hasGroups,
+      gradeId: gradeId ?? this.gradeId,
+      pageSize: pageSize ?? this.pageSize,
+      pageIndex: pageIndex ?? this.pageIndex,
+      search: search ?? this.search,
+      noInGroupId: noInGroupId ?? this.noInGroupId,
+      dateFrom: dateFrom ,
+      dateTo: dateTo
+    );
   }
 }

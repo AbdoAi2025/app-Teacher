@@ -212,43 +212,6 @@ class SessionDetailsController extends GetxController {
     SessionsEvents.removeListener(_sessionsEventsUpdated);
   }
 
-  Future<void> loadMyStudents(SessionDetailsUiState uiState) async {
-    var stateValue = state.value;
-    if (stateValue is SessionDetailsStateSuccess) {
-      var gradeId = stateValue.uiState.gradeId;
-      var groupId = stateValue.uiState.groupId;
-      studentsSelectionState.value = StudentsSelectionStateLoading();
-      var request = GetMyStudentsRequest(noInGroupId: groupId);
-      var result = await getMyStudentsListUseCase.execute(request);
-      if (result is AppResultSuccess) {
-        var existsStudents =
-            uiState.activities.map((e) => e.studentId).toList();
-        var students = result.value
-                ?.where(
-                  (element) => !existsStudents.contains(element.studentId),
-                )
-                .map((e) => StudentSelectionItemUiState(
-                    studentId: e.studentId ?? "",
-                    studentName: e.studentName ?? "",
-                    groupName: e.groupName ?? "",
-                    gradeId: e.gradeId ?? 0,
-                    isSelected: false))
-                .toList() ??
-            List.empty();
-        studentsSelectionState.value = StudentsSelectionStateSuccess(students);
-      }
-    }
-  }
-
-  void onAddStudentToSessionClick(SessionDetailsUiState uiState) {
-    var studentsState = studentsSelectionState.value;
-    if (studentsState is StudentsSelectionStateSuccess &&
-        studentsState.students.isNotEmpty) {
-      return;
-    }
-    loadMyStudents(uiState);
-  }
-
   Stream<AppResult<dynamic>> addStudentToSession(SessionDetailsUiState uiState,
       List<StudentSelectionItemUiState> items) async* {
     var request = UpdateSessionActivitiesRequest(

@@ -5,6 +5,7 @@ import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'package:teacher_app/widgets/students/student_item_widget.dart';
 import '../../screens/students_list/states/student_item_ui_state.dart';
 import '../pagination_list_widget.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 // ignore: must_be_immutable
 class StudentsListPaginationWidget extends PaginationListWidget<StudentItemUiState> {
@@ -20,18 +21,14 @@ class StudentsListPaginationWidget extends PaginationListWidget<StudentItemUiSta
     super.isLoading,
     super.reversed,
     super.separatorBuilder,
+    super.padding,
   });
 
   @override
   Widget getItemWidget(StudentItemUiState item, index) {
-
     if(item is StudentItemTitleUiState){
-      return AppTextWidget(item.title.isEmpty ? "Without group".tr : item.title , style: AppTextStyle.title,);
+      return AppTextWidget(item.title.isEmpty ? AppStringsKeys.withoutGroup.tr : item.title , style: AppTextStyle.title,);
     }
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      child: StudentItemWidget(uiState: item, onItemClick: onItemSelected),
-    );
+    return StudentItemWidget(uiState: item, onItemClick: onItemSelected);
   }
 }

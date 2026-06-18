@@ -109,8 +109,9 @@ class AppDateUtils{
   /// Parse "HH:mm" into total minutes since midnight
   static int parseTime(String time) {
     final parts = time.split(':');
-    final hours = int.parse(parts[0]);
-    final minutes = int.parse(parts[1]);
+    if (parts.length < 2) return 0;
+    final hours = int.tryParse(parts[0]) ?? 0;
+    final minutes = int.tryParse(parts[1]) ?? 0;
     return hours * 60 + minutes;
   }
 

@@ -1,3 +1,6 @@
+import 'package:get/get.dart';
+import '../../../data/responses/get_student_details_response.dart';
+
 class StudentDetailsUiState {
   final String studentId;
   final String studentName;
@@ -12,6 +15,9 @@ class StudentDetailsUiState {
   final int gradeId;
 
   final String gradeName;
+  final List<StudentGroupApiModel> groups;
+  final List<StudentGradeApiModel> grades;
+  final int sessionCount;
 
   StudentDetailsUiState({
     required this.studentId,
@@ -25,5 +31,18 @@ class StudentDetailsUiState {
     required this.groupTimeFrom,
     required this.groupTimeTo,
     required this.gradeId,
+    required this.groups,
+    required this.grades,
+    this.sessionCount = 0,
   });
+
+
+  get showAddStudentToGroup => groups.isEmpty || groups.where((element) => element.archive == true).length == groups.length;
+
+  String get activeGradeName {
+    final active = grades.firstWhereOrNull((g) => g.archive != true);
+    return active?.localizedName?.name ?? gradeName;
+  }
+
+  String get firstLetter => studentName.isNotEmpty ? studentName[0].toUpperCase() : '';
 }

@@ -7,6 +7,7 @@ import '../../../screens/sessions_list/states/session_item_ui_state.dart';
 import '../../../themes/txt_styles.dart';
 import '../../key_value_row_widget.dart';
 import '../../session_status_widget.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class SessionItemWidget extends StatelessWidget {
   final SessionItemUiState uiState;
@@ -45,15 +46,15 @@ class SessionItemWidget extends StatelessWidget {
   }
 
   _groupName() {
-    return LabelValueRowWidget(label: "Group:".tr, value: uiState.groupName);
+    return LabelValueRowWidget(label: AppStringsKeys.group.tr, value: uiState.groupName);
   }
 
   _groupTime() {
-    return LabelValueRowWidget(label: "Group Time:".tr, value: "${uiState.timeFrom } - ${uiState.timeTo}");
+    return LabelValueRowWidget(label: AppStringsKeys.groupTime.tr, value: "${uiState.timeFrom } - ${uiState.timeTo}");
   }
 
   _date() {
-    return LabelValueRowWidget(label: "Date:".tr, value: "${uiState.date}");
+    return LabelValueRowWidget(label: AppStringsKeys.date2.tr, value: "${uiState.date}");
   }
 
   _status() {

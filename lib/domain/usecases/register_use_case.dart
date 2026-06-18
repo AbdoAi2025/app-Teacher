@@ -47,7 +47,7 @@ class RegisterUseCase extends BaseUseCase<dynamic> {
         // Continue with registration even if Firebase setup fails
       }
 
-      return AppResult.success(null);
+      return AppResult.success(registerResult.id);
     });
   }
 }

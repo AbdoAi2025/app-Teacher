@@ -14,7 +14,7 @@ class SplashController extends GetxController{
 
   final GetUserAuthUseCase _getUserAuthUseCase = GetUserAuthUseCase();
   final CheckUserSessionUseCase _checkUserSessionUseCase = CheckUserSessionUseCase();
-  final ChangeAppVersionUseCase _changeAppVersionUseCase = ChangeAppVersionUseCase();
+  final CheckAppVersionUseCase _changeAppVersionUseCase = CheckAppVersionUseCase();
   final UpdateFcmTokenUseCase _updateFcmTokenUseCase = UpdateFcmTokenUseCase();
 
   Rx<SplashEvent> splashEvent = Rx(SplashEventLoading());
@@ -82,18 +82,21 @@ class SplashController extends GetxController{
       return;
     }
 
-    if(checkUserSession != null && !checkUserSession.isSubscribed){
-      updateEvent(SplashEventNotSubscribed());
+    if(checkUserSession != null && checkUserSession.mustCompleteProfile){
+      updateEvent(SplashEventMustCompleteProfile());
       return;
     }
 
-    // Check if subscription is about to expire (5 or fewer days remaining)
-    if(checkUserSession != null && checkUserSession.isSubscribed == true && checkUserSession.warningLimitExceed ){
-      final remainingDays = checkUserSession.getRemainingDays();
-      if(remainingDays != null && checkUserSession.warningLimitExceed && remainingDays >= 0){
-        updateEvent(SplashEventShowRemainingDays(remainingDays: remainingDays));
-        return;
-      }
+    if(checkUserSession != null && checkUserSession.requireVerify && checkUserSession.userId != null){
+      updateEvent(SplashEventRequireVerify(userId: checkUserSession.userId!));
+      return;
+    }
+
+
+
+    if(checkUserSession != null && !checkUserSession.isSubscribed){
+      updateEvent(SplashEventNotSubscribed());
+      return;
     }
 
     // Update FCM token with server (for authenticated users)

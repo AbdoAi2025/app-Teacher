@@ -5,6 +5,7 @@ import 'package:teacher_app/themes/app_colors.dart';
 
 import '../themes/txt_styles.dart';
 import 'app_txt_widget.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class SessionStatusWidget extends StatelessWidget {
 
@@ -23,7 +24,7 @@ class SessionStatusWidget extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         AppTextWidget(
-          "Status".tr,
+          AppStringsKeys.status.tr,
           style: AppTextStyle.label,
         ),
         AppTextWidget(

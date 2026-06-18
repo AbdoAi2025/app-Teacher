@@ -1,7 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:teacher_app/models/group_item_model.dart';
 import 'package:teacher_app/requests/add_group_request.dart';
+import 'package:teacher_app/requests/remove_student_from_group_request.dart';
+import 'package:teacher_app/requests/set_group_students_request.dart';
 import 'package:teacher_app/requests/update_group_request.dart';
+import 'package:teacher_app/requests/upgrade_group_request.dart';
 import 'package:teacher_app/services/api_service.dart';
 import 'package:teacher_app/services/endpoints.dart';
 
@@ -25,9 +28,28 @@ class GroupsRepository {
     return responseResult;
   }
 
-  Future<GetGroupDetailsResponse?> getGroupDetails(String id) async {
-    Response response =
-        await ApiService.getInstance().get("${EndPoints.getGroupDetails}/$id");
+  Future<AddGroupResponse?> upgradeGroup(UpgradeGroupRequest request) async {
+    Response response = await ApiService.getInstance()
+        .post(EndPoints.upgradeGroup, data: request.toJson());
+    AddGroupResponse responseResult = AddGroupResponse.fromJson(response.data);
+    return responseResult;
+  }
+
+  Future<GetGroupDetailsResponse?> getGroupDetails(String id, {DateTime? dateFrom, DateTime? dateTo}) async {
+    Map<String, dynamic> queryParameters = {};
+
+    if (dateFrom != null) {
+      queryParameters['dateFrom'] = dateFrom.toIso8601String();
+    }
+
+    if (dateTo != null) {
+      queryParameters['dateTo'] = dateTo.toIso8601String();
+    }
+
+    Response response = await ApiService.getInstance().get(
+      "${EndPoints.getGroupDetails}/$id",
+      queryParameters: queryParameters.isNotEmpty ? queryParameters : null
+    );
     GetGroupDetailsResponse responseResult =
         GetGroupDetailsResponse.fromJson(response.data);
     return responseResult;
@@ -36,28 +58,69 @@ class GroupsRepository {
   Future<dynamic> deleteGroup(String id) async {
     return await ApiService.getInstance()
         .delete("${EndPoints.deleteGroup}/$id");
-    ;
   }
 
-  Future<List<GroupItemModel>> fetchGroups() async {
-    Response response =
-        await ApiService.getInstance().get(EndPoints.getMyGroups);
+  Future<dynamic> removeStudentFromGroup(RemoveStudentFromGroupRequest request) async {
+    Response response = await ApiService.getInstance()
+        .delete(EndPoints.removeStudentFromGroup, data: request.toJson());
+    return response.data;
+  }
+
+  Future<dynamic> addStudentToGroup(RemoveStudentFromGroupRequest request) async {
+    Response response = await ApiService.getInstance()
+        .post(EndPoints.addStudentToGroup, data: request.toJson());
+    return response.data;
+  }
+
+  Future<dynamic> setGroupStudents(SetGroupStudentsRequest request) async {
+    Response response = await ApiService.getInstance()
+        .put(EndPoints.groupStudents(request.groupId), data: request.toJson());
+    return response.data;
+  }
+
+  Future<void> addGroupTimings(String groupId, List<Map<String, dynamic>> timings) async {
+    await ApiService.getInstance()
+        .post(EndPoints.groupTimings(groupId), data: timings);
+  }
+
+  Future<void> updateGroupTimings(String groupId, List<Map<String, dynamic>> timings) async {
+    await ApiService.getInstance()
+        .put(EndPoints.groupTimings(groupId), data: timings);
+  }
+
+  Future<List<GroupItemModel>> fetchGroups({String? dateFrom, String? dateTo, String? gradeId}) async {
+    Map<String, dynamic> queryParameters = {};
+
+    if (dateFrom != null) {
+      queryParameters['dateFrom'] = dateFrom;
+    }
+
+    if (dateTo != null) {
+      queryParameters['dateTo'] = dateTo;
+    }
+
+    if (gradeId != null && gradeId.isNotEmpty) {
+      queryParameters['gradeId'] = gradeId;
+    }
+
+    Response response = await ApiService.getInstance().get(
+      EndPoints.getMyGroups,
+      queryParameters: queryParameters.isNotEmpty ? queryParameters : null
+    );
     GetMyGroupsResponse responseResult =
         GetMyGroupsResponse.fromJson(response.data);
     return responseResult.data
             ?.map((e) => GroupItemModel(
                 id: e.groupId ?? "",
                 name: e.groupName ?? "",
-                day: e.groupDay ?? 0,
                 studentCount: e.studentCount ?? 0,
-                timeFrom: e.timeFrom ?? "",
-                timeTo: e.timeTo ?? "",
+                sessionsCount: e.sessionsCount ?? 0,
+                timings: e.timings ?? [],
                 grade: GradeModel(
                   id: e.gradeId,
                   nameEn: e.gradeNameEn ?? "",
                   nameAr: e.gradeNameAr ?? "",
-                ),
-                studentsIds: []))
+                )))
             .toList() ??
         List.empty();
   }

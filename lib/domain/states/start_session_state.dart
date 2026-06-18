@@ -1,4 +1,4 @@
- class StartSessionState {}
+class StartSessionState {}
 
 class StartSessionStateLoading extends StartSessionState{}
 class StartSessionStateSuccess extends StartSessionState{
@@ -8,4 +8,8 @@ class StartSessionStateSuccess extends StartSessionState{
 class StartSessionStateError extends StartSessionState{
   final Exception? exception;
   StartSessionStateError(this.exception);
+}
+class StartSessionStateNotSubscribed extends StartSessionState{
+  final String? message;
+  StartSessionStateNotSubscribed({this.message});
 }

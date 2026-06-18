@@ -322,26 +322,24 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:get/get.dart';
-import 'package:teacher_app/screens/create_group/grades/grades_selection_state.dart';
+import 'package:teacher_app/screens/create_group/grades/select_grade_bottom_sheet.dart';
 import 'package:teacher_app/screens/student_add/add_student_controller.dart';
 import 'package:teacher_app/screens/student_add/states/add_student_state.dart';
 import 'package:teacher_app/utils/Keyboard_utils.dart';
+import 'package:teacher_app/utils/LogUtils.dart';
 import 'package:teacher_app/utils/message_utils.dart';
-import 'package:teacher_app/widgets/app_txt_widget.dart';
-import 'package:teacher_app/widgets/loading_widget.dart';
 import 'package:teacher_app/widgets/primary_button_widget.dart';
 import '../../dialogs/user_not_subscribed_dialog.dart';
 import '../../presentation/app_message_dialogs.dart';
-import '../../themes/app_colors.dart';
 import '../../validations/phone_validation.dart';
 import '../../widgets/app_phone_input_text_field_widget.dart';
 import '../../widgets/app_text_field_widget.dart';
 import '../../widgets/app_toolbar_widget.dart';
 import '../../widgets/dialog_loading_widget.dart';
 import '../../widgets/dropdown_icon_widget.dart';
-import '../../widgets/item_selection_widget/student_list_selection_widget.dart';
 import '../student_edit/states/update_student_state.dart';
 import '../students_list/students_controller.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class AddStudentScreen extends StatefulWidget {
   const AddStudentScreen({super.key});
@@ -386,7 +384,7 @@ class AddStudentScreenState extends State<AddStudentScreen> {
                   _nameField(),
                   _parentPhoneField(),
                   _phoneField(),
-                  _gradeField(),
+                  gradeField(),
                 ],
               ),
             ),
@@ -398,46 +396,46 @@ class AddStudentScreenState extends State<AddStudentScreen> {
 
   _nameField() => AppTextFieldWidget(
         controller: getController().nameController,
-        label: "Student Name".tr,
-        hint: "Student Name".tr,
+        label: AppStringsKeys.studentName.tr,
+        hint: AppStringsKeys.studentName.tr,
         validator: MultiValidator([
-          RequiredValidator(errorText: "Student Name is required".tr),
+          RequiredValidator(errorText: AppStringsKeys.studentNameIsRequired.tr),
         ]).call,
       );
 
   _parentPhoneField() => AppPhoneInputTextFieldWidget(
         controller: getController().parentPhoneController,
-        label: "Parent Phone".tr,
+        label: AppStringsKeys.parentPhone.tr,
         onContactSelected: (phoneNumber, name) {
           _controller.parentPhoneController.text = phoneNumber;
           _controller.nameController.text = name;
         },
         validator: MultiValidator([
-          RequiredValidator(errorText: "Parent Phone is required".tr),
+          RequiredValidator(errorText: AppStringsKeys.parentPhoneIsRequired.tr),
           PhoneValidation(errorText: "Please enter valid phone number".tr),
         ]).call,
       );
 
   _phoneField() => AppPhoneInputTextFieldWidget(
         controller: getController().phoneController,
-        label: "Phone".tr,
+        label: AppStringsKeys.phone.tr,
         onContactSelected: (phoneNumber, name) {
           _controller.phoneController.text = phoneNumber;
         },
         validator: MultiValidator([]).call,
       );
 
-  _gradeField() {
+  Widget gradeField() {
     return Obx(() {
       return AppTextFieldWidget(
         controller: TextEditingController(
             text: getController().selectedGrade.value?.name),
-        label: "Grade".tr,
-        hint: "Grade".tr,
+        label: AppStringsKeys.grade.tr,
+        hint: AppStringsKeys.grade.tr,
         readOnly: true,
         suffixIcon: DropdownIconWidget(),
         validator: MultiValidator([
-          RequiredValidator(errorText: "Grade is required".tr),
+          RequiredValidator(errorText: AppStringsKeys.gradeIsRequired.tr),
         ]).call,
         onTap: _onSelectGradesClick,
       );
@@ -447,39 +445,17 @@ class AddStudentScreenState extends State<AddStudentScreen> {
   Widget _saveButton() => Padding(
         padding: const EdgeInsets.all(16.0),
         child: PrimaryButtonWidget(
-          onClick: onSaveGroupClick,
+          onClick: onSaveClick,
           text: getSubmitButtonText(),
         ),
       );
 
   void _onSelectGradesClick() {
-    var bottomSheetWidget = Obx(() {
-      _controller.checkGradesState();
-      var value = getController().gradeSelectionState.value;
-      switch (value) {
-        case GradesSelectionStateError():
-          return _errorMessageView(value.message);
-        case GradesSelectionStateSuccess():
-          return SizedBox(
-              // height: Get.height * .9,
-              width: double.infinity,
-              child: ItemSelectionWidget(
-                items: value.items,
-                title: "Select Grade",
-                isSingleSelection: true,
-                onSaved: (selectedItems) =>
-                    getController().onSelectedGrade(selectedItems.firstOrNull),
-              ));
-      }
-      return LoadingWidget();
-    });
-
-    Get.bottomSheet(bottomSheetWidget,
-        backgroundColor: AppColors.white,
-        // isScrollControlled: true,
-        useRootNavigator: true,
-        // ignoreSafeArea: false,
-        enableDrag: true);
+    SelectGradeBottomSheet.show(
+      context,
+      selectedId: getController().selectedGrade.value?.id,
+      onSelected: (grade) => getController().onSelectedGrade(grade),
+    );
   }
 
   void onSaveSuccess(SaveStateSuccess result) {
@@ -487,11 +463,11 @@ class AddStudentScreenState extends State<AddStudentScreen> {
   }
 
   String getScreenTitle() {
-    return "Add Student".tr;
+    return AppStringsKeys.addStudent.tr;
   }
 
   String getSubmitButtonText() {
-    return "Add Student".tr;
+    return AppStringsKeys.addStudent.tr;
   }
 
   void onSaveStudentResult(AddStudentState event) {
@@ -511,17 +487,13 @@ class AddStudentScreenState extends State<AddStudentScreen> {
     }
   }
 
-  Widget _errorMessageView(String message) {
-    return AppTextWidget(message);
-  }
-
-  void onSaveGroupClick() {
+  void onSaveClick() {
     getController().onSave().listen(
       (event) {
-
-        if(event is AddStudentStateStudentLimitExceeded){
+        appLog("onSaveClick :event :$event");
+        if(event is AddStudentStateSubscriptionIssue){
           hideDialogLoading();
-          UserNotSubscribedDialog.showUserNotSubscribedDialog(true);
+          UserNotSubscribedDialog.showUserNotSubscribedDialog(message : event.message ?? "", barrierDismissible: true);
         }else {
           onSaveStudentResult(event);
         }

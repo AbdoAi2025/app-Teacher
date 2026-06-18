@@ -20,6 +20,7 @@ class AppToolbarWidget {
     SystemUiOverlayStyle? systemOverlayStyle,
     Color? backgroundColor,
     bool hasLeading = true,
+    bool centerTitle = true,
     Function()? onLeadingClick,
   }){
 
@@ -30,7 +31,7 @@ class AppToolbarWidget {
           title,
           style: AppTextStyle.appToolBarTitle,
         ),
-        centerTitle: true,
+        centerTitle: centerTitle,
         backgroundColor: backgroundColor ?? Colors.transparent,
         leading: !hasLeading ? null : Center(
           child: leading ??

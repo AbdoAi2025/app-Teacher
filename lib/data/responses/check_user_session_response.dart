@@ -31,6 +31,9 @@ class Data {
   bool? active;
   bool? subscribed;
   String? subscriptionExpireDate;
+  bool? mustCompleteProfile;
+  bool? requireVerify;
+  String? userId;
 
   Data({this.active, this.subscriptionExpireDate});
 
@@ -38,14 +41,19 @@ class Data {
     active = json['active'];
     subscribed = json['subscribed'];
     subscriptionExpireDate = json['subscriptionExpireDate'];
+    mustCompleteProfile = json['mustCompleteProfile'];
+    requireVerify = json['requireVerify'];
+    userId = json['userId'];
   }
-
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['active'] = active;
     map['isSubscribed'] = subscribed;
     map['subscriptionExpireDate'] = subscriptionExpireDate;
+    map['mustCompleteProfile'] = mustCompleteProfile;
+    map['requireVerify'] = requireVerify;
+    map['userId'] = userId;
     return map;
   }
 

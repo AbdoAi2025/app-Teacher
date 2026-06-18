@@ -32,15 +32,17 @@ class RunningSessionsItemApiModel {
   String? id;
   String? startDate;
   String? groupName;
+  String? groupId;
 
   RunningSessionsItemApiModel({
-      this.id, 
+      this.id,
       this.startDate,});
 
   RunningSessionsItemApiModel.fromJson(dynamic json) {
     id = json['id'];
     startDate = json['startDate'];
     groupName = json['groupName'];
+    groupId = json['groupId'];
   }
 
 
@@ -49,6 +51,7 @@ class RunningSessionsItemApiModel {
     map['id'] = id;
     map['startDate'] = startDate;
     map['groupName'] = groupName;
+    map['groupId'] = groupId;
     return map;
   }
 

@@ -20,6 +20,7 @@ import '../../requests/get_my_students_request.dart';
 import '../../services/paymob_native_service.dart';
 import '../students_list/students_controller.dart';
 import 'bottomsheets/purchase_confirmation_bottom_sheet.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class SubscriptionPlansScreen extends StatefulWidget {
   const SubscriptionPlansScreen({super.key});
@@ -40,7 +41,7 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppToolbarWidget.appBar(title: 'Subscription Plans'.tr),
+      appBar: AppToolbarWidget.appBar(title: AppStringsKeys.subscriptionPlans.tr),
       body: Obx(() {
         final state = controller.state.value;
         appLog("SubscriptionPlansScreen state:$state");
@@ -80,7 +81,7 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
           ),
           SizedBox(height: 16),
           Text(
-            'Error loading subscription plans'.tr,
+            AppStringsKeys.errorLoadingSubscriptionPlans.tr,
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
               color: Colors.grey[600],
             ),
@@ -88,7 +89,7 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
           ),
           SizedBox(height: 8),
           Text(
-            state.error?.toString() ?? 'Unknown error'.tr,
+            state.error?.toString() ?? AppStringsKeys.unknownError.tr,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: Colors.grey[500],
             ),
@@ -98,7 +99,7 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
           ElevatedButton.icon(
             onPressed: controller.refreshSubscriptionPlans,
             icon: Icon(Icons.refresh),
-            label: Text('Retry'.tr),
+            label: Text(AppStringsKeys.retry.tr),
           ),
         ],
       ),
@@ -121,7 +122,7 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
           ),
           SizedBox(height: 16),
           Text(
-            'No subscription plans available'.tr,
+            AppStringsKeys.noSubscriptionPlansAvailable.tr,
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
               color: Colors.grey[600],
             ),
@@ -129,7 +130,7 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
           SizedBox(height: 8),
           TextButton(
             onPressed: controller.refreshSubscriptionPlans,
-            child: Text('Retry'.tr),
+            child: Text(AppStringsKeys.retry.tr),
           ),
         ],
       ),
@@ -154,9 +155,9 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               if(plan.isCurrentPlan)...{
-                _title('Current Plan'.tr,),
+                _title(AppStringsKeys.currentPlan.tr,),
               }else ...{
-                _title('Subscription Plans'.tr,),
+                _title(AppStringsKeys.subscriptionPlans.tr,),
               },
               SubscriptionPlanItem(
                 planUiModel: plan,
@@ -166,7 +167,7 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
                 onYearlyTap: () => onSubscribeTap(plan , false , state.totalStudentCount),
               ),
                if(plan.isCurrentPlan)
-              _title('Subscription Plans'.tr,),
+              _title(AppStringsKeys.subscriptionPlans.tr,),
             ],
           );
         }
@@ -194,7 +195,7 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
 
      var teacherStudentsCount = totalStudentCount;
     if(teacherStudentsCount > plan.studentLimit ) {
-      var message = sprintf("Can't subscribe this plan because you have more students than the plan limit".tr, [teacherStudentsCount , plan.studentLimit]);
+      var message = sprintf(AppStringsKeys.key873469509.tr, [teacherStudentsCount , plan.studentLimit]);
       showErrorMessagePopup(message);
       return;
     }
@@ -207,7 +208,7 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
        if(subscribeResult.isSuccess) {
          onSubscribeSuccess(plan);
        } else {
-         showErrorMessagePopup(subscribeResult.error?.toString() ?? "failed to complete subscription".tr);
+         showErrorMessagePopup(subscribeResult.error?.toString() ?? AppStringsKeys.failedToCompleteSubscription.tr);
        }
        return;
      }
@@ -228,7 +229,7 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
      bool? confirmed = await PurchaseConfirmationBottomSheet.show(
        context,
        planUiModel: plan,
-       title: isMonthly ? 'Monthly Plan'.tr : 'Annual Plan'.tr,
+       title: isMonthly ? AppStringsKeys.monthlyPlan.tr : AppStringsKeys.annualPlan.tr,
        price: isMonthly ? plan.formattedMonthlyPrice : plan.formattedAnnualPrice,
        isMonthly: isMonthly,
      );
@@ -250,11 +251,11 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
            if(verifyPaymentResult.isSuccess && verifyPaymentResult.data?.data == true){
              onSubscribeSuccess(plan);
            }else {
-             showErrorMessagePopup("failed to complete payment process".tr);
+             showErrorMessagePopup(AppStringsKeys.failedToCompletePaymentProcess.tr);
            }
          }
        }else {
-         showErrorMessagePopup(result.error?.toString() ?? "failed to complete payment process".tr);
+         showErrorMessagePopup(result.error?.toString() ?? AppStringsKeys.failedToCompletePaymentProcess.tr);
        }
 
        // await purchaseService.purchaseSubscription(plan, isMonthly: isMonthly);
@@ -262,7 +263,7 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
    }
 
   Future<void> onSubscribeSuccess(SubscriptionPlanItemUiState plan) async {
-    await showSuccessMessagePopup("Subscription process completed successfully".tr);
+    await showSuccessMessagePopup(AppStringsKeys.subscriptionProcessCompletedSuccessfully.tr);
     controller.refreshSubscriptionPlans();
   }
 

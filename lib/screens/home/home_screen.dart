@@ -9,18 +9,15 @@ import 'package:teacher_app/utils/LogUtils.dart';
 import 'package:teacher_app/utils/app_background_styles.dart';
 import 'package:teacher_app/utils/message_utils.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
-import 'package:teacher_app/widgets/empty_view_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
 import 'package:teacher_app/widgets/primary_button_widget.dart';
 import 'package:teacher_app/widgets/sessions/running_session_item_widget.dart';
-
-import '../../widgets/app_toolbar_widget.dart';
 import '../../widgets/groups/group_item_widget.dart';
-import '../../widgets/paymob_simple_widget.dart';
 import '../groups/groups_state.dart';
 import 'states/home_state.dart';
 import 'states/running_session_item_ui_state.dart';
 import 'states/running_sessions_state.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -63,11 +60,11 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       },
       child: Scaffold(
-        // appBar: AppToolbarWidget.appBar(title: "Home".tr, hasLeading: false),
+        // appBar: AppToolbarWidget.appBar(title: AppStringsKeys.home.tr, hasLeading: false),
         body: SafeArea(
             child: Column(
           children: [
-            _nameAndLogout(),
+            _name(),
             Expanded(child: _content()),
           ],
         )),
@@ -107,17 +104,16 @@ class _HomeScreenState extends State<HomeScreen> {
   _runningSession() {
     return SizedBox(
       width: double.infinity,
-      height: 300,
-      // padding: EdgeInsets.all(15),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         spacing: 15,
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: _runningTitle(),
           ),
-          Expanded(child: Obx(() {
+          Obx(() {
             var state = controller.runningState.value;
 
             appLog("home screen _runningSession state:$state");
@@ -137,14 +133,14 @@ class _HomeScreenState extends State<HomeScreen> {
             }
 
             return _runningSessions(uiStates);
-          }))
+          }),
         ],
       ),
     );
   }
 
   Widget _runningTitle() => AppTextWidget(
-        "Running Session".tr,
+        AppStringsKeys.runningSession.tr,
         style: AppTextStyle.title,
       );
 
@@ -164,28 +160,34 @@ class _HomeScreenState extends State<HomeScreen> {
 
   _runningSessions(List<RunningSessionItemUiState> uiStates) {
 
+    // return _runningSessionEmpty();
     if (uiStates.isEmpty) {
       return _runningSessionEmpty();
     }
 
-    return ListView.separated(
-        scrollDirection: Axis.horizontal,
-        shrinkWrap: true,
-        itemBuilder: (context, index) {
-          var item = uiStates[index];
-          return Container(
-              margin: EdgeInsetsDirectional.only(
-                  start: index == 0 ? 20 : 0,
-                  end: (index == uiStates.length - 1) ? 20 : 0),
-              width: uiStates.length == 1 ? Get.width - 40 : Get.width * .7,
-              padding: EdgeInsets.all(15),
-              decoration: AppBackgroundStyle.backgroundWithShadow(),
-              child: _runningSessionItem(item));
-        },
-        separatorBuilder: (context, index) => SizedBox(
-              width: 10,
-            ),
-        itemCount: uiStates.length);
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ...uiStates.asMap().entries.map((entry) {
+              final index = entry.key;
+              final item = entry.value;
+              return Container(
+                margin: EdgeInsetsDirectional.only(
+                    start: index == 0 ? 20 : 10,
+                    end: index == uiStates.length - 1 ? 20 : 0),
+                width: uiStates.length == 1 ? Get.width - 40 : Get.width * .7,
+                padding: EdgeInsets.all(15),
+                decoration: AppBackgroundStyle.backgroundWithShadow(),
+                child: _runningSessionItem(item),
+              );
+            }),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _runningSessionItem(RunningSessionItemUiState item) {
@@ -199,28 +201,40 @@ class _HomeScreenState extends State<HomeScreen> {
 
   _runningSessionEmpty() {
     return Container(
-        width: double.infinity,
-        height: double.infinity,
-        margin: EdgeInsets.symmetric(horizontal: 20),
-        padding: EdgeInsets.all(15),
-        decoration: AppBackgroundStyle.backgroundWithShadow(),
-        child: Column(
-          spacing: 20,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.do_not_disturb_alt,
-              size: 60,
+      width: double.infinity,
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 20),
+      decoration: AppBackgroundStyle.backgroundWithShadow(),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        spacing: 12,
+        children: [
+          Container(
+            width: 72,
+            height: 72,
+            decoration: BoxDecoration(
+              color: AppColors.appMainColor.withValues(alpha: 0.08),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.play_circle_outline_rounded,
+              size: 38,
               color: AppColors.appMainColor,
             ),
-            AppTextWidget(
-              "No Running Sessions Found".tr,
-              style: AppTextStyle.title,
-              color: AppColors.appMainColor,
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ));
+          ),
+          AppTextWidget(
+            AppStringsKeys.noRunningSessions.tr,
+            style: AppTextStyle.title.copyWith(color: AppColors.appMainColor),
+            textAlign: TextAlign.center,
+          ),
+          AppTextWidget(
+            AppStringsKeys.allSessionsAreCurrentlyInactive.tr,
+            style: AppTextStyle.subTitle,
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _todayGroupsList(List<GroupItemUiState> uiStates) {
@@ -229,35 +243,79 @@ class _HomeScreenState extends State<HomeScreen> {
       return _noTodayGroups();
     }
 
-    return Column(
-      spacing: 15,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-          child: AppTextWidget("Today Groups".tr , style: AppTextStyle.title,),
-        ),
-        ...uiStates.map((e) => GroupItemWidget(uiState: e,))
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
+      child: Column(
+        spacing: 15,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AppTextWidget(AppStringsKeys.todayGroups.tr , style: AppTextStyle.title,),
+          ...uiStates.map((e) => GroupItemWidget(uiState: e,))
+        ],
+      ),
     );
   }
 
   Widget _noTodayGroups() {
-    return Column(
-      spacing: 20,
-      children: [
-        EmptyViewWidget(message: "No Today Groups".tr),
-        PrimaryButtonWidget(
-            text: "Create New Groups".tr,
-            onClick: () {
-              AppNavigator.navigateToCreateGroup();
-            })
-      ],
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 20),
+      // decoration: BoxDecoration(
+      //   color: AppColors.white,
+      //   borderRadius: BorderRadius.circular(16),
+      //   border: Border.all(color: AppColors.color_DBD5CC.withValues(alpha: 0.5)),
+      //   boxShadow: [
+      //     BoxShadow(
+      //       color: Colors.black.withValues(alpha: 0.04),
+      //       blurRadius: 10,
+      //       offset: const Offset(0, 4),
+      //     ),
+      //   ],
+      // ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        spacing: 16,
+        children: [
+          Container(
+            width: 80,
+            height: 80,
+            decoration: BoxDecoration(
+              color: AppColors.appMainColor.withValues(alpha: 0.07),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.groups_2_outlined,
+              size: 40,
+              color: AppColors.appMainColor,
+            ),
+          ),
+          Column(
+            spacing: 6,
+            children: [
+              AppTextWidget(
+                AppStringsKeys.noGroupsToday.tr,
+                style: AppTextStyle.title.copyWith(color: AppColors.appMainColor),
+                textAlign: TextAlign.center,
+              ),
+              AppTextWidget(
+                AppStringsKeys.youHaveNoSessionsScheduledForToday.tr,
+                style: AppTextStyle.subTitle,
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+          PrimaryButtonWidget(
+            text: AppStringsKeys.createNewGroups.tr,
+            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+            onClick: () => AppNavigator.navigateToCreateGroup(),
+          ),
+        ],
+      ),
     );
   }
 
-  _nameAndLogout() {
+  _name() {
    return Obx(() {
       var state = controller.profileInfo.value;
 
@@ -267,14 +325,9 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Expanded(
                 child: AppTextWidget(
-              "${"Hey, Mr.".tr} ${state?.name ?? ""}" ,
+              "${state?.gender.isFemale == true ? AppStringsKeys.heyMs.tr : AppStringsKeys.heyMr.tr} ${state?.name ?? ""}" ,
               style: AppTextStyle.title.copyWith(color: AppColors.appMainColor),
             )),
-            InkWell(
-                onTap: () {
-                  onLogout();
-                },
-                child: Icon(Icons.logout))
           ],
         ),
       );
@@ -283,7 +336,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void onLogout() {
 
-    showConfirmationMessage("Are you sure to logout".tr, (){
+    showConfirmationMessage(AppStringsKeys.areYouSureToLogout.tr, (){
       controller.logout();
       AppNavigator.navigateToLogin();
     });

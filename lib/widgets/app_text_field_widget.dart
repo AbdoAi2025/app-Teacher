@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:teacher_app/themes/app_colors.dart';
 import 'package:teacher_app/themes/txt_styles.dart';
 
 class AppTextFieldWidget extends StatelessWidget {
@@ -60,12 +61,12 @@ class AppTextFieldWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
+    final field = TextFormField(
       controller: controller,
       style: textStyle ?? AppTextStyle.textFieldStyle,
       readOnly: readOnly,
       textDirection: textDirection,
-      textAlign: textAlign?? TextAlign.start,
+      textAlign: textAlign ?? TextAlign.start,
       onTap: onTap,
       minLines: minLines,
       obscureText: obscureText,
@@ -73,8 +74,7 @@ class AppTextFieldWidget extends StatelessWidget {
       maxLength: maxLength,
       keyboardType: keyboardType,
       decoration: InputDecoration(
-        labelText: label,
-        prefixIcon: prefixIcon,
+        prefixIcon: prefixIconWidget(),
         hintTextDirection: textDirection,
         hintText: hint,
         hintStyle: hintTextStyle,
@@ -89,11 +89,23 @@ class AppTextFieldWidget extends StatelessWidget {
       validator: validator,
       onChanged: onChanged,
       textInputAction: textInputAction,
+    );
 
+    if (label == null) return field;
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label!, style: AppTextStyle.label.copyWith(color: AppColors.textSecondaryColor)),
+        const SizedBox(height: 6),
+        field,
+      ],
     );
   }
 
   Widget? suffixIconWidget() => suffixIcon;
+  Widget? prefixIconWidget() => prefixIcon;
 
 
 }

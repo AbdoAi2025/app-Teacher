@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:teacher_app/localization/localArabic.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
 import 'package:teacher_app/screens/session_details/args/session_details_args_model.dart';
 import 'package:teacher_app/widgets/app_visibility_widget.dart';
@@ -8,9 +7,11 @@ import 'package:teacher_app/widgets/lifecycle_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
 import 'package:teacher_app/widgets/sessions/session_item/session_item_widget.dart';
 import '../../widgets/app_toolbar_widget.dart';
+import '../../widgets/sessions/sessions_empty_widget.dart';
 import 'session_lisit_controller.dart';
 import 'states/session_item_ui_state.dart';
 import 'states/session_lisit_state.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class SessionListScreen extends StatefulWidget {
   const SessionListScreen({super.key});
@@ -27,7 +28,7 @@ class _SessionListScreenState extends LifecycleWidgetState<SessionListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppToolbarWidget.appBar(title: "Sessions".tr),
+        appBar: AppToolbarWidget.appBar(title: AppStringsKeys.sessions.tr),
         body: RefreshIndicator(
           onRefresh: () async {
             onRefresh();
@@ -63,11 +64,11 @@ class _SessionListScreenState extends LifecycleWidgetState<SessionListScreen> {
   }
 
   _showNotFound() {
-    return ErrorWidget("Session Not Found".tr);
+    return ErrorWidget(AppStringsKeys.sessionNotFound.tr);
   }
 
   _showInvalidArgs() {
-    return ErrorWidget("Invalid Args".tr);
+    return ErrorWidget(AppStringsKeys.invalidArgs.tr);
   }
 
   _showError(SessionListStateError state) {
@@ -75,6 +76,19 @@ class _SessionListScreenState extends LifecycleWidgetState<SessionListScreen> {
   }
 
   _showDetails(List<SessionItemUiState> uiState) {
+    if (uiState.isEmpty) {
+      return ConstrainedBox(
+        constraints: BoxConstraints(
+          minHeight: MediaQuery.of(context).size.height
+              - kToolbarHeight
+              - MediaQuery.of(context).padding.top,
+        ),
+        child: SessionsEmptyWidget(
+          title: AppStringsKeys.noSessionsFound.tr,
+          subtitle: AppStringsKeys.noActiveSessions.tr,
+        ),
+      );
+    }
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),

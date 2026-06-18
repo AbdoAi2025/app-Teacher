@@ -30,6 +30,7 @@ import '../../../widgets/quiz_grade_widget.dart';
 import '../../../widgets/sessions/student_activities/update_student_activity_widget.dart';
 import '../../../widgets/switch_button_widget.dart';
 import '../states/session_details_ui_state.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class StudentActivityItemWidget extends StatefulWidget {
   final SessionDetailsUiState sessionDetailsUiState;
@@ -130,27 +131,27 @@ class _StudentActivityItemWidgetState extends State<StudentActivityItemWidget> {
 
   _attended() {
     return LabelValueRowWidget(
-      label: "Attendance:".tr,
+      label: AppStringsKeys.attendance2.tr,
       valueWidget: _yesNoText( uiState.attended),);
   }
 
   _behaviorGood() {
     return LabelValueRowWidget(
-      label: "Behavior:".tr,
+      label: AppStringsKeys.behavior2.tr,
       valueWidget:  BehaviorStatusWidget( behaviorStatus),
     );
   }
 
   _homeworkStatus() {
     return LabelValueRowWidget(
-      label: "Homework:".tr,
+      label: AppStringsKeys.homework2.tr,
       valueWidget: HomeworkStatusWidget(uiState.homeworkStatus),
     );
   }
 
   _yesNoText(bool? bool) {
     return AppTextWidget(
-      bool == null ? "Not Determined".tr :   (bool == true ? "Yes" : "No"),
+      bool == null ? AppStringsKeys.notDetermined.tr :   (bool == true ? "Yes" : "No"),
       style: AppTextStyle.label.copyWith(
         color:  bool == null ? AppColors.inactiveColor :  bool == true ? AppColors.colorYes : AppColors.colorNo,
       ),
@@ -161,7 +162,7 @@ class _StudentActivityItemWidgetState extends State<StudentActivityItemWidget> {
     return Row(
       spacing: 5,
       children: [
-        AppTextWidget("Quiz Grade:".tr, style: AppTextStyle.label),
+        AppTextWidget(AppStringsKeys.quizGrade2.tr, style: AppTextStyle.label),
         QuizGradeWidget(total: uiState.sessionQuizGrade ?? 0 , score: quizGrade,),
       ],
     );
@@ -201,7 +202,7 @@ class _StudentActivityItemWidgetState extends State<StudentActivityItemWidget> {
               12, AppColors.appMainColor),
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
           child: AppTextWidget(
-            "Send Report".tr,
+            AppStringsKeys.sendReport.tr,
             color: AppColors.white,
           )),
     );
@@ -234,7 +235,7 @@ class _StudentActivityItemWidgetState extends State<StudentActivityItemWidget> {
 
   _deleteIcon() => InkWell(
     onTap: () {
-      showConfirmationMessage("Are you sure you want to delete this report?".tr, (){
+      showConfirmationMessage(AppStringsKeys.areYouSureYouWantToDeleteThisReport.tr, (){
         widget.onDeleteClick(uiState);
       });
     },

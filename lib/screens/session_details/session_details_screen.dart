@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:teacher_app/domain/managers/grade_manager.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
-import 'package:teacher_app/presentation/bottom_sheets/students_list_selections_bottom_sheet.dart';
+import 'package:teacher_app/bottomsheets/select_students/select_students_bottom_sheet.dart';
 import 'package:teacher_app/screens/create_group/students_selection/states/student_selection_item_ui_state.dart';
+import 'package:teacher_app/screens/create_group/students_selection/students_selection_controller.dart';
 import 'package:teacher_app/screens/session_details/states/session_details_ui_state.dart';
+import 'package:teacher_app/screens/session_details/widgets/end_session_widget.dart';
+import 'package:teacher_app/themes/app_colors.dart';
+import 'package:teacher_app/utils/app_background_styles.dart';
 import 'package:teacher_app/utils/message_utils.dart';
+import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'package:teacher_app/widgets/app_visibility_widget.dart';
 import 'package:teacher_app/widgets/cancel_icon_widget.dart';
 import 'package:teacher_app/widgets/delete_icon_widget.dart';
@@ -25,6 +31,7 @@ import 'session_details_controller.dart';
 import 'states/session_details_state.dart';
 import 'states/update_session_activities_state.dart';
 import 'widgets/student_activity_item_widget.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class SessionDetailsScreen extends StatefulWidget {
   const SessionDetailsScreen({super.key});
@@ -39,6 +46,7 @@ class _SessionDetailsScreenState extends LifecycleWidgetState<SessionDetailsScre
   bool isEditable = false;
 
   final SessionDetailsController controller = Get.put(SessionDetailsController());
+  final StudentsSelectionController studentsController = Get.put(StudentsSelectionController());
 
   @override
   void initState() {
@@ -97,11 +105,11 @@ class _SessionDetailsScreenState extends LifecycleWidgetState<SessionDetailsScre
   }
 
   _showNotFound() {
-    return ErrorWidget("Session Not Found".tr);
+    return ErrorWidget(AppStringsKeys.sessionNotFound.tr);
   }
 
   _showInvalidArgs() {
-    return ErrorWidget("Invalid Args".tr);
+    return ErrorWidget(AppStringsKeys.invalidArgs.tr);
   }
 
   _showError(SessionDetailsStateError state) {
@@ -233,14 +241,12 @@ class _SessionDetailsScreenState extends LifecycleWidgetState<SessionDetailsScre
   }
 
   _enSessionButton(SessionDetailsUiState uiState) {
-    return SizedBox(
-      width: double.infinity,
-      child: EndSessionButtonWidget(
-        sessionId: uiState.id,
-        onSessionEnded: () {
-          onRefresh();
-        },
-      ),
+    return EndSessionWidget(
+      sessionId: uiState.id,
+      groupId: uiState.groupId,
+      onSessionEnded: () {
+        onRefresh();
+      },
     );
   }
 
@@ -256,7 +262,7 @@ class _SessionDetailsScreenState extends LifecycleWidgetState<SessionDetailsScre
           actions: [_closeIcon()]);
     }
     return AppToolbarWidget.appBar(
-        title: "Session Details".tr, actions: [
+        title: AppStringsKeys.sessionDetails.tr, actions: [
           _deleteIcon(),
           _searchIcon()]);
   }
@@ -302,15 +308,30 @@ class _SessionDetailsScreenState extends LifecycleWidgetState<SessionDetailsScre
   }
 
   onAddStudentToSessionClick(SessionDetailsUiState uiState) {
-    controller.onAddStudentToSessionClick(uiState);
-    var bottomSheet = StudentsListSelectionsBottomSheet(
-        studentsSelectionState : controller.studentsSelectionState,
-        onSaveClick: (items) { onSessionStudentsSelected(uiState, items);});
-    bottomSheet.show(context);
+    appLog("onAddStudentToSessionClick uiState.gradeId.toString() : ${uiState.gradeId.toString()}");
+    // studentsController.setGradeId(
+    //   uiState.gradeId.toString(),
+    // );
+
+    //load student if first time
+    if(!studentsController.isStudentLoadedSuccess()) {
+      studentsController.loadStudents();
+    }
+
+    appLog("onAddStudentToSessionClick studentsController.selectedGradeFilter.value: ${studentsController.selectedGradeFilter.value?.id}");
+
+    SelectStudentsBottomSheet.show(
+      context: context,
+      controller: studentsController,
+      onAfterSaved: () => onSessionStudentsSelected(
+        uiState,
+        studentsController.selectedStudents.toList(),
+      ),
+    );
   }
 
   void onSessionStudentsSelected(SessionDetailsUiState uiState , List<StudentSelectionItemUiState> items) {
-      showConfirmationMessage("Are you sure you want to add students to this session?".tr, (){
+      showConfirmationMessage(AppStringsKeys.areYouSureYouWantToAddStudentsToThisSession.tr, (){
         showDialogLoading();
         controller.addStudentToSession(uiState ,  items )
         .listen((result){
@@ -322,7 +343,7 @@ class _SessionDetailsScreenState extends LifecycleWidgetState<SessionDetailsScre
   }
 
   _deleteIcon() => DeleteIconWidget(onClick: () {
-     showConfirmationMessage("Are you sure you want to delete the session".tr, (){
+     showConfirmationMessage(AppStringsKeys.areYouSureYouWantToDeleteTheSession.tr, (){
        showDialogLoading();
        controller.deleteSession().listen((result){
          appLog("_deleteIcon result : ${result.toString()}");

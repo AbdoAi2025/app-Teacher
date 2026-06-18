@@ -7,6 +7,7 @@ import 'package:teacher_app/widgets/app_txt_widget.dart';
 
 import '../../../widgets/primary_button_widget.dart';
 import 'item_selection_ui_state.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class ItemSelectionWidget extends StatefulWidget {
 
@@ -113,7 +114,7 @@ class _ItemSelectionWidgetState
     return SizedBox(
       width: double.infinity,
       child: PrimaryButtonWidget(
-        text: "Save".tr,
+        text: AppStringsKeys.save.tr,
         onClick: () {
           onSaveClick();
         },

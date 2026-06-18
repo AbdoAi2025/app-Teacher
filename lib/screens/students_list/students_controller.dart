@@ -3,13 +3,16 @@ import 'package:teacher_app/apimodels/student_list_item_api_model.dart';
 import 'package:teacher_app/domain/usecases/get_my_students_list_use_case.dart';
 import 'package:teacher_app/screens/students_list/states/students_state.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
+import 'package:teacher_app/utils/day_utils.dart';
 import 'package:teacher_app/utils/extensions_utils.dart';
 import 'package:teacher_app/utils/localized_name_model.dart';
+import 'package:teacher_app/widgets/item_selection_widget/item_selection_ui_state.dart';
 
 import '../../base/AppResult.dart';
 import '../../domain/events/students_events.dart';
 import '../../domain/usecases/delete_student_use_case.dart';
 import '../../requests/get_my_students_request.dart';
+import '../../utils/date_filter_manager.dart';
 import 'states/student_item_ui_state.dart';
 
 class StudentsController extends GetxController {
@@ -24,6 +27,11 @@ class StudentsController extends GetxController {
   List<StudentItemUiState> studentsUiStates = [];
   List<StudentItemUiState> searchStudentsUiStates = [];
 
+  final DateFilterManager dateFilterManager = DateFilterManager();
+
+  final Rx<ItemSelectionUiState?> selectedGradeFilter = Rx(null);
+  final Rx<bool?> hasGroupFilter = Rx(null);
+
   static const  sortByGroupType = 0;
   static const  sortByGradeType = 1;
   int? sortType ;
@@ -35,11 +43,26 @@ class StudentsController extends GetxController {
     super.onInit();
     _loadStudents();
     _initOnStudentEvents();
+    initDateFilter();
+  }
+
+  void initDateFilter() {
+    dateFilterManager.onFilterChanged = () {
+      refreshStudents();
+    };
   }
 
   Future<void> _loadStudents() async {
 
     request.pageIndex = 0;
+
+    final dateFilter = dateFilterManager.currentDateFilter;
+    appLog("StudentsController dateFilter: ${dateFilter.dateFromFormatted} - ${dateFilter.dateToFormatted}");
+
+    request = request.copyWith(
+      dateFrom: dateFilter.dateFromFormatted,
+      dateTo: dateFilter.dateToFormatted,
+    );
 
     var studentsResult = await getMyStudentsListUseCase.execute(request);
 
@@ -118,15 +141,55 @@ class StudentsController extends GetxController {
             ?.map((e) => StudentItemUiState(
                   id: e.studentId ?? "",
                   name: e.studentName ?? "",
-                  grade: LocalizedNameModel(
-                          nameEn: e.gradeNameEn ?? "",
-                          nameAr: e.gradeNameAr ?? "")
-                      .toLocalizedName(),
-                  groupName: e.groupName ?? "",
+                  groups: e.groups
+                      .map((g) => StudentGroupInfo(
+                            groupId: g.groupId ?? '',
+                            groupName: g.groupName ?? '',
+                          ))
+                      .toList(),
+                  grades: e.grades
+                      .map((g) => StudentGradeInfo(
+                            gradeId: g.gradeId ?? 0,
+                            gradeName: LocalizedNameModel(
+                              nameEn: g.gradeNameEn ?? '',
+                              nameAr: g.gradeNameAr ?? '',
+                            ).name,
+                          ))
+                      .toList(),
                   parentPhone: e.studentParentPhone ?? "",
+                  createdDate: AppDateUtils.parsStringToString(e.createdDate, "dd MMM, yyyy"),
                 ))
             .toList() ??
         List.empty();
+  }
+
+  void onGradeFilterSelected(ItemSelectionUiState? item) {
+    selectedGradeFilter.value = item;
+    request.gradeId = (item == null || item.id.isEmpty) ? null : item.id;
+    refreshStudents();
+  }
+
+  void resetGradeFilter() {
+    onGradeFilterSelected(null);
+  }
+
+  void onHasGroupFilterCycle() {
+    // cycles: null → true → false → null
+    if (hasGroupFilter.value == null) {
+      hasGroupFilter.value = true;
+    } else if (hasGroupFilter.value == true) {
+      hasGroupFilter.value = false;
+    } else {
+      hasGroupFilter.value = null;
+    }
+    request.hasGroups = hasGroupFilter.value;
+    refreshStudents();
+  }
+
+  void resetHasGroupFilter() {
+    hasGroupFilter.value = null;
+    request.hasGroups = null;
+    refreshStudents();
   }
 
   onSearchChanged(String? query) {
@@ -268,4 +331,6 @@ class StudentsController extends GetxController {
       updateRefresh = null;
     }
   }
+
+
 }

@@ -5,7 +5,9 @@ import 'package:teacher_app/themes/app_colors.dart';
 import 'package:teacher_app/themes/txt_styles.dart';
 import 'package:teacher_app/utils/message_utils.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
+import 'package:teacher_app/widgets/info_chip_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class PhoneWithIconWidget extends StatelessWidget {
   final String phone;
@@ -13,17 +15,23 @@ class PhoneWithIconWidget extends StatelessWidget {
   final bool showCallIcon;
   final MainAxisSize? mainAxisSize;
   final bool canCall;
+  final Color? color;
 
   const PhoneWithIconWidget(this.phone,
       {super.key,
       this.hideIcon = false,
       this.showCallIcon = false,
       this.mainAxisSize,
-      this.canCall = true
+      this.canCall = true,
+      this.color,
       });
 
   @override
   Widget build(BuildContext context) {
+    return InkWell(
+        onTap: onClick,
+        child: InfoChipWidget(text: phone , icon: showCallIcon ? Icons.phone : null , color: color));
+
     return InkWell(
       onTap: onClick,
       child: Row(
@@ -57,11 +65,8 @@ class PhoneWithIconWidget extends StatelessWidget {
       ));
 
   void onClick() {
-
-
-
     if (canCall) {
-      showConfirmationMessage( sprintf("Are you sure to call".tr, [phone]) , (){
+      showConfirmationMessage( sprintf(AppStringsKeys.areYouSureToCall.tr, [phone]) , (){
         launchUrl(Uri.parse('tel:$phone'));
       });
     }

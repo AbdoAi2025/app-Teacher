@@ -1,0 +1,191 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:teacher_app/bottomsheets/select_students/select_students_bottom_sheet.dart';
+import 'package:teacher_app/screens/create_group/students_selection/states/students_selection_state.dart';
+import 'package:teacher_app/screens/create_group/students_selection/students_selection_controller.dart';
+import 'package:teacher_app/widgets/empty_view_widget.dart';
+import 'package:teacher_app/widgets/loading_widget.dart';
+import '../create_group_controller.dart';
+import '../students_selection/states/student_selection_item_ui_state.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
+
+class AddStudentsStep extends StatefulWidget {
+  final CreateGroupController controller;
+  final StudentsSelectionController studentsController;
+  final VoidCallback onPrevious;
+  final VoidCallback onNext;
+  final VoidCallback? onAddStudent;
+
+  const AddStudentsStep({
+    super.key,
+    required this.controller,
+    required this.studentsController,
+    required this.onPrevious,
+    required this.onNext,
+    this.onAddStudent,
+  });
+
+  @override
+  State<AddStudentsStep> createState() => _AddStudentsStepState();
+}
+
+class _AddStudentsStepState extends State<AddStudentsStep> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        _buildHeader(),
+        Expanded(
+          child: Obx(() {
+            final state = widget.studentsController.studentsState.value;
+            switch (state) {
+              case StudentsSelectionStateError():
+                return Center(child: Text(state.message));
+              case StudentsSelectionStateSelectGrade():
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child:
+                        EmptyViewWidget(message: AppStringsKeys.pleaseSelectGradeFirst.tr),
+                  ),
+                );
+              case StudentsSelectionStateSuccess():
+                return _buildContent(state.students);
+            }
+            return const LoadingWidget();
+          }),
+        ),
+        _buildFooter(),
+      ],
+    );
+  }
+
+  Widget _buildHeader() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+      child: Row(
+        children: [
+          Expanded(
+            child: Obx(() {
+              final count = widget.studentsController.selectedStudents.length;
+              return Text(
+                '$count ${AppStringsKeys.selectedStudents.tr}',
+                style:
+                    const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+              );
+            }),
+          ),
+          OutlinedButton.icon(
+            onPressed: widget.onAddStudent,
+            icon: const Icon(Icons.person_add_outlined, size: 16),
+            label: Text(AppStringsKeys.addStudent.tr),
+            style: OutlinedButton.styleFrom(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildContent(List<StudentSelectionItemUiState> students) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+          child: OutlinedButton.icon(
+            onPressed: () => SelectStudentsBottomSheet.show(
+              context: context,
+              controller: widget.studentsController,
+            ),
+            icon: const Icon(Icons.checklist_outlined, size: 16),
+            label: Text(AppStringsKeys.selectStudents.tr),
+            style: OutlinedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+            ),
+          ),
+        ),
+        Expanded(
+          child: Obx(() {
+            final selected = widget.studentsController.selectedStudents;
+            if (selected.isEmpty) {
+              return Center(
+                child: EmptyViewWidget(message: AppStringsKeys.noStudentsSelected2.tr),
+              );
+            }
+            return _buildSelectedList(selected);
+          }),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSelectedList(List<StudentSelectionItemUiState> selected) {
+    return ListView.separated(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      itemCount: selected.length,
+      separatorBuilder: (_, __) =>
+          Divider(height: 1, color: Colors.grey[200]),
+      itemBuilder: (_, i) {
+        final s = selected[i];
+        return ListTile(
+          contentPadding: EdgeInsets.zero,
+          title: Text(s.studentName, style: const TextStyle(fontSize: 14)),
+          subtitle: s.groupName.isNotEmpty
+              ? Text(s.groupName,
+                  style: TextStyle(fontSize: 12, color: Colors.grey[600]))
+              : null,
+          trailing: IconButton(
+            icon: const Icon(Icons.close, size: 18),
+            onPressed: () =>
+                widget.studentsController.removeStudent(s),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildFooter() {
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Obx(() {
+              final err = widget.controller.stepError.value;
+              if (err.isEmpty) return const SizedBox.shrink();
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Text(err,
+                    style: const TextStyle(color: Colors.red, fontSize: 13)),
+              );
+            }),
+            Obx(() => widget.controller.isStepLoading.value
+                ? const Center(child: CircularProgressIndicator())
+                : Row(
+                    spacing: 8,
+                    children: [
+                      IconButton.outlined(
+                        onPressed: widget.onPrevious,
+                        icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                      ),
+                      const Spacer(),
+                      IconButton.outlined(
+                        onPressed: widget.onNext,
+                        icon: const Icon(Icons.arrow_forward_ios_rounded),
+                      ),
+                    ],
+                  )),
+          ],
+        ),
+      ),
+    );
+  }
+}

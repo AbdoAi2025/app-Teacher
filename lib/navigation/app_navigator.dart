@@ -50,6 +50,10 @@ class AppNavigator {
     return await Get.toNamed(AppRoutes.editGroup , arguments: model);
   }
 
+  static Future<dynamic> navigateToUpgradeGroup(EditGroupArgsModel model) async {
+    return await Get.toNamed(AppRoutes.upgradeGroup , arguments: model);
+  }
+
   static Future<dynamic>? navigateToEditStudent(EditStudentArgsModel args) {
     return Get.toNamed(AppRoutes.editStudent , arguments: args);
   }
@@ -84,6 +88,15 @@ class AppNavigator {
 
   static void navigateToSubscriptionPlans() {
     Get.toNamed(AppRoutes.subscriptionPlans);
+  }
+
+  static void navigateToProfile() {
+    Get.toNamed(AppRoutes.profile);
+  }
+
+  static Future<dynamic> navigateToEditProfile(dynamic profileData) {
+    return Get.toNamed(AppRoutes.editProfile, arguments: profileData)
+        ?? Future.value(null);
   }
 
   static void back() {

@@ -8,9 +8,9 @@ class GetGroupDetailsUseCase extends BaseUseCase<GetGroupDetailsResponse?>{
 
   var repository = GroupsRepository();
 
-  Future<AppResult<GetGroupDetailsResponse?>> execute(String id) async {
+  Future<AppResult<GetGroupDetailsResponse?>> execute(String id, {DateTime? dateFrom, DateTime? dateTo}) async {
     return call(() async {
-      var items =  await repository.getGroupDetails(id);
+      var items =  await repository.getGroupDetails(id, dateFrom: dateFrom, dateTo: dateTo);
       return AppResult.success(items);
     });
   }

@@ -1,4 +1,6 @@
-/// data : {"studentId":"d92f838c-bf33-47d4-9cca-86fe288a48cf","studentName":"Student2","studentPhone":"","studentParentPhone":"0123123412341234","gradeNameEn":"Grade4","gradeNameAr":"الصف الرابع","groupId":"","groupName":""}
+import '../../utils/localized_name_model.dart';
+
+/// data : {"studentId":"bab9c2f3-0d49-4a94-8b9c-de740929b89f","studentName":"student1 for Hamdy5","studentPhone":"+20123123123123123","studentParentPhone":"+201032434567","gradeId":3,"gradeNameEn":"Grade 1","gradeNameAr":"الصف الأول الابتدائي","groupId":"ab513c19-65e9-4ef9-867a-a4cbd9a65229","groupName":"group1 grade1  hamdy5 ","groupDay":0,"groupTimeFrom":"12:00","groupTimeTo":"14:00","groups":[{"groupId":"ab513c19-65e9-4ef9-867a-a4cbd9a65229","groupName":"group1 grade1  hamdy5 ","groupDay":0,"groupTimeFrom":"12:00","groupTimeTo":"14:00","groupCreatedAt":"2025-04-11T23:23:19.572+00:00"}],"grades":[{"id":"3","nameEn":"Grade 1","nameAr":"الصف الأول الابتدائي","groupCreatedAt":"2025-04-11T23:22:05.209+00:00"}]}
 
 class GetStudentDetailsResponse {
   GetStudentDetailsResponse({
@@ -13,23 +15,22 @@ class GetStudentDetailsResponse {
 
   StudentDetailsApiModel? data;
 
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    if (data != null) {
-      map['data'] = data?.toJson();
-    }
-    return map;
-  }
 }
 
-/// studentId : "d92f838c-bf33-47d4-9cca-86fe288a48cf"
-/// studentName : "Student2"
-/// studentPhone : ""
-/// studentParentPhone : "0123123412341234"
-/// gradeNameEn : "Grade4"
-/// gradeNameAr : "الصف الرابع"
-/// groupId : ""
-/// groupName : ""
+/// studentId : "bab9c2f3-0d49-4a94-8b9c-de740929b89f"
+/// studentName : "student1 for Hamdy5"
+/// studentPhone : "+20123123123123123"
+/// studentParentPhone : "+201032434567"
+/// gradeId : 3
+/// gradeNameEn : "Grade 1"
+/// gradeNameAr : "الصف الأول الابتدائي"
+/// groupId : "ab513c19-65e9-4ef9-867a-a4cbd9a65229"
+/// groupName : "group1 grade1  hamdy5 "
+/// groupDay : 0
+/// groupTimeFrom : "12:00"
+/// groupTimeTo : "14:00"
+/// groups : [{"groupId":"ab513c19-65e9-4ef9-867a-a4cbd9a65229","groupName":"group1 grade1  hamdy5 ","groupDay":0,"groupTimeFrom":"12:00","groupTimeTo":"14:00","groupCreatedAt":"2025-04-11T23:23:19.572+00:00"}]
+/// grades : [{"id":"3","nameEn":"Grade 1","nameAr":"الصف الأول الابتدائي","groupCreatedAt":"2025-04-11T23:22:05.209+00:00"}]
 
 class StudentDetailsApiModel {
   StudentDetailsApiModel({
@@ -37,6 +38,7 @@ class StudentDetailsApiModel {
     this.studentName,
     this.studentPhone,
     this.studentParentPhone,
+    this.gradeId,
     this.gradeNameEn,
     this.gradeNameAr,
     this.groupId,
@@ -44,6 +46,8 @@ class StudentDetailsApiModel {
     this.groupDay,
     this.groupTimeFrom,
     this.groupTimeTo,
+    this.groups,
+    this.grades,
   });
 
   StudentDetailsApiModel.fromJson(dynamic json) {
@@ -51,6 +55,7 @@ class StudentDetailsApiModel {
     studentName = json['studentName'];
     studentPhone = json['studentPhone'];
     studentParentPhone = json['studentParentPhone'];
+    gradeId = json['gradeId'];
     gradeNameEn = json['gradeNameEn'];
     gradeNameAr = json['gradeNameAr'];
     groupId = json['groupId'];
@@ -58,13 +63,27 @@ class StudentDetailsApiModel {
     groupDay = json['groupDay'];
     groupTimeFrom = json['groupTimeFrom'];
     groupTimeTo = json['groupTimeTo'];
-    gradeId = json['gradeId'];
+
+    if (json['groups'] != null) {
+      groups = <StudentGroupApiModel>[];
+      json['groups'].forEach((v) {
+        groups?.add(StudentGroupApiModel.fromJson(v));
+      });
+    }
+
+    if (json['grades'] != null) {
+      grades = <StudentGradeApiModel>[];
+      json['grades'].forEach((v) {
+        grades?.add(StudentGradeApiModel.fromJson(v));
+      });
+    }
   }
 
   String? studentId;
   String? studentName;
   String? studentPhone;
   String? studentParentPhone;
+  int? gradeId;
   String? gradeNameEn;
   String? gradeNameAr;
   String? groupId;
@@ -72,21 +91,79 @@ class StudentDetailsApiModel {
   int? groupDay;
   String? groupTimeFrom;
   String? groupTimeTo;
-  int? gradeId;
+  List<StudentGroupApiModel>? groups;
+  List<StudentGradeApiModel>? grades;
 
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['studentId'] = studentId;
-    map['studentName'] = studentName;
-    map['studentPhone'] = studentPhone;
-    map['studentParentPhone'] = studentParentPhone;
-    map['gradeNameEn'] = gradeNameEn;
-    map['gradeNameAr'] = gradeNameAr;
-    map['groupId'] = groupId;
-    map['groupName'] = groupName;
-    map['groupDay'] = groupDay;
-    map['groupTimeFrom'] = groupTimeFrom;
-    map['groupTimeTo'] = groupTimeTo;
-    return map;
+}
+
+/// groupId : "ab513c19-65e9-4ef9-867a-a4cbd9a65229"
+/// groupName : "group1 grade1  hamdy5 "
+/// groupDay : 0
+/// groupTimeFrom : "12:00"
+/// groupTimeTo : "14:00"
+/// groupCreatedAt : "2025-04-11T23:23:19.572+00:00"
+
+class StudentGroupApiModel {
+  StudentGroupApiModel({
+    this.groupId,
+    this.groupName,
+    this.groupDay,
+    this.groupTimeFrom,
+    this.groupTimeTo,
+    this.groupCreatedAt,
+    this.archive,
+  });
+
+  StudentGroupApiModel.fromJson(dynamic json) {
+    groupId = json['groupId'];
+    groupName = json['groupName'];
+    groupDay = json['groupDay'];
+    groupTimeFrom = json['groupTimeFrom'];
+    groupTimeTo = json['groupTimeTo'];
+    groupCreatedAt = json['groupCreatedAt'];
+    archive = json['archive'] ?? false;
   }
+
+  String? groupId;
+  String? groupName;
+  int? groupDay;
+  String? groupTimeFrom;
+  String? groupTimeTo;
+  String? groupCreatedAt;
+  bool? archive;
+
+}
+
+/// id : "3"
+/// nameEn : "Grade 1"
+/// nameAr : "الصف الأول الابتدائي"
+/// groupCreatedAt : "2025-04-11T23:22:05.209+00:00"
+
+class StudentGradeApiModel {
+  StudentGradeApiModel({
+    this.id,
+    this.gradeId,
+    this.nameEn,
+    this.nameAr,
+    this.gradeCreatedAt,
+  });
+
+  StudentGradeApiModel.fromJson(dynamic json) {
+    id = json['id'];
+    gradeId = json['gradeId'];
+    nameEn = json['nameEn'];
+    nameAr = json['nameAr'];
+    gradeCreatedAt = json['gradeCreatedAt'];
+    archive = json['archive'];
+  }
+
+  int? id;
+  int? gradeId;
+  String? nameEn;
+  String? nameAr;
+  String? gradeCreatedAt;
+  bool? archive;
+
+
+  LocalizedNameModel? get localizedName => LocalizedNameModel(nameEn: nameEn ?? "", nameAr: nameAr ?? "");
 }

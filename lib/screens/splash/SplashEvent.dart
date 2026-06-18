@@ -9,6 +9,11 @@ class SplashEventLoading extends SplashEvent {}
 class SplashEventGoToLogin extends SplashEvent {}
 class SplashEventGoToHome extends SplashEvent {}
 class SplashEventNotSubscribed extends SplashEvent {}
+class SplashEventMustCompleteProfile extends SplashEvent {}
+class SplashEventRequireVerify extends SplashEvent {
+  final String userId;
+  SplashEventRequireVerify({required this.userId});
+}
 
 class SplashEventForceUpdate extends SplashEvent {
   final CheckAppVersionModel model;
@@ -21,10 +26,6 @@ class SplashEventUserNotActive extends SplashEvent {
 
 }
 
-class SplashEventShowRemainingDays extends SplashEvent {
-  final int remainingDays;
-  SplashEventShowRemainingDays({required this.remainingDays});
-}
 class SplashError extends SplashEvent {
   final Exception? ex;
   SplashError(this.ex);

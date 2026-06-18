@@ -18,6 +18,8 @@ import '../../widgets/app_toolbar_widget.dart';
 import '../subscription_plans/states/subscription_plans_state.dart';
 import '../subscription_plans/subscription_plans_controller.dart';
 import 'widgets/current_subscription_plan_bottom_sheet.dart';
+import '../profile/profile_controller.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class SettingsScreen extends StatefulWidget{
 
@@ -28,6 +30,7 @@ class SettingsScreen extends StatefulWidget{
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  final _profileController = Get.put(ProfileController());
 
   get appVersion => AppSetting.getAppSetting().appVersion;
 
@@ -35,7 +38,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     appLog("SettingsScreen build");
     return Scaffold(
-      appBar: AppToolbarWidget.appBar(title: "Settings".tr, hasLeading: false),
+      appBar: AppToolbarWidget.appBar(title: AppStringsKeys.settings.tr, hasLeading: false),
       body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(20.0),
@@ -44,11 +47,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Column(
                   spacing: 20,
                   children: [
+                    _profileSection(),
                     _language(),
                     _mySubscription(),
                     _privacyPolicy(),
                     _contactUs(),
-                    _deleteAccount()
+                    _deleteAccount(),
+                    _logout(),
+
                   ],
                 ),
 
@@ -61,6 +67,83 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           )),
     );
+  }
+
+  Widget _profileSection() {
+    return InkWell(
+      onTap: AppNavigator.navigateToProfile,
+      borderRadius: BorderRadius.circular(15),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 14),
+        decoration: AppBackgroundStyle.backgroundWithShadow(),
+        child: Obx(() {
+          final profile = _profileController.profile.value;
+          final isLoading = _profileController.isLoading.value;
+          final initials = _profileInitials(profile?.name);
+          return Row(
+            spacing: 12,
+            children: [
+              CircleAvatar(
+                radius: 24,
+                backgroundColor: Theme.of(context).primaryColor,
+                child: isLoading
+                    ? const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(
+                            strokeWidth: 2, color: Colors.white),
+                      )
+                    : Text(
+                        initials,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AppTextWidget(
+                      isLoading
+                          ? '...'
+                          : profile?.name ?? AppStringsKeys.profile.tr,
+                    ),
+                    if (!isLoading && profile?.email != null)
+                      Text(
+                        profile!.email!,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey[500],
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                  ],
+                ),
+              ),
+              Icon(
+                Icons.arrow_back_ios_sharp,
+                textDirection: !AppSetting.isArabic
+                    ? TextDirection.rtl
+                    : TextDirection.ltr,
+                size: 16,
+              ),
+            ],
+          );
+        }),
+      ),
+    );
+  }
+
+  String _profileInitials(String? name) {
+    if (name == null || name.trim().isEmpty) return '?';
+    final parts = name.trim().split(' ');
+    if (parts.length >= 2) {
+      return '${parts.first[0]}${parts[1][0]}'.toUpperCase();
+    }
+    return parts.first[0].toUpperCase();
   }
 
   _language() {
@@ -78,7 +161,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           spacing: 5,
           children: [
             Icon(Icons.language),
-            Expanded(child: AppTextWidget("Language".tr)),
+            Expanded(child: AppTextWidget(AppStringsKeys.language.tr)),
             _selectedLanguage()
           ],
         ),
@@ -103,19 +186,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   _privacyPolicy() {
-    return  _cell("Privacy Policy".tr , Icons.privacy_tip_outlined ,onPrivacyPolicyClick );
+    return  _cell(AppStringsKeys.privacyPolicy.tr , Icons.privacy_tip_outlined ,onPrivacyPolicyClick );
   }
 
   _contactUs() {
-    return  _cell("Contact Us".tr , Icons.support_agent ,onContactUsClick );
+    return  _cell(AppStringsKeys.contactUs.tr , Icons.support_agent ,onContactUsClick );
   }
 
   _mySubscription() {
-    return _cell("My Subscription".tr , Icons.subscriptions_outlined , onMySubscriptionClick );
+    return _cell(AppStringsKeys.mySubscription.tr , Icons.subscriptions_outlined , onMySubscriptionClick );
+  }
+
+  _logout() {
+    return _cell(AppStringsKeys.logout.tr, Icons.logout, onLogout, color: Colors.red);
   }
 
   _deleteAccount() {
-    return  _cell("Delete Account".tr , Icons.person_off ,onDeleteAccount );
+    return  _cell(AppStringsKeys.deleteAccount.tr , Icons.person_off ,onDeleteAccount );
   }
 
   Future<void> onPrivacyPolicyClick() async {
@@ -157,8 +244,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
     // CurrentSubscriptionPlanBottomSheet.show(context, subscriptionPlansController);
   }
 
+  void onLogout() {
+    showConfirmationMessage(AppStringsKeys.areYouSureToLogout.tr, () {
+      LogoutUseCase().execute();
+      AppNavigator.navigateToLogin();
+    });
+  }
+
   void onDeleteAccount() {
-    showConfirmationMessage("delete_account_confirm_message".tr, (){
+    showConfirmationMessage(AppStringsKeys.deleteAccountConfirmMessage.tr, (){
       LogoutUseCase().execute();
       AppNavigator.navigateToLogin();
     });
@@ -179,7 +273,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget _cell(String text , IconData icon , Function() onClick) {
+  Widget _cell(String text, IconData icon, Function() onClick, {Color? color}) {
     return InkWell(
       onTap: onClick,
       child: Container(
@@ -188,9 +282,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
         child: Row(
           spacing: 5,
           children: [
-            Icon(icon),
-            Expanded(child: AppTextWidget(text)),
-            Icon(Icons.arrow_back_ios_sharp , textDirection: !AppSetting.isArabic ?  TextDirection.rtl : TextDirection.ltr,)
+            Icon(icon, color: color),
+            Expanded(child: AppTextWidget(text, color: color)),
+            Icon(Icons.arrow_back_ios_sharp, color: color, textDirection: !AppSetting.isArabic ? TextDirection.rtl : TextDirection.ltr)
           ],
         ),
       ),

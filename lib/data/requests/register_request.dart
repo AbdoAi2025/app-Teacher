@@ -1,6 +1,9 @@
 /// name : ""
 /// username : ""
 /// password : ""
+/// email : ""
+/// gender : ""
+/// subjectId : 0
 /// fcmToken : ""
 /// deviceId : ""
 /// deviceName : ""
@@ -8,30 +11,26 @@
 
 class RegisterRequest {
   RegisterRequest({
-      this.name,
-      this.username,
-      this.password,
-      this.phoneNumber,
-      this.fcmToken,
-      this.deviceId,
-      this.deviceName,
-      this.platform,
+    this.name,
+    this.username,
+    this.password,
+    this.phoneNumber,
+    this.email,
+    this.gender,
+    this.subjectId,
+    this.fcmToken,
+    this.deviceId,
+    this.deviceName,
+    this.platform,
   });
 
-  RegisterRequest.fromJson(dynamic json) {
-    name = json['name'];
-    username = json['username'];
-    password = json['password'];
-    phoneNumber = json['phoneNumber'];
-    fcmToken = json['fcmToken'];
-    deviceId = json['deviceId'];
-    deviceName = json['deviceName'];
-    platform = json['platform'];
-  }
   String? name;
   String? username;
   String? phoneNumber;
   String? password;
+  String? email;
+  String? gender;
+  int? subjectId;
   String? fcmToken;
   String? deviceId;
   String? deviceName;
@@ -43,11 +42,13 @@ class RegisterRequest {
     map['username'] = username;
     map['password'] = password;
     map['phoneNumber'] = phoneNumber;
+    if (email != null) map['email'] = email;
+    if (gender != null) map['gender'] = gender;
+    if (subjectId != null) map['subjectId'] = subjectId;
     if (fcmToken != null) map['fcmToken'] = fcmToken;
     if (deviceId != null) map['deviceId'] = deviceId;
     if (deviceName != null) map['deviceName'] = deviceName;
     if (platform != null) map['platform'] = platform;
     return map;
   }
-
 }

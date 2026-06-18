@@ -12,6 +12,7 @@ import '../../../utils/app_background_styles.dart';
 import '../../../utils/day_utils.dart';
 import '../../app_txt_widget.dart';
 import '../timer_counter_widget.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class SessionInfoWidget extends StatelessWidget{
 
@@ -50,7 +51,7 @@ class SessionInfoWidget extends StatelessWidget{
       mainAxisSize: MainAxisSize.min,
       children: [
         AppTextWidget(
-          "Session Name:".tr,
+          AppStringsKeys.sessionName.tr,
           style: AppTextStyle.label,
         ),
         AppTextWidget(
@@ -67,7 +68,7 @@ class SessionInfoWidget extends StatelessWidget{
       mainAxisSize: MainAxisSize.min,
       children: [
         AppTextWidget(
-          "Group:".tr,
+          AppStringsKeys.group.tr,
           style: AppTextStyle.label,
         ),
         AppTextWidget(
@@ -86,7 +87,7 @@ class SessionInfoWidget extends StatelessWidget{
       mainAxisSize: MainAxisSize.min,
       children: [
         AppTextWidget(
-          "Quiz:".tr,
+          AppStringsKeys.quiz2.tr,
           style: AppTextStyle.label,
         ),
         AppTextWidget(
@@ -103,7 +104,7 @@ class SessionInfoWidget extends StatelessWidget{
       mainAxisSize: MainAxisSize.min,
       children: [
         AppTextWidget(
-          "Start Date:".tr,
+          AppStringsKeys.startDate.tr,
           style: AppTextStyle.label,
         ),
         AppTextWidget(
@@ -131,7 +132,7 @@ class SessionInfoWidget extends StatelessWidget{
       mainAxisSize: MainAxisSize.min,
       children: [
         AppTextWidget(
-          "Session Status".tr,
+          AppStringsKeys.sessionStatus.tr,
           style: AppTextStyle.label,
         ),
         AppTextWidget(
@@ -144,7 +145,7 @@ class SessionInfoWidget extends StatelessWidget{
         InkWell(
           onTap: onAddStudentToSession,
           child: AppTextWidget(
-            "Add student to session".tr,
+            AppStringsKeys.addStudentToSession.tr,
             style: AppTextStyle.label.copyWith(color: AppColors.appMainColor , decoration: TextDecoration.underline),
           ),
         )

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/themes/app_colors.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class AppErrorWidget extends StatelessWidget {
 
@@ -29,5 +30,5 @@ class AppErrorWidget extends StatelessWidget {
       onTap: () {
         onRetry?.call();
       },
-      child: AppTextWidget("Retry".tr));
+      child: AppTextWidget(AppStringsKeys.retry.tr));
 }

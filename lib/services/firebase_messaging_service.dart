@@ -102,6 +102,21 @@ class FirebaseMessagingService {
   // Token Management
   Future<String?> _getToken() async {
     try {
+      if (!kIsWeb && Platform.isIOS) {
+        // On iOS, FCM requires the APNS token first. Poll briefly since it
+        // arrives asynchronously from APNs after permission is granted.
+        String? apnsToken;
+        for (int i = 0; i < 5 && apnsToken == null; i++) {
+          apnsToken = await _messagingInstance.getAPNSToken();
+          if (apnsToken == null) await Future.delayed(const Duration(seconds: 1));
+        }
+        if (apnsToken == null) {
+          appLog("Firebase Messaging: APNS token unavailable — FCM token cannot be fetched");
+          return null;
+        }
+        appLog("Firebase Messaging: APNS token ready");
+      }
+
       _fcmToken = await _messagingInstance.getToken();
       appLog("Firebase Messaging: FCM Token received - ${_fcmToken?.substring(0, 20)}...");
 

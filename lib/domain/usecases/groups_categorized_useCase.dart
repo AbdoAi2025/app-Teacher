@@ -38,8 +38,7 @@ class GroupsCategorizedUseCase{
     List<GroupItemUiState> sortedGroups = [];
 
     grouped.forEach((key, value) {
-      sortedGroups.add(GroupItemTitleUiState(
-          title: key));
+      sortedGroups.add(GroupItemTitleUiState(title: key , count : value.length));
       sortedGroups.addAll(value);
 
     });

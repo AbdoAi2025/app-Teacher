@@ -1,104 +1,130 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:teacher_app/screens/groups/groups_state.dart';
+import 'package:teacher_app/themes/app_colors.dart';
 import 'package:teacher_app/themes/txt_styles.dart';
-import 'package:teacher_app/utils/app_background_styles.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
+import 'package:teacher_app/widgets/app_divider_widget.dart';
+import 'package:teacher_app/widgets/date_info_chip_widget.dart';
+import 'package:teacher_app/widgets/day_info_chip_widget.dart';
+import 'package:teacher_app/widgets/forward_arrow_widget.dart';
 
 import '../../navigation/app_navigator.dart';
 import '../../screens/group_details/args/group_details_arg_model.dart';
-import '../../screens/groups/groups_state.dart';
-import '../../themes/app_colors.dart';
-import '../day_with_icon_widget.dart';
-import '../delete_icon_widget.dart';
-import '../time_with_icon_widget.dart';
+import '../grade_chip_widget.dart';
+import '../sessions_count_info_chip_widget.dart';
+import '../student_count_info_chip_widget.dart';
+import '../time_from_to_info_chip_widget.dart';
+import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class GroupItemWidget extends StatelessWidget {
-
   final GroupItemUiState uiState;
-  final Function(GroupItemUiState)? onClick;
-  final Function(GroupItemUiState)? onDeleteClick;
+  final Function(GroupItemUiState)? onTap;
 
-  const GroupItemWidget(
-      {super.key,
-      required this.uiState,
-        this.onClick,
-       this.onDeleteClick});
+  const GroupItemWidget({
+    super.key,
+    required this.uiState,
+    this.onTap,
+  }) : super();
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        if (onClick != null) {
-          onClick?.call(uiState);
-          return;
-        }
-        onGroupItemClick();
-      },
-      child: Container(
-        decoration: AppBackgroundStyle.backgroundWithShadow(),
-        margin: EdgeInsets.symmetric(horizontal: 20, ),
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  spacing: 15,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: () => onGroupItemClick(),
+        child: Card(
+          color: AppColors.white,
+          shape: RoundedRectangleBorder(
+            side: BorderSide(
+              color: AppColors.color_DBD5CC.withOpacity(0.5),
+              width: 1,
+            ),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          elevation: 1,
+          child: Container(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
                   children: [
-                    Row(
-                      children: [
-                        _groupName(),
-                        Spacer(),
-                        // _deleteIcon(),
-                      ],
+                    Expanded(
+                      child: _groupName(),
                     ),
-
-                    AppTextWidget("${"Students".tr}  ${uiState.studentsCount}"),
-
-                    Row(
-                      children: [
-                        Expanded(
-                            child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [_date(), _time()],
-                        )),
-                      ],
-                    ),
+                    _forwardIcon(),
                   ],
                 ),
-              ),
-              _arrowIcon()
-            ],
+                AppDividerWidget(),
+                SizedBox(height: 0),
+                Wrap(
+                  spacing: 5,
+                  runSpacing: 5,
+                  children: [
+                    StudentCountInfoChipWidget(count: uiState.studentsCount),
+                    SessionsCountInfoChipWidget(count: uiState.sessionsCount),
+                    // TimeFromToInfoChipWidget(text: "${uiState.timeFrom} - ${uiState.timeTo}"),
+                    _timing()
+
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  _arrowIcon() => Icon(Icons.arrow_forward_ios, color: Colors.grey);
-
-  _date() => DayWithIconWidget(uiState.dayName.tr);
-
-  _time() => TimeWithIconWidget(uiState.timeFrom, uiState.timeTo);
-
-  _groupName() => AppTextWidget(
-        uiState.groupName,
-        style: AppTextStyle.title,
-      );
-
-  _deleteIcon() => DeleteIconWidget(
-      onClick: () => onDeleteClick?.call(uiState) ?? _onDeleteClick()
-  ) ;
-
 
   onGroupItemClick() {
+    if(onTap != null) {
+      onTap?.call(uiState);
+      return;
+    }
     AppNavigator.navigateToGroupDetails(GroupDetailsArgModel(id: uiState.groupId));
   }
 
-  _onDeleteClick() {
+  Widget _groupName() => Row(
+    children: [
+      Container(
+        width: 32,
+        height: 32,
+        decoration: BoxDecoration(
+          color: AppColors.appMainColor.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Icon(Icons.groups_2_rounded, size: 18, color: AppColors.appMainColor),
+      ),
+      const SizedBox(width: 10),
+      Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AppTextWidget(
+              uiState.groupName,
+              style: AppTextStyle.label.copyWith(color: AppColors.colorBlack),
+            ),
+            AppTextWidget(uiState.gradeName, style: AppTextStyle.value,),
+          ],
+        ),
+      ),
+    ],
+  );
 
+  Widget _forwardIcon() {
+    return ForwardArrowWidget(
+      color: AppColors.textSecondaryColor,
+      size: 16,
+    );
+  }
+
+  _timing() {
+    var count = uiState.timingDays.length;
+    if(count == 0) return Container();
+    var countText = count > 1 ? "+${count-1} ${AppStringsKeys.timing.tr}" : "";
+    return  TimeFromToInfoChipWidget(text:  "${uiState.dayName.tr} ${uiState.timeFrom} - ${uiState.timeTo} $countText");
   }
 }
