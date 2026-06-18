@@ -3,7 +3,7 @@
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 LOCAL_PROPS="$PROJECT_ROOT/android/local.properties"
-CREDENTIALS="$PROJECT_ROOT/.playstore.env"
+CREDENTIALS="$PROJECT_ROOT/tools/.playstore.env"
 
 # ── Colors & helpers ──────────────────────────────────────────────────────────
 RED='\033[0;31m'
