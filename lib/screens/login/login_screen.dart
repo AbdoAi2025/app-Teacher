@@ -76,6 +76,8 @@ class _LoginScreenState extends State<LoginScreen> {
         label: AppStringsKeys.userName.tr,
         hint: AppStringsKeys.userName.tr,
         prefixIcon: Icon(Icons.person),
+    minLines: 1,
+    maxLines: 1,
       );
 
   _passwordField() => AppPasswordFieldWidget(
@@ -164,9 +166,6 @@ class _LoginScreenState extends State<LoginScreen> {
           case LoginStateMustCompleteProfile():
             CompleteProfileBottomSheet.show(context, onSuccess: onLoginClick);
             break;
-          case LoginStateRemainDays():
-            AppNavigator.navigateToHome();
-            UserNotSubscribedDialog.showSubscriptionExpiringDialog(remainingDays: result.remainingDays,);();
           case LoginStateRequiresVerification():
             _handleRequiresVerification(result);
         }
@@ -202,10 +201,6 @@ class _LoginScreenState extends State<LoginScreen> {
             break;
           case LoginStateMustCompleteProfile():
             CompleteProfileBottomSheet.show(context, onSuccess: onLoginClick);
-            break;
-          case LoginStateRemainDays():
-            AppNavigator.navigateToHome();
-            UserNotSubscribedDialog.showSubscriptionExpiringDialog(remainingDays: event.remainingDays,);
             break;
           case LoginStateRequiresVerification():
             break;

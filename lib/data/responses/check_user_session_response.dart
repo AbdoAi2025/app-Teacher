@@ -34,6 +34,7 @@ class Data {
   bool? mustCompleteProfile;
   bool? requireVerify;
   String? userId;
+  String? otpSentTo;
 
   Data({this.active, this.subscriptionExpireDate});
 
@@ -44,6 +45,7 @@ class Data {
     mustCompleteProfile = json['mustCompleteProfile'];
     requireVerify = json['requireVerify'];
     userId = json['userId'];
+    otpSentTo = json['otpSentTo'];
   }
 
   Map<String, dynamic> toJson() {
@@ -54,6 +56,7 @@ class Data {
     map['mustCompleteProfile'] = mustCompleteProfile;
     map['requireVerify'] = requireVerify;
     map['userId'] = userId;
+    map['otpSentTo'] = otpSentTo;
     return map;
   }
 

@@ -336,9 +336,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
               onSuccess: () => onLoginByEmail(email),
             );
             break;
-          case LoginStateRemainDays():
-            AppNavigator.navigateToHome();
-            UserNotSubscribedDialog.showSubscriptionExpiringDialog(remainingDays: result.remainingDays,);();
           case LoginStateRequiresVerification():
             _openOtpVerification(result.userId, result.otpSentTo ?? email);
         }

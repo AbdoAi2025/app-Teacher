@@ -143,6 +143,7 @@ class IdentityRepositoryImpl extends IdentityRepository {
       mustCompleteProfile: response.data?.mustCompleteProfile ?? false,
       requireVerify: response.data?.requireVerify ?? false,
       userId: response.data?.userId,
+      otpSentTo: response.data?.otpSentTo
     );
   }
 }

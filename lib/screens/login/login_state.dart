@@ -5,10 +5,6 @@ sealed class LoginState {}
 class LoginStateLoading extends LoginState {}
 class LoginStateSuccess extends LoginState {}
 class LoginStateInvalidSession extends LoginState {}
-class LoginStateRemainDays extends LoginState{
-  final int remainingDays;
-  LoginStateRemainDays(this.remainingDays);
-}
 class LoginStateNotActive extends LoginState {}
 class LoginStateMustCompleteProfile extends LoginState {}
 class LoginStateRequiresVerification extends LoginState {

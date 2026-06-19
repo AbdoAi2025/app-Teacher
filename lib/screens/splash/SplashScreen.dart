@@ -87,11 +87,6 @@ class _SplashscreenState extends State<SplashScreen> {
           case SplashEventForceUpdate():
             ForceUpdateDialog.show();
             break;
-          case SplashEventNotSubscribed():
-            {
-              AppNavigator.navigateToHome();
-            }
-            break;
           case SplashEventRequireVerify():
             OtpVerificationBottomSheet.showRequireVerify(
               context,

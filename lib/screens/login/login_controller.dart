@@ -6,7 +6,7 @@ import 'package:teacher_app/domain/models/login_model.dart';
 import 'package:teacher_app/domain/usecases/login_use_case.dart';
 import 'package:teacher_app/screens/login/login_state.dart';
 
-import '../../domain/usecases/get_check_user_session_state_use_case.dart';
+import '../../domain/usecases/check_user_session_use_case.dart';
 import '../../main.dart';
 import '../../services/environment_service.dart';
 
@@ -31,15 +31,27 @@ class LoginController extends GetxController{
       return;
     }
 
-    if (result.value?.requiresVerification == true) {
+    var data = result.data;
+
+    if(data == null){
+      yield LoginStateError(Exception("data is not found"));
+      return;
+    }
+
+    if(data.mustCompleteProfile == true){
+      yield LoginStateMustCompleteProfile();
+      return;
+    }
+
+    if( data.requiresVerification == true){
       yield LoginStateRequiresVerification(
-        userId: result.value!.id,
-        otpSentTo: result.value!.otpSentTo,
+        userId: data.id ?? '',
+        otpSentTo: data.otpSentTo,
       );
       return;
     }
 
-    yield* _checkSession();
+    yield LoginStateSuccess();
   }
 
   Stream<LoginState> continueAfterVerification() async* {
@@ -48,9 +60,7 @@ class LoginController extends GetxController{
   }
 
   Stream<LoginState> _checkSession() async* {
-    GetCheckUserSessionStateUseCase getCheckUserSessionStateUseCase =  GetCheckUserSessionStateUseCase();
-
-    var getCheckUserSessionResult  =  await getCheckUserSessionStateUseCase.execute();
+    var getCheckUserSessionResult = await CheckUserSessionUseCase().execute();
 
     if(getCheckUserSessionResult is UserSessionStateError){
       yield LoginStateError(getCheckUserSessionResult.ex);
@@ -67,13 +77,16 @@ class LoginController extends GetxController{
       return;
     }
 
-    if(getCheckUserSessionResult is UserSessionStateNotActive){
-      yield LoginStateNotActive();
+    if(getCheckUserSessionResult is UserSessionStateRequireVerify){
+      yield LoginStateRequiresVerification(
+        userId: getCheckUserSessionResult.userId ?? '',
+        otpSentTo: getCheckUserSessionResult.otpSentTo,
+      );
       return;
     }
 
-    if(getCheckUserSessionResult is UserSessionStateRemainDays) {
-      yield LoginStateRemainDays(getCheckUserSessionResult.remainingDays);
+    if(getCheckUserSessionResult is UserSessionStateNotActive){
+      yield LoginStateNotActive();
       return;
     }
 

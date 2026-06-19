@@ -8,6 +8,7 @@ class CheckUserSessionModel {
   final bool mustCompleteProfile;
   final bool requireVerify;
   final String? userId;
+  final String? otpSentTo;
 
   CheckUserSessionModel({
     required this.isActive,
@@ -16,6 +17,7 @@ class CheckUserSessionModel {
     this.mustCompleteProfile = false,
     this.requireVerify = false,
     this.userId,
+    this.otpSentTo,
   });
 
   int? getRemainingDays() {

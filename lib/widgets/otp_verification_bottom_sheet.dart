@@ -17,6 +17,7 @@ class OtpVerificationBottomSheet extends StatefulWidget {
   final OtpChannel otpChannel;
   final String channelValue;
   final bool isForgot;
+  final bool requestInitialOtp;
 
   const OtpVerificationBottomSheet({
     super.key,
@@ -24,6 +25,7 @@ class OtpVerificationBottomSheet extends StatefulWidget {
     required this.otpChannel,
     required this.channelValue,
     this.isForgot = false,
+    this.requestInitialOtp = false,
   });
 
 
@@ -38,6 +40,7 @@ class OtpVerificationBottomSheet extends StatefulWidget {
     required OtpChannel otpChannel,
     required String channelValue,
     bool isForgot = false,
+    bool requestInitialOtp = false,
   }) async {
     final result = await showModalBottomSheet<bool>(
       context: context,
@@ -49,6 +52,7 @@ class OtpVerificationBottomSheet extends StatefulWidget {
         otpChannel: otpChannel,
         channelValue: channelValue,
         isForgot: isForgot,
+        requestInitialOtp: requestInitialOtp,
       ),
     );
     return result ?? false;
@@ -124,7 +128,12 @@ class _OtpVerificationBottomSheetState
   @override
   void initState() {
     super.initState();
-    _startCountdown();
+    if (widget.requestInitialOtp) {
+      _remainingSeconds = 0;
+      WidgetsBinding.instance.addPostFrameCallback((_) => _onResend());
+    } else {
+      _startCountdown();
+    }
   }
 
   @override

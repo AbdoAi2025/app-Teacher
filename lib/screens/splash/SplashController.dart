@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:teacher_app/appSetting/appSetting.dart';
 import 'package:teacher_app/domain/usecases/get_user_auth_use_case.dart';
-import 'package:teacher_app/exceptions/app_http_exception.dart';
 import 'package:teacher_app/screens/splash/SplashEvent.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
 
@@ -59,45 +58,33 @@ class SplashController extends GetxController{
     }
 
     /*Check User session*/
-    var checkUserSessionResult = await _checkUserSessionUseCase.execute();
+    var sessionState = await _checkUserSessionUseCase.execute();
 
-    if(checkUserSessionResult.isError){
-      var error = checkUserSessionResult.error;
-      if(error is AppHttpException){
-        var statusCode = error.statusCode;
-        if(statusCode == 401){
-          updateEvent(SplashEventGoToLogin());
-          return;
-        }
-      }else {
-        updateEvent(SplashError(checkUserSessionResult.error));
-        return;
-      }
-    }
-
-    var checkUserSession = checkUserSessionResult.data;
-    var isValidSession = checkUserSessionResult.isSuccess &&  checkUserSession != null && checkUserSession.isActive == true;
-    if(!isValidSession && checkUserSession != null){
-      updateEvent(SplashEventUserNotActive(checkUserSessionModel: checkUserSession));
+    if(sessionState is UserSessionStateError){
+      updateEvent(SplashError(sessionState.ex));
       return;
     }
 
-    if(checkUserSession != null && checkUserSession.mustCompleteProfile){
+    if(sessionState is UserSessionStateInvalidSession){
+      updateEvent(SplashEventGoToLogin());
+      return;
+    }
+
+    if(sessionState is UserSessionStateNotActive){
+      updateEvent(SplashEventUserNotActive(checkUserSessionModel: sessionState.session!));
+      return;
+    }
+
+    if(sessionState is UserSessionStateRequireVerify && sessionState.userId != null){
+      updateEvent(SplashEventRequireVerify(userId: sessionState.userId!));
+      return;
+    }
+
+    if(sessionState is UserSessionStateMustCompleteProfile){
       updateEvent(SplashEventMustCompleteProfile());
       return;
     }
 
-    if(checkUserSession != null && checkUserSession.requireVerify && checkUserSession.userId != null){
-      updateEvent(SplashEventRequireVerify(userId: checkUserSession.userId!));
-      return;
-    }
-
-
-
-    if(checkUserSession != null && !checkUserSession.isSubscribed){
-      updateEvent(SplashEventNotSubscribed());
-      return;
-    }
 
     // Update FCM token with server (for authenticated users)
     await _updateFcmTokenIfAvailable();
