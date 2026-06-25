@@ -94,8 +94,8 @@ prompt_ios_version_bump() {
   echo "  ${BOLD}Current:${NC} shortVersion=${YELLOW}$SHORT_VERSION${NC}  bundleVersion=${YELLOW}$BUNDLE_VERSION${NC}"
   echo ""
   echo "  What would you like to bump?"
-  echo "  1) Both (auto)         ($SHORT_VERSION → $MAJOR.$((MINOR + 1)))  ($BUNDLE_VERSION → $((BUNDLE_VERSION + 1)))"
-  echo "  2) Short version only  ($SHORT_VERSION → $MAJOR.$((MINOR + 1)))"
+  echo "  1) Both (auto)         ($SHORT_VERSION → $MAJOR.$((MINOR + 1)))  (bundleVersion → 1)"
+  echo "  2) Short version only  ($SHORT_VERSION → $MAJOR.$((MINOR + 1)))  (bundleVersion → 1)"
   echo "  3) Bundle version only ($BUNDLE_VERSION → $((BUNDLE_VERSION + 1)))"
   echo "  4) Enter custom"
   echo "  5) Skip"
@@ -108,11 +108,11 @@ prompt_ios_version_bump() {
   case "$_choice" in
     1)
       NEW_SHORT_VERSION="$MAJOR.$((MINOR + 1))"
-      NEW_BUNDLE_VERSION=$((BUNDLE_VERSION + 1))
+      NEW_BUNDLE_VERSION=1
       ;;
     2)
       NEW_SHORT_VERSION="$MAJOR.$((MINOR + 1))"
-      NEW_BUNDLE_VERSION=$BUNDLE_VERSION
+      NEW_BUNDLE_VERSION=1
       ;;
     3)
       NEW_SHORT_VERSION=$SHORT_VERSION
@@ -124,7 +124,9 @@ prompt_ios_version_bump() {
       printf "  Bundle version (integer):   "
       read -r NEW_BUNDLE_VERSION
       [[ -z "$NEW_SHORT_VERSION" ]] && NEW_SHORT_VERSION=$SHORT_VERSION
-      [[ -z "$NEW_BUNDLE_VERSION" ]] && NEW_BUNDLE_VERSION=$BUNDLE_VERSION
+      if [[ -z "$NEW_BUNDLE_VERSION" ]]; then
+        [[ "$NEW_SHORT_VERSION" != "$SHORT_VERSION" ]] && NEW_BUNDLE_VERSION=1 || NEW_BUNDLE_VERSION=$BUNDLE_VERSION
+      fi
       ;;
     5)
       NEW_SHORT_VERSION=$SHORT_VERSION
