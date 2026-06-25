@@ -1,11 +1,12 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter/material.dart';
 import 'package:teacher_app/domain/models/register_model.dart';
 import 'package:teacher_app/domain/models/subject_model.dart';
 import 'package:teacher_app/domain/usecases/register_use_case.dart';
 import 'package:teacher_app/enums/gender_enum.dart';
 import 'package:teacher_app/screens/register/register_state.dart';
 import 'package:teacher_app/localization/generated/app_strings_keys.dart';
+import 'package:teacher_app/widgets/phone_text_editing_controller.dart';
 
 class RegisterController extends GetxController {
   RegisterUseCase registerUseCase = RegisterUseCase();
@@ -14,7 +15,7 @@ class RegisterController extends GetxController {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
-  TextEditingController phoneController = TextEditingController();
+  PhoneTextEditingController phoneController = PhoneTextEditingController();
   TextEditingController emailController = TextEditingController();
 
   Rx<GenderEnum?> selectedGender = Rx(null);
@@ -63,19 +64,6 @@ class RegisterController extends GetxController {
     return null;
   }
 
-  String? validatePhone(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return AppStringsKeys.phoneNumberIsRequired.tr;
-    }
-    String cleanedPhone = value.trim().replaceAll(RegExp(r'[^\d]'), '');
-    if (cleanedPhone.length < 10) {
-      return AppStringsKeys.phoneNumberMustBeAtLeast10Digits.tr;
-    }
-    if (cleanedPhone.length > 15) {
-      return AppStringsKeys.phoneNumberMustNotExceed15Digits.tr;
-    }
-    return null;
-  }
 
   String? validateEmail(String? value) {
     if (value == null || value.trim().isEmpty) {
@@ -132,7 +120,7 @@ class RegisterController extends GetxController {
       name: nameController.text.trim(),
       userName: usernameController.text.trim(),
       password: passwordController.text.trim(),
-      phone: phoneController.text.trim(),
+      phone: phoneController.getPhone(),
       email: emailController.text.trim(),
       gender: selectedGender.value!,
       subjectId: selectedSubject.value!.id,

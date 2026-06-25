@@ -87,7 +87,7 @@ class AppTextFieldWidget extends StatelessWidget {
         suffixIcon: suffixIconWidget(),
       ),
       validator: validator,
-      onChanged: onChanged,
+      onChanged: effectiveOnChanged,
       textInputAction: textInputAction,
     );
 
@@ -106,6 +106,7 @@ class AppTextFieldWidget extends StatelessWidget {
 
   Widget? suffixIconWidget() => suffixIcon;
   Widget? prefixIconWidget() => prefixIcon;
+  Function(String?)? get effectiveOnChanged => onChanged;
 
 
 }

@@ -1,20 +1,19 @@
+import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart';
-import 'package:flutter_native_contact_picker/model/contact.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:teacher_app/utils/message_utils.dart';
 import 'package:teacher_app/widgets/app_text_field_widget.dart';
-import 'package:teacher_app/widgets/app_txt_widget.dart';
+import 'package:teacher_app/widgets/phone_text_editing_controller.dart';
 
 import '../themes/txt_styles.dart';
 
 class AppPhoneInputTextFieldWidget extends AppTextFieldWidget {
-
-  final Function(String phoneNumber , String name) onContactSelected;
+  final PhoneTextEditingController phoneController;
+  final Function(String phoneNumber, String name)? onContactSelected;
 
   const AppPhoneInputTextFieldWidget({
     super.key,
-    required super.controller,
+    required this.phoneController,
     super.label,
     super.border,
     super.focusedBorder,
@@ -31,63 +30,53 @@ class AppPhoneInputTextFieldWidget extends AppTextFieldWidget {
     super.onTap,
     super.validator,
     super.onChanged,
-    required this.onContactSelected,
+    this.onContactSelected,
   }) : super(
-      keyboardType: TextInputType.phone ,
-      hint: "010xxxxxxxx",
-      textAlign: TextAlign.start,
-      textDirection: TextDirection.ltr,
-  );
+          controller: phoneController,
+          keyboardType: TextInputType.phone,
+          hint: "xxxxxxxx",
+          textAlign: TextAlign.start,
+          textDirection: TextDirection.ltr,
+        );
 
   @override
-  Widget? prefixIconWidget() => Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 10),
-    child: Row(
-      spacing: 5,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        InkWell(
-            onTap: _onContactIconTapped,
-            child: Icon(Icons.phone_android)
+  Widget? prefixIconWidget() => ValueListenableBuilder<String>(
+        valueListenable: phoneController.countryCodeNotifier,
+        builder: (_, code, __) => CountryCodePicker(
+          initialSelection: code,
+          favorite: const ['+20'],
+          padding: const EdgeInsets.all(3),
+          showCountryOnly: false,
+          showOnlyCountryWhenClosed: false,
+          alignLeft: false,
+          textStyle: textStyle ?? AppTextStyle.textFieldStyle,
+          onChanged: (c) => phoneController.countryCode = c.dialCode ?? '+20',
         ),
-      ],
-    ),
-  );
-
+      );
 
   @override
-  Widget? suffixIconWidget() => Row(
-    spacing: 5,
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      AppTextWidget("+20" ,style:  textStyle ?? AppTextStyle.textFieldStyle,),
-    ],
-  );
+  Widget? suffixIconWidget() => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: InkWell(
+          onTap: _onContactIconTapped,
+          child: const Icon(Icons.phone_android),
+        ),
+      );
 
   void _onContactIconTapped() async {
     try {
-      // Use flutter_native_contact_picker - no permissions needed
       final picker = FlutterNativeContactPicker();
       final contact = await picker.selectPhoneNumber();
 
       if (contact != null) {
-        // Extract phone number and name
-        String phoneNumber = contact.selectedPhoneNumber ?? "";
-        String name = contact.fullName ?? "";
+        final phoneNumber = phoneController
+            .processContactPhone(contact.selectedPhoneNumber ?? '');
 
-        // Remove +20 prefix if present
-        phoneNumber = phoneNumber.replaceFirst("+20", "");
-        // Clean phone number (remove spaces, dashes, etc.)
-        phoneNumber = phoneNumber.replaceAll(RegExp(r'[^0-9+]'), '');
-
-        print("selectedPhoneNumber: $phoneNumber, name: $name");
-        onContactSelected(phoneNumber, name);
+        phoneController.text = phoneNumber;
+        onContactSelected?.call(phoneNumber, contact.fullName ?? '');
       }
     } catch (e) {
-      print("Error with contact picker: $e");
       showErrorMessage("Error accessing contacts: $e");
     }
   }
-
-
 }

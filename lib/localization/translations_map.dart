@@ -12,7 +12,7 @@ final Map<String, TranslationModel> translationsMap = {
   "Settings": TranslationModel(en: "Settings", ar: "الإعدادات"),
   "Session Name:": TranslationModel(en: "Session Name:", ar: "اسم الحصة:"),
   "Group:": TranslationModel(en: "Group:", ar: "المجموعة:"),
-  "Student Details": TranslationModel(en: "Student Details:", ar: "تفاصيل الطالب"),
+  "Student Details": TranslationModel(en: "Student Details", ar: "تفاصيل الطالب"),
   "View all sessions": TranslationModel(en: "View all sessions", ar: "عرض جميع الجلسات"),
   "Parent Phone": TranslationModel(en: "Parent Phone", ar: "هاتف ولي الأمر"),
   "Student Phone": TranslationModel(en: "Student Phone", ar: "هاتف الطالب"),

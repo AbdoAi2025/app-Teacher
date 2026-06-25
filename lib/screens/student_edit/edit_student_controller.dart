@@ -58,8 +58,8 @@ class EditStudentController extends AddStudentController {
     UpdateStudentRequest request = UpdateStudentRequest(
      studentId: args?.studentId,
       name: nameController.text,
-      parentPhone: "+20${parentPhoneController.text}",
-      phone: "+20${phoneController.text}",
+      parentPhone: parentPhoneController.getPhone(),
+      phone: phoneController.getPhone(),
       gradeId: selectedGrade.value?.id ,
     );
 

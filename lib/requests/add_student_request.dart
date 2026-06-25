@@ -30,8 +30,8 @@ class AddStudentRequest {
     var phone = removeLeadingZero(this.phone);
     var parentPhone = removeLeadingZero(this.parentPhone);
     map['gradeId'] = gradeId;
-    map['phone'] = phone.isEmpty ? "" : "+20$phone";
-    map['parentPhone'] = parentPhone.isEmpty ? "" : "+20$parentPhone";
+    map['phone'] = phone.isEmpty ? "" : phone;
+    map['parentPhone'] = parentPhone.isEmpty ? "" : parentPhone;
 
     map['name'] = name;
     map['password'] = password;

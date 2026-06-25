@@ -6,6 +6,7 @@ import 'package:teacher_app/domain/usecases/get_teacher_profile_use_case.dart';
 import 'package:teacher_app/domain/usecases/update_teacher_profile_use_case.dart';
 import 'package:teacher_app/enums/gender_enum.dart';
 import 'package:teacher_app/localization/generated/app_strings_keys.dart';
+import 'package:teacher_app/widgets/phone_text_editing_controller.dart';
 
 class EditProfileController extends GetxController {
   final TeacherProfileData? initialProfile;
@@ -17,7 +18,7 @@ class EditProfileController extends GetxController {
 
   late final TextEditingController nameController;
   late final TextEditingController emailController;
-  late final TextEditingController phoneController;
+  late final PhoneTextEditingController phoneController;
 
   late Rx<GenderEnum?> selectedGender;
   late Rx<SubjectModel?> selectedSubject;
@@ -39,7 +40,7 @@ class EditProfileController extends GetxController {
     super.onInit();
     nameController = TextEditingController();
     emailController = TextEditingController();
-    phoneController = TextEditingController();
+    phoneController = PhoneTextEditingController();
     selectedGender = Rx(null);
     selectedSubject = Rx(null);
 
@@ -55,7 +56,7 @@ class EditProfileController extends GetxController {
     _initialEmail = profile.email;
     nameController.text = profile.name ?? '';
     emailController.text = profile.email ?? '';
-    phoneController.text = profile.phone ?? '';
+    phoneController.setFromFullPhone(profile.phone);
 
     selectedGender.value = profile.gender != null
         ? GenderEnum.values.firstWhereOrNull(
@@ -101,14 +102,6 @@ class EditProfileController extends GetxController {
     return null;
   }
 
-  String? validatePhone(String? v) {
-    if (v == null || v.trim().isEmpty) return AppStringsKeys.phoneNumberIsRequired.tr;
-    final clean = v.trim().replaceAll(RegExp(r'[^\d]'), '');
-    if (clean.length < 10) return AppStringsKeys.phoneNumberMustBeAtLeast10Digits.tr;
-    if (clean.length > 15) return AppStringsKeys.phoneNumberMustNotExceed15Digits.tr;
-    return null;
-  }
-
   Future<bool> save() async {
     if (selectedGender.value == null || selectedSubject.value == null) {
       return false;
@@ -120,7 +113,7 @@ class EditProfileController extends GetxController {
     final result = await _useCase.execute(
       name: nameController.text.trim(),
       email: emailController.text.trim(),
-      phone: phoneController.text.trim(),
+      phone: phoneController.getPhone(),
       gender: selectedGender.value!,
       subjectId: selectedSubject.value!.id,
     );

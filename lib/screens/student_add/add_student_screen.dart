@@ -404,11 +404,12 @@ class AddStudentScreenState extends State<AddStudentScreen> {
       );
 
   _parentPhoneField() => AppPhoneInputTextFieldWidget(
-        controller: getController().parentPhoneController,
+        phoneController: getController().parentPhoneController,
         label: AppStringsKeys.parentPhone.tr,
-        onContactSelected: (phoneNumber, name) {
-          _controller.parentPhoneController.text = phoneNumber;
-          _controller.nameController.text = name;
+        onContactSelected: (_, name) {
+          if(_controller.nameController.text.isEmpty){
+            _controller.nameController.text = name;
+          }
         },
         validator: MultiValidator([
           RequiredValidator(errorText: AppStringsKeys.parentPhoneIsRequired.tr),
@@ -417,11 +418,8 @@ class AddStudentScreenState extends State<AddStudentScreen> {
       );
 
   _phoneField() => AppPhoneInputTextFieldWidget(
-        controller: getController().phoneController,
+        phoneController: getController().phoneController,
         label: AppStringsKeys.phone.tr,
-        onContactSelected: (phoneNumber, name) {
-          _controller.phoneController.text = phoneNumber;
-        },
         validator: MultiValidator([]).call,
       );
 

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/domain/usecases/add_student_use_case.dart';
 import 'package:teacher_app/requests/add_student_request.dart';
+import 'package:teacher_app/widgets/phone_text_editing_controller.dart';
 
 import '../../base/AppResult.dart';
 import '../../domain/states/add_student_result.dart';
@@ -13,8 +14,8 @@ class AddStudentController extends GetxController{
   final formKey = GlobalKey<FormState>();
 
   final TextEditingController nameController = TextEditingController();
-  final TextEditingController parentPhoneController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
+  final PhoneTextEditingController parentPhoneController = PhoneTextEditingController();
+  final PhoneTextEditingController phoneController = PhoneTextEditingController();
   final TextEditingController gradeController = TextEditingController();
 
   final Rx<ItemSelectionUiState?> selectedGrade = Rx(null);
@@ -56,8 +57,8 @@ class AddStudentController extends GetxController{
   AddStudentRequest getRequest() {
     return AddStudentRequest(
       name: nameController.text.trim(),
-      parentPhone: parentPhoneController.text.trim(),
-      phone: phoneController.text.trim(),
+      parentPhone: parentPhoneController.getPhone(),
+      phone: phoneController.getPhone(),
       gradeId: selectedGrade.value?.id,
     );
   }

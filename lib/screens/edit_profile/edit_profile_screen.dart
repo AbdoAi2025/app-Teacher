@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:teacher_app/data/responses/get_teacher_profile_response.dart';
 import 'package:teacher_app/enums/gender_enum.dart';
 import 'package:teacher_app/screens/edit_profile/edit_profile_controller.dart';
+import 'package:teacher_app/widgets/app_phone_input_text_field_widget.dart';
 import 'package:teacher_app/widgets/app_text_field_widget.dart';
 import 'package:teacher_app/widgets/app_toolbar_widget.dart';
 import 'package:teacher_app/widgets/dialog_loading_widget.dart';
@@ -97,13 +98,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         validator: controller.validateEmail,
       );
 
-  Widget _phoneField() => AppTextFieldWidget(
-        controller: controller.phoneController,
+  Widget _phoneField() => AppPhoneInputTextFieldWidget(
+        phoneController: controller.phoneController,
         label: AppStringsKeys.phoneNumber.tr,
-        hint: AppStringsKeys.enterYourPhoneNumber.tr,
-        prefixIcon: const Icon(Icons.phone_outlined),
-        keyboardType: TextInputType.phone,
-        validator: controller.validatePhone,
+        validator: controller.phoneController.validate,
       );
 
   Widget _genderField() {
