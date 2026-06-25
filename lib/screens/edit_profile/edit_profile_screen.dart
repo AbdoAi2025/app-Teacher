@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:teacher_app/data/responses/get_teacher_profile_response.dart';
 import 'package:teacher_app/enums/gender_enum.dart';
 import 'package:teacher_app/screens/edit_profile/edit_profile_controller.dart';
-import 'package:teacher_app/widgets/app_phone_input_text_field_widget.dart';
+import 'package:teacher_shared/widgets/app_phone_input_text_field_widget.dart';
 import 'package:teacher_app/widgets/app_text_field_widget.dart';
 import 'package:teacher_app/widgets/app_toolbar_widget.dart';
 import 'package:teacher_app/widgets/dialog_loading_widget.dart';

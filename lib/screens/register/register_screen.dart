@@ -17,7 +17,7 @@ import '../../dialogs/user_not_active_dialog.dart';
 import '../../dialogs/user_not_subscribed_dialog.dart';
 import '../../enums/otp_channel_enum.dart';
 import '../../generated/assets.dart';
-import '../../widgets/app_phone_input_text_field_widget.dart';
+import 'package:teacher_shared/widgets/app_phone_input_text_field_widget.dart';
 import '../../widgets/complete_profile_bottom_sheet.dart';
 import '../../widgets/otp_verification_bottom_sheet.dart';
 import '../login/login_controller.dart';

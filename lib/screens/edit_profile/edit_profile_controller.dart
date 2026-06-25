@@ -6,7 +6,7 @@ import 'package:teacher_app/domain/usecases/get_teacher_profile_use_case.dart';
 import 'package:teacher_app/domain/usecases/update_teacher_profile_use_case.dart';
 import 'package:teacher_app/enums/gender_enum.dart';
 import 'package:teacher_app/localization/generated/app_strings_keys.dart';
-import 'package:teacher_app/widgets/phone_text_editing_controller.dart';
+import 'package:teacher_shared/widgets/phone_text_editing_controller.dart';
 
 class EditProfileController extends GetxController {
   final TeacherProfileData? initialProfile;

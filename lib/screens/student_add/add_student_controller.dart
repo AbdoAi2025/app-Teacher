@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/domain/usecases/add_student_use_case.dart';
 import 'package:teacher_app/requests/add_student_request.dart';
-import 'package:teacher_app/widgets/phone_text_editing_controller.dart';
+import 'package:teacher_shared/widgets/phone_text_editing_controller.dart';
 
 import '../../base/AppResult.dart';
 import '../../domain/states/add_student_result.dart';
