@@ -15,9 +15,9 @@ class PaymentMethodHandler {
   }
 
   Future<List<PaymentMethodModel>> getAvailablePaymentMethods() async {
-    if (_cachedPaymentMethods != null) {
-      return _cachedPaymentMethods!;
-    }
+    // if (_cachedPaymentMethods != null) {
+    //   return _cachedPaymentMethods!;
+    // }
 
     try {
       final result = await _getPaymentMethodsUseCase.execute();
