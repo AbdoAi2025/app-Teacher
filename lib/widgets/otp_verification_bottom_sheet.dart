@@ -7,10 +7,12 @@ import 'package:teacher_app/domain/usecases/resend_otp_use_case.dart';
 import 'package:teacher_app/domain/usecases/verify_forgot_password_otp_use_case.dart';
 import 'package:teacher_app/domain/usecases/verify_otp_use_case.dart';
 import 'package:teacher_app/enums/otp_channel_enum.dart';
+import 'package:teacher_app/navigation/app_navigator.dart';
 import 'package:teacher_app/utils/message_utils.dart';
 import 'package:teacher_app/widgets/dialog_loading_widget.dart';
 import 'package:teacher_app/widgets/reset_password_bottom_sheet.dart';
 import 'package:teacher_app/localization/generated/app_strings_keys.dart';
+import 'package:teacher_app/navigation/app_routes.dart';
 
 class OtpVerificationBottomSheet extends StatefulWidget {
   final String userId;
@@ -68,6 +70,8 @@ class OtpVerificationBottomSheet extends StatefulWidget {
       () => _resendAndVerify(context, userId: userId, onSuccess: onSuccess),
       barrierDismissible: false,
       positiveButtonText: AppStringsKeys.verifyNow.tr,
+      negativeButtonText: AppStringsKeys.skip.tr,
+      onCancel: () => AppNavigator.navigateToHome()
     );
   }
 

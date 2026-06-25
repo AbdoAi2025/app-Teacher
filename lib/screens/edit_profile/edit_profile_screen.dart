@@ -4,7 +4,6 @@ import 'package:teacher_app/data/responses/get_teacher_profile_response.dart';
 import 'package:teacher_app/enums/gender_enum.dart';
 import 'package:teacher_app/screens/edit_profile/edit_profile_controller.dart';
 import 'package:teacher_app/widgets/app_text_field_widget.dart';
-import 'package:teacher_app/enums/otp_channel_enum.dart';
 import 'package:teacher_app/widgets/app_toolbar_widget.dart';
 import 'package:teacher_app/widgets/dialog_loading_widget.dart';
 import 'package:teacher_app/widgets/otp_verification_bottom_sheet.dart';
@@ -281,41 +280,31 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
 
 
+    showDialogLoading();
     final success = await controller.save();
+    hideDialogLoading();
     if (!mounted) return;
 
     if (controller.hasEmailChanged && controller.userId != null) {
-      var channel = OtpChannel.EMAIL;
-      showDialogLoading();
-      final sent = await OtpVerificationBottomSheet.sendVerificationOtp(controller.userId! ,channel);
-      hideDialogLoading();
-      if (!context.mounted) return;
-      if (!sent) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(AppStringsKeys.sendOtpFailed.tr)),
-        );
-        return;
-      }
-
-      final verified = await OtpVerificationBottomSheet.show(
+      OtpVerificationBottomSheet.showRequireVerify(
         context,
         userId: controller.userId!,
-        otpChannel: channel,
-        channelValue: controller.emailController.text.trim(),
+        onSuccess: _onSaveSuccess,
       );
-      if (!mounted) return;
-      if (!verified) return;
+      return;
     }
 
-    if (success) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppStringsKeys.profileUpdatedSuccessfully.tr)),
-      );
-      if (widget.onSaved != null) {
-        widget.onSaved!();
-      } else {
-        Navigator.pop(context, true);
-      }
+    if (success) _onSaveSuccess();
+  }
+
+  void _onSaveSuccess() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(AppStringsKeys.profileUpdatedSuccessfully.tr)),
+    );
+    if (widget.onSaved != null) {
+      widget.onSaved!();
+    } else {
+      Navigator.pop(context, true);
     }
   }
 }

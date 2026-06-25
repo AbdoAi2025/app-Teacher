@@ -96,6 +96,7 @@ Future<dynamic> showConfirmationMessage(String message, Function() action, {
   String? positiveButtonText,
   String? negativeButtonText ,
   Function()? onCancel,
+  bool showCancelBtn = true,
   Widget? subTitleWidget
 }) async {
 
@@ -114,7 +115,7 @@ Future<dynamic> showConfirmationMessage(String message, Function() action, {
                 autoDismiss : barrierDismissible,
                 positive_button_text: positiveButtonText ?? AppStringsKeys.yes2.tr,
                 negative_button_text: negativeButtonText ?? AppStringsKeys.no.tr,
-                showCancelBtn : true,
+                showCancelBtn : showCancelBtn,
                 onSuccess: () {
                   action();
                 },

@@ -395,7 +395,7 @@ final Map<String, TranslationModel> translationsMap = {
   "Complete Profile": TranslationModel(en: "Complete Profile", ar: "إكمال الملف الشخصي"),
   "complete_profile_message": TranslationModel(en: "Please complete your profile information to continue using the app.", ar: "يرجى إكمال بيانات ملفك الشخصي للمتابعة واستخدام التطبيق."),
   "Complete Now": TranslationModel(en: "Complete Now", ar: "إكمال الآن"),
-  "require_verify_message": TranslationModel(en: "Please verify your account to continue using the app.", ar: "يرجى التحقق من حسابك للمتابعة واستخدام التطبيق."),
+  "require_verify_message": TranslationModel(en: "Your account needs to be verified. You can verify now or skip.", ar: "حسابك يحتاج إلى التحقق. يمكنك التحقق الآن أو تخطي."),
   "Verify Now": TranslationModel(en: "Verify Now", ar: "تحقق الآن"),
 
   // Forgot Password

@@ -91,13 +91,13 @@ class _SplashscreenState extends State<SplashScreen> {
             OtpVerificationBottomSheet.showRequireVerify(
               context,
               userId: callback.userId,
-              onSuccess: splashController.retry,
+              onSuccess: () => AppNavigator.navigateToHome(),
             );
             break;
           case SplashEventMustCompleteProfile():
             CompleteProfileBottomSheet.show(
               context,
-              onSuccess: splashController.retry,
+              onSuccess: ()=>  AppNavigator.navigateToHome(),
             );
             break;
         }

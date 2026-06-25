@@ -15,6 +15,8 @@ class CompleteProfileBottomSheet {
       AppStringsKeys.completeProfileMessage.tr,
       () => _openSheet(context, onSuccess: onSuccess),
       barrierDismissible: false,
+      negativeButtonText: '',
+      showCancelBtn: false,
       positiveButtonText: AppStringsKeys.completeNow.tr,
     );
   }

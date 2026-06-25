@@ -11,7 +11,6 @@ import 'package:teacher_app/widgets/primary_button_widget.dart';
 
 import '../../dialogs/user_not_active_dialog.dart';
 import '../../dialogs/user_not_subscribed_dialog.dart';
-import '../../enums/otp_channel_enum.dart';
 import '../../widgets/otp_verification_bottom_sheet.dart';
 import '../../domain/models/app_locale_model.dart';
 import '../../domain/usecases/change_app_locale_use_case.dart';
@@ -173,39 +172,37 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void _handleRequiresVerification(LoginStateRequiresVerification state) async {
-    final verified = await OtpVerificationBottomSheet.show(
+  void _handleRequiresVerification(LoginStateRequiresVerification state) {
+    OtpVerificationBottomSheet.showRequireVerify(
       context,
       userId: state.userId,
-      otpChannel: OtpChannel.EMAIL,
-      channelValue: state.otpSentTo ?? '',
+      onSuccess: () {
+        controller.continueAfterVerification().listen((event) {
+          hideDialogLoading();
+          switch (event) {
+            case LoginStateLoading():
+              showDialogLoading();
+              break;
+            case LoginStateSuccess():
+              AppNavigator.navigateToHome();
+              break;
+            case LoginStateError():
+              showErrorMessageEx(event.exception);
+              break;
+            case LoginStateInvalidSession():
+              UserNotActiveDialog.showUserNotActive();
+              break;
+            case LoginStateNotActive():
+              UserNotActiveDialog.showUserNotActive();
+              break;
+            case LoginStateMustCompleteProfile():
+              CompleteProfileBottomSheet.show(context, onSuccess: onLoginClick);
+              break;
+            case LoginStateRequiresVerification():
+              break;
+          }
+        });
+      },
     );
-    if (verified && context.mounted) {
-      controller.continueAfterVerification().listen((event) {
-        hideDialogLoading();
-        switch (event) {
-          case LoginStateLoading():
-            showDialogLoading();
-            break;
-          case LoginStateSuccess():
-            AppNavigator.navigateToHome();
-            break;
-          case LoginStateError():
-            showErrorMessageEx(event.exception);
-            break;
-          case LoginStateInvalidSession():
-            UserNotActiveDialog.showUserNotActive();
-            break;
-          case LoginStateNotActive():
-            UserNotActiveDialog.showUserNotActive();
-            break;
-          case LoginStateMustCompleteProfile():
-            CompleteProfileBottomSheet.show(context, onSuccess: onLoginClick);
-            break;
-          case LoginStateRequiresVerification():
-            break;
-        }
-      });
-    }
   }
 }
