@@ -329,16 +329,13 @@ import 'package:teacher_app/utils/Keyboard_utils.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
 import 'package:teacher_app/utils/message_utils.dart';
 import 'package:teacher_app/widgets/primary_button_widget.dart';
+import 'package:teacher_shared/widgets/app_phone_input_text_field_widget.dart';
 import '../../dialogs/user_not_subscribed_dialog.dart';
-import '../../presentation/app_message_dialogs.dart';
 import '../../validations/phone_validation.dart';
-import '../../widgets/app_phone_input_text_field_widget.dart';
 import '../../widgets/app_text_field_widget.dart';
 import '../../widgets/app_toolbar_widget.dart';
 import '../../widgets/dialog_loading_widget.dart';
 import '../../widgets/dropdown_icon_widget.dart';
-import '../student_edit/states/update_student_state.dart';
-import '../students_list/students_controller.dart';
 import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 class AddStudentScreen extends StatefulWidget {

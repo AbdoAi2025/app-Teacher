@@ -15,6 +15,7 @@ class SettingItemModel{
   factory SettingItemModel.upgradeItem(VoidCallback onTap) => SettingItemModel(title: AppStringsKeys.upgrade.tr, icon: Icons.upgrade, onTap: onTap);
   factory SettingItemModel.deleteItem(VoidCallback onTap) => SettingItemModel(title: AppStringsKeys.delete.tr, icon: Icons.delete, onTap: onTap);
   factory SettingItemModel.addStudentToGroup(VoidCallback onTap) => SettingItemModel(title: AppStringsKeys.addToGroup.tr, icon: Icons.people_outline, onTap: onTap);
+  factory SettingItemModel.shareParentLoginInfoItem(VoidCallback onTap) => SettingItemModel(title: AppStringsKeys.shareParentLoginInfo.tr, icon: Icons.share_outlined, onTap: onTap);
 
 }
 

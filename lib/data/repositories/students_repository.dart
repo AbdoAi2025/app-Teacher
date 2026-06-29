@@ -66,4 +66,12 @@ class StudentsRepository {
     Response response = await ApiService.getInstance().put(url, queryParameters: params);
     return response.data;
   }
+
+  Future<String> shareParentLoginInfo(String studentId) async {
+    Response response = await ApiService.getInstance().post(
+      EndPoints.shareParentLoginInfo,
+      queryParameters: {"studentId": studentId},
+    );
+    return response.data['data'] as String;
+  }
 }

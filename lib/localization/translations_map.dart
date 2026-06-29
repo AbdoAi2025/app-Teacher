@@ -223,6 +223,7 @@ final Map<String, TranslationModel> translationsMap = {
   "Renew": TranslationModel(en: "Renew", ar: "تجديد"),
   "Close": TranslationModel(en: "Close", ar: "إغلاق"),
   "Share": TranslationModel(en: "Share", ar: "مشاركة"),
+  "Share Parent Login Info": TranslationModel(en: "Share Parent Login Info", ar: "مشاركة بيانات دخول ولي الأمر"),
   "Could not share file": TranslationModel(en: "Could not share file", ar: "لا يمكن مشاركة الملف"),
   "no_internet_connection": TranslationModel(en: "No internet connection", ar: "لا يوجد اتصال بالإنترنت"),
   "Copied": TranslationModel(en: "Copied", ar: "تم النسخ"),

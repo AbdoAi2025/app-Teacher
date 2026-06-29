@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:sprintf/sprintf.dart';
+import 'package:teacher_app/domain/usecases/share_student_parent_login_info_use_case.dart';
 import 'package:teacher_app/navigation/app_navigator.dart';
 import 'package:teacher_app/screens/group_details/args/group_details_arg_model.dart';
 import 'package:teacher_app/screens/sessions_list/args/session_list_args_model.dart';
@@ -342,12 +344,30 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
           SettingItemModel.editItem(() {
             onEditClick();
           }),
+          SettingItemModel.shareParentLoginInfoItem(() {
+            _onShareParentLoginInfoClick(uiState);
+          }),
           SettingItemModel.deleteItem(() {
             onDeleteClick();
           }),
         ]
     );
+  }
 
+  Future<void> _onShareParentLoginInfoClick(StudentDetailsUiState uiState) async {
+    showDialogLoading();
+    try {
+      final result = await ShareStudentParentLoginInfoUseCase().execute(uiState.studentId);
+      hideDialogLoading();
+      if (result.isSuccess) {
+        await SharePlus.instance.share(ShareParams(text: result.data ?? ''));
+      } else {
+        showErrorMessage(result.error?.toString());
+      }
+    } catch (e) {
+      hideDialogLoading();
+      showErrorMessage(e.toString());
+    }
   }
 
 

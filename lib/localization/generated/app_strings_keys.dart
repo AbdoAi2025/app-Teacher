@@ -958,6 +958,9 @@ class AppStringsKeys {
   /// Key: "Share"
   static const String share = "Share";
 
+  /// Key: "Share Parent Login Info"
+  static const String shareParentLoginInfo = "Share Parent Login Info";
+
   /// Key: "Share via"
   static const String shareVia = "Share via";
 
