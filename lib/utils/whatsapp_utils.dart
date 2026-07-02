@@ -419,6 +419,9 @@ class WhatsappUtils {
       await SharePlus.instance.share(
         ShareParams(
           files: [XFile(filePath)],
+          sharePositionOrigin: Platform.isIOS
+              ? Rect.fromLTWH(0, 0, Get.width, Get.height / 2)
+              : null,
         ),
       );
     } catch (e) {
