@@ -8,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:teacher_app/enums/homework_enum.dart';
 import 'package:teacher_app/enums/student_behavior_enum.dart';
 import 'package:teacher_app/generated/assets.dart';
+import 'package:teacher_app/navigation/app_navigator.dart';
 import 'package:teacher_app/screens/home/home_controller.dart';
 import 'package:teacher_app/screens/report/args/student_report_args.dart';
 import 'package:teacher_app/screens/report/student_report_controller.dart';
@@ -429,7 +430,7 @@ The student got (... / ...) marks on the quiz.
       children: [
         InkWell(
             onTap: () {
-              Get.back();
+              Navigator.pop(context);
             },
             child: Icon(Icons.close)),
       ],

@@ -75,6 +75,11 @@ class WhatsappUtils {
           margin: EdgeInsets.all(16),
         );
 
+      if (Platform.isIOS) {
+        await _shareWithOther(file.path);
+        return;
+      }
+
       // Check if user has selected "don't ask me again"
       final dontAskAgain = await WhatsAppSharePreferences.getDontAskAgain();
 
@@ -91,8 +96,11 @@ class WhatsappUtils {
       _showShareOptionsDialog(file, phoneNumber);
     } catch (e) {
       appLog("Error in sendToWhatsAppFile: $e");
-      // Continue with sharing even if clipboard copy fails
-      _showShareOptionsDialog(file, phoneNumber);
+      if (Platform.isIOS) {
+        await _shareWithOther(file.path);
+      } else {
+        _showShareOptionsDialog(file, phoneNumber);
+      }
     }
   }
 
