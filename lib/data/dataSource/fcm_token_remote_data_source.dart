@@ -10,7 +10,7 @@ class FcmTokenRemoteDataSource {
 
   Future<FcmTokenResponse> registerToken(UpdateFcmTokenRequest request) async {
       appLog("FcmTokenRemoteDataSource: registerToken called with token: ${request.token.substring(0, 20)}...");
-      var response = await  ApiService.getInstance().post(EndPoints.updateFcmToken);
+      var response = await  ApiService.getInstance().post(EndPoints.updateFcmToken , data: request.toJson());
       final fcmTokenResponse = FcmTokenResponse.fromJson(response.data!);
       appLog("FcmTokenRemoteDataSource: FCM token registered successfully");
       return fcmTokenResponse;

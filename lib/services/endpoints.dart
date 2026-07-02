@@ -59,7 +59,7 @@ class EndPoints{
   static const String verifyPayment = "$apiV1/payments/verify";
   static const String getPaymentMethods = "$apiV1/payment-methods/enabled";
 
-  static String updateFcmToken = "$apiV1/api/v1/fcm/register-token";
+  static String updateFcmToken = "$apiV1/fcm/register-token";
 
   /*OTP*/
   static const String verifyOtp = "$apiV1/otp/verify";
