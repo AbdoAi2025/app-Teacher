@@ -74,6 +74,9 @@ class EndPoints{
   /*Parent Login Info*/
   static const String shareParentLoginInfo = "$apiV1/teachers/shareParentLoginInfo";
 
+  /*Students by Parent Phone*/
+  static const String getStudentsByParentPhone = "$apiV1/teachers/students/byParentPhone";
+
   /*Group Timings*/
   static String groupTimings(String groupId) => "$apiV1/groups/$groupId/timings";
 

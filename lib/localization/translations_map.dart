@@ -457,4 +457,10 @@ final Map<String, TranslationModel> translationsMap = {
   "Score": TranslationModel(en: "Score", ar: "الدرجة"),
   "appName": TranslationModel(en: "Teacher Assistant", ar: "مساعد المدرس"),
   "EGP": TranslationModel(en: "EGP", ar: "ج.م"),
+
+  // Student picker bottom sheet
+  "Check Students": TranslationModel(en: "Check Students", ar: "بحث عن الطلاب"),
+  "Select Student": TranslationModel(en: "Select Student", ar: "اختر الطالب"),
+  "Already Added": TranslationModel(en: "Already Added", ar: "مضاف مسبقاً"),
+  "Create New Student": TranslationModel(en: "Create New Student", ar: "إضافة طالب جديد"),
 };

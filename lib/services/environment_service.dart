@@ -7,7 +7,7 @@ import '../utils/LogUtils.dart';
 
 const String prodBaseUrl = "https://assistant-app-2136afb92d95.herokuapp.com";
 const String devBaseUrl = "https://assistant-app-backend-dev-dc445a76bc87.herokuapp.com/";
-const String defaultLocalBaseUrl = "http://192.168.0.130:8080";
+const String defaultLocalBaseUrl = "http://192.168.1.102:8080";
 
 class AppMode {
 

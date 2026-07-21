@@ -6,19 +6,22 @@
 
 class AddStudentRequest {
   AddStudentRequest({
-      this.gradeId, 
-      this.phone, 
-      this.parentPhone, 
-      this.name, 
+      this.studentId,
+      this.gradeId,
+      this.phone,
+      this.parentPhone,
+      this.name,
       this.password,});
 
   AddStudentRequest.fromJson(dynamic json) {
+    studentId = json['studentId'];
     gradeId = json['gradeId'];
     phone = json['phone'];
     parentPhone = json['parentPhone'];
     name = json['name'];
     password = json['password'];
   }
+  String? studentId;
   String? gradeId;
   String? phone;
   String? parentPhone;
@@ -29,10 +32,10 @@ class AddStudentRequest {
     final map = <String, dynamic>{};
     var phone = removeLeadingZero(this.phone);
     var parentPhone = removeLeadingZero(this.parentPhone);
+    if (studentId != null) map['studentId'] = studentId;
     map['gradeId'] = gradeId;
     map['phone'] = phone.isEmpty ? "" : phone;
     map['parentPhone'] = parentPhone.isEmpty ? "" : parentPhone;
-
     map['name'] = name;
     map['password'] = password;
     return map;

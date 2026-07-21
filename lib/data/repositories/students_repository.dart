@@ -12,6 +12,7 @@ import '../../requests/get_student_details_request.dart';
 import '../responses/add_student_response.dart';
 import '../responses/get_my_students_responses.dart';
 import '../responses/get_student_details_response.dart';
+import '../responses/get_students_by_parent_phone_response.dart';
 
 class StudentsRepository {
 
@@ -52,6 +53,15 @@ class StudentsRepository {
     var params = {"gradeId":gradeId};
     Response response = await ApiService.getInstance().delete(url , queryParameters: params);
     return response.data;
+  }
+
+  Future<List<StudentByParentPhoneApiModel>> getStudentsByParentPhone(String phone) async {
+    Response response = await ApiService.getInstance().get(
+      EndPoints.getStudentsByParentPhone,
+      queryParameters: {'phone': phone},
+    );
+    GetStudentsByParentPhoneResponse responseResult = GetStudentsByParentPhoneResponse.fromJson(response.data);
+    return responseResult.students ?? List.empty();
   }
 
   Future<dynamic> removeStudentGrade(String id) async {

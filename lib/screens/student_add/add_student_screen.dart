@@ -322,6 +322,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:get/get.dart';
+import 'package:teacher_app/data/responses/get_students_by_parent_phone_response.dart';
 import 'package:teacher_app/screens/create_group/grades/select_grade_bottom_sheet.dart';
 import 'package:teacher_app/screens/student_add/add_student_controller.dart';
 import 'package:teacher_app/screens/student_add/states/add_student_state.dart';
@@ -351,6 +352,7 @@ class AddStudentScreenState extends State<AddStudentScreen> {
   @override
   void initState() {
     super.initState();
+    _controller.onStudentsFound = _showStudentPickerBottomSheet;
   }
 
   AddStudentController getController() => _controller;
@@ -378,8 +380,15 @@ class AddStudentScreenState extends State<AddStudentScreen> {
                 spacing: 20,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  Column(
+                    spacing: 5,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _parentPhoneField(),
+                      _checkStudentsButton(),
+                    ],
+                  ),
                   _nameField(),
-                  _parentPhoneField(),
                   _phoneField(),
                   gradeField(),
                 ],
@@ -391,20 +400,26 @@ class AddStudentScreenState extends State<AddStudentScreen> {
     );
   }
 
-  _nameField() => AppTextFieldWidget(
+  Widget _nameField() {
+    return Obx(() {
+      final enabled = getController().fieldsEnabled.value;
+      return AppTextFieldWidget(
         controller: getController().nameController,
         label: AppStringsKeys.studentName.tr,
         hint: AppStringsKeys.studentName.tr,
+        enabled: enabled,
         validator: MultiValidator([
           RequiredValidator(errorText: AppStringsKeys.studentNameIsRequired.tr),
         ]).call,
       );
+    });
+  }
 
-  _parentPhoneField() => AppPhoneInputTextFieldWidget(
+  Widget _parentPhoneField() => AppPhoneInputTextFieldWidget(
         phoneController: getController().parentPhoneController,
         label: AppStringsKeys.parentPhone.tr,
         onContactSelected: (_, name) {
-          if(_controller.nameController.text.isEmpty){
+          if (_controller.nameController.text.isEmpty) {
             _controller.nameController.text = name;
           }
         },
@@ -414,25 +429,69 @@ class AddStudentScreenState extends State<AddStudentScreen> {
         ]).call,
       );
 
-  _phoneField() => AppPhoneInputTextFieldWidget(
+  Widget _phoneField() {
+    return Obx(() {
+      final enabled = getController().fieldsEnabled.value;
+      return AppPhoneInputTextFieldWidget(
         phoneController: getController().phoneController,
         label: AppStringsKeys.phone.tr,
+        enabled: enabled,
         validator: MultiValidator([]).call,
       );
+    });
+  }
+
+  Widget _checkStudentsButton() {
+    return Obx(() {
+      final loading = getController().isSearchingByPhone.value;
+      return Align(
+        alignment: AlignmentDirectional.centerEnd,
+        child: GestureDetector(
+          onTap: loading ? null : () {
+            KeyboardUtils.hideKeyboard(context);
+            getController().searchByParentPhone();
+          },
+          child: loading
+              ? const SizedBox(
+                  height: 16,
+                  width: 16,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : Text(
+                  'Check Students'.tr,
+                  style: const TextStyle(
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+        ),
+      );
+    });
+  }
+
+
 
   Widget gradeField() {
     return Obx(() {
+      final ctrl = getController();
+      final isStudentSelected = ctrl.selectedStudentId.value != null;
+      final gradeText = isStudentSelected
+          ? ctrl.gradeDisplayName.value
+          : ctrl.selectedGrade.value?.name ?? '';
+      final gradeEnabled = !isStudentSelected && ctrl.fieldsEnabled.value;
       return AppTextFieldWidget(
-        controller: TextEditingController(
-            text: getController().selectedGrade.value?.name),
+        controller: TextEditingController(text: gradeText),
         label: AppStringsKeys.grade.tr,
         hint: AppStringsKeys.grade.tr,
         readOnly: true,
-        suffixIcon: DropdownIconWidget(),
-        validator: MultiValidator([
-          RequiredValidator(errorText: AppStringsKeys.gradeIsRequired.tr),
-        ]).call,
-        onTap: _onSelectGradesClick,
+        enabled: gradeEnabled,
+        suffixIcon: gradeEnabled ? DropdownIconWidget() : null,
+        validator: (value) {
+          if (isStudentSelected) return null;
+          return RequiredValidator(
+                  errorText: AppStringsKeys.gradeIsRequired.tr)
+              .call(value);
+        },
+        onTap: gradeEnabled ? _onSelectGradesClick : null,
       );
     });
   }
@@ -450,6 +509,28 @@ class AddStudentScreenState extends State<AddStudentScreen> {
       context,
       selectedId: getController().selectedGrade.value?.id,
       onSelected: (grade) => getController().onSelectedGrade(grade),
+    );
+  }
+
+  void _showStudentPickerBottomSheet(List<StudentByParentPhoneApiModel> students) {
+    if (!mounted) return;
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (ctx) => _StudentPickerBottomSheet(
+        students: students,
+        onStudentSelected: (student) {
+          Navigator.pop(ctx);
+          getController().onStudentSelected(student);
+        },
+        onCreateNew: () {
+          Navigator.pop(ctx);
+          getController().onCreateNewStudent();
+        },
+      ),
     );
   }
 
@@ -486,13 +567,110 @@ class AddStudentScreenState extends State<AddStudentScreen> {
     getController().onSave().listen(
       (event) {
         appLog("onSaveClick :event :$event");
-        if(event is AddStudentStateSubscriptionIssue){
+        if (event is AddStudentStateSubscriptionIssue) {
           hideDialogLoading();
-          UserNotSubscribedDialog.showUserNotSubscribedDialog(message : event.message ?? "", barrierDismissible: true);
-        }else {
+          UserNotSubscribedDialog.showUserNotSubscribedDialog(
+              message: event.message ?? "", barrierDismissible: true);
+        } else {
           onSaveStudentResult(event);
         }
       },
+    );
+  }
+}
+
+class _StudentPickerBottomSheet extends StatelessWidget {
+  final List<StudentByParentPhoneApiModel> students;
+  final Function(StudentByParentPhoneApiModel) onStudentSelected;
+  final VoidCallback onCreateNew;
+
+  const _StudentPickerBottomSheet({
+    required this.students,
+    required this.onStudentSelected,
+    required this.onCreateNew,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.9,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 40,
+                    height: 4,
+                    margin: const EdgeInsets.only(bottom: 16),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  Text(
+                    'Select Student'.tr,
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 12),
+                ],
+              ),
+            ),
+            Flexible(
+              child: SingleChildScrollView(
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: students.length,
+                  separatorBuilder: (_, __) => const Divider(height: 1),
+                  itemBuilder: (_, i) {
+                    final student = students[i];
+                    final alreadyAdded = student.addedToMe == true;
+                    return ListTile(
+                      title: Text(
+                        student.studentName ?? '',
+                        style: TextStyle(
+                          color: alreadyAdded ? Colors.grey : null,
+                        ),
+                      ),
+                      subtitle: Text(
+                        student.gradeName,
+                        style: TextStyle(
+                          color: alreadyAdded ? Colors.grey[400] : null,
+                        ),
+                      ),
+                      trailing: alreadyAdded
+                          ? Text(
+                              'Already Added'.tr,
+                              style: const TextStyle(color: Colors.grey, fontSize: 12),
+                            )
+                          : const Icon(Icons.chevron_right),
+                      enabled: !alreadyAdded,
+                      onTap: alreadyAdded ? null : () => onStudentSelected(student),
+                    );
+                  },
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+              child: SizedBox(
+                width: double.infinity,
+                child: OutlinedButton(
+                  onPressed: onCreateNew,
+                  child: Text('Create New Student'.tr),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
