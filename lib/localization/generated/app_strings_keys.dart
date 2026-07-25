@@ -409,6 +409,18 @@ class AppStringsKeys {
   /// Key: "Enrollment Requests"
   static const String enrollmentRequests = "Enrollment Requests";
 
+  /// Key: "Season Rejoin Requests"
+  static const String seasonRejoinRequests = "Season Rejoin Requests";
+
+  /// Key: "Rejoin Request Students"
+  static const String rejoinRequestStudents = "Rejoin Request Students";
+
+  /// Key: "Are you sure to send rejoin request to all parents?"
+  static const String areYouSureToSendRejoinRequestToAllParents = "Are you sure to send rejoin request to all parents?";
+
+  /// Key: "Request created successfully"
+  static const String requestCreatedSuccessfully = "Request created successfully";
+
   /// Key: "Generate Enrollment Link"
   static const String generateEnrollmentLink = "Generate Enrollment Link";
 
@@ -579,6 +591,15 @@ class AppStringsKeys {
 
   /// Key: "No Requests"
   static const String noRequests = "No Requests";
+
+  /// Key: "pending"
+  static const String pending = "pending";
+
+  /// Key: "accepted"
+  static const String accepted = "accepted";
+
+  /// Key: "rejected"
+  static const String rejected = "rejected";
 
   /// Key: "No Running Sessions"
   static const String noRunningSessions = "No Running Sessions";

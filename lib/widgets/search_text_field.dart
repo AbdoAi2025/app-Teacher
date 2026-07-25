@@ -11,12 +11,14 @@ class SearchTextField extends StatefulWidget {
   final String? hint;
   final TextEditingController controller;
   final Function(String?) onChanged;
+  final bool searchOnSubmit;
 
   const SearchTextField({
     super.key,
     this.hint,
     required this.controller,
     required this.onChanged,
+    this.searchOnSubmit = false,
   });
 
   @override
@@ -50,17 +52,36 @@ class _SearchTextFieldState extends State<SearchTextField> {
 
   @override
   Widget build(BuildContext context) {
+    final suffixIcon = _hasText
+        ? IconButton(
+            icon: const Icon(Icons.close, size: 18),
+            onPressed: _onClear,
+          )
+        : null;
+
+    if (widget.searchOnSubmit) {
+      return TextFormField(
+        controller: widget.controller,
+        textInputAction: TextInputAction.search,
+        decoration: InputDecoration(
+          hintText: widget.hint ?? AppStringsKeys.search.tr,
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+          suffixIcon: suffixIcon,
+        ),
+        onChanged: (_) {
+          final hasText = widget.controller.text.isNotEmpty;
+          if (hasText != _hasText) setState(() => _hasText = hasText);
+        },
+        onFieldSubmitted: (value) => widget.onChanged(value),
+      );
+    }
+
     return AppTextFieldWidget(
       hint: widget.hint ?? AppStringsKeys.search.tr,
       onChanged: _onSearchChanged,
       controller: widget.controller,
       textInputAction: TextInputAction.search,
-      suffixIcon: _hasText
-          ? IconButton(
-              icon: const Icon(Icons.close, size: 18),
-              onPressed: _onClear,
-            )
-          : null,
+      suffixIcon: suffixIcon,
     );
   }
 

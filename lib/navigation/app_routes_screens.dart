@@ -21,6 +21,8 @@ import '../screens/subscription_plans/subscription_plans_screen.dart';
 import '../screens/profile/profile_screen.dart';
 import '../screens/edit_profile/edit_profile_screen.dart';
 import '../screens/requests/enrollment_request_screen.dart';
+import '../screens/season_rejoin_requests/season_rejoin_requests_screen.dart';
+import '../screens/rejoin_request_students/rejoin_request_students_screen.dart';
 
 
 const int transitionDuration = 600;
@@ -47,6 +49,8 @@ List<GetPage> appRoutes() => [
   _getPage(AppRoutes.profile, ProfileScreen()),
   _getPage(AppRoutes.editProfile, EditProfileScreen()),
   _getPage(AppRoutes.requests, EnrollmentRequestScreen()),
+  _getPage(AppRoutes.seasonRejoinRequests, SeasonRejoinRequestsScreen()),
+  _getPage(AppRoutes.rejoinRequestStudents, RejoinRequestStudentsScreen()),
 ];
 
 

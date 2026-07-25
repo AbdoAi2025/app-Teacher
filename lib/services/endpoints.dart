@@ -87,6 +87,11 @@ class EndPoints{
   static const String getSentRequests = "$apiV1/enroll-requests/sent";
   static const String getReceivedRequests = "$apiV1/enroll-requests/received";
 
+  /*Rejoin Requests*/
+  static const String getSentRejoinRequests = "$apiV1/join-requests/sent";
+  static const String createRejoinRequest = "$apiV1/join-requests/teacher/createRequest";
+  static String rejoinRequestStudents(int id) => "$apiV1/join-requests/$id/students";
+
   /*Password Reset*/
   static const String forgotPassword = "$apiV1/password/forgot";
   static const String verifyForgotPasswordOtp = "$apiV1/password/verify-otp";

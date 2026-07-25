@@ -48,13 +48,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
               spacing: 20,
               children: [
                 _profileSection(),
-                _language(),
                 _mySubscription(),
+                _seasonRejoinRequests(),
                 _requests(),
+                _generateEnrollmentLink(),
                 _privacyPolicy(),
                 _contactUs(),
-                _generateEnrollmentLink(),
                 _deleteAccount(),
+                _language(),
                 _logout(),
                 if (appVersion != null) _versionInfo(appVersion!.toString()),
               ],
@@ -181,6 +182,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   _requests() {
     return _cell(AppStringsKeys.enrollmentRequests.tr, Icons.inbox_outlined, AppNavigator.navigateToRequests);
+  }
+
+  _seasonRejoinRequests() {
+    return _cell(AppStringsKeys.seasonRejoinRequests.tr, Icons.sync_outlined, AppNavigator.navigateToSeasonRejoinRequests);
   }
 
   _generateEnrollmentLink() {

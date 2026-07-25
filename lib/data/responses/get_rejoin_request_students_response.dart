@@ -2,62 +2,58 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:teacher_app/utils/safe_json_access.dart';
 
-class GetEnrollRequestsResponse {
-  final EnrollRequestsPageData? data;
+class GetRejoinRequestStudentsResponse {
+  final RejoinRequestStudentsPageData? data;
 
-  GetEnrollRequestsResponse({this.data});
+  GetRejoinRequestStudentsResponse({this.data});
 
-  factory GetEnrollRequestsResponse.fromJson(Map<String, dynamic> json) {
+  factory GetRejoinRequestStudentsResponse.fromJson(Map<String, dynamic> json) {
     final dataJson = json['data'];
-    return GetEnrollRequestsResponse(
+    return GetRejoinRequestStudentsResponse(
       data: dataJson is Map<String, dynamic>
-          ? EnrollRequestsPageData.fromJson(dataJson)
+          ? RejoinRequestStudentsPageData.fromJson(dataJson)
           : null,
     );
   }
 }
 
-class EnrollRequestsPageData {
+class RejoinRequestStudentsPageData {
   final int? totalPages;
   final int? totalItems;
-  final List<EnrollRequestData>? items;
+  final List<RejoinRequestStudentData>? items;
 
-  EnrollRequestsPageData({this.totalPages, this.totalItems, this.items});
+  RejoinRequestStudentsPageData({this.totalPages, this.totalItems, this.items});
 
-  factory EnrollRequestsPageData.fromJson(Map<String, dynamic> json) {
-    return EnrollRequestsPageData(
+  factory RejoinRequestStudentsPageData.fromJson(Map<String, dynamic> json) {
+    return RejoinRequestStudentsPageData(
       totalPages: json.tryInt('totalPages'),
       totalItems: json.tryInt('totalItems'),
       items: json.tryList('items')
           ?.whereType<Map<String, dynamic>>()
-          .map(EnrollRequestData.fromJson)
+          .map(RejoinRequestStudentData.fromJson)
           .toList(),
     );
   }
 }
 
-class EnrollRequestData {
+class RejoinRequestStudentData {
   final int? id;
-  final String? fromUserId;
-  final String? fromUserName;
-  final String? toUserId;
-  final String? toUserName;
+  final int? joinRequestId;
   final String? studentId;
   final String? studentName;
+  final String? parentId;
   final int? gradeId;
   final String? gradeNameAr;
   final String? gradeNameEn;
   final String? status;
   final DateTime? createdAt;
 
-  EnrollRequestData({
+  RejoinRequestStudentData({
     this.id,
-    this.fromUserId,
-    this.fromUserName,
-    this.toUserId,
-    this.toUserName,
+    this.joinRequestId,
     this.studentId,
     this.studentName,
+    this.parentId,
     this.gradeId,
     this.gradeNameAr,
     this.gradeNameEn,
@@ -71,15 +67,13 @@ class EnrollRequestData {
 
   String get localizedStatus => status?.tr ?? '';
 
-  factory EnrollRequestData.fromJson(Map<String, dynamic> json) {
-    return EnrollRequestData(
+  factory RejoinRequestStudentData.fromJson(Map<String, dynamic> json) {
+    return RejoinRequestStudentData(
       id: json.tryInt('id'),
-      fromUserId: json.tryString('fromUserId'),
-      fromUserName: json.tryString('fromUserName'),
-      toUserId: json.tryString('toUserId'),
-      toUserName: json.tryString('toUserName'),
+      joinRequestId: json.tryInt('joinRequestId'),
       studentId: json.tryString('studentId'),
       studentName: json.tryString('studentName'),
+      parentId: json.tryString('parentId'),
       gradeId: json.tryInt('gradeId'),
       gradeNameAr: json.tryString('gradeNameAr'),
       gradeNameEn: json.tryString('gradeNameEn'),

@@ -36,6 +36,8 @@ class AppRoutes {
 
   /*Requests*/
   static const String requests = "/requests";
+  static const String seasonRejoinRequests = "/seasonRejoinRequests";
+  static const String rejoinRequestStudents = "/rejoinRequestStudents";
 
   /*Profile*/
   static const String profile = "/profile";

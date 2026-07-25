@@ -94,6 +94,14 @@ class AppNavigator {
     Get.toNamed(AppRoutes.requests);
   }
 
+  static void navigateToSeasonRejoinRequests() {
+    Get.toNamed(AppRoutes.seasonRejoinRequests);
+  }
+
+  static void navigateToRejoinRequestStudents(int requestId) {
+    Get.toNamed(AppRoutes.rejoinRequestStudents, arguments: requestId);
+  }
+
   static void navigateToProfile() {
     Get.toNamed(AppRoutes.profile);
   }
