@@ -6,7 +6,10 @@ import 'package:teacher_app/models/grade_model.dart';
 import 'package:teacher_app/themes/app_colors.dart';
 import 'package:teacher_app/themes/txt_styles.dart';
 import 'package:teacher_app/utils/app_background_styles.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:teacher_app/enums/request_status_enum.dart';
+import 'package:teacher_app/screens/profile/profile_controller.dart';
+import 'package:teacher_app/services/environment_service.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'package:teacher_app/widgets/app_toolbar_widget.dart';
 import 'package:teacher_app/widgets/filters/grade_filter_chip_widget.dart';
@@ -178,9 +181,29 @@ class _StudentCard extends StatelessWidget {
             ),
           ),
           RequestStatusChipWidget(status: RequestStatusEnum.fromString(item.status)),
+          if (item.parentId != null) ...[
+            const SizedBox(width: 8),
+            IconButton(
+              icon: Icon(Icons.share_outlined, color: AppColors.appMainColor, size: 20),
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+              onPressed: _onShare,
+            ),
+          ],
         ],
       ),
     );
+  }
+
+  Future<void> _onShare() async {
+    final profileController = Get.isRegistered<ProfileController>()
+        ? Get.find<ProfileController>()
+        : Get.put(ProfileController());
+    final teacherId = profileController.profile.value?.teacherId;
+    if (teacherId == null) return;
+    final baseUrl = EnvironmentService.baseUrl.replaceAll(RegExp(r'/$'), '');
+    final link = '$baseUrl/rejoin/$teacherId?parentId=${item.parentId}';
+    await SharePlus.instance.share(ShareParams(text: link));
   }
 }
 
