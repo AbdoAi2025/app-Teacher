@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:get/get.dart';
 import 'package:teacher_app/apimodels/student_list_item_api_model.dart';
 import 'package:teacher_app/domain/usecases/get_my_students_list_use_case.dart';
@@ -33,6 +35,8 @@ class StudentsController extends GetxController {
   static const  sortByGroupType = 0;
   static const  sortByGradeType = 1;
   int? sortType ;
+
+  Timer? _searchDebounce;
 
   Function()? updateRefresh;
 
@@ -179,11 +183,14 @@ class StudentsController extends GetxController {
   onSearchChanged(String? query) {
     appLog("onSearchChanged query: $query");
     request.search = (query != null && query.isNotEmpty) ? query : null;
-    refreshStudents();
+    _searchDebounce?.cancel();
+    _searchDebounce = Timer(const Duration(milliseconds: 1000), refreshStudents);
   }
 
   void onCloseSearch() {
-    onSearchChanged(null);
+    _searchDebounce?.cancel();
+    request.search = null;
+    refreshStudents();
   }
 
   List<StudentItemUiState> _applySort(List<StudentItemUiState> studentsUiStates) {
@@ -285,8 +292,9 @@ class StudentsController extends GetxController {
 
   @override
   void onClose() {
-    super.onClose();
+    _searchDebounce?.cancel();
     StudentsEvents.removeListener(_studentsEventsUpdated);
+    super.onClose();
   }
 
   _studentsEventsUpdated(StudentsEventsState event) {

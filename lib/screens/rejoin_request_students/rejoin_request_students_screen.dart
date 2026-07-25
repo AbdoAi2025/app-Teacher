@@ -77,7 +77,6 @@ class _RejoinRequestStudentsScreenState
                 SearchTextField(
                   controller: _searchController,
                   onChanged: (v) => _controller.onSearchChanged(v ?? ''),
-                  searchOnSubmit: true,
                 ),
                 Align(
                   alignment: AlignmentDirectional.centerStart,

@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:teacher_app/apimodels/student_list_item_api_model.dart';
 import 'package:teacher_app/base/AppResult.dart';
+import 'package:teacher_app/exceptions/app_http_exception.dart';
 import 'package:teacher_app/requests/add_student_request.dart';
 import 'package:teacher_app/requests/get_my_students_request.dart';
 import 'package:teacher_app/requests/update_student_request.dart';
@@ -45,6 +46,10 @@ class StudentsRepository {
   Future<dynamic> upgradeStudents(List<UpgradeStudentRequest> students) async {
     List<Map<String, dynamic>> data = students.map((student) => student.toJson()).toList();
     Response response = await ApiService.getInstance().post(EndPoints.upgradeStudents, data: data);
+    final responseData = response.data?['data'];
+    if (responseData is String && responseData.isNotEmpty) {
+      throw AppHttpException(responseData);
+    }
     return response.data;
   }
 

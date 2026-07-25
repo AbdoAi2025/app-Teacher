@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:get/get.dart';
 import 'package:teacher_app/base/AppResult.dart';
 import 'package:teacher_app/data/responses/get_rejoin_request_students_response.dart';
@@ -21,6 +23,7 @@ class RejoinRequestStudentsController extends GetxController {
 
   final Rx<ItemSelectionUiState?> selectedGrade = Rx(null);
   String _search = '';
+  Timer? _searchDebounce;
 
   int _page = 0;
 
@@ -30,6 +33,12 @@ class RejoinRequestStudentsController extends GetxController {
     load();
   }
 
+  @override
+  void onClose() {
+    _searchDebounce?.cancel();
+    super.onClose();
+  }
+
   void onGradeSelected(ItemSelectionUiState? grade) {
     selectedGrade.value = grade;
     load();
@@ -37,7 +46,8 @@ class RejoinRequestStudentsController extends GetxController {
 
   void onSearchChanged(String query) {
     _search = query;
-    load();
+    _searchDebounce?.cancel();
+    _searchDebounce = Timer(const Duration(milliseconds: 800), load);
   }
 
   Future<void> load() async {
