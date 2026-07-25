@@ -4,6 +4,7 @@ import 'package:teacher_app/data/responses/get_rejoin_request_students_response.
 import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 import 'package:teacher_app/models/grade_model.dart';
 import 'package:teacher_app/themes/app_colors.dart';
+import 'package:teacher_app/themes/txt_styles.dart';
 import 'package:teacher_app/utils/app_background_styles.dart';
 import 'package:teacher_app/enums/request_status_enum.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
@@ -28,11 +29,14 @@ class _RejoinRequestStudentsScreenState
     extends State<RejoinRequestStudentsScreen> {
   late final RejoinRequestStudentsController _controller;
   final TextEditingController _searchController = TextEditingController();
+  late final String? _requestDate;
 
   @override
   void initState() {
     super.initState();
-    final int requestId = Get.arguments as int;
+    final args = Get.arguments as Map<String, dynamic>;
+    final int requestId = args['id'] as int;
+    _requestDate = args['date'] as String?;
     _controller = Get.put(
       RejoinRequestStudentsController(requestId: requestId),
       tag: requestId.toString(),
@@ -48,7 +52,16 @@ class _RejoinRequestStudentsScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppToolbarWidget.appBar(title: AppStringsKeys.rejoinRequestStudents.tr),
+      appBar: AppToolbarWidget.appBar(
+        titleWidget: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(AppStringsKeys.rejoinRequestStudents.tr, style: AppTextStyle.appToolBarTitle),
+            if (_requestDate != null && _requestDate.isNotEmpty)
+              Text(_requestDate, style: TextStyle(fontSize: 12, color: AppColors.textSecondaryColor)),
+          ],
+        ),
+      ),
       body: Column(
         children: [
           Padding(

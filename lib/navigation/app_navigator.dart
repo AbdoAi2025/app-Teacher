@@ -98,8 +98,8 @@ class AppNavigator {
     Get.toNamed(AppRoutes.seasonRejoinRequests);
   }
 
-  static void navigateToRejoinRequestStudents(int requestId) {
-    Get.toNamed(AppRoutes.rejoinRequestStudents, arguments: requestId);
+  static void navigateToRejoinRequestStudents(int requestId, {String? date}) {
+    Get.toNamed(AppRoutes.rejoinRequestStudents, arguments: {'id': requestId, 'date': date});
   }
 
   static void navigateToProfile() {

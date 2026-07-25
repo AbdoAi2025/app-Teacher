@@ -88,7 +88,7 @@ class _RejoinRequestList extends PaginationListWidget<RejoinRequestData> {
   Widget getItemWidget(RejoinRequestData item, int index) {
     return GestureDetector(
       onTap: () {
-        if (item.id != null) AppNavigator.navigateToRejoinRequestStudents(item.id!);
+        if (item.id != null) AppNavigator.navigateToRejoinRequestStudents(item.id!, date: item.createdDateFormat);
       },
       child: _RejoinRequestCard(item: item),
     );
