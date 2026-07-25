@@ -4,7 +4,6 @@ import 'package:teacher_app/domain/usecases/get_my_students_list_use_case.dart';
 import 'package:teacher_app/screens/students_list/states/students_state.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
 import 'package:teacher_app/utils/day_utils.dart';
-import 'package:teacher_app/utils/extensions_utils.dart';
 import 'package:teacher_app/utils/localized_name_model.dart';
 import 'package:teacher_app/widgets/item_selection_widget/item_selection_ui_state.dart';
 
@@ -25,7 +24,6 @@ class StudentsController extends GetxController {
   Rx<StudentsState> state = Rx(StudentsStateLoading());
 
   List<StudentItemUiState> studentsUiStates = [];
-  List<StudentItemUiState> searchStudentsUiStates = [];
 
   final DateFilterManager dateFilterManager = DateFilterManager();
 
@@ -53,7 +51,6 @@ class StudentsController extends GetxController {
   }
 
   Future<void> _loadStudents() async {
-
     request.pageIndex = 0;
 
     final dateFilter = dateFilterManager.currentDateFilter;
@@ -69,14 +66,12 @@ class StudentsController extends GetxController {
     if (studentsResult.isSuccess) {
       var uiStates = _getStudentsUiStates(studentsResult.data);
       studentsUiStates = uiStates;
-      var isLoadingMore = false;
-      var isNextPage = false;//uiStates.isNotEmpty;
-      var totalRecords = isNextPage ? uiStates.length * 2 : uiStates.length;
-
+      final isNextPage = uiStates.length >= request.pageSize;
+      final filteredItems = _getItemsFiltered();
       _updateState(StudentsStateSuccess(
-        uiStates: _getItemsFiltered(),
-        isLoadingMore: isLoadingMore,
-        totalRecords: totalRecords,
+        uiStates: filteredItems,
+        isLoadingMore: false,
+        totalRecords: isNextPage ? filteredItems.length + 1 : filteredItems.length,
         isNextPage: isNextPage,
       ));
       return;
@@ -99,41 +94,30 @@ class StudentsController extends GetxController {
 
 
   Future<void> getMoreStudents() async {
+    final currentState = state.value;
+    if (currentState is! StudentsStateSuccess) return;
+    if (!currentState.isNextPage || currentState.isLoadingMore) return;
 
-    // request.pageIndex++;
-    //
-    // var state = this.state.value;
-    //
-    // if(state is StudentsStateSuccess){
-    //
-    //   _updateState(state.copyWith(isLoadingMore: true));
-    //
-    //   var studentsResult = await getMyStudentsListUseCase.execute(request);
-    //
-    //   if (studentsResult.isSuccess) {
-    //     var allUiStates = studentsUiStates;
-    //     var uiStates = _getStudentsUiStates(studentsResult.data);
-    //     allUiStates.addAll(uiStates);
-    //
-    //     if(request.search != null && request.search!.isNotEmpty){
-    //       searchStudentsUiStates = allUiStates;
-    //     }else {
-    //       studentsUiStates = allUiStates;
-    //     }
-    //
-    //     var isLoadingMore = false;
-    //     var isNextPage = uiStates.isNotEmpty;
-    //     var totalRecords = isNextPage ? allUiStates.length * 2 : allUiStates.length;
-    //
-    //     _updateState(StudentsStateSuccess(
-    //       uiStates: allUiStates,
-    //       isLoadingMore: isLoadingMore,
-    //       totalRecords: totalRecords,
-    //       isNextPage: isNextPage,
-    //     ));
-    //     return;
-    //   }
-    // }
+    _updateState(currentState.copyWith(isLoadingMore: true));
+
+    request.pageIndex++;
+    var studentsResult = await getMyStudentsListUseCase.execute(request);
+
+    if (studentsResult.isSuccess) {
+      final newUiStates = _getStudentsUiStates(studentsResult.data);
+      studentsUiStates.addAll(newUiStates);
+      final isNextPage = newUiStates.length >= request.pageSize;
+      final filteredItems = _getItemsFiltered();
+      _updateState(StudentsStateSuccess(
+        uiStates: filteredItems,
+        isLoadingMore: false,
+        totalRecords: isNextPage ? filteredItems.length + 1 : filteredItems.length,
+        isNextPage: isNextPage,
+      ));
+    } else {
+      request.pageIndex--;
+      _updateState(currentState.copyWith(isLoadingMore: false));
+    }
   }
 
   List<StudentItemUiState> _getStudentsUiStates(List<StudentListItemApiModel>? data) {
@@ -194,25 +178,12 @@ class StudentsController extends GetxController {
 
   onSearchChanged(String? query) {
     appLog("onSearchChanged query: $query");
-    appLog("onSearchChanged studentsUiStates:${studentsUiStates.length}");
-    request.search = query;
-    updateList();
+    request.search = (query != null && query.isNotEmpty) ? query : null;
+    refreshStudents();
   }
 
   void onCloseSearch() {
     onSearchChanged(null);
-  }
-
-  List<StudentItemUiState> filterStudentBySearch(List<StudentItemUiState> studentsUiStates, String? search) {
-    if (search == null || search.isEmpty) {
-      return studentsUiStates;
-    }
-    return studentsUiStates.where((element) =>
-       element.name.toLowerCase().contains(search.toLowerCase()) ||
-       element.grade.toLowerCase().contains(search.toLowerCase()) ||
-       element.groupName.toLowerCase().contains(search.toLowerCase()) ||
-       element.parentPhone.toLowerCase().contains(search.toLowerCase())
-    ).toList();
   }
 
   List<StudentItemUiState> _applySort(List<StudentItemUiState> studentsUiStates) {
@@ -297,11 +268,8 @@ class StudentsController extends GetxController {
     return sortedGroups;
   }
 
-  /*apply sort if needed , and search if needed*/
   List<StudentItemUiState> _getItemsFiltered() {
-    var items  = filterStudentBySearch(studentsUiStates.toList(), request.search);
-    items = _applySort(items);
-    return items;
+    return _applySort(studentsUiStates.toList());
   }
 
   void updateList() {
