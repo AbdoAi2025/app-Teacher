@@ -8,7 +8,9 @@ import 'package:teacher_app/themes/txt_styles.dart';
 import 'package:teacher_app/utils/app_background_styles.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:teacher_app/enums/request_status_enum.dart';
+import 'package:teacher_app/navigation/app_navigator.dart';
 import 'package:teacher_app/screens/profile/profile_controller.dart';
+import 'package:teacher_app/screens/student_details/args/student_details_arg_model.dart';
 import 'package:teacher_app/services/environment_service.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'package:teacher_app/widgets/app_toolbar_widget.dart';
@@ -155,42 +157,48 @@ class _StudentCard extends StatelessWidget {
       nameAr: item.gradeNameAr ?? '',
     ).name;
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(14),
-      decoration: AppBackgroundStyle.backgroundWithShadow(),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 20,
-            backgroundColor: AppColors.appMainColor.withValues(alpha: 0.1),
-            child: Icon(Icons.person_outline, color: AppColors.appMainColor, size: 20),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (item.studentName != null && item.studentName!.isNotEmpty)
-                  AppTextWidget(item.studentName!),
-                if (gradeName.isNotEmpty)
-                  AppTextWidget(gradeName, color: AppColors.textSecondaryColor),
-                if (item.createdDateFormat.isNotEmpty)
-                  AppTextWidget(item.createdDateFormat, color: AppColors.textSecondaryColor),
-              ],
+    return GestureDetector(
+      onTap: item.studentId != null
+          ? () => AppNavigator.navigateToStudentDetails(
+                StudentDetailsArgModel(id: item.studentId!))
+          : null,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(14),
+        decoration: AppBackgroundStyle.backgroundWithShadow(),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 20,
+              backgroundColor: AppColors.appMainColor.withValues(alpha: 0.1),
+              child: Icon(Icons.person_outline, color: AppColors.appMainColor, size: 20),
             ),
-          ),
-          RequestStatusChipWidget(status: RequestStatusEnum.fromString(item.status)),
-          if (item.parentId != null) ...[
-            const SizedBox(width: 8),
-            IconButton(
-              icon: Icon(Icons.share_outlined, color: AppColors.appMainColor, size: 20),
-              padding: EdgeInsets.zero,
-              constraints: const BoxConstraints(),
-              onPressed: _onShare,
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (item.studentName != null && item.studentName!.isNotEmpty)
+                    AppTextWidget(item.studentName!),
+                  if (gradeName.isNotEmpty)
+                    AppTextWidget(gradeName, color: AppColors.textSecondaryColor),
+                  if (item.createdDateFormat.isNotEmpty)
+                    AppTextWidget(item.createdDateFormat, color: AppColors.textSecondaryColor),
+                ],
+              ),
             ),
+            RequestStatusChipWidget(status: RequestStatusEnum.fromString(item.status)),
+            if (item.parentId != null) ...[
+              const SizedBox(width: 8),
+              IconButton(
+                icon: Icon(Icons.share_outlined, color: AppColors.appMainColor, size: 20),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+                onPressed: _onShare,
+              ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
