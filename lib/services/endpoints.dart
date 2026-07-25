@@ -83,6 +83,10 @@ class EndPoints{
   /*Group Students*/
   static String groupStudents(String groupId) => "$apiV1/groups/$groupId/students";
 
+  /*Enroll Requests*/
+  static const String getSentRequests = "$apiV1/enroll-requests/sent";
+  static const String getReceivedRequests = "$apiV1/enroll-requests/received";
+
   /*Password Reset*/
   static const String forgotPassword = "$apiV1/password/forgot";
   static const String verifyForgotPasswordOtp = "$apiV1/password/verify-otp";

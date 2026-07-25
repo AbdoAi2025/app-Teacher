@@ -20,6 +20,7 @@ import '../screens/student_reports/students_reports_screen.dart';
 import '../screens/subscription_plans/subscription_plans_screen.dart';
 import '../screens/profile/profile_screen.dart';
 import '../screens/edit_profile/edit_profile_screen.dart';
+import '../screens/requests/enrollment_request_screen.dart';
 
 
 const int transitionDuration = 600;
@@ -45,6 +46,7 @@ List<GetPage> appRoutes() => [
   _getPage(AppRoutes.subscriptionPlans, SubscriptionPlansScreen()),
   _getPage(AppRoutes.profile, ProfileScreen()),
   _getPage(AppRoutes.editProfile, EditProfileScreen()),
+  _getPage(AppRoutes.requests, EnrollmentRequestScreen()),
 ];
 
 

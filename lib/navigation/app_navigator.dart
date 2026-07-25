@@ -90,6 +90,10 @@ class AppNavigator {
     Get.toNamed(AppRoutes.subscriptionPlans);
   }
 
+  static void navigateToRequests() {
+    Get.toNamed(AppRoutes.requests);
+  }
+
   static void navigateToProfile() {
     Get.toNamed(AppRoutes.profile);
   }

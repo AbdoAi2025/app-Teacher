@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:teacher_app/appSetting/appSetting.dart';
 import 'package:teacher_app/domain/models/app_locale_model.dart';
 import 'package:teacher_app/domain/usecases/logout_use_case.dart';
+import 'package:teacher_app/services/environment_service.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
 import 'package:teacher_app/utils/app_background_styles.dart';
 import 'package:teacher_app/utils/app_localization_utils.dart';
@@ -40,29 +42,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       appBar: AppToolbarWidget.appBar(title: AppStringsKeys.settings.tr, hasLeading: false),
       body: SafeArea(
-          child: Padding(
+          child: SingleChildScrollView(
             padding: const EdgeInsets.all(20.0),
             child: Column(
+              spacing: 20,
               children: [
-                Column(
-                  spacing: 20,
-                  children: [
-                    _profileSection(),
-                    _language(),
-                    _mySubscription(),
-                    _privacyPolicy(),
-                    _contactUs(),
-                    _deleteAccount(),
-                    _logout(),
-
-                  ],
-                ),
-
-                if(appVersion != null)...{
-                  Spacer(),
-                  _versionInfo(appVersion!.toString()),
-                }
-
+                _profileSection(),
+                _language(),
+                _mySubscription(),
+                _requests(),
+                _privacyPolicy(),
+                _contactUs(),
+                _generateEnrollmentLink(),
+                _deleteAccount(),
+                _logout(),
+                if (appVersion != null) _versionInfo(appVersion!.toString()),
               ],
             ),
           )),
@@ -185,6 +179,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     hideDialogLoading();
   }
 
+  _requests() {
+    return _cell(AppStringsKeys.enrollmentRequests.tr, Icons.inbox_outlined, AppNavigator.navigateToRequests);
+  }
+
+  _generateEnrollmentLink() {
+    return _cell(AppStringsKeys.generateEnrollmentLink.tr, Icons.link, onGenerateEnrollmentLinkClick);
+  }
+
   _privacyPolicy() {
     return  _cell(AppStringsKeys.privacyPolicy.tr , Icons.privacy_tip_outlined ,onPrivacyPolicyClick );
   }
@@ -203,6 +205,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   _deleteAccount() {
     return  _cell(AppStringsKeys.deleteAccount.tr , Icons.person_off ,onDeleteAccount );
+  }
+
+  Future<void> onGenerateEnrollmentLinkClick() async {
+    final teacherId = _profileController.profile.value?.teacherId;
+    if (teacherId == null) return;
+    final baseUrl = EnvironmentService.baseUrl.replaceAll(RegExp(r'/$'), '');
+    final link = '$baseUrl/enroll/$teacherId';
+    await SharePlus.instance.share(ShareParams(text: link));
   }
 
   Future<void> onPrivacyPolicyClick() async {

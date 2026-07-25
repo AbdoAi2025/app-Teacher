@@ -34,6 +34,9 @@ class AppRoutes {
   /*Subscription*/
   static const String subscriptionPlans = "/subscriptionPlans";
 
+  /*Requests*/
+  static const String requests = "/requests";
+
   /*Profile*/
   static const String profile = "/profile";
   static const String editProfile = "/editProfile";

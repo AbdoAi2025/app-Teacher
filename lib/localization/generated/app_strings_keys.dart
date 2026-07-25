@@ -406,6 +406,12 @@ class AppStringsKeys {
   /// Key: "Gender"
   static const String gender = "Gender";
 
+  /// Key: "Enrollment Requests"
+  static const String enrollmentRequests = "Enrollment Requests";
+
+  /// Key: "Generate Enrollment Link"
+  static const String generateEnrollmentLink = "Generate Enrollment Link";
+
   /// Key: "Good"
   static const String good = "Good";
 
@@ -570,6 +576,9 @@ class AppStringsKeys {
 
   /// Key: "No Reports Found"
   static const String noReportsFound = "No Reports Found";
+
+  /// Key: "No Requests"
+  static const String noRequests = "No Requests";
 
   /// Key: "No Running Sessions"
   static const String noRunningSessions = "No Running Sessions";
@@ -802,8 +811,14 @@ class AppStringsKeys {
   /// Key: "Renew Subscription"
   static const String renewSubscription = "Renew Subscription";
 
+  /// Key: "Received"
+  static const String received = "Received";
+
   /// Key: "Report Period"
   static const String reportPeriod = "Report Period";
+
+  /// Key: "Requests"
+  static const String requests = "Requests";
 
   /// Key: "Resend Code"
   static const String resendCode = "Resend Code";
@@ -846,6 +861,9 @@ class AppStringsKeys {
 
   /// Key: "Search"
   static const String search = "Search";
+
+  /// Key: "Sent"
+  static const String sent = "Sent";
 
   /// Key: "Search groups"
   static const String searchGroups = "Search groups";
