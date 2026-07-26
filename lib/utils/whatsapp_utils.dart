@@ -19,19 +19,8 @@ class WhatsappUtils {
   /// Shares file via WhatsApp using platform-specific approaches
   static void sendToWhatsAppFile(File file, String phoneNumber) async {
     try {
-      // Copy phone number to clipboard
-      await Clipboard.setData(ClipboardData(text: phoneNumber));
 
-      // Show toast that phone number has been copied
-      Get.snackbar(
-        AppStringsKeys.copied.tr,
-        AppStringsKeys.parentPhoneNumberCopiedToClipboard.tr,
-        duration: Duration(seconds: 3),
-        backgroundColor: Colors.grey[800],
-        colorText: Colors.white,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.all(16),
-      );
+      await _copyPhoneNumberToClipboard(phoneNumber);
 
       if (Platform.isIOS) {
         await _shareWithOther(file.path);
@@ -80,8 +69,7 @@ class WhatsappUtils {
   static Future<void> shareParentLoginInfo(String message , String parentPhone) async {
 
     // Copy phone number to clipboard
-    await Clipboard.setData(ClipboardData(text: parentPhone));
-
+    await _copyPhoneNumberToClipboard(parentPhone);
     _selectShareOptionsDialog(
         onWhatsApp: () {
           WhatsappUtils.sendToWhatsApp(message, parentPhone);
@@ -465,6 +453,26 @@ class WhatsappUtils {
       appLog("shareWithOther ex: ${e.toString()}");
       showErrorMessage(AppStringsKeys.couldNotShareFile.tr);
     }
+  }
+
+  static Future<void> _copyPhoneNumberToClipboard(String parentPhone) async {
+    scaffoldMessengerKey.currentState?.showSnackBar(
+      SnackBar(
+        content: Text(
+          AppStringsKeys.parentPhoneNumberCopiedToClipboard.tr,
+          style: const TextStyle(color: Colors.white),
+        ),
+        duration: const Duration(seconds: 3),
+        backgroundColor: Colors.grey[800],
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.all(16),
+      ),
+    );
+    Clipboard.setData(ClipboardData(text: parentPhone));
+    await Future.delayed(Duration(seconds: 3));
+
+    // await Future.delayed(Duration(seconds: 2));
+
   }
 
 }

@@ -162,7 +162,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
     return ElevatedButton.icon(
       onPressed: () => onViewAllSessionsClick(uiState),
       icon: const Icon(Icons.bar_chart_outlined),
-      label: Text(AppStringsKeys.viewFullReport.tr , style: AppTextStyle.value.copyWith(color: Colors.white, fontSize: 13)),
+      label: Text(AppStringsKeys.viewFullReport.tr , style: AppTextStyle.value.copyWith(color: Colors.white, fontSize: 12)),
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.appMainColor,
         foregroundColor: Colors.white,

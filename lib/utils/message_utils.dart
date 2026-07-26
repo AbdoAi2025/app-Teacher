@@ -9,6 +9,7 @@ import 'Keyboard_utils.dart';
 import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
 void showSuccessMessage(message) {
   if (message == null) {

@@ -14,6 +14,7 @@ import 'package:teacher_app/themes/app_colors.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:teacher_app/utils/app_localization_utils.dart';
+import 'package:teacher_app/utils/message_utils.dart';
 import 'domain/models/app_locale_model.dart';
 import 'domain/usecases/get_app_setting_use_case.dart';
 import 'localization/app_translation.dart';
@@ -93,6 +94,7 @@ class _MyAppState extends State<MyApp> {
               _getFirebaseObserver(),
             ], // attach observer
             navigatorKey: navigatorKey,
+            scaffoldMessengerKey: scaffoldMessengerKey,
             textDirection: (rtlLanguages.contains(langCode)
                 ? TextDirection.rtl
                 : TextDirection.ltr),
