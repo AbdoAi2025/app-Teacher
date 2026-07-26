@@ -27,6 +27,7 @@ import '../../bottomsheets/setting_bottom_sheet.dart';
 import '../../data/responses/get_student_details_response.dart';
 import '../../themes/app_colors.dart';
 import '../../themes/txt_styles.dart';
+import '../../utils/whatsapp_utils.dart';
 import '../../widgets/app_toolbar_widget.dart';
 import '../../widgets/primary_button_widget.dart';
 import '../../widgets/section_widget.dart';
@@ -161,7 +162,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
     return ElevatedButton.icon(
       onPressed: () => onViewAllSessionsClick(uiState),
       icon: const Icon(Icons.bar_chart_outlined),
-      label: Text(AppStringsKeys.viewFullReport.tr),
+      label: Text(AppStringsKeys.viewFullReport.tr , style: AppTextStyle.value.copyWith(color: Colors.white, fontSize: 13)),
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.appMainColor,
         foregroundColor: Colors.white,
@@ -360,7 +361,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
       final result = await ShareStudentParentLoginInfoUseCase().execute(uiState.studentId);
       hideDialogLoading();
       if (result.isSuccess) {
-        await SharePlus.instance.share(ShareParams(text: result.data ?? ''));
+        WhatsappUtils.shareParentLoginInfo(result.data ?? '' , uiState.parentPhone);
       } else {
         showErrorMessage(result.error?.toString());
       }
