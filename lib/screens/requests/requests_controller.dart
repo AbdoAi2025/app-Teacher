@@ -93,7 +93,7 @@ class RequestsController extends GetxController {
     load();
   }
 
-  Future<void> updateRequestStatus(int id, String status) async {
+  Future<void> updateRequestStatus(int id, String status, {void Function(EnrollRequestData)? onAccepted}) async {
     updatingIds.add(id);
     final result = await _updateUseCase.execute(id, status);
     updatingIds.remove(id);
@@ -103,6 +103,7 @@ class RequestsController extends GetxController {
       if (index != -1) {
         items[index] = updated;
       }
+      if (status == 'ACCEPTED') onAccepted?.call(updated);
     } else {
       showErrorMessageEx(result.error);
     }

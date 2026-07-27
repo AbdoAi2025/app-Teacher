@@ -13,6 +13,8 @@ import 'package:teacher_app/widgets/filters/status_filter_chip_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
 import 'package:teacher_app/widgets/pagination_list_widget.dart';
 import 'package:teacher_app/widgets/request_status_chip_widget.dart';
+import 'package:teacher_app/navigation/app_navigator.dart';
+import 'package:teacher_app/screens/student_details/args/student_details_arg_model.dart';
 import 'package:teacher_app/widgets/requests_empty_view_widget.dart';
 import 'requests_controller.dart';
 
@@ -183,7 +185,16 @@ class _RequestCard extends StatelessWidget {
                     onPressed: isUpdating
                         ? null
                         : () => controller.updateRequestStatus(
-                            item.id!, 'ACCEPTED'),
+                              item.id!, 'ACCEPTED',
+                              onAccepted: (updated) {
+                                final studentId = updated.studentId;
+                                if (studentId != null) {
+                                  AppNavigator.navigateToStudentDetails(
+                                    StudentDetailsArgModel(id: studentId),
+                                  );
+                                }
+                              },
+                            ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.appMainColor,
                       foregroundColor: Colors.white,
