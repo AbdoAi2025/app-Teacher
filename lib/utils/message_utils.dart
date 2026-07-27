@@ -11,14 +11,15 @@ import 'package:teacher_app/localization/generated/app_strings_keys.dart';
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
-void showSuccessMessage(message) {
-  if (message == null) {
-    return;
-  }
-  ScaffoldMessenger.of(Get.context!).showSnackBar(SnackBar(
-    content: Text(message),
-    backgroundColor: Colors.lightGreen,
-  ));
+Future<void> showSuccessMessage(message) async {
+  // if (message == null) {
+  //   return;
+  // }
+  // ScaffoldMessenger.of(Get.context!).showSnackBar(SnackBar(
+  //   content: Text(message),
+  //   backgroundColor: Colors.lightGreen,
+  // ));
+  await showSuccessMessagePopup(message);
 }
 
 void showErrorMessage(message , {String? buttonText, Function()? onClose}) {

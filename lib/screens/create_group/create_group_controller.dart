@@ -122,12 +122,20 @@ class CreateGroupController extends GetxController {
   // ----------------------------------------------------------------
   bool validateGroupInfo() => formKey.currentState?.validate() ?? false;
 
-  Future<bool> submitAll() async {
+  Stream<CreateGroupState> submitAll() async* {
+    yield CreateGroupStateLoading();
+
     final step1Ok = await onSubmitGroupInfo();
-    if (!step1Ok) return false;
+    if (!step1Ok) {
+      yield CreateGroupStateError(Exception(stepError.value));
+      return;
+    }
 
     final step2Ok = await submitStudents();
-    if (!step2Ok) return false;
+    if (!step2Ok) {
+      yield CreateGroupStateError(Exception(stepError.value));
+      return;
+    }
 
     final step3Ok = await submitTimings();
     GroupsManagers.onGroupUpdated(createdGroupId);
@@ -135,11 +143,14 @@ class CreateGroupController extends GetxController {
     for (var id in currentIds) {
       StudentsEvents.onStudentUpdated(id);
     }
-
     StudentsEvents.onStudentAdded();
     GroupsManagers.onRefresh();
-    return step3Ok;
 
+    if (step3Ok) {
+      yield SaveGroupStateSuccess();
+    } else {
+      yield CreateGroupStateError(Exception(stepError.value));
+    }
   }
 
   // ----------------------------------------------------------------

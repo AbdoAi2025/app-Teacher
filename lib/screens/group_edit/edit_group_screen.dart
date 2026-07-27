@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teacher_app/screens/create_group/create_group_controller.dart';
 import 'package:teacher_app/screens/create_group/states/create_group_state.dart';
+import 'package:teacher_app/utils/LogUtils.dart';
 import 'package:teacher_app/utils/message_utils.dart';
 import '../../widgets/dialog_loading_widget.dart';
 import '../create_group/create_group_screen.dart';
@@ -38,6 +39,7 @@ class EditGroupScreenState extends CreateGroupScreenState {
 
   @override
   void onSaveGroupResult(CreateGroupState event) {
+    appLog("EditGroupScreenState onSaveGroupResult event:$event");
     var result = event;
     hideDialogLoading();
     switch (result) {
@@ -58,8 +60,10 @@ class EditGroupScreenState extends CreateGroupScreenState {
   }
 
   @override
-  void onCreateGroupSuccess(SaveGroupStateSuccess result) {
-    showSuccessMessage(AppStringsKeys.groupEditedSuccessfully.tr);
+  Future<void> onCreateGroupSuccess(SaveGroupStateSuccess result) async {
+    appLog("EditGroupScreenState onCreateGroupSuccess event:$result");
+
+    await showSuccessMessage(AppStringsKeys.groupEditedSuccessfully.tr);
     super.onCreateGroupSuccess(result);
   }
 }

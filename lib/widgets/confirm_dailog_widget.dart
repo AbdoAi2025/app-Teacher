@@ -85,14 +85,13 @@ class ConfirmDailogWidget extends StatelessWidget {
                 spacing: 15,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-
                   if(showCancelBtn)...{
+                    Expanded(
+                      child: _negativeButton(context),
+                    ),
                     Expanded(
                       child: _positiveButton(context),
                     ),
-                    Expanded(
-                      child: _negativeButton(context),
-                    )
                   }else ...{
                     _positiveButton(context)
                   }

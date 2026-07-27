@@ -39,11 +39,15 @@ class AppNavigator {
      Get.toNamed(AppRoutes.createGroup);
   }
 
-  static  navigateToGroupDetails(GroupDetailsArgModel model) {
+  static navigateToGroupDetails(GroupDetailsArgModel model) {
     navigateOrBackIfExistToNamed(AppRoutes.groupDetails , arguments: model);
     if (Get.isRegistered<GroupDetailsController>()) {
       Get.find<GroupDetailsController>().updateGroup(model);
     }
+  }
+
+  static void replaceWithGroupDetails(GroupDetailsArgModel model) {
+    Get.offNamed(AppRoutes.groupDetails, arguments: model);
   }
 
   static Future<dynamic> navigateToEditGroup(EditGroupArgsModel model) async {

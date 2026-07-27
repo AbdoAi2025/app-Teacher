@@ -26,6 +26,7 @@ import '../../widgets/groups/states/group_student_item_ui_state.dart';
 import '../../widgets/sessions/sessions_empty_widget.dart';
 import '../../widgets/students/students_group_list_search_widget.dart';
 import '../group_edit/args/edit_group_args_model.dart';
+import 'args/group_details_arg_model.dart';
 import 'group_details_controller.dart';
 import 'states/group_details_state.dart';
 import 'package:teacher_app/localization/generated/app_strings_keys.dart';
@@ -39,7 +40,15 @@ class GroupDetailsScreen extends StatefulWidget {
 
 class _GroupDetailsScreenState extends LifecycleWidgetState<GroupDetailsScreen> {
 
-  final GroupDetailsController controller = Get.put(GroupDetailsController());
+  late final GroupDetailsController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    final args = Get.arguments;
+    final tag = args is GroupDetailsArgModel ? args.id : null;
+    controller = Get.put(GroupDetailsController(), tag: tag);
+  }
 
   @override
   Widget build(BuildContext context) {

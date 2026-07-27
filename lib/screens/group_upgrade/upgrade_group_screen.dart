@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:teacher_app/navigation/app_navigator.dart';
 import 'package:teacher_app/screens/create_group/create_group_controller.dart';
+import 'package:teacher_app/screens/group_details/args/group_details_arg_model.dart';
 import 'package:teacher_app/screens/group_edit/edit_group_screen.dart';
+import 'package:teacher_app/utils/LogUtils.dart';
 import 'package:teacher_app/utils/message_utils.dart';
 import '../create_group/create_group_screen.dart';
 import '../create_group/states/create_group_state.dart';
@@ -36,8 +39,14 @@ class _UpgradeGroupScreenState extends EditGroupScreenState {
   }
 
   @override
-  void onCreateGroupSuccess(SaveGroupStateSuccess result) {
-    showSuccessMessage(AppStringsKeys.groupUpgradedSuccessfully.tr);
-    super.onCreateGroupSuccess(result);
+  Future<void> onCreateGroupSuccess(SaveGroupStateSuccess result) async {
+    await showSuccessMessage(AppStringsKeys.groupUpgradedSuccessfully.tr);
+    final groupId = _upgradeController.createdGroupId;
+    appLog("onCreateGroupSuccess groupId:$groupId");
+    if (groupId != null) {
+      AppNavigator.replaceWithGroupDetails(GroupDetailsArgModel(id: groupId));
+    } else {
+      Get.back(result: true);
+    }
   }
 }

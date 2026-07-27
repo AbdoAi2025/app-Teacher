@@ -104,10 +104,11 @@ class CreateGroupScreenState extends State<CreateGroupScreen> {
   Future<void> _onStep3Done() async {
     showConfirmationMessage(
       AppStringsKeys.areYouSureYouWantToSave.tr,
-      () async {
-        final ok = await getController().submitAll();
-        if (!mounted) return;
-        if (ok) Get.back(result: true);
+      () {
+        getController().submitAll().listen((status) {
+          if (!mounted) return;
+          onSaveGroupResult(status);
+        });
       },
     );
   }

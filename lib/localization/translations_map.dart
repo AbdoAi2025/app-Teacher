@@ -478,4 +478,8 @@ final Map<String, TranslationModel> translationsMap = {
   "Select Student": TranslationModel(en: "Select Student", ar: "اختر الطالب"),
   "Already Added": TranslationModel(en: "Already Added", ar: "مضاف مسبقاً"),
   "Create New Student": TranslationModel(en: "Create New Student", ar: "إضافة طالب جديد"),
+
+  // Upgrade students failure dialog
+  "upgrade_failed_continue_message": TranslationModel(en: "Students upgrade failed, do you want to continue without upgrading?", ar: "فشل ترقية الطلاب، هل تريد المتابعة بدون ترقية؟"),
+  "continue_without_upgrading": TranslationModel(en: "Continue", ar: "متابعة"),
 };
