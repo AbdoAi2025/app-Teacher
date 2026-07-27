@@ -1,6 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:teacher_app/data/repositories/activity_images_repository.dart';
+import 'package:teacher_app/domain/models/activity_image_model.dart';
 import 'package:teacher_app/enums/homework_enum.dart';
+import 'package:teacher_app/themes/app_colors.dart';
+import 'package:teacher_shared/widgets/image_gallery_viewer.dart';
 import 'package:teacher_app/themes/txt_styles.dart';
 import 'package:teacher_app/utils/Keyboard_utils.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
@@ -48,6 +55,104 @@ class _UpdateStudentActivityWidgetState extends State<UpdateStudentActivityWidge
   late StudentBehaviorEnum? behaviorStatus = widget.uiState.behaviorStatus ?? StudentBehaviorEnum.GOOD;
   late HomeworkEnum? homeworkStatus = widget.uiState.homeworkStatus ?? HomeworkEnum.FULLY_DONE;
 
+  final _imagesRepo = ActivityImagesRepository();
+  final _imagePicker = ImagePicker();
+  List<ActivityImageModel> _images = [];
+  bool _imagesLoading = false;
+  final Set<int> _deletingIds = {};
+  bool _uploadingImages = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadImages();
+  }
+
+  Future<void> _loadImages() async {
+    setState(() => _imagesLoading = true);
+    try {
+      _images = await _imagesRepo.getImages(uiState.activityId);
+    } catch (e) {
+      appLog('loadImages error: $e');
+    }
+    if (mounted) setState(() => _imagesLoading = false);
+  }
+
+  Future<void> _pickAndUploadImages() async {
+    final source = await _showImageSourceDialog();
+    if (source == null) return;
+
+    final List<XFile> picked;
+    if (source == ImageSource.camera) {
+      final photo = await _imagePicker.pickImage(source: ImageSource.camera);
+      picked = photo != null ? [photo] : [];
+    } else {
+      picked = await _imagePicker.pickMultiImage();
+    }
+    if (picked.isEmpty) return;
+
+    setState(() => _uploadingImages = true);
+    try {
+      final files = picked.map((x) => File(x.path)).toList();
+      final added = await _imagesRepo.addImages(uiState.activityId, files);
+      setState(() => _images = [..._images, ...added]);
+    } catch (e) {
+      showErrorMessage(e.toString());
+    }
+    if (mounted) setState(() => _uploadingImages = false);
+  }
+
+  void _openImageFullScreen(int initialIndex) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ImageGalleryViewer(
+          imageUrls: _images.map((e) => e.url).toList(),
+          initialIndex: initialIndex,
+        ),
+      ),
+    );
+  }
+
+  Future<ImageSource?> _showImageSourceDialog() async {
+    return showModalBottomSheet<ImageSource>(
+      context: context,
+      builder: (_) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.camera_alt_outlined),
+              title: Text('camera'.tr),
+              onTap: () => Navigator.pop(context, ImageSource.camera),
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo_library_outlined),
+              title: Text('gallery'.tr),
+              onTap: () => Navigator.pop(context, ImageSource.gallery),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _deleteImage(ActivityImageModel image) async {
+    showConfirmationMessage(
+      AppStringsKeys.areYouSureToDelete.tr,
+      () async {
+        setState(() => _deletingIds.add(image.id));
+        try {
+          await _imagesRepo.deleteImage(image.id);
+          if (mounted) setState(() => _images.removeWhere((i) => i.id == image.id));
+        } catch (e) {
+          showErrorMessage(e.toString());
+        }
+        if (mounted) setState(() => _deletingIds.remove(image.id));
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -80,6 +185,7 @@ class _UpdateStudentActivityWidgetState extends State<UpdateStudentActivityWidge
                   _grade(),
                 ],
               ),
+              _imagesSection(),
               _saveButton()
             ],
           ),
@@ -189,6 +295,97 @@ class _UpdateStudentActivityWidgetState extends State<UpdateStudentActivityWidge
       children: [
         LabelWidget(AppStringsKeys.score.tr),
         _gradeNotes()
+      ],
+    );
+  }
+
+  _imagesSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      spacing: 8,
+      children: [
+        Row(
+          children: [
+            Expanded(child: LabelWidget('images'.tr)),
+            if (_uploadingImages)
+              const SizedBox(
+                  width: 18, height: 18,
+                  child: CircularProgressIndicator(strokeWidth: 2))
+            else
+              IconButton(
+                onPressed: _pickAndUploadImages,
+                icon: const Icon(Icons.add_photo_alternate_outlined),
+                color: AppColors.appMainColor,
+                tooltip: 'addImages'.tr,
+              ),
+          ],
+        ),
+        if (_imagesLoading)
+          const Center(child: CircularProgressIndicator())
+        else if (_images.isNotEmpty)
+          SizedBox(
+            height: 90,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: _images.length,
+              separatorBuilder: (_, __) => const SizedBox(width: 8),
+              itemBuilder: (_, i) {
+                final img = _images[i];
+                final isDeleting = _deletingIds.contains(img.id);
+                return Stack(
+                  children: [
+                    GestureDetector(
+                      onTap: () => _openImageFullScreen(i),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.network(
+                          img.url,
+                          width: 90,
+                          height: 90,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) => Container(
+                            width: 90, height: 90,
+                            color: Colors.grey.shade200,
+                            child: const Icon(Icons.broken_image_outlined),
+                          ),
+                        ),
+                      ),
+                    ),
+                    if (isDeleting)
+                      Container(
+                        width: 90, height: 90,
+                        decoration: BoxDecoration(
+                          color: Colors.black38,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Center(
+                          child: SizedBox(
+                              width: 20, height: 20,
+                              child: CircularProgressIndicator(
+                                  strokeWidth: 2, color: Colors.white)),
+                        ),
+                      )
+                    else
+                      Positioned(
+                        top: 2, right: 2,
+                        child: GestureDetector(
+                          onTap: () => _deleteImage(img),
+                          child: Container(
+                            decoration: const BoxDecoration(
+                              color: Colors.black54,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(Icons.close,
+                                size: 16, color: Colors.white),
+                          ),
+                        ),
+                      ),
+                  ],
+                );
+              },
+            ),
+          ),
       ],
     );
   }

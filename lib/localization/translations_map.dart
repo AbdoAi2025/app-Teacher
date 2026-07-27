@@ -482,4 +482,10 @@ final Map<String, TranslationModel> translationsMap = {
   // Upgrade students failure dialog
   "upgrade_failed_continue_message": TranslationModel(en: "Students upgrade failed, do you want to continue without upgrading?", ar: "فشل ترقية الطلاب، هل تريد المتابعة بدون ترقية؟"),
   "continue_without_upgrading": TranslationModel(en: "Continue", ar: "متابعة"),
+
+  // Activity images
+  "images": TranslationModel(en: "Images", ar: "الصور"),
+  "addImages": TranslationModel(en: "Add Images", ar: "إضافة صور"),
+  "camera": TranslationModel(en: "Camera", ar: "الكاميرا"),
+  "gallery": TranslationModel(en: "Gallery", ar: "المعرض"),
 };

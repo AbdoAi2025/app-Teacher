@@ -93,6 +93,10 @@ class EndPoints{
   static const String createRejoinRequest = "$apiV1/join-requests/teacher/createRequest";
   static String rejoinRequestStudents(int id) => "$apiV1/join-requests/$id/students";
 
+  /*Activity Images*/
+  static String activityImages(String activityId) => "$apiV1/activities/$activityId/images";
+  static String deleteActivityImage(int imageId) => "$apiV1/activities/images/$imageId";
+
   /*Password Reset*/
   static const String forgotPassword = "$apiV1/password/forgot";
   static const String verifyForgotPasswordOtp = "$apiV1/password/verify-otp";
