@@ -86,6 +86,7 @@ class EndPoints{
   /*Enroll Requests*/
   static const String getSentRequests = "$apiV1/enroll-requests/sent";
   static const String getReceivedRequests = "$apiV1/enroll-requests/received";
+  static String updateEnrollRequestStatus(int id) => "$apiV1/enroll-requests/$id/status";
 
   /*Rejoin Requests*/
   static const String getSentRejoinRequests = "$apiV1/join-requests/sent";

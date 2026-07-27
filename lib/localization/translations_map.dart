@@ -52,6 +52,8 @@ final Map<String, TranslationModel> translationsMap = {
   "pending": TranslationModel(en: "Pending", ar: "قيد الانتظار"),
   "accepted": TranslationModel(en: "Accepted", ar: "مقبول"),
   "rejected": TranslationModel(en: "Rejected", ar: "مرفوض"),
+  "Accept": TranslationModel(en: "Accept", ar: "قبول"),
+  "Reject": TranslationModel(en: "Reject", ar: "رفض"),
   "WhatsApp": TranslationModel(en: "WhatsApp", ar: "واتساب"),
   "WhatsApp Business": TranslationModel(en: "WhatsApp Business", ar: "واتساب للأعمال"),
   "Other": TranslationModel(en: "Other", ar: "أخرى"),

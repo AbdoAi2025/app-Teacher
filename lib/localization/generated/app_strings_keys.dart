@@ -7,6 +7,9 @@
 class AppStringsKeys {
   AppStringsKeys._();
 
+  /// Key: "Accept"
+  static const String accept = "Accept";
+
   /// Key: "Acceptable"
   static const String acceptable = "Acceptable";
 
@@ -408,6 +411,9 @@ class AppStringsKeys {
 
   /// Key: "Enrollment Requests"
   static const String enrollmentRequests = "Enrollment Requests";
+
+  /// Key: "Reject"
+  static const String reject = "Reject";
 
   /// Key: "Season Rejoin Requests"
   static const String seasonRejoinRequests = "Season Rejoin Requests";

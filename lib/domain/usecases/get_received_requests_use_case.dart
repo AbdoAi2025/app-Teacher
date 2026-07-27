@@ -6,9 +6,19 @@ import 'package:teacher_app/domain/base_use_case.dart';
 class GetReceivedRequestsUseCase extends BaseUseCase<EnrollRequestsPageData> {
   final _repository = EnrollmentRepository();
 
-  Future<AppResult<EnrollRequestsPageData>> execute({int page = 0, int size = 20}) async {
+  Future<AppResult<EnrollRequestsPageData>> execute({
+    int page = 0,
+    int size = 20,
+    String? status,
+    int? gradeId,
+  }) async {
     return call(() async {
-      final data = await _repository.getReceivedRequests(page: page, size: size);
+      final data = await _repository.getReceivedRequests(
+        page: page,
+        size: size,
+        status: status,
+        gradeId: gradeId,
+      );
       return AppResult.success(data);
     });
   }
