@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:teacher_app/base/AppResult.dart';
 import 'package:teacher_app/data/responses/get_rejoin_request_students_response.dart';
 import 'package:teacher_app/domain/usecases/get_rejoin_request_students_use_case.dart';
+import 'package:teacher_app/enums/request_status_enum.dart';
 import 'package:teacher_app/widgets/item_selection_widget/item_selection_ui_state.dart';
 
 const int _pageSize = 20;
@@ -22,6 +23,7 @@ class RejoinRequestStudentsController extends GetxController {
   final RxString error = ''.obs;
 
   final Rx<ItemSelectionUiState?> selectedGrade = Rx(null);
+  final Rx<RequestStatusEnum?> selectedStatus = Rx(null);
   String _search = '';
   Timer? _searchDebounce;
 
@@ -41,6 +43,11 @@ class RejoinRequestStudentsController extends GetxController {
 
   void onGradeSelected(ItemSelectionUiState? grade) {
     selectedGrade.value = grade;
+    load();
+  }
+
+  void onStatusSelected(RequestStatusEnum? status) {
+    selectedStatus.value = status;
     load();
   }
 
@@ -68,6 +75,13 @@ class RejoinRequestStudentsController extends GetxController {
     isLoadingMore.value = false;
   }
 
+  String? get _statusParam => switch (selectedStatus.value) {
+        RequestStatusEnum.pending => 'PENDING',
+        RequestStatusEnum.accepted => 'ACCEPTED',
+        RequestStatusEnum.rejected => 'REJECTED',
+        _ => null,
+      };
+
   Future<void> _fetchPage() async {
     final result = await _useCase.execute(
       requestId,
@@ -75,6 +89,7 @@ class RejoinRequestStudentsController extends GetxController {
       size: _pageSize,
       gradeId: selectedGrade.value?.id,
       search: _search.isEmpty ? null : _search,
+      status: _statusParam,
     );
     if (result is AppResultSuccess) {
       final pageData = result.value!;

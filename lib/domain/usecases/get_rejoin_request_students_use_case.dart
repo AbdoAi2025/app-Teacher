@@ -12,6 +12,7 @@ class GetRejoinRequestStudentsUseCase extends BaseUseCase<RejoinRequestStudentsP
     int size = 20,
     String? gradeId,
     String? search,
+    String? status,
   }) async {
     return call(() async {
       final data = await _repository.getStudents(
@@ -20,6 +21,7 @@ class GetRejoinRequestStudentsUseCase extends BaseUseCase<RejoinRequestStudentsP
         size: size,
         gradeId: gradeId,
         search: search,
+        status: status,
       );
       return AppResult.success(data);
     });

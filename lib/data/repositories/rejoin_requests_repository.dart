@@ -33,10 +33,12 @@ class RejoinRequestsRepository {
     int size = 20,
     String? gradeId,
     String? search,
+    String? status,
   }) async {
     final params = <String, dynamic>{'page': page, 'size': size};
     if (gradeId != null && gradeId.isNotEmpty) params['gradeId'] = gradeId;
     if (search != null && search.isNotEmpty) params['studentName'] = search;
+    if (status != null) params['status'] = status;
 
     Response response = await ApiService.getInstance().get(
       EndPoints.rejoinRequestStudents(requestId),

@@ -15,6 +15,7 @@ import 'package:teacher_app/services/environment_service.dart';
 import 'package:teacher_app/widgets/app_txt_widget.dart';
 import 'package:teacher_app/widgets/app_toolbar_widget.dart';
 import 'package:teacher_app/widgets/filters/grade_filter_chip_widget.dart';
+import 'package:teacher_app/widgets/filters/status_filter_chip_widget.dart';
 import 'package:teacher_app/widgets/loading_widget.dart';
 import 'package:teacher_app/widgets/pagination_list_widget.dart';
 import 'package:teacher_app/widgets/request_status_chip_widget.dart';
@@ -78,12 +79,21 @@ class _RejoinRequestStudentsScreenState
                   controller: _searchController,
                   onChanged: (v) => _controller.onSearchChanged(v ?? ''),
                 ),
-                Align(
-                  alignment: AlignmentDirectional.centerStart,
-                  child: GradeFilterChipWidget(
-                    selectedGrade: _controller.selectedGrade,
-                    onSelected: _controller.onGradeSelected,
-                    onReset: () => _controller.onGradeSelected(null),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      StatusFilterChipWidget(
+                        selectedStatus: _controller.selectedStatus,
+                        onSelected: _controller.onStatusSelected,
+                      ),
+                      const SizedBox(width: 8),
+                      GradeFilterChipWidget(
+                        selectedGrade: _controller.selectedGrade,
+                        onSelected: _controller.onGradeSelected,
+                        onReset: () => _controller.onGradeSelected(null),
+                      ),
+                    ],
                   ),
                 ),
               ],
