@@ -59,11 +59,14 @@ class _EditStudentScreenState extends AddStudentScreenState {
   }
 
   @override
+  Widget checkStudentsButton() => const SizedBox.shrink();
+
+  @override
   Widget gradeField() => const SizedBox.shrink();
 
   @override
-  void onSaveSuccess(SaveStateSuccess result) {
-    showSuccessMessage(AppStringsKeys.studentEditedSuccessfully.tr);
+  Future<void> onSaveSuccess(SaveStateSuccess result) async {
+    await showSuccessMessage(AppStringsKeys.studentEditedSuccessfully.tr);
     super.onSaveSuccess(result);
   }
 }

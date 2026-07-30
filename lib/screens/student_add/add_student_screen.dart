@@ -385,7 +385,7 @@ class AddStudentScreenState extends State<AddStudentScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       _parentPhoneField(),
-                      _checkStudentsButton(),
+                      checkStudentsButton(),
                     ],
                   ),
                   _nameField(),
@@ -441,7 +441,7 @@ class AddStudentScreenState extends State<AddStudentScreen> {
     });
   }
 
-  Widget _checkStudentsButton() {
+  Widget checkStudentsButton() {
     return Obx(() {
       final loading = getController().isSearchingByPhone.value;
       return Align(

@@ -14,6 +14,7 @@ class UpdateStudentUseCase extends BaseUseCase<AddStudentResponse?>{
     return call(() async {
       var items =  await repository.updateStudent(request);
       StudentsEvents.onStudentUpdated(request.studentId);
+      StudentsEvents.onStudentRefresh();
       return AppResult.success(items);
     });
   }

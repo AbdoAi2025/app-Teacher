@@ -30,6 +30,7 @@ class EditStudentController extends AddStudentController {
         isSelected: true
       );
     }
+    fieldsEnabled.value = true;
 
     super.onInit();
   }
