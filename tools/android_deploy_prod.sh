@@ -56,13 +56,15 @@ fi
 section "Select Upload Track"
 echo "  1) internal"
 echo "  2) production"
+echo "  3) both"
 echo -n "  Track [1]: "
 read TRACK_CHOICE
 case "$TRACK_CHOICE" in
-  2) SELECTED_TRACK="production" ;;
-  *) SELECTED_TRACK="internal" ;;
+  2) SELECTED_TRACKS="production" ;;
+  3) SELECTED_TRACKS="internal,production" ;;
+  *) SELECTED_TRACKS="internal" ;;
 esac
-info "Track: $SELECTED_TRACK"
+info "Track(s): $SELECTED_TRACKS"
 
 # ── Send for review ───────────────────────────────────────────────────────────
 section "Send for Review"
@@ -85,9 +87,21 @@ VERSION_PROPS="$PROJECT_ROOT/android/version.properties"
 source "$SCRIPT_DIR/_version_bump.sh"
 prompt_android_version_bump "$VERSION_PROPS"
 
+# ── Environment selection ─────────────────────────────────────────────────────
+section "Select Environment"
+echo "  1) prod"
+echo "  2) dev"
+echo -n "  Environment [1]: "
+read ENV_CHOICE
+case "$ENV_CHOICE" in
+  2) SELECTED_ENV="dev" ;;
+  *) SELECTED_ENV="prod" ;;
+esac
+info "Environment: $SELECTED_ENV"
+
 # ── Build AAB ─────────────────────────────────────────────────────────────────
-echo "Building Android App Bundle (prod)..."
-"$FLUTTER" build appbundle --release --dart-define=APP_ENV=prod
+section "Building Android App Bundle ($SELECTED_ENV)"
+"$FLUTTER" build appbundle --release --dart-define=APP_ENV=$SELECTED_ENV
 
 if [[ $? -ne 0 ]]; then
   echo "Error: Flutter build failed"
@@ -105,12 +119,12 @@ fi
 echo "Found AAB: $AAB_PATH"
 
 # ── Upload to Google Play ─────────────────────────────────────────────────────
-echo "Uploading to Google Play ($SELECTED_TRACK track)..."
+echo "Uploading to Google Play ($SELECTED_TRACKS track(s))..."
 python3 "$PROJECT_ROOT/tools/play_upload.py" \
   --service-account "$PLAY_SERVICE_ACCOUNT_JSON" \
   --package-name "$PLAY_PACKAGE_NAME" \
   --aab "$AAB_PATH" \
-  --track "$SELECTED_TRACK" \
+  --tracks "$SELECTED_TRACKS" \
   --send-for-review "$SEND_FOR_REVIEW"
 
 if [[ $? -eq 0 ]]; then

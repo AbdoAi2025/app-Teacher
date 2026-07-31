@@ -32,7 +32,7 @@ from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 from google.oauth2 import service_account
 
-def upload(service_account_json, package_name, aab_path, track, send_for_review):
+def upload(service_account_json, package_name, aab_path, tracks, send_for_review):
     credentials = service_account.Credentials.from_service_account_file(
         service_account_json,
         scopes=["https://www.googleapis.com/auth/androidpublisher"],
@@ -53,13 +53,14 @@ def upload(service_account_json, package_name, aab_path, track, send_for_review)
     version_code = bundle["versionCode"]
     print(f"Uploaded bundle version code: {version_code}")
 
-    edits.tracks().update(
-        packageName=package_name,
-        editId=edit_id,
-        track=track,
-        body={"releases": [{"versionCodes": [version_code], "status": "completed"}]},
-    ).execute()
-    print(f"Track '{track}' updated")
+    for track in tracks:
+        edits.tracks().update(
+            packageName=package_name,
+            editId=edit_id,
+            track=track,
+            body={"releases": [{"versionCodes": [version_code], "status": "completed"}]},
+        ).execute()
+        print(f"Track '{track}' updated")
 
     if send_for_review:
         edits.commit(packageName=package_name, editId=edit_id).execute()
@@ -77,7 +78,7 @@ if __name__ == "__main__":
     parser.add_argument("--service-account", required=True)
     parser.add_argument("--package-name", required=True)
     parser.add_argument("--aab", required=True)
-    parser.add_argument("--track", default="internal")
+    parser.add_argument("--tracks", default="internal")
     parser.add_argument("--send-for-review", default="true")
     args = parser.parse_args()
 
@@ -85,6 +86,6 @@ if __name__ == "__main__":
         args.service_account,
         args.package_name,
         args.aab,
-        args.track,
+        [t.strip() for t in args.tracks.split(",")],
         args.send_for_review.lower() == "true",
     )
