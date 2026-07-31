@@ -8,10 +8,12 @@ import 'package:teacher_app/domain/models/activity_image_model.dart';
 import 'package:teacher_app/enums/homework_enum.dart';
 import 'package:teacher_app/themes/app_colors.dart';
 import 'package:teacher_shared/widgets/image_gallery_viewer.dart';
+import 'package:teacher_shared/widgets/image_load_network.dart';
 import 'package:teacher_app/themes/txt_styles.dart';
 import 'package:teacher_app/utils/Keyboard_utils.dart';
 import 'package:teacher_app/utils/LogUtils.dart';
 import 'package:teacher_app/widgets/key_value_row_widget.dart';
+import '../../../bottomsheets/app_bottom_sheets.dart';
 import '../../../enums/student_behavior_enum.dart';
 import '../../../screens/session_details/states/session_details_ui_state.dart';
 import '../../../utils/grade_utils.dart';
@@ -41,6 +43,17 @@ class UpdateStudentActivityWidget extends StatefulWidget {
   @override
   State<UpdateStudentActivityWidget> createState() =>
       _UpdateStudentActivityWidgetState();
+
+  static void showBottomSheet(SessionActivityItemUiState uiState, Function(SessionActivityItemUiState) onSaveClick) {
+    showAppBottomSheet(
+        UpdateStudentActivityWidget(
+          uiState: uiState,
+          onCloseClick: (){
+            Get.back();
+          },
+          onSaveClick: onSaveClick,
+        ), isScrollControlled : true);
+  }
 }
 
 class _UpdateStudentActivityWidgetState extends State<UpdateStudentActivityWidget> {
@@ -155,41 +168,56 @@ class _UpdateStudentActivityWidgetState extends State<UpdateStudentActivityWidge
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(20),
-      child: SingleChildScrollView(
-        physics: AlwaysScrollableScrollPhysics(),
-        child: GestureDetector(
-          onPanDown: (v){
-            KeyboardUtils.hideKeyboard(context);
-          },
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            spacing: 15,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.95,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
                 _title(),
                 _suTitle(),
-              ],),
-              Column(
-                spacing: 15,
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _attendance(),
-                  _homework(),
-                  _behavior(),
-                  _grade(),
-                ],
-              ),
-              _imagesSection(),
-              _saveButton()
-            ],
+              ],
+            ),
           ),
-        ),
+          const Divider(height: 1),
+          Expanded(
+            child: GestureDetector(
+              onPanDown: (v) => KeyboardUtils.hideKeyboard(context),
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  spacing: 15,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      spacing: 15,
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _attendance(),
+                        _homework(),
+                        _behavior(),
+                        _grade(),
+                      ],
+                    ),
+                    _imagesSection(),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: _saveButton(),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -339,16 +367,11 @@ class _UpdateStudentActivityWidgetState extends State<UpdateStudentActivityWidge
                       onTap: () => _openImageFullScreen(i),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: Image.network(
-                          img.url,
+                        child: ImageLoadNetwork(
+                          url: img.url,
                           width: 90,
                           height: 90,
                           fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) => Container(
-                            width: 90, height: 90,
-                            color: Colors.grey.shade200,
-                            child: const Icon(Icons.broken_image_outlined),
-                          ),
                         ),
                       ),
                     ),

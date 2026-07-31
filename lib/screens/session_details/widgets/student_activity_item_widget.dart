@@ -117,16 +117,9 @@ class _StudentActivityItemWidgetState extends State<StudentActivityItemWidget> {
   }
 
   void onEditClick() {
-    showAppBottomSheet(
-        UpdateStudentActivityWidget(
-            uiState: uiState,
-          onCloseClick: (){
-              Get.back();
-          },
-          onSaveClick: (uiState){
-            onUpdateStudentActivityClick(uiState);
-          },
-        ), isScrollControlled : true);
+    UpdateStudentActivityWidget.showBottomSheet(uiState , (uiState){
+      onUpdateStudentActivityClick(uiState);
+    },);
   }
 
   _attended() {
