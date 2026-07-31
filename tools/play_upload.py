@@ -32,7 +32,7 @@ from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 from google.oauth2 import service_account
 
-def upload(service_account_json, package_name, aab_path, track):
+def upload(service_account_json, package_name, aab_path, track, send_for_review):
     credentials = service_account.Credentials.from_service_account_file(
         service_account_json,
         scopes=["https://www.googleapis.com/auth/androidpublisher"],
@@ -61,8 +61,16 @@ def upload(service_account_json, package_name, aab_path, track):
     ).execute()
     print(f"Track '{track}' updated")
 
-    edits.commit(packageName=package_name, editId=edit_id).execute()
-    print("Edit committed — upload complete!")
+    if send_for_review:
+        edits.commit(packageName=package_name, editId=edit_id).execute()
+        print("Edit committed and sent for review!")
+    else:
+        edits.commit(
+            packageName=package_name,
+            editId=edit_id,
+            changesNotSentForReview=True,
+        ).execute()
+        print("Edit committed — go to Play Console to send for review manually.")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -70,6 +78,13 @@ if __name__ == "__main__":
     parser.add_argument("--package-name", required=True)
     parser.add_argument("--aab", required=True)
     parser.add_argument("--track", default="internal")
+    parser.add_argument("--send-for-review", default="true")
     args = parser.parse_args()
 
-    upload(args.service_account, args.package_name, args.aab, args.track)
+    upload(
+        args.service_account,
+        args.package_name,
+        args.aab,
+        args.track,
+        args.send_for_review.lower() == "true",
+    )

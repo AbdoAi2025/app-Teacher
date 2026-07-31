@@ -52,6 +52,30 @@ if [[ ! -f "$PLAY_SERVICE_ACCOUNT_JSON" ]]; then
   exit 1
 fi
 
+# ── Track selection ──────────────────────────────────────────────────────────
+section "Select Upload Track"
+echo "  1) internal"
+echo "  2) production"
+echo -n "  Track [1]: "
+read TRACK_CHOICE
+case "$TRACK_CHOICE" in
+  2) SELECTED_TRACK="production" ;;
+  *) SELECTED_TRACK="internal" ;;
+esac
+info "Track: $SELECTED_TRACK"
+
+# ── Send for review ───────────────────────────────────────────────────────────
+section "Send for Review"
+echo "  1) Yes — auto-send for review after upload"
+echo "  2) No  — commit only, send for review manually from Play Console"
+echo -n "  Choice [1]: "
+read REVIEW_CHOICE
+case "$REVIEW_CHOICE" in
+  2) SEND_FOR_REVIEW="false" ;;
+  *) SEND_FOR_REVIEW="true" ;;
+esac
+info "Send for review: $SEND_FOR_REVIEW"
+
 # ── Version Bump ─────────────────────────────────────────────────────────────
 section "Version Bump"
 
@@ -81,12 +105,13 @@ fi
 echo "Found AAB: $AAB_PATH"
 
 # ── Upload to Google Play ─────────────────────────────────────────────────────
-echo "Uploading to Google Play ($PLAY_TRACK track)..."
+echo "Uploading to Google Play ($SELECTED_TRACK track)..."
 python3 "$PROJECT_ROOT/tools/play_upload.py" \
   --service-account "$PLAY_SERVICE_ACCOUNT_JSON" \
   --package-name "$PLAY_PACKAGE_NAME" \
   --aab "$AAB_PATH" \
-  --track "$PLAY_TRACK"
+  --track "$SELECTED_TRACK" \
+  --send-for-review "$SEND_FOR_REVIEW"
 
 if [[ $? -eq 0 ]]; then
   success "Upload successful!"
