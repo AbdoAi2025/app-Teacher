@@ -14,6 +14,16 @@ enum Term {
   second
 }
 
+class TeachingYearConfig {
+  static const int yearStartMonth = 7;  // July
+  static const int yearStartDay   = 1;
+  static const int yearEndMonth   = 6;  // June
+  static const int yearEndDay     = 30;
+  static const int term2StartMonth = 2; // February
+  static const int term1EndMonth   = 1; // January
+  static const int term1EndDay     = 31;
+}
+
 class TeachingYear {
   final int startYear;
   final int endYear;
@@ -22,8 +32,8 @@ class TeachingYear {
 
   String get displayName => '$startYear-$endYear';
 
-  DateTime get startDate => DateTime(startYear, 8, 1); // August 1st
-  DateTime get endDate => DateTime(endYear, 7, 31); // July 31st
+  DateTime get startDate => DateTime(startYear, TeachingYearConfig.yearStartMonth, TeachingYearConfig.yearStartDay);
+  DateTime get endDate => DateTime(endYear, TeachingYearConfig.yearEndMonth, TeachingYearConfig.yearEndDay);
 
   @override
   bool operator ==(Object other) =>
@@ -70,11 +80,11 @@ class DateFilter {
           teachingYear: year,
           term: termSelected,
           startDate: termSelected == Term.first
-              ? DateTime(year.startYear, 8, 1) // Aug 1st
-              : DateTime(year.endYear, 2, 1), // Feb 1st next year
+              ? DateTime(year.startYear, TeachingYearConfig.yearStartMonth, TeachingYearConfig.yearStartDay)
+              : DateTime(year.endYear, TeachingYearConfig.term2StartMonth, 1),
           endDate: termSelected == Term.first
-              ? DateTime(year.endYear, 1, 31) // Jan 31st next year
-              : DateTime(year.endYear, 7, 31), // July 31st next year
+              ? DateTime(year.endYear, TeachingYearConfig.term1EndMonth, TeachingYearConfig.term1EndDay)
+              : DateTime(year.endYear, TeachingYearConfig.yearEndMonth, TeachingYearConfig.yearEndDay),
         );
 
   DateFilter.customRange(DateTime start, DateTime end)
@@ -136,7 +146,7 @@ class DateFilterHelper {
     final currentMonth = currentDate.month;
 
     // Determine the current teaching year
-    final currentTeachingYear = currentMonth >= 8
+    final currentTeachingYear = currentMonth >= TeachingYearConfig.yearStartMonth
         ? TeachingYear(startYear: currentYear, endYear: currentYear + 1)
         : TeachingYear(startYear: currentYear - 1, endYear: currentYear);
 
@@ -157,7 +167,7 @@ class DateFilterHelper {
     final currentYear = currentDate.year;
     final currentMonth = currentDate.month;
 
-    return currentMonth >= 8
+    return currentMonth >= TeachingYearConfig.yearStartMonth
         ? TeachingYear(startYear: currentYear, endYear: currentYear + 1)
         : TeachingYear(startYear: currentYear - 1, endYear: currentYear);
   }
@@ -166,9 +176,9 @@ class DateFilterHelper {
     final currentDate = DateTime.now();
     final currentMonth = currentDate.month;
 
-    if (currentMonth >= 8 || currentMonth == 1) {
+    if (currentMonth >= TeachingYearConfig.yearStartMonth || currentMonth == TeachingYearConfig.term1EndMonth) {
       return Term.first;
-    } else if (currentMonth >= 2 && currentMonth <= 7) {
+    } else if (currentMonth >= TeachingYearConfig.term2StartMonth && currentMonth < TeachingYearConfig.yearStartMonth) {
       return Term.second;
     }
 
