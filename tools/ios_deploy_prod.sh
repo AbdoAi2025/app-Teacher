@@ -95,16 +95,19 @@ xcrun altool --upload-app \
 if [[ $? -eq 0 ]]; then
   success "Upload successful — build available on TestFlight"
 
-  if [[ "$VERSION_BUMPED" == "true" ]]; then
-    section "Committing version bump"
-    git -C "$PROJECT_ROOT" add ios/Runner/Info.plist
-    git -C "$PROJECT_ROOT" commit -m "chore: bump iOS version to $NEW_SHORT_VERSION ($NEW_BUNDLE_VERSION) [prod deploy]"
+  section "Committing changes"
+  git -C "$PROJECT_ROOT" add -A
+  if git -C "$PROJECT_ROOT" diff --cached --quiet; then
+    info "Nothing to commit"
+  else
+    COMMIT_MSG="chore: bump iOS version to $NEW_SHORT_VERSION ($NEW_BUNDLE_VERSION) [prod deploy]"
+    git -C "$PROJECT_ROOT" commit -m "$COMMIT_MSG"
     if [[ $? -eq 0 ]]; then
-      success "Version bump committed"
+      success "Changes committed"
       git -C "$PROJECT_ROOT" push
       [[ $? -eq 0 ]] && success "Pushed to remote" || warn "Git push failed"
     else
-      warn "Git commit failed — Info.plist was updated but not committed"
+      warn "Git commit failed"
     fi
   fi
 else
